@@ -30,17 +30,34 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
+          padding: EdgeInsets.only(left: 20, right: 20),
           child: Form(
             key: _usuarioform,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  'Ingresa tus datos:',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
+                SizedBox(
+                  height: 80,
+                ),
+                Center(
+                  child: Text(
+                    'Ingresa tus datos:',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Los campos marcados con * son obligatorios.',
+                  style: TextStyle(color: Colors.red),
+                ),
+                SizedBox(
+                  height: 15,
                 ),
                 TextFormField(
                   initialValue: null,
@@ -60,10 +77,16 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10))),
                 ),
+                SizedBox(
+                  height: 15,
+                ),
                 Text('* Sexo:'),
+                SizedBox(
+                  height: 3,
+                ),
                 RadioButtonGroup(
                     picked: null,
-                    orientation: GroupedButtonsOrientation.HORIZONTAL,
+                    orientation: GroupedButtonsOrientation.VERTICAL,
                     labels: <String>[
                       'Mujer',
                       'Hombre',
@@ -73,6 +96,9 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                         form_usuario['sexo'] = opcion;
                       });
                     }),
+                SizedBox(
+                  height: 15,
+                ),
                 TextFormField(
                   keyboardType: TextInputType.number,
                   initialValue: null,
@@ -91,6 +117,9 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10))),
                 ),
+                SizedBox(
+                  height: 15,
+                ),
                 TextFormField(
                   initialValue: null,
                   onSaved: (String value) {
@@ -100,6 +129,9 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       labelText: 'Correo electrónico (opcional)',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10))),
+                ),
+                SizedBox(
+                  height: 15,
                 ),
                 TextFormField(
                   initialValue: null,
@@ -119,7 +151,12 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                           borderRadius: BorderRadius.circular(10))),
                 ),
                 Text(
-                    'Respalda tu contraseña, no podrás reestablecerla una vez guardes tus datos'),
+                  'Respalda tu contraseña, no podrás reestablecerla una vez guardes tus datos',
+                  style: TextStyle(color: Colors.grey, fontSize: 13),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
                 TextFormField(
                   keyboardType: TextInputType.number,
                   initialValue: null,
@@ -139,10 +176,21 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                           borderRadius: BorderRadius.circular(10))),
                 ),
                 Text(
-                    'Protegemos tus datos. Tu número telefónico no aparecerá en tu perfil,  \n sólo será visible cuando hagas un rescate o tengas animales en adopción.'),
+                  'Protegemos tus datos. Tu número telefónico no aparecerá en tu perfil, sólo será visible cuando hagas un rescate o tengas animales en adopción',
+                  style: TextStyle(color: Colors.grey, fontSize: 13),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
                 Text('* Foto: '),
                 // Copiar la parte de fotos de vetec
+                SizedBox(
+                  height: 15,
+                ),
                 Text('* ¿Qué tipo de usuario eres?'),
+                SizedBox(
+                  height: 3,
+                ),
                 RadioButtonGroup(
                     picked: null,
                     orientation: GroupedButtonsOrientation.VERTICAL,
@@ -155,10 +203,13 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                         tipotemp = opcion;
                       });
                     }),
+                SizedBox(
+                  height: 15,
+                ),
                 tipotemp == 'Represento a un refugio'
                     ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text('*Ubicación (google maps)'),
                           TextFormField(
                             initialValue: null,
                             onSaved: (String value) {
@@ -177,7 +228,10 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10))),
                           ),
-                          Text('Cantidad de mascotas refugiadas:'),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text('* Cantidad de mascotas refugiadas:'),
                           RadioButtonGroup(
                               picked: null,
                               orientation: GroupedButtonsOrientation.VERTICAL,
@@ -191,9 +245,15 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                                   form_usuario['cantidadmascotas'] = opcion;
                                 });
                               }),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text('*Ubicación (google maps)'),
+                          //Pendiente por hacer
                         ],
                       )
                     : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           TextFormField(
                             initialValue: null,
@@ -208,13 +268,19 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                           ),
                         ],
                       ),
+                SizedBox(
+                  height: 15,
+                ),
                 RaisedButton.icon(
-                    icon: Icon(Icons.playlist_add_check),
+                    icon: Icon(Icons.check),
                     label: Text('Guardar'),
                     onPressed: () async {
                       setState(() {
-                        _usuarioform.currentState.validate();
-                        _usuarioform.currentState.save();
+                        if (_usuarioform.currentState.validate()) {
+                          //Aquí va la consulta para subir la foto a firebase, obtener
+                          //el link y guardarlo en la variable del form
+                          _usuarioform.currentState.save();
+                        }
                       });
 
                       var agregar = await Firestore.instance
