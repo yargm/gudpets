@@ -9,8 +9,8 @@ class AnimalModel {
   String edad;
   bool esterilizacion;
   bool vacunacion;
-  dynamic album;
-
+ // dynamic album;
+int id;
 
   AnimalModel(
       {this.desc,
@@ -21,7 +21,9 @@ class AnimalModel {
       this.edad,
       this.esterilizacion,
       this.vacunacion,
-      this.album});
+    //  this.album,
+      this.id
+      });
 
   AnimalModel.fromDocumentSnapshot(DocumentSnapshot data) {
     foto = data['foto'];
@@ -32,6 +34,7 @@ class AnimalModel {
     edad = data['edad'];
     esterilizacion = data['esterilizacion'];
     vacunacion = data['vacunacion'];
-    album = data['album'];
+   // album = data['album'];
+    id =data['id'] ;
   }
 }

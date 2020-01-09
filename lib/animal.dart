@@ -4,16 +4,22 @@ import 'adoption.dart';
 
 class Animal extends StatelessWidget {
   final AnimalModel objeto;
-
+final double containerPadding = 45;
+final double containerPadding2 = 60;
+final double containerBorderRadius = 10;
   Animal({this.objeto});
   @override
   Widget build(BuildContext context) {
+    var leftAligned = (objeto.id % 2 == 0 )? true : false;
+   
     // TODO: implement build
     return Container(
+      padding: EdgeInsets.only(left:leftAligned ? 0 : containerPadding2, right: leftAligned? containerPadding : 0 ),
         child: Column(
+          
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 40.0, bottom: 10.0),
+        padding: EdgeInsets.only(left: 0, right: 0),
           child: GestureDetector(
             onTap: () {
               Navigator.push(
@@ -22,31 +28,43 @@ class Animal extends StatelessWidget {
                     builder: (context) => Adoption(objeto: objeto)),
               );
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Hero(
-                  tag: objeto.nombre,
-                  child: Container(
-                    width: double.infinity,
-                    height: 250.0,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          bottomLeft: Radius.circular(20.0),
-                        ),
-                        image: DecorationImage(
-                          image: NetworkImage(objeto.foto),
-                          fit: BoxFit.cover,
-                        )),
-                  ),
+            child: Container(
+              width: double.maxFinite,
+              height: 200,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                          child: ClipRRect(
+                borderRadius: BorderRadius.horizontal(
+                  left: leftAligned ? Radius.circular(0): Radius.circular(containerBorderRadius),
+                  right: leftAligned ? Radius.circular(containerBorderRadius) : Radius.circular(0) ,
                 ),
-              ],
+                  child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Hero(
+                      tag: objeto.nombre,
+                      child: Container(
+                       width: 400,
+                       height: 200,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(0.0),
+                              topRight: Radius.circular(0.0),
+                            ),
+                            image: DecorationImage(
+                              image: NetworkImage(objeto.foto),
+                              fit: BoxFit.cover,
+                            )),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
+            
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 40.0),
+          padding: EdgeInsets.only(left:20.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -68,7 +86,7 @@ class Animal extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 40.0, bottom: 20.0),
+          padding: EdgeInsets.only(left:20,right: 30, bottom: 20.0),
           child: Text(objeto.desc,
               style: TextStyle(
                 fontFamily: 'Montserrat',
