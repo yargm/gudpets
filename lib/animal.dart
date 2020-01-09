@@ -64,7 +64,7 @@ final double containerBorderRadius = 10;
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 40.0),
+          padding: EdgeInsets.only(left:20.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -86,7 +86,7 @@ final double containerBorderRadius = 10;
           ),
         ),
         Padding(
-          padding: EdgeInsets.only( bottom: 20.0),
+          padding: EdgeInsets.only(left:20,right: 30, bottom: 20.0),
           child: Text(objeto.desc,
               style: TextStyle(
                 fontFamily: 'Montserrat',
