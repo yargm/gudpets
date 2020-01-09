@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'animal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'models.dart';
@@ -11,9 +12,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var animales = Firestore.instance.collection('animales').snapshots();
 
-  Widget _categoria(bool _isSelected, String categoria) {
+  Widget _categoria(bool _isSelected, Icon ion) {
     return GestureDetector(
-      onTap: () => print('Seleccionó $categoria'),
+      onTap: () => print('Seleccionó '),
       child: Container(
           margin: EdgeInsets.all(10.0),
           width: 80.0,
@@ -25,13 +26,7 @@ class _HomePageState extends State<HomePage> {
                 : null,
           ),
           child: Center(
-            child: Text(categoria,
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                )),
+            child: IconButton(onPressed: () => null, icon: ion),
           )),
     );
   }
@@ -43,7 +38,7 @@ class _HomePageState extends State<HomePage> {
         body: ListView(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(left: 40.0, top: 40.0),
+              padding: EdgeInsets.only(left: 40.0, top: 40.0, right: 40),
               alignment: Alignment.centerLeft,
               child: CircleAvatar(
                 child: ClipOval(
@@ -59,7 +54,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 10.0),
             Container(
-                height: 100.0,
+                height: 80.0,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
@@ -76,10 +71,9 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    _categoria(true, 'Perros'),
-                    _categoria(false, 'Gatos'),
-                    _categoria(false, 'Aves'),
-                    _categoria(false, 'Otros'),
+                    _categoria(true, Icon(FontAwesomeIcons.dog)),
+                    _categoria(false, Icon(FontAwesomeIcons.cat)),
+                    _categoria(false, Icon(FontAwesomeIcons.dove)),
                   ],
                 )),
             SizedBox(
