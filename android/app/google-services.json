@@ -1,71 +1,34 @@
 {
   "project_info": {
-    "project_number": "783291131777",
-    "firebase_url": "https://friendlychat-edf2a.firebaseio.com",
-    "project_id": "friendlychat-edf2a",
-    "storage_bucket": "friendlychat-edf2a.appspot.com"
+    "project_number": "720642444819",
+    "firebase_url": "https://adoptionapp-8a76d.firebaseio.com",
+    "project_id": "adoptionapp-8a76d",
+    "storage_bucket": "adoptionapp-8a76d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:783291131777:android:67b0d9a0b1cbbec796aa80",
+        "mobilesdk_app_id": "1:720642444819:android:7c4b757f0bed2cda5839e6",
         "android_client_info": {
-          "package_name": "com.example.adoption_app"
+          "package_name": "com.gudtech.adoption_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "783291131777-d2n750qu9lbqh8go6o5d21qr0mcv0rag.apps.googleusercontent.com",
+          "client_id": "720642444819-l981uivl73k195r2c2o14bk34or7s2pc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBgDJ2nCVkmmsKQ3ctz_N0EiIQAV6IMU8o"
+          "current_key": "AIzaSyCXmVZJemOXgw_vo5TB3_K8ZwPLbpklo7s"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "783291131777-d2n750qu9lbqh8go6o5d21qr0mcv0rag.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:783291131777:android:64e58dacc0483faa",
-        "android_client_info": {
-          "package_name": "com.google.firebase.udacity.friendlychat"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "783291131777-ul90vdl19otgt636tl68o87q901nvest.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.google.firebase.udacity.friendlychat",
-            "certificate_hash": "b9a89283fc44f165f02a74fe6f976947a3728048"
-          }
-        },
-        {
-          "client_id": "783291131777-d2n750qu9lbqh8go6o5d21qr0mcv0rag.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBgDJ2nCVkmmsKQ3ctz_N0EiIQAV6IMU8o"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "783291131777-d2n750qu9lbqh8go6o5d21qr0mcv0rag.apps.googleusercontent.com",
+              "client_id": "720642444819-l981uivl73k195r2c2o14bk34or7s2pc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -2,6 +2,7 @@ import 'package:adoption_app/adoption.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'registrousuario.dart';
+import 'home2.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
