@@ -1,4 +1,4 @@
-package com.example.adoption_app
+package com.gudtech.adoption_app
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
