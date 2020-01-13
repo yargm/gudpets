@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _categoria(bool _isSelected, Icon ion) {
     return GestureDetector(
-      onTap: () => print('Seleccionó '),
+      onTap: () => print('Seleccionó'),
       child: Container(
           margin: EdgeInsets.all(10.0),
           width: 80.0,
