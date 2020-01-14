@@ -3,15 +3,15 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-class EmergenciaCard extends StatelessWidget {
-  final dynamic objeto;
+class RescateCard extends StatelessWidget {
+  final EmergenciaModel objeto;
   final int posicion;
   
 final double containerPadding = 80;
 final double containerPadding2 = 80;
 final double containerBorderRadius = 15;
 
-  EmergenciaCard({this.objeto, this.posicion});
+  RescateCard({this.objeto, this.posicion});
   @override
   
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ print(posicion.toString());
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Hero(
-                  tag: objeto.user_id,
+                  tag: objeto.emergencia_id,
                   child: Container(
                    width: double.maxFinite,
                    height: 200,

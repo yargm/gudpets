@@ -3,16 +3,16 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-class Emergencia extends StatefulWidget {
-  final EmergenciaModel objeto;
+class Rescate extends StatefulWidget {
+  final RescateModel objeto;
 
-  Emergencia({this.objeto});
+  Rescate({this.objeto});
 
   @override
-  _EmergenciaState createState() => _EmergenciaState();
+  _RescateState createState() => _RescateState();
 }
 
-class _EmergenciaState extends State<Emergencia> {
+class _RescateState extends State<Rescate> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -37,7 +37,7 @@ class _EmergenciaState extends State<Emergencia> {
                       height: 350.0,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage(widget.objeto.foto),
+                              image: NetworkImage(widget.objeto.fotos),
                               fit: BoxFit.cover)),
                     ),
                   )),

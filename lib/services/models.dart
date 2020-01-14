@@ -64,7 +64,7 @@ class EmergenciaModel {
       this.document_id});
 
   EmergenciaModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    titulo = data['titulo'];
+    titulo = data['titulo'] ?? '';
     tipo_emergencia = data['tipo_emergencia'];
     ubicacion = data['ubicacion'];
     descripcion = data['descripcion'];
@@ -73,5 +73,43 @@ class EmergenciaModel {
     tipo_animal = data['tipo_animal'];
     emergencia_id = data['emergencia_id'];
     document_id = data.documentID.toString();
+  }
+}
+
+
+
+class RescateModel {
+  String descripcion;
+  String ubicacion;
+  int telefono;
+  int user_id;
+  int rescate_id;
+ dynamic fotos;
+  String tipo_animal; 
+  String titulo;
+  String foto;
+
+  RescateModel(
+      {this.fotos,
+      this.rescate_id,
+      this.ubicacion,
+      this.descripcion,
+      this.user_id,
+      this.telefono,
+      this.tipo_animal,
+      this.titulo,
+      this.foto
+      });
+
+ RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    titulo = data['titulo'] ?? '';
+    ubicacion = data['ubicacion'];
+    descripcion = data['descripcion'];
+    user_id = data['user_id'];
+    fotos = data['fotos'];
+    tipo_animal = data['tipo_animal'];
+    rescate_id = data['rescate_id'];
+    foto = data['foto'];
+    
   }
 }
