@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'models.dart';
-import 'registrousuario.dart';
+import 'package:adoption_app/pages/pages.dart';
+import 'package:adoption_app/services/services.dart';
+import 'package:adoption_app/shared/shared.dart';
 
-class Adoption extends StatefulWidget {
-  final AnimalModel objeto;
+class Rescate extends StatefulWidget {
+  final RescateModel objeto;
 
-  Adoption({this.objeto});
+  Rescate({this.objeto});
 
   @override
-  _AdoptionState createState() => _AdoptionState();
+  _RescateState createState() => _RescateState();
 }
 
-class _AdoptionState extends State<Adoption> {
+class _RescateState extends State<Rescate> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -23,7 +24,7 @@ class _AdoptionState extends State<Adoption> {
           Stack(
             children: <Widget>[
               Hero(
-                  tag: widget.objeto.nombre,
+                  tag: widget.objeto.user_id,
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -36,7 +37,7 @@ class _AdoptionState extends State<Adoption> {
                       height: 350.0,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage(widget.objeto.foto),
+                              image: NetworkImage(widget.objeto.fotos),
                               fit: BoxFit.cover)),
                     ),
                   )),
