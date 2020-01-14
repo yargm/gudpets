@@ -41,43 +41,6 @@ class UsuarioModel {
   }
 }
 
-class EmergenciaModel {
-  String titulo;
-  String tipo_emergencia;
-  String ubicacion;
-  String descripcion;
-  int user_id;
-  int emergencia_id;
-  String foto;
-  String tipo_animal;
-  String document_id;
-
-  EmergenciaModel(
-      {this.titulo,
-      this.tipo_emergencia,
-      this.ubicacion,
-      this.descripcion,
-      this.user_id,
-      this.emergencia_id,
-      this.foto,
-      this.tipo_animal,
-      this.document_id});
-
-  EmergenciaModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    titulo = data['titulo'] ?? '';
-    tipo_emergencia = data['tipo_emergencia'];
-    ubicacion = data['ubicacion'];
-    descripcion = data['descripcion'];
-    user_id = data['user_id'];
-    foto = data['foto'];
-    tipo_animal = data['tipo_animal'];
-    emergencia_id = data['emergencia_id'];
-    document_id = data.documentID.toString();
-  }
-}
-
-
-
 class RescateModel {
   String descripcion;
   String ubicacion;
@@ -110,6 +73,59 @@ class RescateModel {
     tipo_animal = data['tipo_animal'];
     rescate_id = data['rescate_id'];
     foto = data['foto'];
-    
+
+  }
+} 
+
+class EmergenciaModel {
+  String titulo;
+  String tipo_emergencia;
+  String ubicacion;
+  String descripcion;
+  int user_id;
+  int emergencia_id;
+  String foto;
+  String tipo_animal;
+  String document_id;
+
+  EmergenciaModel(
+      {this.titulo,
+      this.tipo_emergencia,
+      this.ubicacion,
+      this.descripcion,
+      this.user_id,
+      this.emergencia_id,
+      this.foto,
+      this.tipo_animal,
+      this.document_id});
+
+  EmergenciaModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    titulo = data['titulo'];
+    tipo_emergencia = data['tipo_emergencia'];
+    ubicacion = data['ubicacion'];
+    descripcion = data['descripcion'];
+    user_id = data['user_id'];
+    foto = data['foto'];
+    tipo_animal = data['tipo_animal'];
+    emergencia_id = data['emergencia_id'];
+    document_id = data.documentID.toString();
+  }
+}
+
+class PerdidoModel {
+  String tipo_animal;
+  String ubicacion;
+  String titulo;
+  String descripcion;
+  String foto;
+
+  String document_id;
+
+  PerdidoModel(
+      {this.tipo_animal, this.document_id});
+
+  PerdidoModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    tipo_animal = data['tipo_animal'];
+    document_id = data.documentID.toString();
   }
 }

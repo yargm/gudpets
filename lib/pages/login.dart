@@ -78,7 +78,9 @@ Widget build(BuildContext context) {
                             height: 40.0,
                           ),
                           RaisedButton(
-                            onPressed: () => null,
+                            onPressed: () { 
+                              Navigator.of(context).pushReplacementNamed('/home');
+                            },
                             textColor: Colors.black,
                             elevation: 9.0,
                             highlightElevation: 6.0,
