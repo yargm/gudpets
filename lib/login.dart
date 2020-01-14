@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LogIn extends StatefulWidget {
   @override
@@ -13,45 +14,63 @@ class _LogInState extends State<LogIn> {
   Map<String, dynamic> loginMap = {'user': null, 'password': null};
 
   @override
-Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:Colors.amber[100],
+  Widget build(BuildContext context) {
+    return Scaffold(   
+      backgroundColor: Colors.amber[100],
       body: SingleChildScrollView(
+       
         child: Center(
           child: Container(
             margin: EdgeInsets.all(4.0),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
             child: Form(
               key: _formKey,
               child: Column(
                 children: <Widget>[
+                  
                   SizedBox(
-                    height: 75.0,
+                    height: 20.0,
+                  ),
+                  Container(
+                    width: 190.0,
+                    height: 190.0,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              'http://www.petcarevets.ie/wp-content/uploads/2019/08/Happy-Pets-PNG.png'),
+                        )),
+                  ),
+                  SizedBox(
+                    height: 30,
                   ),
                   Text(
-                    'Iniciar Sesión',
+                    'Nombre e la App no?',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black26),
+                    style: TextStyle(color: Colors.black),
                   ),
                   SizedBox(
-                    height: 75.0,
+                    height: 30.0,
                   ),
                   Card(
+                    margin: EdgeInsets.symmetric(horizontal: 40),
                     elevation: 9.0,
+                    
                     shape: ContinuousRectangleBorder(
                         borderRadius: BorderRadius.circular(100.0)),
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding:  EdgeInsets.all(20.0),
                       child: Column(
                         children: <Widget>[
                           SizedBox(
                             height: 30.0,
                           ),
                           TextFormField(
+                            
                             decoration: InputDecoration(
                               contentPadding:
-                                  EdgeInsets.fromLTRB(18.0, 15.0, 18.0, 15.0),
+                                  EdgeInsets.fromLTRB(30.0, 15.0, 20.0, 15.0),
                               labelText: 'Usuario',
                               prefixIcon: Icon(Icons.account_circle),
                               border: OutlineInputBorder(
@@ -66,7 +85,7 @@ Widget build(BuildContext context) {
                             obscureText: true,
                             decoration: InputDecoration(
                               contentPadding:
-                                  EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                                  EdgeInsets.fromLTRB(30.0, 15.0, 20.0, 15.0),
                               labelText: 'Contraseña',
                               prefixIcon: Icon(Icons.lock),
                               border: OutlineInputBorder(
@@ -78,17 +97,21 @@ Widget build(BuildContext context) {
                             height: 40.0,
                           ),
                           RaisedButton(
+                            color: Colors.brown[300],
                             onPressed: () => null,
-                            textColor: Colors.black,
-                            elevation: 9.0,
-                            highlightElevation: 6.0,
+                            textColor: Colors.white,
+                            elevation: 12.0,
+                            highlightElevation: 8.0,
                             child: Text(
-                              "Login",
+                              
+                              "Iniciar Sesión",
                               textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 15),
                             ),
-                            shape: BeveledRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                          ),
+                          SizedBox(
+                            width: 50,
                           )
                         ],
                       ),
@@ -100,6 +123,11 @@ Widget build(BuildContext context) {
           ),
         ),
       ),
+     floatingActionButton: FloatingActionButton.extended(onPressed: (){},
+     label: Text(' Registrate'),
+      icon: Icon(FontAwesomeIcons.userPlus),
+      backgroundColor: Colors.brown[300],
+    ),
     );
   }
 }
