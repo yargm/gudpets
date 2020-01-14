@@ -97,11 +97,20 @@ class _LogInState extends State<LogIn> {
                             height: 40.0,
                           ),
                           RaisedButton(
+<<<<<<< HEAD:lib/login.dart
                             color: Colors.brown[300],
                             onPressed: () => null,
                             textColor: Colors.white,
                             elevation: 12.0,
                             highlightElevation: 8.0,
+=======
+                            onPressed: () { 
+                              Navigator.of(context).pushReplacementNamed('/home');
+                            },
+                            textColor: Colors.black,
+                            elevation: 9.0,
+                            highlightElevation: 6.0,
+>>>>>>> master:lib/pages/login.dart
                             child: Text(
                               
                               "Iniciar Sesión",

@@ -1,2 +1,2 @@
-export 'emergenciaCard.dart';
+export 'card.dart';
 export 'filtro.dart';

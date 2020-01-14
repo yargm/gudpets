@@ -1,39 +1,45 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class EmergenciaModel {
-  String titulo;
-  String tipo_emergencia;
-  String ubicacion;
+class UsuarioModel {
+  String contrasena;
+  String correo;
   String descripcion;
-  int user_id;
-  int emergencia_id;
+  int edad;
   String foto;
-  String tipo_animal; 
+  String nombre;
+  String sexo;
+  int telefono;
+  String tipo;
+  int user_id;
+  String document_id;
 
-  EmergenciaModel(
-      {this.titulo,
-      this.tipo_emergencia,
-      this.ubicacion,
+  UsuarioModel(
+      {this.contrasena,
+      this.correo,
       this.descripcion,
-      this.user_id,
-      this.emergencia_id,
+      this.edad,
       this.foto,
-      this.tipo_animal,
-      });
+      this.nombre,
+      this.sexo,
+      this.telefono,
+      this.tipo,
+      this.user_id,
+      this.document_id});
 
-  EmergenciaModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    titulo = data['titulo'] ?? '';
-    tipo_emergencia = data['tipo_emergencia'];
-    ubicacion = data['ubicacion'];
+  UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    contrasena = data['tcontrasena'];
+    correo = data['correo'];
     descripcion = data['descripcion'];
-    user_id = data['user_id'];
+    edad = data['edad'];
     foto = data['foto'];
-    tipo_animal = data['tipo_animal'];
-    emergencia_id = data['emergencia_id'];
-    
+    nombre = data['nombre'];
+    sexo = data['sexo'];
+    telefono = data['telefono'];
+    tipo = data['tipo'];
+    user_id = data['user_id'];
+    document_id = data.documentID.toString();
   }
 }
-
 
 class RescateModel {
   String descripcion;
@@ -67,6 +73,59 @@ class RescateModel {
     tipo_animal = data['tipo_animal'];
     rescate_id = data['rescate_id'];
     foto = data['foto'];
-    
+
+  }
+} 
+
+class EmergenciaModel {
+  String titulo;
+  String tipo_emergencia;
+  String ubicacion;
+  String descripcion;
+  int user_id;
+  int emergencia_id;
+  String foto;
+  String tipo_animal;
+  String document_id;
+
+  EmergenciaModel(
+      {this.titulo,
+      this.tipo_emergencia,
+      this.ubicacion,
+      this.descripcion,
+      this.user_id,
+      this.emergencia_id,
+      this.foto,
+      this.tipo_animal,
+      this.document_id});
+
+  EmergenciaModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    titulo = data['titulo'];
+    tipo_emergencia = data['tipo_emergencia'];
+    ubicacion = data['ubicacion'];
+    descripcion = data['descripcion'];
+    user_id = data['user_id'];
+    foto = data['foto'];
+    tipo_animal = data['tipo_animal'];
+    emergencia_id = data['emergencia_id'];
+    document_id = data.documentID.toString();
+  }
+}
+
+class PerdidoModel {
+  String tipo_animal;
+  String ubicacion;
+  String titulo;
+  String descripcion;
+  String foto;
+
+  String document_id;
+
+  PerdidoModel(
+      {this.tipo_animal, this.document_id});
+
+  PerdidoModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    tipo_animal = data['tipo_animal'];
+    document_id = data.documentID.toString();
   }
 }

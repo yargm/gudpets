@@ -26,9 +26,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
       'foto': null,
       'descripcion': null,
       'tipo': null,
-      'ubicacion': null,
-      'cantidadmascotas': null,
-      'usuario_id': null,
+      'user_id': null,
     };
     // TODO: implement build
     return Scaffold(
