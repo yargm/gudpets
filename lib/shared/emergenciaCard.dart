@@ -5,13 +5,18 @@ import 'package:adoption_app/shared/shared.dart';
 
 class EmergenciaCard extends StatelessWidget {
   final EmergenciaModel objeto;
-final double containerPadding = 45;
-final double containerPadding2 = 60;
-final double containerBorderRadius = 10;
-  EmergenciaCard({this.objeto});
+  final int posicion;
+  
+final double containerPadding = 80;
+final double containerPadding2 = 80;
+final double containerBorderRadius = 15;
+
+  EmergenciaCard({this.objeto, this.posicion});
   @override
+  
   Widget build(BuildContext context) {
-    var leftAligned = (objeto.emergencia_id % 2 == 0 )? true : false;
+print(posicion.toString());
+    var leftAligned = (posicion% 2 == 0 )? true : false;
    
     // TODO: implement build
     return Container(
@@ -32,40 +37,36 @@ final double containerBorderRadius = 10;
             child: Container(
               width: double.maxFinite,
               height: 200,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                          child: ClipRRect(
-                borderRadius: BorderRadius.horizontal(
-                  left: leftAligned ? Radius.circular(0): Radius.circular(containerBorderRadius),
-                  right: leftAligned ? Radius.circular(containerBorderRadius) : Radius.circular(0) ,
+              // decoration: BoxDecoration(borderRadius: BorderRadius.circular(0)),R
+              child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Hero(
+                  tag: objeto.emergencia_id,
+                  child: Container(
+                   width: double.maxFinite,
+                   height: 200,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: leftAligned ? Radius.circular(0) : Radius.circular(40.0),
+                          topRight: leftAligned ? Radius.circular(40.0) : Radius.circular(0),
+                          bottomLeft: leftAligned ? Radius.circular(0) : Radius.circular(40.0),
+                          bottomRight: leftAligned ? Radius.circular(40.0) : Radius.circular(0),
+                        ),
+                        image: DecorationImage(
+                          image: NetworkImage(objeto.foto),
+                          fit: BoxFit.cover,
+                        )),
+                  ),
                 ),
-                  child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Hero(
-                      tag: objeto.emergencia_id,
-                      child: Container(
-                       width: 400,
-                       height: 200,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(0.0),
-                              topRight: Radius.circular(0.0),
-                            ),
-                            image: DecorationImage(
-                              image: NetworkImage(objeto.foto),
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                    ),
-                  ],
+              ],
                 ),
-              ),
             ),
             
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left:20.0),
+          padding: EdgeInsets.only(left:10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -78,6 +79,8 @@ final double containerBorderRadius = 10;
                 ),
               ),
               IconButton(
+                
+                padding: leftAligned ?  EdgeInsets.only(right: 30) : EdgeInsets.only(right: 5),
                 icon: Icon(Icons.favorite_border),
                 iconSize: 30.0,
                 color: Colors.pink,
@@ -89,14 +92,17 @@ final double containerBorderRadius = 10;
             ],
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(left:20,right: 30, bottom: 20.0),
-          child: Text(objeto.descripcion,
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 16.0,
-                color: Colors.grey,
-              )),
+        Align(
+          alignment:Alignment.centerLeft ,
+                  child: Padding(
+            padding: EdgeInsets.only(left:20,right: 30, bottom: 20.0),
+            child: Text(objeto.descripcion,
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 16.0,
+                  color: Colors.grey,
+                )),
+          ),
         ),
       ],
     ));
