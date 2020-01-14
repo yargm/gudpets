@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:adoption_app/pages/pages.dart';
+import 'package:adoption_app/services/services.dart';
+import 'package:adoption_app/shared/shared.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -8,19 +11,17 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int seleccionado = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
+   List<Widget> _widgetOptions = <Widget>[
     Text(
-      'Index 0: Home',
+      'Adopción',
     ),
     Text(
-      'Index 1: Business',
+      'Perdidos',
     ),
     Text(
-      'Index 2: School',
+      'Rescates',
     ),
-    // Text(
-    //   'Index 3: Work',
-    // ),
+    EmergenciaList(),
   ];
 
   void _onItemTapped(int index) {
@@ -39,24 +40,28 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
+            icon: Icon(Icons.pets),
+            title: Text('Adopcion'),
+            backgroundColor: Colors.grey,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            title: Text('Business'),
+            icon: Icon(Icons.pets),
+            title: Text('Perdidos'),
+            backgroundColor: Colors.grey,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            title: Text('School'),
+            icon: Icon(Icons.pets),
+            title: Text('Rescates'),
+            backgroundColor: Colors.grey,
            ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.build),
-          //   title: Text('Work'),
-          // ),
+           BottomNavigationBarItem(
+            icon: Icon(Icons.pets),
+            title: Text('Emergencias'),
+            backgroundColor: Colors.grey,
+           ),
         ],
         currentIndex: seleccionado,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.white,
         onTap: _onItemTapped,
       ),
     );

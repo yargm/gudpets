@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'models.dart';
-import 'registrousuario.dart';
+import 'package:adoption_app/pages/pages.dart';
+import 'package:adoption_app/services/services.dart';
+import 'package:adoption_app/shared/shared.dart';
 
-class Adoption extends StatefulWidget {
-  final AnimalModel objeto;
+class Emergencia extends StatefulWidget {
+  final EmergenciaModel objeto;
 
-  Adoption({this.objeto});
+  Emergencia({this.objeto});
 
   @override
-  _AdoptionState createState() => _AdoptionState();
+  _EmergenciaState createState() => _EmergenciaState();
 }
 
-class _AdoptionState extends State<Adoption> {
+class _EmergenciaState extends State<Emergencia> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -23,7 +24,7 @@ class _AdoptionState extends State<Adoption> {
           Stack(
             children: <Widget>[
               Hero(
-                  tag: widget.objeto.nombre,
+                  tag: widget.objeto.emergencia_id,
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(
