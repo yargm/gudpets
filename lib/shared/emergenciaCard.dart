@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'models.dart';
-import 'adoption.dart';
+import 'package:adoption_app/pages/pages.dart';
+import 'package:adoption_app/services/services.dart';
+import 'package:adoption_app/shared/shared.dart';
 
-class Animal extends StatelessWidget {
-  final AnimalModel objeto;
+class EmergenciaCard extends StatelessWidget {
+  final EmergenciaModel objeto;
 final double containerPadding = 45;
 final double containerPadding2 = 60;
 final double containerBorderRadius = 10;
-  Animal({this.objeto});
+  EmergenciaCard({this.objeto});
   @override
   Widget build(BuildContext context) {
-    var leftAligned = (objeto.id % 2 == 0 )? true : false;
+    var leftAligned = (objeto.emergencia_id % 2 == 0 )? true : false;
    
     // TODO: implement build
     return Container(
@@ -25,7 +26,7 @@ final double containerBorderRadius = 10;
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => Adoption(objeto: objeto)),
+                    builder: (context) => Emergencia(objeto: objeto)),
               );
             },
             child: Container(
@@ -41,7 +42,7 @@ final double containerBorderRadius = 10;
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Hero(
-                      tag: objeto.nombre,
+                      tag: objeto.emergencia_id,
                       child: Container(
                        width: 400,
                        height: 200,
@@ -69,7 +70,7 @@ final double containerBorderRadius = 10;
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                objeto.nombre,
+                objeto.titulo,
                 style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 24.0,
@@ -80,14 +81,17 @@ final double containerBorderRadius = 10;
                 icon: Icon(Icons.favorite_border),
                 iconSize: 30.0,
                 color: Colors.pink,
-                onPressed: () => print('Corazón'),
+                onPressed: () {
+                  // añadir o quitar de la lista de favoritos del usuario con el controlador
+                  print('curazao');
+                },
               ),
             ],
           ),
         ),
         Padding(
           padding: EdgeInsets.only(left:20,right: 30, bottom: 20.0),
-          child: Text(objeto.desc,
+          child: Text(objeto.descripcion,
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 16.0,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:adoption_app/pages/pages.dart';
+import 'package:adoption_app/services/services.dart';
+import 'package:adoption_app/shared/shared.dart';
+
+
 
 class RegistroUsuario extends StatefulWidget {
   @override
@@ -9,6 +11,7 @@ class RegistroUsuario extends StatefulWidget {
 }
 
 class _RegistroUsuarioState extends State<RegistroUsuario> {
+  File _image = null;
   final _usuarioform = GlobalKey<FormState>();
   String tipotemp = '';
   @override
@@ -25,6 +28,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
       'tipo': null,
       'ubicacion': null,
       'cantidadmascotas': null,
+      'usuario_id': null,
     };
     // TODO: implement build
     return Scaffold(
@@ -183,7 +187,23 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   height: 15,
                 ),
                 Text('* Foto: '),
-                // Copiar la parte de fotos de vetec
+                GestureDetector(
+                  onTap: () {
+                    getImage();
+                  },
+                  child: Container(
+                      width: 150.0,
+                      height: 150.0,
+                      margin: EdgeInsets.only(top: 25.0, bottom: 10.0),
+                      child: CircleAvatar(
+                        radius: 45.0,
+                        backgroundImage: _image == null
+                            ? NetworkImage(
+                                'http://mjcnuapada.com/wp-content/uploads/2018/03/no-photo-925faf7029ff24e9d19075149c4f2dfe.jpeg')
+                            : FileImage(_image),
+                        backgroundColor: Colors.transparent,
+                      )),
+                ),
                 SizedBox(
                   height: 15,
                 ),
@@ -300,5 +320,12 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
         ),
       ),
     );
+  }
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
   }
 }
