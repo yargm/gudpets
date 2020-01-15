@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
@@ -8,7 +9,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp( 
       initialRoute: '/login',
       home: Home(),
       routes: {
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         '/rescate': (BuildContext context) => Rescate(),
         '/emergencia': (BuildContext context) => Emergencia(),
       },
+      debugShowCheckedModeBanner: false,
     );
   }
 }
