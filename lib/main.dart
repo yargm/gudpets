@@ -9,13 +9,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     initialRoute: '/login',
+      initialRoute: '/login',
       home: Home(),
       routes: {
-        '/emergencia_list': (BuildContext context) => EmergenciaList(),
-        '/registro_usuario': (BuildContext context) => RegistroUsuario(),
         '/login': (BuildContext context) => LogIn(),
+        '/registro_usuario': (BuildContext context) => RegistroUsuario(),
         '/home': (BuildContext context) => Home(),
+        '/adopcion': (BuildContext context) => Adopcion(),
+        '/perdido': (BuildContext context) => Perdido(),
+        '/rescate': (BuildContext context) => Rescate(),
+        '/emergencia': (BuildContext context) => Emergencia(),
       },
     );
   }

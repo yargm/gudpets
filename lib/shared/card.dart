@@ -26,49 +26,40 @@ class ListCard extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(left: 0, right: 0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Emergencia(objeto: objeto)),
-                  );
-                },
-                child: Container(
-                  width: double.maxFinite,
-                  height: 200,
-                  // decoration: BoxDecoration(borderRadius: BorderRadius.circular(0)),R
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Hero(
-                        tag: objeto.document_id,
-                        child: Container(
-                          width: double.maxFinite,
-                          height: 200,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: leftAligned
-                                    ? Radius.circular(0)
-                                    : Radius.circular(40.0),
-                                topRight: leftAligned
-                                    ? Radius.circular(40.0)
-                                    : Radius.circular(0),
-                                bottomLeft: leftAligned
-                                    ? Radius.circular(0)
-                                    : Radius.circular(40.0),
-                                bottomRight: leftAligned
-                                    ? Radius.circular(40.0)
-                                    : Radius.circular(0),
-                              ),
-                              image: DecorationImage(
-                                image: NetworkImage(objeto.foto),
-                                fit: BoxFit.cover,
-                              )),
-                        ),
+              child: Container(
+                width: double.maxFinite,
+                height: 200,
+                // decoration: BoxDecoration(borderRadius: BorderRadius.circular(0)),R
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Hero(
+                      tag: objeto.document_id,
+                      child: Container(
+                        width: double.maxFinite,
+                        height: 200,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: leftAligned
+                                  ? Radius.circular(0)
+                                  : Radius.circular(40.0),
+                              topRight: leftAligned
+                                  ? Radius.circular(40.0)
+                                  : Radius.circular(0),
+                              bottomLeft: leftAligned
+                                  ? Radius.circular(0)
+                                  : Radius.circular(40.0),
+                              bottomRight: leftAligned
+                                  ? Radius.circular(40.0)
+                                  : Radius.circular(0),
+                            ),
+                            image: DecorationImage(
+                              image: NetworkImage(objeto.foto),
+                              fit: BoxFit.cover,
+                            )),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -86,7 +77,9 @@ class ListCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                     IconButton(
                       padding: leftAligned
                           ? EdgeInsets.only(right: 30)
