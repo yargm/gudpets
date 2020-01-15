@@ -1,3 +1,5 @@
+import 'package:adoption_app/services/models.dart';
+import 'package:adoption_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -7,6 +9,7 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  final key = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String error = '';
@@ -15,19 +18,17 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(   
+    return Scaffold(
       backgroundColor: Colors.amber[100],
       body: SingleChildScrollView(
-       
         child: Center(
           child: Container(
             margin: EdgeInsets.all(4.0),
             padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
             child: Form(
-              key: _formKey,
+              key: key,
               child: Column(
                 children: <Widget>[
-                  
                   SizedBox(
                     height: 20.0,
                   ),
@@ -56,18 +57,25 @@ class _LogInState extends State<LogIn> {
                   Card(
                     margin: EdgeInsets.symmetric(horizontal: 40),
                     elevation: 9.0,
-                    
                     shape: ContinuousRectangleBorder(
                         borderRadius: BorderRadius.circular(100.0)),
                     child: Padding(
-                      padding:  EdgeInsets.all(20.0),
+                      padding: EdgeInsets.all(20.0),
                       child: Column(
                         children: <Widget>[
                           SizedBox(
                             height: 30.0,
                           ),
                           TextFormField(
-                            
+                            onSaved: (String texto) {
+                              loginMap['user'] = texto;
+                            },
+                            validator: (String texto) {
+                              if (texto.isEmpty) {
+                                return 'Correo Vacio';
+                              }
+                            },
+                            keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
                               contentPadding:
                                   EdgeInsets.fromLTRB(30.0, 15.0, 20.0, 15.0),
@@ -83,6 +91,14 @@ class _LogInState extends State<LogIn> {
                           ),
                           TextFormField(
                             obscureText: true,
+                            onSaved: (String texto) {
+                              loginMap['password'] = texto;
+                            },
+                            validator: (String texto) {
+                              if (texto.isEmpty) {
+                                return 'Contraseña vacia';
+                              }
+                            },
                             decoration: InputDecoration(
                               contentPadding:
                                   EdgeInsets.fromLTRB(30.0, 15.0, 20.0, 15.0),
@@ -97,27 +113,39 @@ class _LogInState extends State<LogIn> {
                             height: 40.0,
                           ),
                           RaisedButton(
-<<<<<<< HEAD:lib/login.dart
-                            color: Colors.brown[300],
-                            onPressed: () => null,
-                            textColor: Colors.white,
-                            elevation: 12.0,
-                            highlightElevation: 8.0,
-=======
-                            onPressed: () { 
-                              Navigator.of(context).pushReplacementNamed('/home');
+                            onPressed: () {
+                              if (key.currentState.validate()) {
+                                key.currentState.save();
+                                var consulta = Firestore.instance
+                                    .collection('usuarios')
+                                    .where('correo',
+                                        isEqualTo: loginMap['user'])
+                                    .where('contrasena',
+                                        isEqualTo: loginMap['password'])
+                                    .getDocuments();
+
+                                consulta.then((onValue) {
+                                  if (onValue.documents.isEmpty) {
+                                    print('Datos Incorrectos');
+                                    return;
+                                  } else {
+                                    Navigator.of(context)
+                                        .pushReplacementNamed('/home');
+                                  }
+                                });
+                              }
                             },
-                            textColor: Colors.black,
+                            color: Colors.brown[300],
+                            textColor: Colors.white,
                             elevation: 9.0,
                             highlightElevation: 6.0,
->>>>>>> master:lib/pages/login.dart
                             child: Text(
-                              
                               "Iniciar Sesión",
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 15),
                             ),
-                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18)),
                           ),
                           SizedBox(
                             width: 50,
@@ -132,11 +160,12 @@ class _LogInState extends State<LogIn> {
           ),
         ),
       ),
-     floatingActionButton: FloatingActionButton.extended(onPressed: (){},
-     label: Text(' Registrate'),
-      icon: Icon(FontAwesomeIcons.userPlus),
-      backgroundColor: Colors.brown[300],
-    ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        label: Text(' Registrate'),
+        icon: Icon(FontAwesomeIcons.userPlus),
+        backgroundColor: Colors.brown[300],
+      ),
     );
   }
 }
