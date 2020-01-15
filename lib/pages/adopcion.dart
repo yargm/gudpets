@@ -3,16 +3,16 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-class Rescate extends StatefulWidget {
-  final RescateModel objeto;
+class Adopcion extends StatefulWidget {
+  final AdopcionModel objeto;
 
-  Rescate({this.objeto});
+  Adopcion({this.objeto});
 
   @override
-  _RescateState createState() => _RescateState();
+  _AdopcionState createState() => _AdopcionState();
 }
 
-class _RescateState extends State<Rescate> {
+class _AdopcionState extends State<Adopcion> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -37,7 +37,7 @@ class _RescateState extends State<Rescate> {
                       height: 350.0,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage(widget.objeto.fotos),
+                              image: NetworkImage(widget.objeto.foto),
                               fit: BoxFit.cover)),
                     ),
                   )),

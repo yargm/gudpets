@@ -3,13 +3,13 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-class RescateList extends StatefulWidget {
+class AdopcionList extends StatefulWidget {
   @override
-  _RescateListState createState() => _RescateListState();
+  _AdopcionListState createState() => _AdopcionListState();
 }
 
-class _RescateListState extends State<RescateList> {
-  var rescates = Firestore.instance.collection('rescates').snapshots();
+class _AdopcionListState extends State<AdopcionList> {
+  var adopciones = Firestore.instance.collection('adopciones').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +17,12 @@ class _RescateListState extends State<RescateList> {
       children: <Widget>[
         SizedBox(height: 40),
         StreamBuilder(
-          stream: rescates,
+          stream: adopciones,
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('Cargando...');
             return ListView.builder(
               itemBuilder: (context, index) => ListCard(
-                  objeto: EmergenciaModel.fromDocumentSnapshot(
+                  objeto: AdopcionModel.fromDocumentSnapshot(
                       snapshot.data.documents[index]),
                   posicion: index),
               itemCount: snapshot.data.documents.length,
