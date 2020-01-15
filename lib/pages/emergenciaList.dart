@@ -9,50 +9,29 @@ class EmergenciaList extends StatefulWidget {
 }
 
 class _EmergenciaListState extends State<EmergenciaList> {
-  
   var emergencias = Firestore.instance.collection('emergencias').snapshots();
-  int posicion2 = 0;
-
-
 
   @override
   Widget build(BuildContext context) {
     return ListView(
-          children: <Widget>[
-            SizedBox(height: 40),
-            StreamBuilder(
-              stream: emergencias,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const Text('Cargando...');
-                return ListView.builder(
-                  itemBuilder: (context, index) => EmergenciaCard(
-                      objeto: EmergenciaModel.fromDocumentSnapshot(
-                          snapshot.data.documents[index]),
-                          posicion: index),
-                                
-                  itemCount: snapshot.data.documents.length,
-                 
-                                    shrinkWrap: true,
-                                    physics:
-                                        ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                                        
-                                  );
-                               
-                                },
-                                
-                              ),
-                            ],
-                            
-                          );
-                    }
-                  
-                    posicion(posicion) {
-                      print(posicion.toString());
-                     
-                         posicion2=posicion+1;
-                     
-                     
-                      return posicion2;
-
-                    }
+      children: <Widget>[
+        SizedBox(height: 40),
+        StreamBuilder(
+          stream: emergencias,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const Text('Cargando...');
+            return ListView.builder(
+              itemBuilder: (context, index) => ListCard(
+                  objeto: EmergenciaModel.fromDocumentSnapshot(
+                      snapshot.data.documents[index]),
+                  posicion: index),
+              itemCount: snapshot.data.documents.length,
+              shrinkWrap: true,
+              physics: ScrollPhysics(parent: NeverScrollableScrollPhysics()),
+            );
+          },
+        ),
+      ],
+    );
+  }
 }

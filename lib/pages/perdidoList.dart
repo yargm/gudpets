@@ -3,13 +3,13 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-class RescateList extends StatefulWidget {
+class PerdidoList extends StatefulWidget {
   @override
-  _RescateListState createState() => _RescateListState();
+  _PerdidoListState createState() => _PerdidoListState();
 }
 
-class _RescateListState extends State<RescateList> {
-  var rescates = Firestore.instance.collection('rescates').snapshots();
+class _PerdidoListState extends State<PerdidoList> {
+  var perdidos = Firestore.instance.collection('perdidos').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class _RescateListState extends State<RescateList> {
       children: <Widget>[
         SizedBox(height: 40),
         StreamBuilder(
-          stream: rescates,
+          stream: perdidos,
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('Cargando...');
             return ListView.builder(
