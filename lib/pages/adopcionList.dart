@@ -19,7 +19,10 @@ class _AdopcionListState extends State<AdopcionList> {
         StreamBuilder(
           stream: adopciones,
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return const Text('Cargando...');
+            if (!snapshot.hasData)
+              return Center(
+                child: Text('Cargando...'),
+              );
             return ListView.builder(
               itemBuilder: (context, index) => ListCard(
                   objeto: AdopcionModel.fromDocumentSnapshot(

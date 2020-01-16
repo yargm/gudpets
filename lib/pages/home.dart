@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -19,14 +20,17 @@ class _HomeState extends State<Home> {
     EmergenciaList(),
   ];
 
-  void _onItemTapped(int index) {
+  _onItemTapped(int index, Controller controlador1) {
     setState(() {
       seleccionado = index;
+      controlador1.pestana_act = index;
+      print('Estoy en : ' + controlador1.pestana_act.toString());
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
     // TODO: implement build
     return Scaffold(
       drawer: Drawer(
@@ -34,39 +38,61 @@ class _HomeState extends State<Home> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('Menú'),
+              child: Column(
+                children: <Widget>[
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: NetworkImage(controlador1.usuario.foto),
+                  ),
+                  SizedBox(height: 5,),
+                  Text(controlador1.usuario.nombre, style: TextStyle(fontWeight: FontWeight.bold, color: secondaryText, fontSize: 30)),
+                  SizedBox(height: 5,),
+                ],
+              ),
               decoration: BoxDecoration(
-                
-                color: Colors.blue,
-                
+                color: secondaryColor,
               ),
             ),
             ListTile(
-              title: Text('Perfil'),
+              title: Row(
+                children: <Widget>[
+                  Icon(Icons.person),
+                  SizedBox(width: 10,),
+                  Text('Perfil'),
+                ],
+              ),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                print('perfil');
               },
             ),
             ListTile(
-              title: Text('Mis publicaciones'),
+              title: Row(
+                children: <Widget>[
+                  Icon(FontAwesomeIcons.history),
+                  SizedBox(width: 10,),
+                  Text('Mis publicaciones'),
+                ],
+              ),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                print('publicaciones');
               },
             ),
             ListTile(
-              title: Text('Favoritos'),
+              title: Row(
+                children: <Widget>[
+                  Icon(FontAwesomeIcons.solidHeart),
+                  SizedBox(width: 10,),
+                  Text('Favoritos'),
+                ],
+              ),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                print('favoritos');
               },
             ),
             ListTile(
               title: Text('Cerrar sesión'),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                print('cerrar sesion');
               },
             ),
           ],
@@ -77,47 +103,44 @@ class _HomeState extends State<Home> {
           IconButton(
             onPressed: () {
               print('avisos');
-              //Ir a avisos
             },
-            icon: Icon(Icons.warning, color: Colors.black),
+            icon: Icon(FontAwesomeIcons.bullhorn),
           )
         ],
-        backgroundColor: Colors.white,
       ),
       body: Center(
         child: _widgetOptions.elementAt(seleccionado),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(Icons.add),
-        backgroundColor: Colors.brown,
+        child: Icon(Icons.add, color: primaryLight),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        showUnselectedLabels: true,
+        unselectedItemColor: primaryDark,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.pets),
+            icon: Icon(FontAwesomeIcons.home),
             title: Text('Adopcion'),
-            backgroundColor: Colors.grey,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.pets),
+            icon: Icon(FontAwesomeIcons.searchLocation),
             title: Text('Perdidos'),
-            backgroundColor: Colors.grey,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.pets),
+            icon: Icon(FontAwesomeIcons.handHoldingHeart),
             title: Text('Rescates'),
-            backgroundColor: Colors.grey,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.pets),
+            icon: Icon(FontAwesomeIcons.ambulance),
             title: Text('Emergencias'),
-            backgroundColor: Colors.grey
           ),
         ],
         currentIndex: seleccionado,
         selectedItemColor: Colors.brown,
-        onTap: _onItemTapped,
+        onTap: (int index) {
+          _onItemTapped(index, controlador1);
+        },
       ),
     );
   }
