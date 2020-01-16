@@ -29,14 +29,12 @@ class _LogInState extends State<LogIn> {
         child: Center(
           child: Container(
             margin: EdgeInsets.all(4.0),
-            padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 70, 0, 90),
             child: Form(
               key: key,
               child: Column(
                 children: <Widget>[
-                  SizedBox(
-                    height: 20.0,
-                  ),
+                 
                   Container(
                     width: 190.0,
                     height: 190.0,
@@ -117,49 +115,50 @@ class _LogInState extends State<LogIn> {
                           SizedBox(
                             height: 25.0,
                           ),
-                          Row(
-                            children: <Widget>[
-                                _singInButton(),
-                                SizedBox(width: 37,),
-                              RaisedButton(
-                                onPressed: () {
-                                  if (key.currentState.validate()) {
-                                    key.currentState.save();
-                                    var consulta = Firestore.instance
-                                        .collection('usuarios')
-                                        .where('correo',
-                                            isEqualTo: loginMap['user'])
-                                        .where('contrasena',
-                                            isEqualTo: loginMap['password'])
-                                        .getDocuments();
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                  _singInButton(),
+                                  SizedBox(width: 37,),
+                                RaisedButton(
+                                  onPressed: () {
+                                    if (key.currentState.validate()) {
+                                      key.currentState.save();
+                                      var consulta = Firestore.instance
+                                          .collection('usuarios')
+                                          .where('correo',
+                                              isEqualTo: loginMap['user'])
+                                          .where('contrasena',
+                                              isEqualTo: loginMap['password'])
+                                          .getDocuments();
 
-                                    consulta.then((onValue) {
-                                      if (onValue.documents.isEmpty) {
-                                        print('Datos Incorrectos');
-                                        return;
-                                      } else {
-                                        Navigator.of(context)
-                                            .pushReplacementNamed('/home');
-                                      }
-                                    });
-                                  }
-                                },
-                                color: Colors.brown[300],
-                                textColor: Colors.white,
-                                elevation: 9.0,
-                                highlightElevation: 6.0,
-                                child: Text(
-                                  "Iniciar Sesión",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 16),
+                                      consulta.then((onValue) {
+                                        if (onValue.documents.isEmpty) {
+                                          print('Datos Incorrectos');
+                                          return;
+                                        } else {
+                                          Navigator.of(context)
+                                              .pushReplacementNamed('/home');
+                                        }
+                                      });
+                                    }
+                                  },
+                                  color: Colors.brown[300],
+                                  textColor: Colors.white,
+                                  elevation: 9.0,
+                                  highlightElevation: 6.0,
+                                  child: Text(
+                                    "Iniciar Sesión",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
                                 ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)),
-                              ),
-                             
-                            ],
-                            
-                          ),
+                               
+                              ],
+                              
+                            ),
                          
                           SizedBox(
                             width: 50,
@@ -189,8 +188,10 @@ class _LogInState extends State<LogIn> {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
+      
         signInWithGoogle().whenComplete(() {
-          Navigator.of(context).pushReplacementNamed('/home');
+        
+           Navigator.of(context).pushReplacementNamed('/registro_usuario');
         }).catchError((onError) {
           print('error');
         });
@@ -208,7 +209,7 @@ class _LogInState extends State<LogIn> {
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: Text(
-                'Iniciar con Google',
+                'Registrate con Google',
                 style: TextStyle(
                   fontSize:15,
                   color: Colors.grey,

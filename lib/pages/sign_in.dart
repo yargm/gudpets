@@ -6,6 +6,7 @@ final GoogleSignIn googleSignIn = GoogleSignIn();
 String name;
 String email;
 String imageUrl;
+String uid;
 
 Future<String> signInWithGoogle() async {
   
@@ -24,10 +25,11 @@ Future<String> signInWithGoogle() async {
   assert(!user.isAnonymous);
   assert(await user.getIdToken() != null);
 
-    assert(user.email != null);
+assert(user.email != null);
 assert(user.displayName != null);
 assert(user.photoUrl != null);
-
+assert(user.uid != null);
+uid= user.uid;
 name = user.displayName;
 email = user.email;
 imageUrl = user.photoUrl;

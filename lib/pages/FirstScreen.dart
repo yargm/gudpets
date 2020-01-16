@@ -20,6 +20,7 @@ class FirstScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
+              Text(uid),
               CircleAvatar(
                 backgroundImage: NetworkImage(
                   imageUrl,
