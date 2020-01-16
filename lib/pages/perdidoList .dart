@@ -21,7 +21,7 @@ class _PerdidoListState extends State<PerdidoList> {
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('Cargando...');
             return ListView.builder(
-              itemBuilder: (context, index) => EmergenciaCard(
+              itemBuilder: (context, index) => ListCard(
                   objeto: PerdidoModel.fromDocumentSnapshot(
                       snapshot.data.documents[index]),
                   posicion: index),
