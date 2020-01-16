@@ -34,20 +34,36 @@ class _HomeState extends State<Home> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('Drawer Header'),
+              child: Text('Menú'),
               decoration: BoxDecoration(
+                
                 color: Colors.blue,
+                
               ),
             ),
             ListTile(
-              title: Text('Item 1'),
+              title: Text('Perfil'),
               onTap: () {
                 // Update the state of the app.
                 // ...
               },
             ),
             ListTile(
-              title: Text('Item 2'),
+              title: Text('Mis publicaciones'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: Text('Favoritos'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: Text('Cerrar sesión'),
               onTap: () {
                 // Update the state of the app.
                 // ...
@@ -81,22 +97,22 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
             icon: Icon(Icons.pets),
             title: Text('Adopcion'),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.pets),
             title: Text('Perdidos'),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.pets),
             title: Text('Rescates'),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.pets),
             title: Text('Emergencias'),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey
           ),
         ],
         currentIndex: seleccionado,

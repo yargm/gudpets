@@ -27,7 +27,7 @@ class _EmergenciaState extends State<Emergencia> {
           Stack(
             children: <Widget>[
               Hero(
-                  tag: widget.objeto.user_id,
+                  tag: widget.objeto.document_id,
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(

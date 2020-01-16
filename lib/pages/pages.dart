@@ -1,11 +1,17 @@
-export 'emergencia.dart';
-export 'emergenciaList.dart';
 export 'home.dart';
 export 'registroUsuario.dart';
 export 'login.dart';
-export 'rescateList.dart';
+
+export 'emergencia.dart';
+export 'emergenciaList.dart';
+
 export 'rescate.dart';
-export 'adopcionList .dart';
-export 'perdidoList .dart';
-export 'adoption.dart';
+export 'rescateList.dart';
+
+
 export 'perdido.dart';
+export 'perdidoList.dart';
+
+export 'adopcion.dart';
+export 'adopcionList.dart';
+

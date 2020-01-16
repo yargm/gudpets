@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:adoption_app/services/services.dart';
 
 class UsuarioModel {
   String contrasena;
@@ -47,8 +48,8 @@ class RescateModel {
   int telefono;
   int user_id;
   int rescate_id;
- dynamic fotos;
-  String tipo_animal; 
+  dynamic fotos;
+  String tipo_animal;
   String titulo;
   String foto;
   String document_id;
@@ -63,10 +64,11 @@ class RescateModel {
       this.tipo_animal,
       this.titulo,
       this.foto,
-      this.document_id
-      });
 
- RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
+      this.document_id});
+
+
+  RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'] ?? '';
     ubicacion = data['ubicacion'];
     descripcion = data['descripcion'];
@@ -78,7 +80,7 @@ class RescateModel {
     document_id = data.documentID.toString();
 
   }
-} 
+}
 
 class EmergenciaModel {
   String titulo;
@@ -117,6 +119,8 @@ class EmergenciaModel {
 
 class PerdidoModel {
   String titulo;
+
+  String perdido_id;
   int user_id;
   String descripcion;
   String tipo_animal;
@@ -141,7 +145,10 @@ class PerdidoModel {
       this.senas_part,
       this.sexo,
       this.fecha_extravio,
-      this.document_id,});
+
+      this.document_id,
+      this.perdido_id});
+
 
   PerdidoModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -199,8 +206,18 @@ class AdopcionModel {
     vacunacion = data['vacunacion'];
     desparacitacion = data['desparacitacion'];
     convivenciaotros = data['convivenciaotros'];
+
+    tipo_animal = data['tipo_animal'];
+ 
+    foto = data['foto'];
+  
+   
+    sexo = data['sexo'];
+  
+
     document_id = data.documentID.toString();
     
   }
 }
+
 

@@ -3,16 +3,16 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-class Perdido extends StatefulWidget {
-  final PerdidoModel objeto;
+class Adopcion extends StatefulWidget {
+  final AdopcionModel objeto;
 
-  Perdido({this.objeto});
+  Adopcion({this.objeto});
 
   @override
-  _PerdidoState createState() => _PerdidoState();
+  _AdopcionState createState() => _AdopcionState();
 }
 
-class _PerdidoState extends State<Perdido> {
+class _AdopcionState extends State<Adopcion> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -24,7 +24,6 @@ class _PerdidoState extends State<Perdido> {
           Stack(
             children: <Widget>[
               Hero(
-
                   tag: widget.objeto.document_id,
                   child: GestureDetector(
                     onTap: () {
@@ -42,13 +41,10 @@ class _PerdidoState extends State<Perdido> {
                               fit: BoxFit.cover)),
                     ),
                   )),
-
             ],
           )
         ],
       )),
     );
   }
-
 }
-
