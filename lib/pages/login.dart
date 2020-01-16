@@ -115,44 +115,52 @@ class _LogInState extends State<LogIn> {
                             ),
                           ),
                           SizedBox(
-                            height: 40.0,
+                            height: 25.0,
                           ),
-                          RaisedButton(
-                            onPressed: () {
-                              if (key.currentState.validate()) {
-                                key.currentState.save();
-                                var consulta = Firestore.instance
-                                    .collection('usuarios')
-                                    .where('correo',
-                                        isEqualTo: loginMap['user'])
-                                    .where('contrasena',
-                                        isEqualTo: loginMap['password'])
-                                    .getDocuments();
+                          Row(
+                            children: <Widget>[
+                                _singInButton(),
+                                SizedBox(width: 37,),
+                              RaisedButton(
+                                onPressed: () {
+                                  if (key.currentState.validate()) {
+                                    key.currentState.save();
+                                    var consulta = Firestore.instance
+                                        .collection('usuarios')
+                                        .where('correo',
+                                            isEqualTo: loginMap['user'])
+                                        .where('contrasena',
+                                            isEqualTo: loginMap['password'])
+                                        .getDocuments();
 
-                                consulta.then((onValue) {
-                                  if (onValue.documents.isEmpty) {
-                                    print('Datos Incorrectos');
-                                    return;
-                                  } else {
-                                    Navigator.of(context)
-                                        .pushReplacementNamed('/home');
+                                    consulta.then((onValue) {
+                                      if (onValue.documents.isEmpty) {
+                                        print('Datos Incorrectos');
+                                        return;
+                                      } else {
+                                        Navigator.of(context)
+                                            .pushReplacementNamed('/home');
+                                      }
+                                    });
                                   }
-                                });
-                              }
-                            },
-                            color: Colors.brown[300],
-                            textColor: Colors.white,
-                            elevation: 9.0,
-                            highlightElevation: 6.0,
-                            child: Text(
-                              "Iniciar Sesión",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18)),
+                                },
+                                color: Colors.brown[300],
+                                textColor: Colors.white,
+                                elevation: 9.0,
+                                highlightElevation: 6.0,
+                                child: Text(
+                                  "Iniciar Sesión",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                              ),
+                             
+                            ],
+                            
                           ),
-                          _singInButton(),
+                         
                           SizedBox(
                             width: 50,
                           )
@@ -167,13 +175,13 @@ class _LogInState extends State<LogIn> {
         ),
       ),
 
-      // floatingActionButton: FloatingActionButton.extended(
-      //   onPressed: () => StateWidget.of(context).signInWithGoogle(),
-      //   label: Text(' Registrate'),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => {},
+        label: Text(' Registrate'),
 
-      //   icon: Icon(FontAwesomeIcons.userPlus),
-      //   backgroundColor: Colors.brown[300],
-      // ),
+        icon: Icon(FontAwesomeIcons.userPlus),
+        backgroundColor: Colors.brown[300],
+      ),
     );
   }
 
@@ -187,8 +195,8 @@ class _LogInState extends State<LogIn> {
           print('error');
         });
       },
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-      highlightElevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      highlightElevation: 6,
       borderSide: BorderSide(color: Colors.grey),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -196,13 +204,13 @@ class _LogInState extends State<LogIn> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(FontAwesomeIcons.google),
+            Icon(FontAwesomeIcons.google,size: 15,),
             Padding(
-              padding: const EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.only(left: 15),
               child: Text(
                 'Iniciar con Google',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize:15,
                   color: Colors.grey,
                 ),
               ),
