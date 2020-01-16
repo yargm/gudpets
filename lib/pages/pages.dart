@@ -5,3 +5,7 @@ export 'registroUsuario.dart';
 export 'login.dart';
 export 'rescateList.dart';
 export 'rescate.dart';
+export 'adopcionList .dart';
+export 'perdidoList .dart';
+export 'adoption.dart';
+export 'perdido.dart';

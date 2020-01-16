@@ -51,6 +51,7 @@ class RescateModel {
   String tipo_animal; 
   String titulo;
   String foto;
+  String document_id;
 
   RescateModel(
       {this.fotos,
@@ -61,7 +62,8 @@ class RescateModel {
       this.telefono,
       this.tipo_animal,
       this.titulo,
-      this.foto
+      this.foto,
+      this.document_id
       });
 
  RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
@@ -73,6 +75,7 @@ class RescateModel {
     tipo_animal = data['tipo_animal'];
     rescate_id = data['rescate_id'];
     foto = data['foto'];
+    document_id = data.documentID.toString();
 
   }
 } 
@@ -113,19 +116,91 @@ class EmergenciaModel {
 }
 
 class PerdidoModel {
+  String titulo;
+  int user_id;
+  String descripcion;
   String tipo_animal;
   String ubicacion;
-  String titulo;
-  String descripcion;
   String foto;
-
+  bool recompensa;
+  String raza;
+  String senas_part;
+  String sexo;
+  DateTime fecha_extravio;
   String document_id;
 
   PerdidoModel(
-      {this.tipo_animal, this.document_id});
+      {this.titulo,
+      this.user_id,
+      this.descripcion,
+      this.tipo_animal,
+      this.ubicacion,
+      this.foto,
+      this.recompensa,
+      this.raza,
+      this.senas_part,
+      this.sexo,
+      this.fecha_extravio,
+      this.document_id,});
 
   PerdidoModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    titulo = data['titulo'];
+    user_id = data['user_id'];
+    descripcion = data['descripcion'];
     tipo_animal = data['tipo_animal'];
+    ubicacion = data['ubicacion'];
+    foto = data['foto'];
+    recompensa = data['recompensa'];
+    raza = data['raza'];
+    senas_part = data['senas_part'];
+    sexo = data['sexo'];
+    fecha_extravio = data['fecha_extravio'];
     document_id = data.documentID.toString();
   }
 }
+
+class AdopcionModel {
+  String titulo;
+  int user_id;
+  String descripcion;
+  String tipo_animal;
+  String foto;
+  String sexo;
+  String edad;
+  bool esterilizacion;
+  bool vacunacion;
+  bool desparacitacion;
+  bool convivenciaotros;
+  String document_id;
+
+  AdopcionModel(
+      {this.titulo,
+      this.user_id,
+      this.descripcion,
+      this.tipo_animal,
+      this.foto,
+      this.sexo,
+      this.edad,
+      this.esterilizacion,
+      this.vacunacion,
+      this.desparacitacion,
+      this.convivenciaotros,
+      this.document_id});
+
+  AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    titulo = data['titulo'];
+    user_id = data['user_id'];
+    descripcion = data['descripcion'];
+    tipo_animal = data['tipo_animal'];
+    foto = data['foto'];
+    sexo = data['sexo'];
+    edad = data['edad'];
+    esterilizacion = data['esterilizacion'];
+    vacunacion = data['vacunacion'];
+    desparacitacion = data['desparacitacion'];
+    convivenciaotros = data['convivenciaotros'];
+    document_id = data.documentID.toString();
+    
+  }
+}
+

@@ -13,14 +13,10 @@ class _HomeState extends State<Home> {
   int seleccionado = 0;
 
   List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Adopción',
-    ),
-    Text(
-      'Perdidos',
-    ),
+    AdopcionList(),
+    PerdidoList(),
     RescateList(),
-    EmergenciaList(),
+    EmergenciaList(), 
   ];
 
   void _onItemTapped(int index) {

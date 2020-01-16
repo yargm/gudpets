@@ -1,7 +1,12 @@
+import 'package:adoption_app/pages/FirstScreen.dart';
+import 'package:adoption_app/pages/sign_in.dart';
 import 'package:adoption_app/services/models.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LogIn extends StatefulWidget {
   @override
@@ -147,6 +152,7 @@ class _LogInState extends State<LogIn> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18)),
                           ),
+                          _singInButton(),
                           SizedBox(
                             width: 50,
                           )
@@ -160,11 +166,49 @@ class _LogInState extends State<LogIn> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: Text(' Registrate'),
-        icon: Icon(FontAwesomeIcons.userPlus),
-        backgroundColor: Colors.brown[300],
+
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () => StateWidget.of(context).signInWithGoogle(),
+      //   label: Text(' Registrate'),
+
+      //   icon: Icon(FontAwesomeIcons.userPlus),
+      //   backgroundColor: Colors.brown[300],
+      // ),
+    );
+  }
+
+  Widget _singInButton() {
+    return OutlineButton(
+      splashColor: Colors.grey,
+      onPressed: () {
+        signInWithGoogle().whenComplete(() {
+          Navigator.of(context).pushReplacementNamed('/home');
+        }).catchError((onError) {
+          print('error');
+        });
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      highlightElevation: 0,
+      borderSide: BorderSide(color: Colors.grey),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(FontAwesomeIcons.google),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Iniciar con Google',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
