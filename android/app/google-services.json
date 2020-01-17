@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "720642444819-lk54hhmnj989tegu4pv07mov844kvoir.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gudtech.adoption_app",
+            "certificate_hash": "d4e0d2ec99f61a62c6433b94ce7d4c19896c0e13"
+          }
+        },
+        {
           "client_id": "720642444819-l981uivl73k195r2c2o14bk34or7s2pc.apps.googleusercontent.com",
           "client_type": 3
         }

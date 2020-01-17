@@ -34,10 +34,13 @@ class _PerdidoState extends State<Perdido> {
                           fit: BoxFit.cover)),
                 ),
               ),
+
             ],
           )
         ],
       )),
     );
   }
+
 }
+

@@ -8,8 +8,10 @@ export 'emergenciaList.dart';
 export 'rescate.dart';
 export 'rescateList.dart';
 
+
 export 'perdido.dart';
 export 'perdidoList.dart';
 
 export 'adopcion.dart';
 export 'adopcionList.dart';
+

@@ -3,23 +3,20 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-class Emergencia extends StatefulWidget {
-  final EmergenciaModel objeto;
+class Adopcion extends StatefulWidget {
+  final AdopcionModel objeto;
 
-  Emergencia({this.objeto});
+  Adopcion({this.objeto});
 
   @override
-  _EmergenciaState createState() => _EmergenciaState();
+  _AdopcionState createState() => _AdopcionState();
 }
 
-class _EmergenciaState extends State<Emergencia> {
+class _AdopcionState extends State<Adopcion> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        
-      ),
       body: SingleChildScrollView(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +24,7 @@ class _EmergenciaState extends State<Emergencia> {
           Stack(
             children: <Widget>[
               Hero(
-                tag: widget.objeto.document_id,
+                tag: "hola",
                 child: Container(
                   width: double.infinity,
                   height: 350.0,

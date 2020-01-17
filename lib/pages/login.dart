@@ -1,7 +1,12 @@
+import 'package:adoption_app/pages/FirstScreen.dart';
+import 'package:adoption_app/pages/sign_in.dart';
 import 'package:adoption_app/services/models.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LogIn extends StatefulWidget {
   @override
@@ -25,11 +30,13 @@ class _LogInState extends State<LogIn> {
         child: Center(
           child: Container(
             margin: EdgeInsets.all(4.0),
-            padding: const EdgeInsets.fromLTRB(0, 70, 0, 70),
+
+            padding: const EdgeInsets.fromLTRB(0, 70, 0, 90),
             child: Form(
               key: key,
               child: Column(
                 children: <Widget>[
+
                   Container(
                     width: 190.0,
                     height: 190.0,
@@ -162,6 +169,44 @@ class _LogInState extends State<LogIn> {
               ),
             ),
           ),
+        ),
+),
+    );
+  }
+
+  Widget _singInButton() {
+    return OutlineButton(
+      splashColor: Colors.grey,
+      onPressed: () {
+      
+        signInWithGoogle().whenComplete(() {
+        
+           Navigator.of(context).pushReplacementNamed('/registro_usuario');
+        }).catchError((onError) {
+          print('error');
+        });
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      highlightElevation: 6,
+      borderSide: BorderSide(color: Colors.grey),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(FontAwesomeIcons.google,size: 15,),
+            Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: Text(
+                'Registrate con Google',
+                style: TextStyle(
+                  fontSize:15,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

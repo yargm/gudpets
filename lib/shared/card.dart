@@ -95,6 +95,7 @@ class ListCard extends StatelessWidget {
                       ),
                     ),
                   ],
+
                 ),
               ),
             ),
