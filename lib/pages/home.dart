@@ -17,7 +17,7 @@ class _HomeState extends State<Home> {
     AdopcionList(),
     PerdidoList(),
     RescateList(),
-    EmergenciaList(), 
+    EmergenciaList(),
   ];
 
   _onItemTapped(int index, Controller controlador1) {
@@ -44,9 +44,17 @@ class _HomeState extends State<Home> {
                     radius: 40,
                     backgroundImage: NetworkImage(controlador1.usuario.foto),
                   ),
-                  SizedBox(height: 5,),
-                  Text(controlador1.usuario.nombre, style: TextStyle(fontWeight: FontWeight.bold, color: secondaryText, fontSize: 30)),
-                  SizedBox(height: 5,),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(controlador1.usuario.nombre,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: secondaryText,
+                          fontSize: 30)),
+                  SizedBox(
+                    height: 5,
+                  ),
                 ],
               ),
               decoration: BoxDecoration(
@@ -57,7 +65,9 @@ class _HomeState extends State<Home> {
               title: Row(
                 children: <Widget>[
                   Icon(Icons.person),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text('Perfil'),
                 ],
               ),
@@ -69,7 +79,9 @@ class _HomeState extends State<Home> {
               title: Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.history),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text('Mis publicaciones'),
                 ],
               ),
@@ -81,7 +93,9 @@ class _HomeState extends State<Home> {
               title: Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.solidHeart),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text('Favoritos'),
                 ],
               ),

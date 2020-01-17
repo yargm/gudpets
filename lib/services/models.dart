@@ -62,9 +62,7 @@ class RescateModel {
       this.tipo_animal,
       this.titulo,
       this.foto,
-
       this.document_id});
-
 
   RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'] ?? '';
@@ -75,7 +73,6 @@ class RescateModel {
     tipo_animal = data['tipo_animal'];
     foto = data['foto'];
     document_id = data.documentID.toString();
-
   }
 }
 
@@ -125,20 +122,20 @@ class PerdidoModel {
   Timestamp fecha_extravio;
   String document_id;
 
-  PerdidoModel(
-      {this.titulo,
-      this.user_id,
-      this.descripcion,
-      this.tipo_animal,
-      this.ubicacion,
-      this.foto,
-      this.recompensa,
-      this.raza,
-      this.senas_part,
-      this.sexo,
-      this.fecha_extravio,
-      this.document_id,});
-
+  PerdidoModel({
+    this.titulo,
+    this.user_id,
+    this.descripcion,
+    this.tipo_animal,
+    this.ubicacion,
+    this.foto,
+    this.recompensa,
+    this.raza,
+    this.senas_part,
+    this.sexo,
+    this.fecha_extravio,
+    this.document_id,
+  });
 
   PerdidoModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -197,8 +194,5 @@ class AdopcionModel {
     desparacitacion = data['desparacitacion'];
     convivenciaotros = data['convivenciaotros'];
     document_id = data.documentID.toString();
-    
   }
 }
-
-

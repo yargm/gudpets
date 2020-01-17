@@ -5,34 +5,33 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-class Filtro extends StatelessWidget{
-
+class Filtro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-                height: 80.0,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 40.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: 20.0),
-                      child: IconButton(
-                        onPressed: () => print('Filtros'),
-                        icon: Icon(
-                          Icons.search,
-                          size: 35.0,
-                        ),
-                      ),
-                    ),
-                    _categoria(true, Icon(FontAwesomeIcons.dog)),
-                    _categoria(false, Icon(FontAwesomeIcons.cat)),
-                    _categoria(false, Icon(FontAwesomeIcons.dove)),
-                  ],
-                ));
+        height: 80.0,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: <Widget>[
+            SizedBox(
+              width: 40.0,
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: IconButton(
+                onPressed: () => print('Filtros'),
+                icon: Icon(
+                  Icons.search,
+                  size: 35.0,
+                ),
+              ),
+            ),
+            _categoria(true, Icon(FontAwesomeIcons.dog)),
+            _categoria(false, Icon(FontAwesomeIcons.cat)),
+            _categoria(false, Icon(FontAwesomeIcons.dove)),
+          ],
+        ));
   }
 
   Widget _categoria(bool _isSelected, Icon ion) {
@@ -53,5 +52,4 @@ class Filtro extends StatelessWidget{
           )),
     );
   }
-  
 }

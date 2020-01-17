@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:grouped_buttons/grouped_buttons.dart';
 
 import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:adoption_app/pages/sign_in.dart';
-
-
 
 class RegistroUsuario extends StatefulWidget {
   @override
@@ -199,10 +198,12 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       margin: EdgeInsets.only(top: 25.0, bottom: 10.0),
                       child: CircleAvatar(
                         radius: 45.0,
-                        backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : _image == null
-                            ? NetworkImage(
-                                'http://mjcnuapada.com/wp-content/uploads/2018/03/no-photo-925faf7029ff24e9d19075149c4f2dfe.jpeg')
-                            : FileImage(_image),
+                        backgroundImage: imageUrl.isNotEmpty
+                            ? NetworkImage(imageUrl)
+                            : _image == null
+                                ? NetworkImage(
+                                    'http://mjcnuapada.com/wp-content/uploads/2018/03/no-photo-925faf7029ff24e9d19075149c4f2dfe.jpeg')
+                                : FileImage(_image),
                         backgroundColor: Colors.transparent,
                       )),
                 ),

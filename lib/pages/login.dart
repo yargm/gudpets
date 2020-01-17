@@ -23,20 +23,18 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
-    Controller controlador1 = Provider.of<Controller>(context);
     return Scaffold(
       backgroundColor: Colors.amber[100],
       body: SingleChildScrollView(
         child: Center(
           child: Container(
             margin: EdgeInsets.all(4.0),
-
             padding: const EdgeInsets.fromLTRB(0, 70, 0, 90),
             child: Form(
               key: key,
               child: Column(
                 children: <Widget>[
-
+                 
                   Container(
                     width: 190.0,
                     height: 190.0,
@@ -115,52 +113,56 @@ class _LogInState extends State<LogIn> {
                             ),
                           ),
                           SizedBox(
-                            height: 20.0,
+                            height: 25.0,
                           ),
-                          ButtonBar(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              RaisedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pushReplacementNamed(
-                                      '/registro_usuario');
-                                },
-                                child: Icon(FontAwesomeIcons.userPlus),
-                              ),
-                              RaisedButton(
-                                onPressed: () {
-                                  if (key.currentState.validate()) {
-                                    key.currentState.save();
-                                    var consulta = Firestore.instance
-                                        .collection('usuarios')
-                                        .where('correo',
-                                            isEqualTo: loginMap['user'])
-                                        .where('contrasena',
-                                            isEqualTo: loginMap['password'])
-                                        .getDocuments();
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                  _singInButton(),
+                                  SizedBox(width: 37,),
+                                RaisedButton(
+                                  onPressed: () {
+                                    if (key.currentState.validate()) {
+                                      key.currentState.save();
+                                      var consulta = Firestore.instance
+                                          .collection('usuarios')
+                                          .where('correo',
+                                              isEqualTo: loginMap['user'])
+                                          .where('contrasena',
+                                              isEqualTo: loginMap['password'])
+                                          .getDocuments();
 
-                                    consulta.then((onValue) {
-                                      if (onValue.documents.isEmpty) {
-                                        print('Datos Incorrectos');
-                                        return;
-                                      } else {
-                                        controlador1.agregausuario(
-                                            UsuarioModel.fromDocumentSnapshot(
-                                                onValue.documents.first));
-                                        Navigator.of(context)
-                                            .pushReplacementNamed('/home');
-                                      }
-                                    });
-                                  }
-                                },
-                                child: Text(
-                                  "Iniciar Sesión",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 15),
+                                      consulta.then((onValue) {
+                                        if (onValue.documents.isEmpty) {
+                                          print('Datos Incorrectos');
+                                          return;
+                                        } else {
+                                          Navigator.of(context)
+                                              .pushReplacementNamed('/home');
+                                        }
+                                      });
+                                    }
+                                  },
+                                  color: Colors.brown[300],
+                                  textColor: Colors.white,
+                                  elevation: 9.0,
+                                  highlightElevation: 6.0,
+                                  child: Text(
+                                    "Iniciar Sesión",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
                                 ),
-                              ),
-                            ],
-                          ),
+                               
+                              ],
+                              
+                            ),
+                         
+                          SizedBox(
+                            width: 50,
+                          )
                         ],
                       ),
                     ),
@@ -170,7 +172,15 @@ class _LogInState extends State<LogIn> {
             ),
           ),
         ),
-),
+      ),
+
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => {},
+        label: Text(' Registrate'),
+
+        icon: Icon(FontAwesomeIcons.userPlus),
+        backgroundColor: Colors.brown[300],
+      ),
     );
   }
 

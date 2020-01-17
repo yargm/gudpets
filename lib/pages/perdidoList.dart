@@ -19,7 +19,8 @@ class _PerdidoListState extends State<PerdidoList> {
         StreamBuilder(
           stream: perdidos,
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return Center(
+            if (!snapshot.hasData)
+              return Center(
                 child: Text('Cargando...'),
               );
             return ListView.builder(

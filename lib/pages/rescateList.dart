@@ -19,7 +19,8 @@ class _RescateListState extends State<RescateList> {
         StreamBuilder(
           stream: rescates,
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return Center(
+            if (!snapshot.hasData)
+              return Center(
                 child: Text('Cargando...'),
               );
             return ListView.builder(
