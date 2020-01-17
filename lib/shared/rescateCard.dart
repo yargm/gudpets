@@ -42,7 +42,7 @@ print(posicion.toString());
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Hero(
-                  tag: objeto.emergencia_id,
+                  tag: objeto.document_id,
                   child: Container(
                    width: double.maxFinite,
                    height: 200,

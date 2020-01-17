@@ -32,6 +32,8 @@ dependencies:
   grouped_buttons: ^1.0.4
   font_awesome_flutter: ^8.5.0
   image_picker: ^0.6.1+8 
+  provider: ^3.1.0
+  google_fonts: ^0.2.0
 
 dev_dependencies:
   flutter_test:

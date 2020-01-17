@@ -19,10 +19,12 @@ class _PerdidoListState extends State<PerdidoList> {
         StreamBuilder(
           stream: perdidos,
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return const Text('Cargando...');
+            if (!snapshot.hasData) return Center(
+                child: Text('Cargando...'),
+              );
             return ListView.builder(
               itemBuilder: (context, index) => ListCard(
-                  objeto: EmergenciaModel.fromDocumentSnapshot(
+                  objeto: PerdidoModel.fromDocumentSnapshot(
                       snapshot.data.documents[index]),
                   posicion: index),
               itemCount: snapshot.data.documents.length,

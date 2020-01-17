@@ -14,8 +14,8 @@ class ListCard extends StatelessWidget {
   ListCard({this.objeto, this.posicion});
   @override
   Widget build(BuildContext context) {
-    print(posicion.toString());
     var leftAligned = (posicion % 2 == 0) ? true : false;
+    Controller controlador1 = Provider.of<Controller>(context);
 
     // TODO: implement build
     return Container(
@@ -35,28 +35,63 @@ class ListCard extends StatelessWidget {
                   children: <Widget>[
                     Hero(
                       tag: objeto.document_id,
-                      child: Container(
-                        width: double.maxFinite,
-                        height: 200,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: leftAligned
-                                  ? Radius.circular(0)
-                                  : Radius.circular(40.0),
-                              topRight: leftAligned
-                                  ? Radius.circular(40.0)
-                                  : Radius.circular(0),
-                              bottomLeft: leftAligned
-                                  ? Radius.circular(0)
-                                  : Radius.circular(40.0),
-                              bottomRight: leftAligned
-                                  ? Radius.circular(40.0)
-                                  : Radius.circular(0),
-                            ),
-                            image: DecorationImage(
-                              image: NetworkImage(objeto.foto),
-                              fit: BoxFit.cover,
-                            )),
+                      child: GestureDetector(
+                        onTap: () {
+                          controlador1.pestana_act == 0
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Adopcion(
+                                            objeto: objeto,
+                                          )),
+                                )
+                              : controlador1.pestana_act == 1
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Perdido(
+                                                objeto: objeto,
+                                              )),
+                                    )
+                                  : controlador1.pestana_act == 2
+                                      ? Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Rescate(
+                                                    objeto: objeto,
+                                                  )),
+                                        )
+                                      : Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Emergencia(
+                                                    objeto: objeto,
+                                                  )),
+                                        );
+                        },
+                        child: Container(
+                          width: double.maxFinite,
+                          height: 200,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: leftAligned
+                                    ? Radius.circular(0)
+                                    : Radius.circular(40.0),
+                                topRight: leftAligned
+                                    ? Radius.circular(40.0)
+                                    : Radius.circular(0),
+                                bottomLeft: leftAligned
+                                    ? Radius.circular(0)
+                                    : Radius.circular(40.0),
+                                bottomRight: leftAligned
+                                    ? Radius.circular(40.0)
+                                    : Radius.circular(0),
+                              ),
+                              image: DecorationImage(
+                                image: NetworkImage(objeto.foto),
+                                fit: BoxFit.cover,
+                              )),
+                        ),
                       ),
                     ),
                   ],

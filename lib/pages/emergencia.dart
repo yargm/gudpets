@@ -27,23 +27,16 @@ class _EmergenciaState extends State<Emergencia> {
           Stack(
             children: <Widget>[
               Hero(
-                  tag: widget.objeto.document_id,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegistroUsuario()));
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 350.0,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: NetworkImage(widget.objeto.foto),
-                              fit: BoxFit.cover)),
-                    ),
-                  )),
+                tag: widget.objeto.document_id,
+                child: Container(
+                  width: double.infinity,
+                  height: 350.0,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: NetworkImage(widget.objeto.foto),
+                          fit: BoxFit.cover)),
+                ),
+              ),
             ],
           )
         ],
