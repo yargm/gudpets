@@ -126,7 +126,15 @@ class _HomeState extends State<Home> {
         child: _widgetOptions.elementAt(seleccionado),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          controlador1.pestana_act == 0
+              ? print(' ir a registro adopcion') 
+              : controlador1.pestana_act == 1
+                  ? print('ir a registro perdido') 
+                  : controlador1.pestana_act == 2
+                      ? print('ir a registro rescate')
+                      : Navigator.of(context).pushNamed('/registro_emergencia');
+        },
         child: Icon(Icons.add, color: primaryLight),
       ),
       bottomNavigationBar: BottomNavigationBar(

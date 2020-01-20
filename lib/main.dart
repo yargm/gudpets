@@ -72,6 +72,7 @@ class MyApp extends StatelessWidget {
           '/perdido': (BuildContext context) => Perdido(),
           '/rescate': (BuildContext context) => Rescate(),
           '/emergencia': (BuildContext context) => Emergencia(),
+          '/registro_emergencia': (BuildContext context) => RegistroEmergencia(),
         },
       ),
     );

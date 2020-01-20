@@ -1,4 +1,3 @@
-import 'package:adoption_app/pages/FirstScreen.dart';
 import 'package:adoption_app/pages/sign_in.dart';
 import 'package:adoption_app/services/models.dart';
 import 'package:adoption_app/services/services.dart';
@@ -23,6 +22,7 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
     return Scaffold(
       backgroundColor: Colors.amber[100],
       body: SingleChildScrollView(
@@ -34,7 +34,6 @@ class _LogInState extends State<LogIn> {
               key: key,
               child: Column(
                 children: <Widget>[
-                 
                   Container(
                     width: 190.0,
                     height: 190.0,
@@ -117,49 +116,51 @@ class _LogInState extends State<LogIn> {
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                  _singInButton(),
-                                  SizedBox(width: 37,),
-                                RaisedButton(
-                                  onPressed: () {
-                                    if (key.currentState.validate()) {
-                                      key.currentState.save();
-                                      var consulta = Firestore.instance
-                                          .collection('usuarios')
-                                          .where('correo',
-                                              isEqualTo: loginMap['user'])
-                                          .where('contrasena',
-                                              isEqualTo: loginMap['password'])
-                                          .getDocuments();
+                            children: <Widget>[
+                              _singInButton(controlador1),
+                              SizedBox(
+                                width: 37,
+                              ),
+                              RaisedButton(
+                                onPressed: () {
+                                  if (key.currentState.validate()) {
+                                    key.currentState.save();
+                                    var consulta = Firestore.instance
+                                        .collection('usuarios')
+                                        .where('correo',
+                                            isEqualTo: loginMap['user'])
+                                        .where('contrasena',
+                                            isEqualTo: loginMap['password'])
+                                        .getDocuments();
 
-                                      consulta.then((onValue) {
-                                        if (onValue.documents.isEmpty) {
-                                          print('Datos Incorrectos');
-                                          return;
-                                        } else {
-                                          Navigator.of(context)
-                                              .pushReplacementNamed('/home');
-                                        }
-                                      });
-                                    }
-                                  },
-                                  color: Colors.brown[300],
-                                  textColor: Colors.white,
-                                  elevation: 9.0,
-                                  highlightElevation: 6.0,
-                                  child: Text(
-                                    "Iniciar Sesión",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30)),
+                                    consulta.then((onValue) {
+                                      if (onValue.documents.isEmpty) {
+                                        print('Datos Incorrectos');
+                                        return;
+                                      } else {
+                                        controlador1.agregausuario(
+                                            UsuarioModel.fromDocumentSnapshot(
+                                                onValue.documents.first));
+                                        Navigator.of(context)
+                                            .pushReplacementNamed('/home');
+                                      }
+                                    });
+                                  }
+                                },
+                                color: Colors.brown[300],
+                                textColor: Colors.white,
+                                elevation: 9.0,
+                                highlightElevation: 6.0,
+                                child: Text(
+                                  "Iniciar Sesión",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 16),
                                 ),
-                               
-                              ],
-                              
-                            ),
-                         
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                              ),
+                            ],
+                          ),
                           SizedBox(
                             width: 50,
                           )
@@ -173,25 +174,23 @@ class _LogInState extends State<LogIn> {
           ),
         ),
       ),
-
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => {},
         label: Text(' Registrate'),
-
         icon: Icon(FontAwesomeIcons.userPlus),
         backgroundColor: Colors.brown[300],
       ),
     );
   }
 
-  Widget _singInButton() {
+  Widget _singInButton(Controller controlador1) {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
-      
-        signInWithGoogle().whenComplete(() {
-        
-           Navigator.of(context).pushReplacementNamed('/registro_usuario');
+        print('entro al on pressed');
+        signInWithGoogle(controlador1).whenComplete(() {
+          print('estoy dentro y voy a navegar con'+controlador1.name);
+          Navigator.of(context).pushReplacementNamed('/registro_usuario');
         }).catchError((onError) {
           print('error');
         });
@@ -205,13 +204,16 @@ class _LogInState extends State<LogIn> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(FontAwesomeIcons.google,size: 15,),
+            Icon(
+              FontAwesomeIcons.google,
+              size: 15,
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: Text(
                 'Registrate con Google',
                 style: TextStyle(
-                  fontSize:15,
+                  fontSize: 15,
                   color: Colors.grey,
                 ),
               ),

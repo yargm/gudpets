@@ -19,6 +19,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   String tipotemp = '';
   @override
   Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
     Map<String, dynamic> form_usuario = {
       'nombre': null,
       'edad': null,
@@ -65,7 +66,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   height: 15,
                 ),
                 TextFormField(
-                  initialValue: name.isNotEmpty ? name : null,
+                  initialValue: controlador1.name.isNotEmpty ? controlador1.name : null,
                   onSaved: (String value) {
                     form_usuario['nombre'] = value;
                   },
@@ -126,7 +127,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   height: 15,
                 ),
                 TextFormField(
-                  initialValue: email.isNotEmpty ? email : null,
+                  initialValue: controlador1.email.isNotEmpty ? controlador1.email : null,
                   onSaved: (String value) {
                     form_usuario['correo'] = value;
                   },
@@ -198,8 +199,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       margin: EdgeInsets.only(top: 25.0, bottom: 10.0),
                       child: CircleAvatar(
                         radius: 45.0,
-                        backgroundImage: imageUrl.isNotEmpty
-                            ? NetworkImage(imageUrl)
+                        backgroundImage: controlador1.imageUrl.isNotEmpty 
+                            ? NetworkImage(controlador1.imageUrl)
                             : _image == null
                                 ? NetworkImage(
                                     'http://mjcnuapada.com/wp-content/uploads/2018/03/no-photo-925faf7029ff24e9d19075149c4f2dfe.jpeg')
@@ -295,6 +296,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   height: 15,
                 ),
                 RaisedButton.icon(
+
                     icon: Icon(Icons.check),
                     label: Text('Guardar'),
                     onPressed: () async {
