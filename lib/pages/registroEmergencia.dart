@@ -3,7 +3,7 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:adoption_app/services/services.dart';
 
-class RegistroEmergencia extends StatefulWidget{
+class RegistroEmergencia extends StatefulWidget {
   @override
   _RegistroEmergenciaState createState() => _RegistroEmergenciaState();
 }
@@ -11,6 +11,7 @@ class RegistroEmergencia extends StatefulWidget{
 class _RegistroEmergenciaState extends State<RegistroEmergencia> {
   @override
   Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
