@@ -234,3 +234,13 @@ class AdopcionModel {
     reference = data.reference;
   }
 }
+
+class AvisoModel{
+  String imagen;
+  String link;
+  AvisoModel({this.imagen, this.link});
+  AvisoModel.fromDocumentSnapshot(DocumentSnapshot data){
+    imagen =  data['imagen'];
+    link = data['link'];
+  }
+}
