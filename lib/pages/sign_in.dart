@@ -40,8 +40,8 @@ Future<String> signInWithGoogle(Controller controlador1) async {
   print('no la estoy dando con' + controlador1.name.toString());
   controlador1.email = user.email;
   controlador1.imageUrl = user.photoUrl;
-  if (name.contains(" ")) {
-    name = name.substring(0, name.indexOf(" "));
+  if (controlador1.name.contains(" ")) {
+    controlador1.name = controlador1.name.substring(0, name.indexOf(" "));
   }
   final FirebaseUser currentUser = await _auth.currentUser();
   assert(user.uid == currentUser.uid);

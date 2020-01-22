@@ -17,6 +17,7 @@ class _PerdidoState extends State<Perdido> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      appBar: AppBar(),
       body: SingleChildScrollView(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +25,7 @@ class _PerdidoState extends State<Perdido> {
           Stack(
             children: <Widget>[
               Hero(
-                tag: widget.objeto.document_id,
+                tag: widget.objeto.documentId,
                 child: Container(
                   width: double.infinity,
                   height: 350.0,

@@ -4,6 +4,7 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'sign_in.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -42,16 +43,19 @@ class _HomeState extends State<Home> {
                 children: <Widget>[
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: NetworkImage(controlador1.usuario.foto),
+                    backgroundImage:
+                        NetworkImage(controlador1.usuario.foto ?? ''),
                   ),
                   SizedBox(
                     height: 5,
                   ),
-                  Text(controlador1.usuario.nombre,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: secondaryText,
-                          fontSize: 30)),
+                  Expanded(
+                    child: Text(controlador1.usuario.nombre,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: secondaryText,
+                            fontSize: 20)),
+                  ),
                   SizedBox(
                     height: 5,
                   ),
@@ -62,51 +66,36 @@ class _HomeState extends State<Home> {
               ),
             ),
             ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(Icons.person),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Perfil'),
-                ],
-              ),
+              leading: Icon(Icons.person),
+              title: Text('Perfil'),
               onTap: () {
                 print('perfil');
               },
             ),
             ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(FontAwesomeIcons.history),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Mis publicaciones'),
-                ],
-              ),
+              leading: Icon(FontAwesomeIcons.history),
+              title: Text('Mis publicaciones'),
               onTap: () {
                 print('publicaciones');
               },
             ),
             ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(FontAwesomeIcons.solidHeart),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Favoritos'),
-                ],
-              ),
+              leading: Icon(FontAwesomeIcons.solidHeart),
+              title: Text('Favoritos'),
               onTap: () {
                 print('favoritos');
               },
             ),
             ListTile(
               title: Text('Cerrar sesión'),
-              onTap: () {
-                print('cerrar sesion');
+              leading: Icon(
+                Icons.power_settings_new,
+                color: Colors.red,
+              ),
+              onTap: () async {
+                signOutGoogle();
+                await controlador1.signOut();
+                Navigator.of(context).pushReplacementNamed('/login');
               },
             ),
           ],
@@ -129,9 +118,9 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           controlador1.pestana_act == 0
-              ? print(' ir a registro adopcion') 
+              ? print(' ir a registro adopcion')
               : controlador1.pestana_act == 1
-                  ? print('ir a registro perdido') 
+                  ? print('ir a registro perdido')
                   : controlador1.pestana_act == 2
                       ? print('ir a registro rescate')
                       : Navigator.of(context).pushNamed('/registro_emergencia');

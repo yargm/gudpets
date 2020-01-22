@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryTextTheme: GoogleFonts.lancelotTextTheme(TextTheme()),
+          primaryTextTheme: GoogleFonts.telexTextTheme(),
           scaffoldBackgroundColor: primaryColor,
           primaryColor: primaryColor,
           accentColor: primaryDark,
@@ -26,6 +26,8 @@ class MyApp extends StatelessWidget {
           primaryColorLight: primaryLight,
           //botones
           buttonTheme: ButtonThemeData(
+            
+            textTheme: ButtonTextTheme.primary,
             disabledColor: primaryDark,
             buttonColor: secondaryColor,
             shape:
@@ -36,6 +38,10 @@ class MyApp extends StatelessWidget {
             color: primaryLight,
           ),
           //iconos
+          accentIconTheme: IconThemeData(
+            color: Colors.white,
+            size: 25
+          ),
           iconTheme: IconThemeData(
             size: 25,
             color: secondaryDark,
@@ -44,9 +50,9 @@ class MyApp extends StatelessWidget {
             color: secondaryDark,
           ),
           //texto
-          textTheme: GoogleFonts.titilliumWebTextTheme(TextTheme(
+          textTheme: GoogleFonts.josefinSansTextTheme(TextTheme(
             body1: TextStyle(fontSize: 15),
-            button: TextStyle(fontSize: 15, color: primaryColor),
+            button: TextStyle(fontSize: 15, color: Colors.white),
             body2: TextStyle(fontSize: 18),
           )),
           //flotante
@@ -57,7 +63,7 @@ class MyApp extends StatelessWidget {
               elevation: 1,
               iconTheme: IconThemeData(size: 30, color: secondaryDark),
               actionsIconTheme: IconThemeData(color: secondaryDark, size: 30),
-              textTheme: GoogleFonts.titilliumWebTextTheme(TextTheme(
+              textTheme: GoogleFonts.josefinSansTextTheme(TextTheme(
                   title: TextStyle(color: primaryText, fontSize: 30))),
               color: primaryDark),
           primarySwatch: Colors.blue,

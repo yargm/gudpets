@@ -3,19 +3,39 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-class ListCard extends StatelessWidget {
+class ListCard extends StatefulWidget {
   final dynamic objeto;
   final int posicion;
 
+  ListCard({this.objeto, this.posicion});
+
+  @override
+  _ListCardState createState() => _ListCardState();
+}
+
+class _ListCardState extends State<ListCard> {
   final double containerPadding = 80;
+
   final double containerPadding2 = 80;
+
   final double containerBorderRadius = 15;
 
-  ListCard({this.objeto, this.posicion});
   @override
   Widget build(BuildContext context) {
-    var leftAligned = (posicion % 2 == 0) ? true : false;
+    bool favorito = false;
+
+    var leftAligned = (widget.posicion % 2 == 0) ? true : false;
     Controller controlador1 = Provider.of<Controller>(context);
+
+    for (var usuario in widget.objeto.favoritos) {
+      setState(() {
+        if (controlador1.usuario.documentId == usuario) {
+          favorito = true;
+        } else {
+          favorito = false;
+        }
+      });
+    }
 
     // TODO: implement build
     return Container(
@@ -34,7 +54,7 @@ class ListCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Hero(
-                      tag: objeto.document_id,
+                      tag: widget.objeto.documentId,
                       child: GestureDetector(
                         onTap: () {
                           controlador1.pestana_act == 0
@@ -42,7 +62,7 @@ class ListCard extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Adopcion(
-                                            objeto: objeto,
+                                            objeto: widget.objeto,
                                           )),
                                 )
                               : controlador1.pestana_act == 1
@@ -50,7 +70,7 @@ class ListCard extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => Perdido(
-                                                objeto: objeto,
+                                                objeto: widget.objeto,
                                               )),
                                     )
                                   : controlador1.pestana_act == 2
@@ -58,15 +78,15 @@ class ListCard extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Rescate(
-                                                    objeto: objeto,
+                                                    objeto: widget.objeto,
                                                   )),
                                         )
                                       : Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Emergencia(
-                                                    objeto: objeto,
-                                                  )),
+                                                  objeto: widget.objeto,
+                                                  favorito: favorito)),
                                         );
                         },
                         child: Container(
@@ -88,7 +108,7 @@ class ListCard extends StatelessWidget {
                                     : Radius.circular(0),
                               ),
                               image: DecorationImage(
-                                image: NetworkImage(objeto.foto),
+                                image: NetworkImage(widget.objeto.foto),
                                 fit: BoxFit.cover,
                               )),
                         ),
@@ -105,9 +125,8 @@ class ListCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      objeto.titulo,
+                      widget.objeto.titulo,
                       style: TextStyle(
-                        fontFamily: 'Montserrat',
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
                       ),
@@ -119,12 +138,143 @@ class ListCard extends StatelessWidget {
                       padding: leftAligned
                           ? EdgeInsets.only(right: 30)
                           : EdgeInsets.only(right: 5),
-                      icon: Icon(Icons.favorite_border),
+                      icon: Icon(
+                          favorito ? Icons.favorite : Icons.favorite_border),
                       iconSize: 30.0,
                       color: Colors.pink,
                       onPressed: () {
-                        // añadir o quitar de la lista de favoritos del usuario con el controlador
-                        print('curazao');
+                        !favorito
+                            ? widget.objeto.reference.updateData({
+                                'favoritos': FieldValue.arrayUnion(
+                                    [controlador1.usuario.documentId]),
+                              })
+                            : widget.objeto.reference.updateData({
+                                'favoritos': FieldValue.arrayRemove(
+                                    [controlador1.usuario.documentId])
+                              });
+                        switch (controlador1.pestana_act) {
+                          case 0:
+                            !favorito
+                                ? controlador1.usuario.reference.updateData(
+                                    {
+                                      'adopciones': FieldValue.arrayUnion([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  )
+                                : controlador1.usuario.reference.updateData(
+                                    {
+                                      'adopciones': FieldValue.arrayRemove([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  );
+                            setState(() {
+                              favorito ? favorito = false : favorito = true;
+                            });
+                            break;
+                          case 1:
+                            !favorito
+                                ? controlador1.usuario.reference.updateData(
+                                    {
+                                      'perdidos': FieldValue.arrayUnion([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  )
+                                : controlador1.usuario.reference.updateData(
+                                    {
+                                      'perdidos': FieldValue.arrayRemove([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  );
+                            setState(() {
+                              favorito ? favorito = false : favorito = true;
+                            });
+                            break;
+                          case 2:
+                            !favorito
+                                ? controlador1.usuario.reference.updateData(
+                                    {
+                                      'rescates': FieldValue.arrayUnion([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  )
+                                : controlador1.usuario.reference.updateData(
+                                    {
+                                      'rescates': FieldValue.arrayRemove([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  );
+                            setState(() {
+                              favorito ? favorito = false : favorito = true;
+                            });
+                            break;
+                          case 3:
+                            !favorito
+                                ? controlador1.usuario.reference.updateData(
+                                    {
+                                      'emergencias': FieldValue.arrayUnion([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  )
+                                : controlador1.usuario.reference.updateData(
+                                    {
+                                      'emergencias': FieldValue.arrayRemove([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  );
+                            setState(() {
+                              favorito ? favorito = false : favorito = true;
+                            });
+                            break;
+                        }
+                        print(favorito.toString());
                       },
                     ),
                   ],
@@ -135,9 +285,8 @@ class ListCard extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.only(left: 20, right: 30, bottom: 20.0),
-                child: Text(objeto.descripcion,
+                child: Text(widget.objeto.descripcion,
                     style: TextStyle(
-                      fontFamily: 'Montserrat',
                       fontSize: 16.0,
                       color: Colors.grey,
                     )),
