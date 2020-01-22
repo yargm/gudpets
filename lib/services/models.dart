@@ -196,3 +196,13 @@ class AdopcionModel {
     document_id = data.documentID.toString();
   }
 }
+
+class AvisoModel{
+  String imagen;
+  String link;
+  AvisoModel({this.imagen, this.link});
+  AvisoModel.fromDocumentSnapshot(DocumentSnapshot data){
+    imagen =  data['imagen'];
+    link = data['link'];
+  }
+}
