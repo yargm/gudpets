@@ -6,13 +6,14 @@ class UsuarioModel {
   String correo;
   String descripcion;
   int edad;
+  DateTime fnacimiento;
   String foto;
   String nombre;
   String sexo;
   int telefono;
+ DocumentReference reference;
   String tipo;
-  int user_id;
-  String document_id;
+  String documentId;
 
   UsuarioModel(
       {this.contrasena,
@@ -24,21 +25,39 @@ class UsuarioModel {
       this.sexo,
       this.telefono,
       this.tipo,
-      this.user_id,
-      this.document_id});
+     
+      this.documentId});
+
+  int calculateAge(DateTime birthDate) {
+  DateTime currentDate = DateTime.now();
+  int age = currentDate.year - birthDate.year;
+  int month1 = currentDate.month;
+  int month2 = birthDate.month;
+  if (month2 > month1) {
+    age--;
+  } else if (month1 == month2) {
+    int day1 = currentDate.day;
+    int day2 = birthDate.day;
+    if (day2 > day1) {
+      age--;
+    }
+  }
+  return age;
+}
 
   UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
     contrasena = data['tcontrasena'];
     correo = data['correo'];
     descripcion = data['descripcion'];
-    edad = data['edad'];
+    edad =  calculateAge(data['fnacimiento'].toDate());
     foto = data['foto'];
     nombre = data['nombre'];
     sexo = data['sexo'];
     telefono = data['telefono'];
     tipo = data['tipo'];
-    user_id = data['user_id'];
-    document_id = data.documentID.toString();
+    reference = data.reference;
+    documentId = data.documentID.toString();
+    fnacimiento = data['fnacimiento'].toDate();
   }
 }
 
@@ -46,118 +65,130 @@ class RescateModel {
   String descripcion;
   String ubicacion;
   int telefono;
-  int user_id;
+  List<dynamic> favoritos = [];
+  int userId;
   dynamic fotos;
-  String tipo_animal;
+  String tipoAnimal;
   String titulo;
   String foto;
-  String document_id;
-
+  String documentId;
+ DocumentReference reference;
   RescateModel(
       {this.fotos,
       this.ubicacion,
       this.descripcion,
-      this.user_id,
+      this.userId,
       this.telefono,
-      this.tipo_animal,
+      this.tipoAnimal,
       this.titulo,
       this.foto,
-      this.document_id});
+      this.documentId});
 
   RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'] ?? '';
+    favoritos = data['favoritos'] ?? [''];
     ubicacion = data['ubicacion'];
     descripcion = data['descripcion'];
-    user_id = data['user_id'];
+    userId = data['user_id'];
     fotos = data['fotos'];
-    tipo_animal = data['tipo_animal'];
+    tipoAnimal = data['tipo_animal'];
     foto = data['foto'];
-    document_id = data.documentID.toString();
+    documentId = data.documentID.toString();
+    reference = data.reference;
   }
 }
 
 class EmergenciaModel {
   String titulo;
-  String tipo_emergencia;
+  String tipoEmergencia;
   String ubicacion;
   String descripcion;
-  int user_id;
+  int userId;
   String foto;
-  String tipo_animal;
-  String document_id;
+  List<dynamic> favoritos = [];
+  String tipoAnimal;
+  String documentId;
+  DocumentReference reference;
 
   EmergenciaModel(
       {this.titulo,
-      this.tipo_emergencia,
+      this.tipoEmergencia,
       this.ubicacion,
       this.descripcion,
-      this.user_id,
+      this.userId,
       this.foto,
-      this.tipo_animal,
-      this.document_id});
+      this.tipoAnimal,
+      this.documentId});
 
   EmergenciaModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
-    tipo_emergencia = data['tipo_emergencia'];
+    favoritos = data['favoritos'] ?? [''];
+    tipoEmergencia = data['tipo_emergencia'];
     ubicacion = data['ubicacion'];
     descripcion = data['descripcion'];
-    user_id = data['user_id'];
+    userId = data['user_id'];
     foto = data['foto'];
-    tipo_animal = data['tipo_animal'];
-    document_id = data.documentID.toString();
+    tipoAnimal = data['tipo_animal'];
+    documentId = data.documentID.toString();
+    reference = data.reference;
   }
 }
 
 class PerdidoModel {
   String titulo;
-  int user_id;
+  int userId;
   String descripcion;
-  String tipo_animal;
+  String tipoAnimal;
   String ubicacion;
   String foto;
   bool recompensa;
   String raza;
-  String senas_part;
+  String senasPart;
   String sexo;
-  Timestamp fecha_extravio;
-  String document_id;
+  List<dynamic> favoritos = [];
+  Timestamp fechaExtravio;
+  String documentId;
+  DocumentReference reference;
 
   PerdidoModel({
     this.titulo,
-    this.user_id,
+    this.userId,
     this.descripcion,
-    this.tipo_animal,
+    this.tipoAnimal,
     this.ubicacion,
     this.foto,
     this.recompensa,
     this.raza,
-    this.senas_part,
+    this.senasPart,
     this.sexo,
-    this.fecha_extravio,
-    this.document_id,
+    this.fechaExtravio,
+    this.documentId,
   });
 
   PerdidoModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
-    user_id = data['user_id'];
+    favoritos = data['favoritos'] ?? [''];
+    userId = data['user_id'];
     descripcion = data['descripcion'];
-    tipo_animal = data['tipo_animal'];
+    tipoAnimal = data['tipo_animal'];
     ubicacion = data['ubicacion'];
     foto = data['foto'];
     recompensa = data['recompensa'];
     raza = data['raza'];
-    senas_part = data['senas_part'];
+    senasPart = data['senas_part'];
     sexo = data['sexo'];
-    fecha_extravio = data['fecha_extravio'];
-    document_id = data.documentID.toString();
+    fechaExtravio = data['fecha_extravio'];
+    documentId = data.documentID.toString();
+    reference = data.reference;
   }
 }
 
 class AdopcionModel {
   String titulo;
-  int user_id;
+  List<dynamic> favoritos = [];
+  int userId;
   String descripcion;
-  String tipo_animal;
+  String tipoAnimal;
   String foto;
   String sexo;
   String edad;
@@ -165,13 +196,14 @@ class AdopcionModel {
   bool vacunacion;
   bool desparacitacion;
   bool convivenciaotros;
-  String document_id;
+  String documentId;
+  DocumentReference reference;
 
   AdopcionModel(
       {this.titulo,
-      this.user_id,
+      this.userId,
       this.descripcion,
-      this.tipo_animal,
+      this.tipoAnimal,
       this.foto,
       this.sexo,
       this.edad,
@@ -179,13 +211,15 @@ class AdopcionModel {
       this.vacunacion,
       this.desparacitacion,
       this.convivenciaotros,
-      this.document_id});
+      this.documentId});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
-    user_id = data['user_id'];
+   
+    favoritos = data['favoritos'] ?? [''];
+    userId = data['user_id'];
     descripcion = data['descripcion'];
-    tipo_animal = data['tipo_animal'];
+    tipoAnimal = data['tipo_animal'];
     foto = data['foto'];
     sexo = data['sexo'];
     edad = data['edad'];
@@ -193,6 +227,7 @@ class AdopcionModel {
     vacunacion = data['vacunacion'];
     desparacitacion = data['desparacitacion'];
     convivenciaotros = data['convivenciaotros'];
-    document_id = data.documentID.toString();
+    documentId = data.documentID.toString();
+    reference = data.reference;
   }
 }

@@ -24,7 +24,7 @@ class _PerdidoState extends State<Perdido> {
           Stack(
             children: <Widget>[
               Hero(
-                tag: widget.objeto.document_id,
+                tag: widget.objeto.documentId,
                 child: Container(
                   width: double.infinity,
                   height: 350.0,
