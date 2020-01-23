@@ -85,8 +85,8 @@ class _ListCardState extends State<ListCard> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Emergencia(
-                                                    objeto: widget.objeto,
-                                                  )),
+                                                  objeto: widget.objeto,
+                                                  favorito: favorito)),
                                         );
                         },
                         child: Container(
@@ -138,7 +138,8 @@ class _ListCardState extends State<ListCard> {
                       padding: leftAligned
                           ? EdgeInsets.only(right: 30)
                           : EdgeInsets.only(right: 5),
-                      icon: Icon(favorito ? Icons.favorite : Icons.favorite_border),
+                      icon: Icon(
+                          favorito ? Icons.favorite : Icons.favorite_border),
                       iconSize: 30.0,
                       color: Colors.pink,
                       onPressed: () {
@@ -156,7 +157,7 @@ class _ListCardState extends State<ListCard> {
                             !favorito
                                 ? controlador1.usuario.reference.updateData(
                                     {
-                                      'adopcionens': FieldValue.arrayUnion([
+                                      'adopciones': FieldValue.arrayUnion([
                                         {
                                           'imagen': widget.objeto.foto,
                                           'titulo': widget.objeto.titulo,
@@ -168,7 +169,7 @@ class _ListCardState extends State<ListCard> {
                                   )
                                 : controlador1.usuario.reference.updateData(
                                     {
-                                      'adopcionens': FieldValue.arrayRemove([
+                                      'adopciones': FieldValue.arrayRemove([
                                         {
                                           'imagen': widget.objeto.foto,
                                           'titulo': widget.objeto.titulo,
@@ -183,22 +184,97 @@ class _ListCardState extends State<ListCard> {
                             });
                             break;
                           case 1:
-                            controlador1.usuario.reference
-                                .collection('perdidos')
-                                .add({});
+                            !favorito
+                                ? controlador1.usuario.reference.updateData(
+                                    {
+                                      'perdidos': FieldValue.arrayUnion([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  )
+                                : controlador1.usuario.reference.updateData(
+                                    {
+                                      'perdidos': FieldValue.arrayRemove([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  );
+                            setState(() {
+                              favorito ? favorito = false : favorito = true;
+                            });
                             break;
                           case 2:
-                            controlador1.usuario.reference
-                                .collection('rescates')
-                                .add({});
+                            !favorito
+                                ? controlador1.usuario.reference.updateData(
+                                    {
+                                      'rescates': FieldValue.arrayUnion([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  )
+                                : controlador1.usuario.reference.updateData(
+                                    {
+                                      'rescates': FieldValue.arrayRemove([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  );
+                            setState(() {
+                              favorito ? favorito = false : favorito = true;
+                            });
                             break;
                           case 3:
-                            controlador1.usuario.reference
-                                .collection('emergencias')
-                                .add({});
+                            !favorito
+                                ? controlador1.usuario.reference.updateData(
+                                    {
+                                      'emergencias': FieldValue.arrayUnion([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  )
+                                : controlador1.usuario.reference.updateData(
+                                    {
+                                      'emergencias': FieldValue.arrayRemove([
+                                        {
+                                          'imagen': widget.objeto.foto,
+                                          'titulo': widget.objeto.titulo,
+                                          'documentId':
+                                              widget.objeto.documentId,
+                                        }
+                                      ])
+                                    },
+                                  );
+                            setState(() {
+                              favorito ? favorito = false : favorito = true;
+                            });
                             break;
                         }
-                        print('curazao');
+                        print(favorito.toString());
                       },
                     ),
                   ],

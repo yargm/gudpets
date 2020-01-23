@@ -80,7 +80,11 @@ class MyApp extends StatelessWidget {
           '/rescate': (BuildContext context) => Rescate(),
           '/emergencia': (BuildContext context) => Emergencia(),
           '/registro_emergencia': (BuildContext context) => RegistroEmergencia(),
+
           '/registro_rescate': (BuildContext context) => RegistroRescate(),
+
+          '/avisos' :(BuildContext context) => AvisosList(),
+
         },
       ),
     );

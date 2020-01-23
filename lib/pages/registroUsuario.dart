@@ -331,7 +331,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     children: <Widget>[
                       saveButton(controlador1),
                       FlatButton(
-                        child: ListTile(title: Text('Cancelar Registro'), leading: Icon(Icons.cancel),),
+                        child: Container(child: ListTile(title: Text('Cancelar Registro'), leading: Icon(Icons.cancel),), width: double.maxFinite,),
                         
                         onPressed: () {
                           signOutGoogle();
