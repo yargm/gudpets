@@ -15,5 +15,5 @@ export 'perdidoList.dart';
 export 'adopcion.dart';
 export 'adopcionList.dart';
 
-export 'avisos.dart';
+export 'avisosCard.dart';
 export 'avisosList.dart';
