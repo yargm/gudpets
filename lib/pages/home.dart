@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
               : controlador1.pestana_act == 1
                   ? print('ir a registro perdido')
                   : controlador1.pestana_act == 2
-                      ? print('ir a registro rescate')
+                      ?Navigator.of(context).pushNamed('/registro_rescate')
                       : Navigator.of(context).pushNamed('/registro_emergencia');
         },
         child: Icon(Icons.add, color: primaryLight),
