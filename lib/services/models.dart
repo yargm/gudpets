@@ -108,6 +108,7 @@ class EmergenciaModel {
   List<dynamic> favoritos = [];
   String tipoAnimal;
   String documentId;
+  String userName;
   DocumentReference reference;
 
   EmergenciaModel(
@@ -118,7 +119,8 @@ class EmergenciaModel {
       this.userId,
       this.foto,
       this.tipoAnimal,
-      this.documentId});
+      this.documentId,
+      this.userName});
 
   EmergenciaModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -129,6 +131,7 @@ class EmergenciaModel {
     userId = data['user_id'];
     foto = data['foto'];
     tipoAnimal = data['tipo_animal'];
+    userName = data['userName'];
     documentId = data.documentID.toString();
     reference = data.reference;
   }
@@ -229,5 +232,15 @@ class AdopcionModel {
     convivenciaotros = data['convivenciaotros'];
     documentId = data.documentID.toString();
     reference = data.reference;
+  }
+}
+
+class AvisoModel{
+  String imagen;
+  String link;
+  AvisoModel({this.imagen, this.link});
+  AvisoModel.fromDocumentSnapshot(DocumentSnapshot data){
+    imagen =  data['imagen'];
+    link = data['link'];
   }
 }

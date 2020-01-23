@@ -105,7 +105,8 @@ class _HomeState extends State<Home> {
         actions: <Widget>[
           IconButton(
             onPressed: () {
-              print('avisos');
+              return Navigator.of(context).pushNamed('/avisos');
+              // print('avisos');
             },
             icon: Icon(FontAwesomeIcons.bullhorn),
           )
