@@ -84,11 +84,10 @@ class MyApp extends StatelessWidget {
           '/registro_rescate': (BuildContext context) => RegistroRescate(),
 
           '/avisos' :(BuildContext context) => AvisosList(),
-<<<<<<< HEAD
-          '/favoritos' : (BuildContext context) => FavoritosList()
-=======
 
->>>>>>> fa7ca9ebda36cb80b8145a34da813463751cbcfa
+          '/favoritos' : (BuildContext context) => FavoritosList()
+
+
         },
       ),
     );
