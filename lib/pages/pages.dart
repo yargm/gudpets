@@ -17,3 +17,5 @@ export 'adopcionList.dart';
 
 export 'avisos.dart';
 export 'avisosList.dart';
+
+export 'favoritosList.dart';

@@ -1,4 +1,4 @@
-import 'package:adoption_app/pages/sign_in.dart';
+
 import 'package:adoption_app/services/models.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:flutter/material.dart';
@@ -49,9 +49,7 @@ class _LogInState extends State<LogIn> {
             width: double.maxFinite,
             margin: EdgeInsets.all(4.0),
             padding: const EdgeInsets.fromLTRB(0, 70, 0, 90),
-            child: isLoading
-                ? CircularProgressIndicator()
-                : Form(
+            child: Form(
                     key: key,
                     child: Column(
                       children: <Widget>[
@@ -77,7 +75,7 @@ class _LogInState extends State<LogIn> {
                         SizedBox(
                           height: 30.0,
                         ),
-                        Card(
+                        isLoading ? CircularProgressIndicator() : Card(
                           margin: EdgeInsets.symmetric(horizontal: 40),
                           elevation: 9.0,
                           shape: ContinuousRectangleBorder(
