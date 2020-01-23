@@ -88,7 +88,7 @@ class RescateModel {
   RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'] ?? '';
     favoritos = data['favoritos'] ?? [''];
-    ubicacion = data['ubicacion']?? [''];
+    ubicacion = data['ubicacion'] ?? [''];
     descripcion = data['descripcion'];
     fotos = data['fotos']  ?? [''];
     tipoAnimal = data['tipoAnimal'];

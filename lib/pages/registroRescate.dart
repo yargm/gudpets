@@ -19,19 +19,20 @@ class _RegistroRescateState extends State<RegistroRescate> {
   File _image = null;
   final _rescatekey = GlobalKey<FormState>();
   String tipotemp = '';
+    bool isLoadig = false;
   String or = '';
   String tipoA = '';
   Map<String, dynamic> form_rescate = {
     'titulo': null,
-    'ubicacion': null,
+    'ubicacion': " ",
     'telefono': null,
     'foto': null,
     'descripcion': null,
     'tipoAnimal': null,
     'fecha': null,
     'userName': null,
-    'fotos' : null,
-    'favoritos' : [],
+    'fotos': [],
+    'favoritos': [],
   };
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,6 @@ class _RegistroRescateState extends State<RegistroRescate> {
                     if (value.isEmpty) {
                       return 'Título vacío';
                     }
-                  
                   },
                   decoration: InputDecoration(
                       labelText: '* Titulo del Post',
@@ -106,24 +106,21 @@ class _RegistroRescateState extends State<RegistroRescate> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10))),
                 ),
-                SizedBox(height: 15,),
+                SizedBox(
+                  height: 15,
+                ),
                 Text('Selecciona el tipo de Animal'),
-               FittedBox(
-                                child: RadioButtonGroup(
-                                picked: null,
-                                orientation: GroupedButtonsOrientation.HORIZONTAL,
-                                labels: <String>[
-                                  'perro',
-                                  'gato',
-                                  'ave',
-                                  'otro'
-                                ],
-                                onSelected: (String opcion) {
-                                  setState(() {
-                                    form_rescate['tipoAnimal'] = opcion;
-                                  });
-                                }),
-               ),
+                FittedBox(
+                  child: RadioButtonGroup(
+                      picked: null,
+                      orientation: GroupedButtonsOrientation.HORIZONTAL,
+                      labels: <String>['perro', 'gato', 'ave', 'otro'],
+                      onSelected: (String opcion) {
+                        setState(() {
+                          form_rescate['tipoAnimal'] = opcion;
+                        });
+                      }),
+                ),
                 SizedBox(
                   height: 15,
                 ),
@@ -256,7 +253,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                   height: 15,
                 ),
                 Center(
-                  child: RaisedButton.icon(
+                  child: isLoadig ? CircularProgressIndicator() : RaisedButton.icon(
                       icon: Icon(Icons.check),
                       label: Text('Guardar'),
                       onPressed: () async {
@@ -264,55 +261,64 @@ class _RegistroRescateState extends State<RegistroRescate> {
                           form_rescate['userName'] =
                               controlador1.usuario.nombre;
                           form_rescate['fecha'] = DateTime.now();
+                          isLoadig = true;
                         });
 
-                        if (_rescatekey.currentState.validate()) {
-                          if (_image != null) {
-                            final String fileName = form_rescate['userName'] +
-                                '/rescate/' +
-                                DateTime.now().toString();
+                        if(!_rescatekey.currentState.validate())
+                        {
 
-                            StorageReference storageRef =
-                                FirebaseStorage.instance.ref().child(fileName);
-
-                            final StorageUploadTask uploadTask =
-                                storageRef.putFile(
-                              _image,
-                            );
-
-                            final StorageTaskSnapshot downloadUrl =
-                                (await uploadTask.onComplete);
-
-                            final String url =
-                                (await downloadUrl.ref.getDownloadURL());
-                            print('URL Is $url');
-                            setState(() {
-                              form_rescate['foto'] = url;
-                            });
-                          } else {
-                            return showDialog(
-                                context: context,
-                                child: AlertDialog(
-                                  content: SingleChildScrollView(
-                                    child: ListBody(
-                                      children: <Widget>[
-                                        Text(
-                                            'Necesitas Añadir una Imagen para continuar'),
-                                      ],
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text('Regresar'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                  title: Text('Campo Obligatorio'),
-                                ));
-                          }
+                         setState(() {
+                            isLoadig = false;
+                          });
+                          return;
                         }
+
+                        if (_image != null) {
+                          final String fileName = form_rescate['userName'] +
+                              '/rescate/' +
+                              DateTime.now().toString();
+
+                          StorageReference storageRef =
+                              FirebaseStorage.instance.ref().child(fileName);
+
+                          final StorageUploadTask uploadTask =
+                              storageRef.putFile(
+                            _image,
+                          );
+
+                          final StorageTaskSnapshot downloadUrl =
+                              (await uploadTask.onComplete);
+
+                          final String url =
+                              (await downloadUrl.ref.getDownloadURL());
+                          print('URL Is $url');
+                          setState(() {
+                            form_rescate['foto'] = url;
+                          });
+                        } else {
+                          return showDialog(
+                              context: context,
+                              child: AlertDialog(
+                                content: SingleChildScrollView(
+                                  child: ListBody(
+                                    children: <Widget>[
+                                      Text(
+                                          'Necesitas Añadir una Imagen para continuar'),
+                                    ],
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text('Regresar'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                                title: Text('Campo Obligatorio'),
+                              ));
+                        }
+
                         _rescatekey.currentState.save();
 
                         var agregar = await Firestore.instance
@@ -325,7 +331,10 @@ class _RegistroRescateState extends State<RegistroRescate> {
                             return false;
                           }
                         });
+
+                        if (agregar) {
                           Navigator.pop(context);
+                        }
                       }),
                 )
               ],
