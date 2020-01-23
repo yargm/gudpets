@@ -66,35 +66,37 @@ class RescateModel {
   String ubicacion;
   int telefono;
   List<dynamic> favoritos = [];
-  int userId;
   dynamic fotos;
   String tipoAnimal;
   String titulo;
   String foto;
   String documentId;
+  DateTime fecha;
+  String userName;
  DocumentReference reference;
   RescateModel(
       {this.fotos,
       this.ubicacion,
       this.descripcion,
-      this.userId,
       this.telefono,
       this.tipoAnimal,
       this.titulo,
       this.foto,
-      this.documentId});
+      this.documentId
+      ,this.fecha, this.userName});
 
   RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'] ?? '';
     favoritos = data['favoritos'] ?? [''];
-    ubicacion = data['ubicacion'];
+    ubicacion = data['ubicacion']?? [''];
     descripcion = data['descripcion'];
-    userId = data['user_id'];
-    fotos = data['fotos'];
-    tipoAnimal = data['tipo_animal'];
+    fotos = data['fotos']  ?? [''];
+    tipoAnimal = data['tipoAnimal'];
     foto = data['foto'];
     documentId = data.documentID.toString();
     reference = data.reference;
+    fecha = data['fecha'].toDate();
+    userName = data['userName'];
   }
 }
 
@@ -103,7 +105,6 @@ class EmergenciaModel {
   String tipoEmergencia;
   String ubicacion;
   String descripcion;
-  int userId;
   String foto;
   List<dynamic> favoritos = [];
   String tipoAnimal;
@@ -115,7 +116,6 @@ class EmergenciaModel {
       this.tipoEmergencia,
       this.ubicacion,
       this.descripcion,
-      this.userId,
       this.foto,
       this.tipoAnimal,
       this.documentId});
@@ -126,7 +126,6 @@ class EmergenciaModel {
     tipoEmergencia = data['tipo_emergencia'];
     ubicacion = data['ubicacion'];
     descripcion = data['descripcion'];
-    userId = data['user_id'];
     foto = data['foto'];
     tipoAnimal = data['tipo_animal'];
     documentId = data.documentID.toString();
@@ -136,7 +135,6 @@ class EmergenciaModel {
 
 class PerdidoModel {
   String titulo;
-  int userId;
   String descripcion;
   String tipoAnimal;
   String ubicacion;
@@ -152,7 +150,6 @@ class PerdidoModel {
 
   PerdidoModel({
     this.titulo,
-    this.userId,
     this.descripcion,
     this.tipoAnimal,
     this.ubicacion,
@@ -168,7 +165,6 @@ class PerdidoModel {
   PerdidoModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
     favoritos = data['favoritos'] ?? [''];
-    userId = data['user_id'];
     descripcion = data['descripcion'];
     tipoAnimal = data['tipo_animal'];
     ubicacion = data['ubicacion'];
@@ -186,7 +182,6 @@ class PerdidoModel {
 class AdopcionModel {
   String titulo;
   List<dynamic> favoritos = [];
-  int userId;
   String descripcion;
   String tipoAnimal;
   String foto;
@@ -201,7 +196,6 @@ class AdopcionModel {
 
   AdopcionModel(
       {this.titulo,
-      this.userId,
       this.descripcion,
       this.tipoAnimal,
       this.foto,
@@ -217,7 +211,6 @@ class AdopcionModel {
     titulo = data['titulo'];
    
     favoritos = data['favoritos'] ?? [''];
-    userId = data['user_id'];
     descripcion = data['descripcion'];
     tipoAnimal = data['tipo_animal'];
     foto = data['foto'];
