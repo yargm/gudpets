@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:location/location.dart';
+import 'mapaejemplo.dart';
 
 import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
@@ -16,15 +18,36 @@ class RegistroRescate extends StatefulWidget {
 }
 
 class _RegistroRescateState extends State<RegistroRescate> {
+  UserLocation _currentLocation;
+  var location = Location();
+  double latitud;
+  double longitud;
+
+  Future<UserLocation> getLocation() async {
+    try {
+      var userLocation = await location.getLocation();
+      setState(() {
+        _currentLocation = UserLocation(
+            latitud: userLocation.latitude, longitud: userLocation.longitude);
+        latitud = _currentLocation.latitud;
+        longitud = _currentLocation.longitud;
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  bool capturaubicacion = false;
+
   File _image = null;
   final _rescatekey = GlobalKey<FormState>();
   String tipotemp = '';
-    bool isLoadig = false;
+  bool isLoadig = false;
   String or = '';
   String tipoA = '';
   Map<String, dynamic> form_rescate = {
     'titulo': null,
-    'ubicacion': " ",
+    'ubicacion': null,
     'telefono': null,
     'foto': null,
     'descripcion': null,
@@ -70,6 +93,31 @@ class _RegistroRescateState extends State<RegistroRescate> {
                   'Los campos marcados con * son obligatorios.',
                   style: TextStyle(color: Colors.red),
                 ),
+                capturaubicacion
+                    ? Text('Ubicación capturada con éxito' +
+                        controlador1.latitudfinal.toString() +
+                        ',' +
+                        controlador1.longitudfinal.toString())
+                    : FlatButton(
+                        child: Text('Capturar ubicación'),
+                        onPressed: () async {
+                          setState(() {
+                            capturaubicacion = true;
+                          });
+                          await getLocation();
+                          print('actual lat: ' + latitud.toString());
+                          print('actual long: ' + longitud.toString());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MapSample(
+                                      latitud: latitud,
+                                      longitud: longitud,
+                                      controlador1: controlador1,
+                                    )),
+                          );
+                        },
+                      ),
                 SizedBox(
                   height: 15,
                 ),
@@ -253,89 +301,91 @@ class _RegistroRescateState extends State<RegistroRescate> {
                   height: 15,
                 ),
                 Center(
-                  child: isLoadig ? CircularProgressIndicator() : RaisedButton.icon(
-                      icon: Icon(Icons.check),
-                      label: Text('Guardar'),
-                      onPressed: () async {
-                        setState(() {
-                          form_rescate['userName'] =
-                              controlador1.usuario.nombre;
-                          form_rescate['fecha'] = DateTime.now();
-                          isLoadig = true;
-                        });
+                  child: isLoadig
+                      ? CircularProgressIndicator()
+                      : RaisedButton.icon(
+                          icon: Icon(Icons.check),
+                          label: Text('Guardar'),
+                          onPressed: () async {
+                            setState(() {
+                              form_rescate['userName'] =
+                                  controlador1.usuario.nombre;
+                              form_rescate['fecha'] = DateTime.now();
+                              isLoadig = true;
+                            });
 
-                        if(!_rescatekey.currentState.validate())
-                        {
+                            if (!_rescatekey.currentState.validate()) {
+                              setState(() {
+                                isLoadig = false;
+                              });
+                              return;
+                            }
 
-                         setState(() {
-                            isLoadig = false;
-                          });
-                          return;
-                        }
+                            if (_image != null) {
+                              final String fileName = form_rescate['userName'] +
+                                  '/rescate/' +
+                                  DateTime.now().toString();
 
-                        if (_image != null) {
-                          final String fileName = form_rescate['userName'] +
-                              '/rescate/' +
-                              DateTime.now().toString();
+                              StorageReference storageRef = FirebaseStorage
+                                  .instance
+                                  .ref()
+                                  .child(fileName);
 
-                          StorageReference storageRef =
-                              FirebaseStorage.instance.ref().child(fileName);
+                              final StorageUploadTask uploadTask =
+                                  storageRef.putFile(
+                                _image,
+                              );
 
-                          final StorageUploadTask uploadTask =
-                              storageRef.putFile(
-                            _image,
-                          );
+                              final StorageTaskSnapshot downloadUrl =
+                                  (await uploadTask.onComplete);
 
-                          final StorageTaskSnapshot downloadUrl =
-                              (await uploadTask.onComplete);
-
-                          final String url =
-                              (await downloadUrl.ref.getDownloadURL());
-                          print('URL Is $url');
-                          setState(() {
-                            form_rescate['foto'] = url;
-                          });
-                        } else {
-                          return showDialog(
-                              context: context,
-                              child: AlertDialog(
-                                content: SingleChildScrollView(
-                                  child: ListBody(
-                                    children: <Widget>[
-                                      Text(
-                                          'Necesitas Añadir una Imagen para continuar'),
+                              final String url =
+                                  (await downloadUrl.ref.getDownloadURL());
+                              print('URL Is $url');
+                              setState(() {
+                                form_rescate['foto'] = url;
+                              });
+                            } else {
+                              return showDialog(
+                                  context: context,
+                                  child: AlertDialog(
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: <Widget>[
+                                          Text(
+                                              'Necesitas Añadir una Imagen para continuar'),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text('Regresar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
                                     ],
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text('Regresar'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                                title: Text('Campo Obligatorio'),
-                              ));
-                        }
+                                    title: Text('Campo Obligatorio'),
+                                  ));
+                            }
 
-                        _rescatekey.currentState.save();
+                            _rescatekey.currentState.save();
 
-                        var agregar = await Firestore.instance
-                            .collection('rescates')
-                            .add(form_rescate)
-                            .then((value) {
-                          if (value != null) {
-                            return true;
-                          } else {
-                            return false;
-                          }
-                        });
+                            var agregar = await Firestore.instance
+                                .collection('rescates')
+                                .add(form_rescate)
+                                .then((value) {
+                              if (value != null) {
+                                return true;
+                              } else {
+                                return false;
+                              }
+                            });
 
-                        if (agregar) {
-                          Navigator.pop(context);
-                        }
-                      }),
+                            if (agregar) {
+                              Navigator.pop(context);
+                            }
+                          }),
                 )
               ],
             ),

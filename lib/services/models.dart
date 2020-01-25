@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:adoption_app/services/services.dart';
 
+import 'package:location/location.dart';
+
+class UserLocation {
+  final double latitud;
+  final double longitud;
+
+  UserLocation({this.latitud, this.longitud});
+}
+
 class UsuarioModel {
   String contrasena;
   String correo;
@@ -11,7 +20,7 @@ class UsuarioModel {
   String nombre;
   String sexo;
   int telefono;
- DocumentReference reference;
+  DocumentReference reference;
   String tipo;
   String documentId;
 
@@ -25,31 +34,30 @@ class UsuarioModel {
       this.sexo,
       this.telefono,
       this.tipo,
-     
       this.documentId});
 
   int calculateAge(DateTime birthDate) {
-  DateTime currentDate = DateTime.now();
-  int age = currentDate.year - birthDate.year;
-  int month1 = currentDate.month;
-  int month2 = birthDate.month;
-  if (month2 > month1) {
-    age--;
-  } else if (month1 == month2) {
-    int day1 = currentDate.day;
-    int day2 = birthDate.day;
-    if (day2 > day1) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
       age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
     }
+    return age;
   }
-  return age;
-}
 
   UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
     contrasena = data['tcontrasena'];
     correo = data['correo'];
     descripcion = data['descripcion'];
-    edad =  calculateAge(data['fnacimiento'].toDate());
+    edad = calculateAge(data['fnacimiento'].toDate());
     foto = data['foto'];
     nombre = data['nombre'];
     sexo = data['sexo'];
@@ -73,7 +81,7 @@ class RescateModel {
   String documentId;
   DateTime fecha;
   String userName;
- DocumentReference reference;
+  DocumentReference reference;
   RescateModel(
       {this.fotos,
       this.ubicacion,
@@ -82,15 +90,16 @@ class RescateModel {
       this.tipoAnimal,
       this.titulo,
       this.foto,
-      this.documentId
-      ,this.fecha, this.userName});
+      this.documentId,
+      this.fecha,
+      this.userName});
 
   RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'] ?? '';
     favoritos = data['favoritos'] ?? [''];
     ubicacion = data['ubicacion'] ?? [''];
     descripcion = data['descripcion'];
-    fotos = data['fotos']  ?? [''];
+    fotos = data['fotos'] ?? [''];
     tipoAnimal = data['tipoAnimal'];
     foto = data['foto'];
     documentId = data.documentID.toString();
@@ -212,7 +221,7 @@ class AdopcionModel {
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
-   
+
     favoritos = data['favoritos'] ?? [''];
     descripcion = data['descripcion'];
     tipoAnimal = data['tipo_animal'];
@@ -228,12 +237,12 @@ class AdopcionModel {
   }
 }
 
-class AvisoModel{
+class AvisoModel {
   String imagen;
   String link;
   AvisoModel({this.imagen, this.link});
-  AvisoModel.fromDocumentSnapshot(DocumentSnapshot data){
-    imagen =  data['imagen'];
+  AvisoModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    imagen = data['imagen'];
     link = data['link'];
   }
 }

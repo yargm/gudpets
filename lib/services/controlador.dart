@@ -17,13 +17,13 @@ class Controller with ChangeNotifier {
   UsuarioModel get usuario => usuario_act;
 
   signOut() async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.clear();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   signIn() async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('correo', usuario_act.correo);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('correo', usuario_act.correo);
   }
 
   Future<bool> signInCheck() async {
@@ -46,4 +46,7 @@ class Controller with ChangeNotifier {
   agregausuario(UsuarioModel usuario) {
     usuario_act = usuario;
   }
+
+  double latitudfinal;
+  double longitudfinal;
 }
