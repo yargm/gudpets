@@ -6,7 +6,6 @@ import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
-import 'package:adoption_app/pages/sign_in.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class RegistroUsuario extends StatefulWidget {
@@ -331,11 +330,11 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     children: <Widget>[
                       saveButton(controlador1),
                       FlatButton(
-                        child: ListTile(title: Text('Cancelar Registro'), leading: Icon(Icons.cancel),),
+                        child: Container(child: ListTile(title: Text('Cancelar Registro'), leading: Icon(Icons.cancel),), width: double.maxFinite,),
                         
                         onPressed: () {
                           signOutGoogle();
-                          Navigator.of(context).pushReplacementNamed('/');
+                          Navigator.of(context).pushReplacementNamed('/login');
                         },
                       ),
                     ],

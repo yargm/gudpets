@@ -3,6 +3,7 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:adoption_app/pages/registroRescate.dart';
 
 void main() => runApp(MyApp());
 
@@ -79,7 +80,14 @@ class MyApp extends StatelessWidget {
           '/rescate': (BuildContext context) => Rescate(),
           '/emergencia': (BuildContext context) => Emergencia(),
           '/registro_emergencia': (BuildContext context) => RegistroEmergencia(),
+
+          '/registro_rescate': (BuildContext context) => RegistroRescate(),
+
           '/avisos' :(BuildContext context) => AvisosList(),
+
+          '/favoritos' : (BuildContext context) => FavoritosList()
+
+
         },
       ),
     );
