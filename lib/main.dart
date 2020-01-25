@@ -85,6 +85,9 @@ class MyApp extends StatelessWidget {
           '/mapaejemplo': (BuildContext context) => MapSample(),
           '/avisos' :(BuildContext context) => AvisosList(),
 
+          '/favoritos' : (BuildContext context) => FavoritosList()
+
+
         },
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:adoption_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
@@ -22,67 +23,139 @@ class _EmergenciaState extends State<Emergencia> {
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Hero(
-                tag: widget.objeto.documentId,
-                child: Container(
-                  width: double.infinity,
-                  height: 350.0,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(widget.objeto.foto),
-                          fit: BoxFit.cover)),
+          child: Card(
+        margin: EdgeInsets.only(bottom: 20, top: 20, right: 10, left: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.bottomRight,
+              children: <Widget>[
+                Hero(
+                  tag: widget.objeto.documentId,
+                  child: Container(
+                    width: double.infinity,
+                    height: 350.0,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(widget.objeto.foto),
+                            fit: BoxFit.cover)),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Padding(
-              padding: EdgeInsets.only(left: 20, top:10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    widget.objeto.titulo,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                      ),
+                      color: Colors.brown[300]),
+                  padding: EdgeInsets.all(10.0),
+                  width: 175.0,
+                  alignment: Alignment.bottomRight,
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    children: <Widget>[
+                      Text(
+                        widget.objeto.userName,
+                        style: TextStyle(fontSize: 16.0, color: Colors.white),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  IconButton(
-                    icon: Icon(widget.favorito
-                        ? Icons.favorite
-                        : Icons.favorite_border),
-                    iconSize: 30.0,
-                    color: Colors.pink,
-                    onPressed: () {
-                      !widget.favorito
-                          ? _favtrue(
-                              widget.favorito, controlador1, widget.objeto)
-                          : _favfalse(
-                              widget.favorito, controlador1, widget.objeto);
-                      setState(() {
-                        widget.favorito
-                            ? widget.favorito = false
-                            : widget.favorito = true;
-                      });
-                      print(widget.favorito.toString());
-                    },
-                  ),
-                ],
-              )),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(widget.objeto.descripcion,
-                style: TextStyle(
-                  fontSize: 18.0,
-                  color: Colors.grey,
+                ),
+              ],
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 20, top: 10, right: 20.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(
+                            widget.objeto.titulo,
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(FontAwesomeIcons.dog),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        IconButton(
+                          icon: Icon(widget.favorito
+                              ? Icons.favorite
+                              : Icons.favorite_border),
+                          iconSize: 30.0,
+                          color: Colors.pink,
+                          onPressed: () {
+                            !widget.favorito
+                                ? _favtrue(widget.favorito, controlador1,
+                                    widget.objeto)
+                                : _favfalse(widget.favorito, controlador1,
+                                    widget.objeto);
+
+                            setState(() {
+                              widget.favorito
+                                  ? widget.favorito = false
+                                  : widget.favorito = true;
+                            });
+
+                            print(widget.favorito.toString());
+                          },
+                        ),
+                        SizedBox(
+                          height: 10,
+                        )
+                      ],
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+                      child: Text(widget.objeto.descripcion,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.grey,
+                          )),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                  'Tipo de emergencia: ' +
+                                      widget.objeto.tipoEmergencia,
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ]),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Container(
+                      color: primaryDark,
+                      height: 200.0,
+                      width: 200.0,
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                  ],
                 )),
-          )
-        ],
+          ],
+        ),
       )),
     );
   }
