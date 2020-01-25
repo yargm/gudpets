@@ -24,7 +24,7 @@ class AvisosList extends StatelessWidget {
                     child: Text('Cargando...'),
                   );
                 return ListView.builder(
-                  itemBuilder: (context, index) => Avisos(
+                  itemBuilder: (context, index) => AvisosCard(
                       objeto: AvisoModel.fromDocumentSnapshot(
                           snapshot.data.documents[index])),
                   itemCount: snapshot.data.documents.length,

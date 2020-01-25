@@ -25,7 +25,6 @@ class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
-    
 
     controlador1.signInCheck().then((onValue) {
       setState(() {
@@ -44,7 +43,6 @@ class _LogInState extends State<LogIn> {
       backgroundColor: Colors.amber[100],
       body: SingleChildScrollView(
         child: Center(
-         
           child: Container(
             width: double.maxFinite,
             margin: EdgeInsets.all(4.0),
@@ -237,25 +235,27 @@ class _LogInState extends State<LogIn> {
       borderSide: BorderSide(color: Colors.grey),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              FontAwesomeIcons.google,
-              size: 15,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15),
-              child: Text(
-                'Registrate con Google',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey,
-                ),
+        child: FittedBox(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                FontAwesomeIcons.google,
+                size: 15,
               ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.only(left: 15),
+                child: Text(
+                  'Registrate con Google',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
