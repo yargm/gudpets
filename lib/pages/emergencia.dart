@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:async';
 
 class Emergencia extends StatefulWidget {
   final EmergenciaModel objeto;
@@ -18,6 +20,16 @@ class _EmergenciaState extends State<Emergencia> {
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
+    Completer<GoogleMapController> _controller = Completer();
+
+    List<Marker> marcador = [
+      Marker(
+        markerId: MarkerId('emergenciaMarker'),
+        draggable: false,
+        position: LatLng(widget.objeto.ubicacion.latitude,
+            widget.objeto.ubicacion.longitude),
+      ),
+    ];
 
     // TODO: implement build
     return Scaffold(
@@ -80,7 +92,21 @@ class _EmergenciaState extends State<Emergencia> {
                         SizedBox(
                           width: 10,
                         ),
-                        Icon(FontAwesomeIcons.dog),
+                        Column(
+                          children: <Widget>[
+                            Text('Tipo:', style: TextStyle(fontSize: 12)),
+                            widget.objeto.tipoAnimal == 'perro'
+                                ? Icon(FontAwesomeIcons.dog)
+                                : widget.objeto.tipoAnimal == 'gato'
+                                    ? Icon(FontAwesomeIcons.cat)
+                                    : widget.objeto.tipoAnimal == 'ave'
+                                        ? Icon(FontAwesomeIcons.dove)
+                                        : Text(
+                                            'otro',
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                          ],
+                        ),
                         SizedBox(
                           width: 10,
                         ),
@@ -121,21 +147,38 @@ class _EmergenciaState extends State<Emergencia> {
                           )),
                     ),
                     SizedBox(
-                      height: 20.0,
+                      height: 5.0,
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Row(children: <Widget>[
                         Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(
-                                  'Tipo de emergencia: ' +
-                                      widget.objeto.tipoEmergencia,
+                              Text('Tipo de emergencia: ',
                                   style: TextStyle(
                                     fontSize: 20.0,
                                   )),
+                              Text(widget.objeto.tipoEmergencia,
+                                  style: TextStyle(
+                                      fontSize: 18.0, color: Colors.grey)),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Text('Fecha de publicación: ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  )),
+                              Text(
+                                widget.objeto.fecha.day.toString() +
+                                    '/' +
+                                    widget.objeto.fecha.month.toString() +
+                                    '/' +
+                                    widget.objeto.fecha.year.toString(),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),
+                              ),
                             ],
                           ),
                         ),
@@ -144,10 +187,30 @@ class _EmergenciaState extends State<Emergencia> {
                     SizedBox(
                       height: 20.0,
                     ),
+                    Text('Ubicación: ',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        )),
+                    SizedBox(
+                      height: 5.0,
+                    ),
                     Container(
-                      color: primaryDark,
-                      height: 200.0,
-                      width: 200.0,
+                      height: 300.0,
+                      width: 400.0,
+                      child: GoogleMap(
+                        zoomGesturesEnabled: true,
+                        scrollGesturesEnabled: true,
+                        markers: Set.from(marcador),
+                        mapType: MapType.normal,
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(widget.objeto.ubicacion.latitude,
+                              widget.objeto.ubicacion.longitude),
+                          zoom: 16,
+                        ),
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: 20.0,

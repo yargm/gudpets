@@ -22,17 +22,19 @@ class MapSampleState extends State<MapSample> {
     super.initState();
 
     marcadores.add(Marker(
-        markerId: MarkerId('aqui estoy'),
+        markerId: MarkerId('Aqui'),
         draggable: true,
         position: LatLng(widget.latitud, widget.longitud),
         onDragEnd: (value) {
           setState(() {
             double newlatitud = value.latitude;
             double newlongitud = value.longitude;
-            print('movi a lat:' + newlatitud.toString());
-            print('movi a long:' + newlongitud.toString());
             widget.controlador1.latitudfinal = newlatitud;
             widget.controlador1.longitudfinal = newlongitud;
+            print('la latitud nueva es:' +
+                widget.controlador1.latitudfinal.toString());
+            print('la longitud nueva es:' +
+                widget.controlador1.longitudfinal.toString());
           });
         }));
   }
@@ -46,22 +48,17 @@ class MapSampleState extends State<MapSample> {
     return new Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          setState(() {
-            widget.controlador1.latitudfinal.isNaN
-                ? widget.controlador1.latitudfinal = widget.latitud
-                : widget.controlador1.latitudfinal =
-                    widget.controlador1.latitudfinal;
-            widget.controlador1.longitudfinal.isNaN
-                ? widget.controlador1.longitudfinal = widget.longitud
-                : widget.controlador1.longitudfinal =
-                    widget.controlador1.longitudfinal;
-          });
           Navigator.pop(context);
+          print('la latitud final es:' +
+              widget.controlador1.latitudfinal.toString());
+          print('la latitud final es:' +
+              widget.controlador1.longitudfinal.toString());
         },
         label: Text('Guardar'),
         icon: Icon(Icons.location_on),
       ),
       body: GoogleMap(
+        zoomGesturesEnabled: true,
         markers: Set.from(marcadores),
         mapType: MapType.normal,
         initialCameraPosition: _ubicacion,
