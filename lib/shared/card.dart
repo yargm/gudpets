@@ -118,167 +118,162 @@ class _ListCardState extends State<ListCard> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 15,
+            ),
             Padding(
               padding: EdgeInsets.only(left: 10.0),
-              child: FittedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Flexible(
+                    child: Text(
                       widget.objeto.titulo,
                       style: TextStyle(
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    IconButton(
-                      padding: leftAligned
-                          ? EdgeInsets.only(right: 30)
-                          : EdgeInsets.only(right: 5),
-                      icon: Icon(
-                          favorito ? Icons.favorite : Icons.favorite_border),
-                      iconSize: 30.0,
-                      color: Colors.pink,
-                      onPressed: () {
-                        !favorito
-                            ? widget.objeto.reference.updateData({
-                                'favoritos': FieldValue.arrayUnion(
-                                    [controlador1.usuario.documentId]),
-                              })
-                            : widget.objeto.reference.updateData({
-                                'favoritos': FieldValue.arrayRemove(
-                                    [controlador1.usuario.documentId])
-                              });
-                        switch (controlador1.pestana_act) {
-                          case 0:
-                            !favorito
-                                ? controlador1.usuario.reference.updateData(
-                                    {
-                                      'adopciones': FieldValue.arrayUnion([
-                                        {
-                                          'imagen': widget.objeto.foto,
-                                          'titulo': widget.objeto.titulo,
-                                          'documentId':
-                                              widget.objeto.documentId,
-                                        }
-                                      ])
-                                    },
-                                  )
-                                : controlador1.usuario.reference.updateData(
-                                    {
-                                      'adopciones': FieldValue.arrayRemove([
-                                        {
-                                          'imagen': widget.objeto.foto,
-                                          'titulo': widget.objeto.titulo,
-                                          'documentId':
-                                              widget.objeto.documentId,
-                                        }
-                                      ])
-                                    },
-                                  );
-                            setState(() {
-                              favorito ? favorito = false : favorito = true;
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  IconButton(
+                    padding: leftAligned
+                        ? EdgeInsets.only(right: 30)
+                        : EdgeInsets.only(right: 5),
+                    icon:
+                        Icon(favorito ? Icons.favorite : Icons.favorite_border),
+                    iconSize: 30.0,
+                    color: Colors.pink,
+                    onPressed: () {
+                      !favorito
+                          ? widget.objeto.reference.updateData({
+                              'favoritos': FieldValue.arrayUnion(
+                                  [controlador1.usuario.documentId]),
+                            })
+                          : widget.objeto.reference.updateData({
+                              'favoritos': FieldValue.arrayRemove(
+                                  [controlador1.usuario.documentId])
                             });
-                            break;
-                          case 1:
-                            !favorito
-                                ? controlador1.usuario.reference.updateData(
-                                    {
-                                      'perdidos': FieldValue.arrayUnion([
-                                        {
-                                          'imagen': widget.objeto.foto,
-                                          'titulo': widget.objeto.titulo,
-                                          'documentId':
-                                              widget.objeto.documentId,
-                                        }
-                                      ])
-                                    },
-                                  )
-                                : controlador1.usuario.reference.updateData(
-                                    {
-                                      'perdidos': FieldValue.arrayRemove([
-                                        {
-                                          'imagen': widget.objeto.foto,
-                                          'titulo': widget.objeto.titulo,
-                                          'documentId':
-                                              widget.objeto.documentId,
-                                        }
-                                      ])
-                                    },
-                                  );
-                            setState(() {
-                              favorito ? favorito = false : favorito = true;
-                            });
-                            break;
-                          case 2:
-                            !favorito
-                                ? controlador1.usuario.reference.updateData(
-                                    {
-                                      'rescates': FieldValue.arrayUnion([
-                                        {
-                                          'imagen': widget.objeto.foto,
-                                          'titulo': widget.objeto.titulo,
-                                          'documentId':
-                                              widget.objeto.documentId,
-                                        }
-                                      ])
-                                    },
-                                  )
-                                : controlador1.usuario.reference.updateData(
-                                    {
-                                      'rescates': FieldValue.arrayRemove([
-                                        {
-                                          'imagen': widget.objeto.foto,
-                                          'titulo': widget.objeto.titulo,
-                                          'documentId':
-                                              widget.objeto.documentId,
-                                        }
-                                      ])
-                                    },
-                                  );
-                            setState(() {
-                              favorito ? favorito = false : favorito = true;
-                            });
-                            break;
-                          case 3:
-                            !favorito
-                                ? controlador1.usuario.reference.updateData(
-                                    {
-                                      'emergencias': FieldValue.arrayUnion([
-                                        {
-                                          'imagen': widget.objeto.foto,
-                                          'titulo': widget.objeto.titulo,
-                                          'documentId':
-                                              widget.objeto.documentId,
-                                        }
-                                      ])
-                                    },
-                                  )
-                                : controlador1.usuario.reference.updateData(
-                                    {
-                                      'emergencias': FieldValue.arrayRemove([
-                                        {
-                                          'imagen': widget.objeto.foto,
-                                          'titulo': widget.objeto.titulo,
-                                          'documentId':
-                                              widget.objeto.documentId,
-                                        }
-                                      ])
-                                    },
-                                  );
-                            setState(() {
-                              favorito ? favorito = false : favorito = true;
-                            });
-                            break;
-                        }
-                        print(favorito.toString());
-                      },
-                    ),
-                  ],
-                ),
+                      switch (controlador1.pestana_act) {
+                        case 0:
+                          !favorito
+                              ? controlador1.usuario.reference.updateData(
+                                  {
+                                    'adopciones': FieldValue.arrayUnion([
+                                      {
+                                        'imagen': widget.objeto.foto,
+                                        'titulo': widget.objeto.titulo,
+                                        'documentId': widget.objeto.documentId,
+                                      }
+                                    ])
+                                  },
+                                )
+                              : controlador1.usuario.reference.updateData(
+                                  {
+                                    'adopciones': FieldValue.arrayRemove([
+                                      {
+                                        'imagen': widget.objeto.foto,
+                                        'titulo': widget.objeto.titulo,
+                                        'documentId': widget.objeto.documentId,
+                                      }
+                                    ])
+                                  },
+                                );
+                          setState(() {
+                            favorito ? favorito = false : favorito = true;
+                          });
+                          break;
+                        case 1:
+                          !favorito
+                              ? controlador1.usuario.reference.updateData(
+                                  {
+                                    'perdidos': FieldValue.arrayUnion([
+                                      {
+                                        'imagen': widget.objeto.foto,
+                                        'titulo': widget.objeto.titulo,
+                                        'documentId': widget.objeto.documentId,
+                                      }
+                                    ])
+                                  },
+                                )
+                              : controlador1.usuario.reference.updateData(
+                                  {
+                                    'perdidos': FieldValue.arrayRemove([
+                                      {
+                                        'imagen': widget.objeto.foto,
+                                        'titulo': widget.objeto.titulo,
+                                        'documentId': widget.objeto.documentId,
+                                      }
+                                    ])
+                                  },
+                                );
+                          setState(() {
+                            favorito ? favorito = false : favorito = true;
+                          });
+                          break;
+                        case 2:
+                          !favorito
+                              ? controlador1.usuario.reference.updateData(
+                                  {
+                                    'rescates': FieldValue.arrayUnion([
+                                      {
+                                        'imagen': widget.objeto.foto,
+                                        'titulo': widget.objeto.titulo,
+                                        'documentId': widget.objeto.documentId,
+                                      }
+                                    ])
+                                  },
+                                )
+                              : controlador1.usuario.reference.updateData(
+                                  {
+                                    'rescates': FieldValue.arrayRemove([
+                                      {
+                                        'imagen': widget.objeto.foto,
+                                        'titulo': widget.objeto.titulo,
+                                        'documentId': widget.objeto.documentId,
+                                      }
+                                    ])
+                                  },
+                                );
+                          setState(() {
+                            favorito ? favorito = false : favorito = true;
+                          });
+                          break;
+                        case 3:
+                          !favorito
+                              ? controlador1.usuario.reference.updateData(
+                                  {
+                                    'emergencias': FieldValue.arrayUnion([
+                                      {
+                                        'imagen': widget.objeto.foto,
+                                        'titulo': widget.objeto.titulo,
+                                        'documentId': widget.objeto.documentId,
+                                      }
+                                    ])
+                                  },
+                                )
+                              : controlador1.usuario.reference.updateData(
+                                  {
+                                    'emergencias': FieldValue.arrayRemove([
+                                      {
+                                        'imagen': widget.objeto.foto,
+                                        'titulo': widget.objeto.titulo,
+                                        'documentId': widget.objeto.documentId,
+                                      }
+                                    ])
+                                  },
+                                );
+                          setState(() {
+                            favorito ? favorito = false : favorito = true;
+                          });
+                          break;
+                      }
+                      print(favorito.toString());
+                    },
+                  ),
+                ],
               ),
             ),
             Align(

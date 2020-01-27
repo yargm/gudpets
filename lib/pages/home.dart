@@ -4,7 +4,7 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'sign_in.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -34,73 +34,7 @@ class _HomeState extends State<Home> {
     Controller controlador1 = Provider.of<Controller>(context);
     // TODO: implement build
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Column(
-                children: <Widget>[
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundImage:
-                        NetworkImage(controlador1.usuario.foto ?? ''),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Expanded(
-                    child: Text(controlador1.usuario.nombre,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: secondaryText,
-                            fontSize: 20)),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                color: secondaryColor,
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Perfil'),
-              onTap: () {
-                print('perfil');
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.history),
-              title: Text('Mis publicaciones'),
-              onTap: () {
-                print('publicaciones');
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.solidHeart),
-              title: Text('Favoritos'),
-              onTap: () {
-                print('favoritos');
-              },
-            ),
-            ListTile(
-              title: Text('Cerrar sesión'),
-              leading: Icon(
-                Icons.power_settings_new,
-                color: Colors.red,
-              ),
-              onTap: () async {
-                signOutGoogle();
-                await controlador1.signOut();
-                Navigator.of(context).pushReplacementNamed('/login');
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: MyDrawer(controlador1: controlador1),
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
@@ -123,7 +57,7 @@ class _HomeState extends State<Home> {
                   ? print('ir a registro perdido')
                   : controlador1.pestana_act == 2
                       ?Navigator.of(context).pushNamed('/registro_rescate')
-                      : Navigator.of(context).pushNamed('/registro_emergencia');
+                      : Navigator.of(context).pushNamed('/mapaejemplo');
         },
         child: Icon(Icons.add, color: primaryLight),
       ),
@@ -157,3 +91,4 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
