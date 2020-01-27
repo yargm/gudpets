@@ -71,7 +71,7 @@ class UsuarioModel {
 
 class RescateModel {
   String descripcion;
-  String ubicacion;
+  GeoPoint ubicacion;
   int telefono;
   List<dynamic> favoritos = [];
   dynamic fotos;
@@ -81,6 +81,8 @@ class RescateModel {
   String documentId;
   DateTime fecha;
   String userName;
+  String userId;
+
   DocumentReference reference;
   RescateModel(
       {this.fotos,
@@ -92,7 +94,8 @@ class RescateModel {
       this.foto,
       this.documentId,
       this.fecha,
-      this.userName});
+      this.userName,
+      this.userId});
 
   RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'] ?? '';
@@ -106,6 +109,7 @@ class RescateModel {
     reference = data.reference;
     fecha = data['fecha'].toDate();
     userName = data['userName'];
+    userId = data['userId'];
   }
 }
 

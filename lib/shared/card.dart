@@ -79,6 +79,7 @@ class _ListCardState extends State<ListCard> {
                                           MaterialPageRoute(
                                               builder: (context) => Rescate(
                                                     objeto: widget.objeto,
+                                                    favorito: favorito,
                                                   )),
                                         )
                                       : Navigator.push(
