@@ -11,6 +11,7 @@ export 'rescateList.dart';
 
 export 'perdido.dart';
 export 'perdidoList.dart';
+export 'registroPerdido.dart';
 
 export 'adopcion.dart';
 export 'adopcionList.dart';

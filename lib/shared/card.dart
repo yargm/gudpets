@@ -70,8 +70,8 @@ class _ListCardState extends State<ListCard> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => Perdido(
-                                                objeto: widget.objeto,
-                                              )),
+                                              objeto: widget.objeto,
+                                              favorito: favorito)),
                                     )
                                   : controlador1.pestana_act == 2
                                       ? Navigator.push(

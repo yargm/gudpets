@@ -21,14 +21,14 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryTextTheme: GoogleFonts.telexTextTheme(),
           scaffoldBackgroundColor: primaryColor,
-          primaryColor: primaryColor,
+          primaryColor: secondaryLight,
           accentColor: primaryDark,
           disabledColor: primaryDark,
           primaryColorDark: primaryDark,
           primaryColorLight: primaryLight,
+
           //botones
           buttonTheme: ButtonThemeData(
-            
             textTheme: ButtonTextTheme.primary,
             disabledColor: primaryDark,
             buttonColor: secondaryColor,
@@ -40,10 +40,7 @@ class MyApp extends StatelessWidget {
             color: primaryLight,
           ),
           //iconos
-          accentIconTheme: IconThemeData(
-            color: Colors.white,
-            size: 25
-          ),
+          accentIconTheme: IconThemeData(color: Colors.white, size: 25),
           iconTheme: IconThemeData(
             size: 25,
             color: secondaryDark,
@@ -80,14 +77,13 @@ class MyApp extends StatelessWidget {
           '/perdido': (BuildContext context) => Perdido(),
           '/rescate': (BuildContext context) => Rescate(),
           '/emergencia': (BuildContext context) => Emergencia(),
-          '/registro_emergencia': (BuildContext context) => RegistroEmergencia(),
+          '/registro_emergencia': (BuildContext context) =>
+              RegistroEmergencia(),
           '/registro_rescate': (BuildContext context) => RegistroRescate(),
+          '/registro_perdido': (BuildContext context) => RegistroPerdido(),
           '/mapaejemplo': (BuildContext context) => MapSample(),
-          '/avisos' :(BuildContext context) => AvisosList(),
-
-          '/favoritos' : (BuildContext context) => FavoritosList()
-
-
+          '/avisos': (BuildContext context) => AvisosList(),
+          '/favoritos': (BuildContext context) => FavoritosList()
         },
       ),
     );
