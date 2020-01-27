@@ -71,7 +71,7 @@ class UsuarioModel {
 
 class RescateModel {
   String descripcion;
-  String ubicacion;
+  GeoPoint ubicacion;
   int telefono;
   List<dynamic> favoritos = [];
   dynamic fotos;
