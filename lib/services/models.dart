@@ -110,36 +110,42 @@ class RescateModel {
 }
 
 class EmergenciaModel {
-  String titulo;
-  String tipoEmergencia;
-  String ubicacion;
-  String descripcion;
   String foto;
-  List<dynamic> favoritos = [];
+  String titulo;
+  String descripcion;
   String tipoAnimal;
-  String documentId;
+  String tipoEmergencia;
   String userName;
+  GeoPoint ubicacion;
+  DateTime fecha;
+
+  String documentId;
+  List<dynamic> favoritos = [];
   DocumentReference reference;
 
-  EmergenciaModel(
-      {this.titulo,
-      this.tipoEmergencia,
-      this.ubicacion,
-      this.descripcion,
-      this.foto,
-      this.tipoAnimal,
-      this.documentId,
-      this.userName});
+  EmergenciaModel({
+    this.foto,
+    this.titulo,
+    this.descripcion,
+    this.tipoAnimal,
+    this.tipoEmergencia,
+    this.userName,
+    this.ubicacion,
+    this.fecha,
+    this.documentId,
+  });
 
   EmergenciaModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    titulo = data['titulo'];
-    favoritos = data['favoritos'] ?? [''];
-    tipoEmergencia = data['tipo_emergencia'];
-    ubicacion = data['ubicacion'];
-    descripcion = data['descripcion'];
     foto = data['foto'];
-    tipoAnimal = data['tipo_animal'];
+    titulo = data['titulo'];
+    descripcion = data['descripcion'];
+    tipoAnimal = data['tipoAnimal'];
+    tipoEmergencia = data['tipoEmergencia'];
     userName = data['userName'];
+    ubicacion = data['ubicacion'];
+    fecha = data['fecha'].toDate();
+    
+    favoritos = data['favoritos'] ?? [''];
     documentId = data.documentID.toString();
     reference = data.reference;
   }

@@ -5,7 +5,6 @@ import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -56,8 +55,8 @@ class _HomeState extends State<Home> {
               : controlador1.pestana_act == 1
                   ? print('ir a registro perdido')
                   : controlador1.pestana_act == 2
-                      ?Navigator.of(context).pushNamed('/registro_rescate')
-                      : Navigator.of(context).pushNamed('/mapaejemplo');
+                      ? Navigator.of(context).pushNamed('/registro_rescate')
+                      : Navigator.of(context).pushNamed('/registro_emergencia');
         },
         child: Icon(Icons.add, color: primaryLight),
       ),
@@ -91,4 +90,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
