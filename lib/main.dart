@@ -83,7 +83,8 @@ class MyApp extends StatelessWidget {
           '/registro_perdido': (BuildContext context) => RegistroPerdido(),
           '/mapaejemplo': (BuildContext context) => MapSample(),
           '/avisos': (BuildContext context) => AvisosList(),
-          '/favoritos': (BuildContext context) => FavoritosList()
+          '/favoritos': (BuildContext context) => FavoritosList(),
+          '/publicaciones': (BuildContext context) => PublicacionList(),
         },
       ),
     );

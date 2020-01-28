@@ -5,8 +5,9 @@ import 'package:adoption_app/shared/shared.dart';
 
 class Adopcion extends StatefulWidget {
   final AdopcionModel objeto;
+  bool favorito;
 
-  Adopcion({this.objeto});
+  Adopcion({this.objeto, this.favorito});
 
   @override
   _AdopcionState createState() => _AdopcionState();

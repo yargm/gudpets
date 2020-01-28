@@ -289,7 +289,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                   enabled: false,
                   initialValue: controlador1.usuario.telefono.toString(),
                   onSaved: (String value) {
-                    form_perdido['telefono'] = value;
+                    form_perdido['telefono'] = int.parse(value);
                   },
                   decoration: InputDecoration(
                       labelText: '* Teléfono',

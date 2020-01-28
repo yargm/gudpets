@@ -198,8 +198,8 @@ class _EmergenciaState extends State<Emergencia> {
                       height: 300.0,
                       width: 400.0,
                       child: GoogleMap(
-                        zoomGesturesEnabled: true,
-                        scrollGesturesEnabled: true,
+                        zoomGesturesEnabled: false,
+                        scrollGesturesEnabled: false,
                         markers: Set.from(marcador),
                         mapType: MapType.normal,
                         initialCameraPosition: CameraPosition(

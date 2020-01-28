@@ -55,7 +55,7 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(FontAwesomeIcons.history),
             title: Text('Mis publicaciones'),
             onTap: () {
-              print('publicaciones');
+              Navigator.of(context).pushNamed('/publicaciones');
             },
           ),
           ListTile(

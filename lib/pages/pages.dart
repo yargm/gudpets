@@ -21,4 +21,5 @@ export 'avisosCard.dart';
 export 'avisosList.dart';
 
 export 'favoritosList.dart';
+export 'publicacionList.dart';
 

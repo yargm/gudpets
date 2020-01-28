@@ -298,7 +298,7 @@ class _PerdidoState extends State<Perdido> {
                       width: 400.0,
                       child: GoogleMap(
                         zoomGesturesEnabled: false,
-                        scrollGesturesEnabled: true,
+                        scrollGesturesEnabled: false,
                         markers: Set.from(marcador),
                         mapType: MapType.normal,
                         initialCameraPosition: CameraPosition(
