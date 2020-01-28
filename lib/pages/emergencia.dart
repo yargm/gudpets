@@ -35,13 +35,14 @@ class _EmergenciaState extends State<Emergencia> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          color: Colors.white,
           onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(Icons.arrow_back_ios),
+          icon: Icon(
+            FontAwesomeIcons.chevronCircleLeft,
+          ),
         ),
         elevation: 0,
-       
         backgroundColor: Colors.transparent,
-      
       ),
       extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
@@ -71,7 +72,7 @@ class _EmergenciaState extends State<Emergencia> {
                         ),
                         color: Colors.brown[300]),
                     padding: EdgeInsets.all(10.0),
-                    width: 175.0,
+                    width: widget.objeto.userName.length * 11.1,
                     height: 40,
                     alignment: Alignment.bottomRight,
                     child: Text(
@@ -205,8 +206,8 @@ class _EmergenciaState extends State<Emergencia> {
                       height: 300.0,
                       width: 400.0,
                       child: GoogleMap(
-                        zoomGesturesEnabled: true,
-                        scrollGesturesEnabled: true,
+                        zoomGesturesEnabled: false,
+                        scrollGesturesEnabled: false,
                         markers: Set.from(marcador),
                         mapType: MapType.normal,
                         initialCameraPosition: CameraPosition(

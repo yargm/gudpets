@@ -17,6 +17,7 @@ class UsuarioModel {
   int edad;
   DateTime fnacimiento;
   String foto;
+  String fotoStorageRef;
   String nombre;
   String sexo;
   int telefono;
@@ -66,6 +67,7 @@ class UsuarioModel {
     reference = data.reference;
     documentId = data.documentID.toString();
     fnacimiento = data['fnacimiento'].toDate();
+    fotoStorageRef = data['fotoStorageRef'];
   }
 }
 
@@ -217,6 +219,7 @@ class PerdidoModel {
 
 class AdopcionModel {
   String titulo;
+  String userName;
   List<dynamic> favoritos = [];
   String descripcion;
   String tipoAnimal;
@@ -245,7 +248,7 @@ class AdopcionModel {
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
-
+    userName = data['userName'];
     favoritos = data['favoritos'] ?? [''];
     descripcion = data['descripcion'];
     tipoAnimal = data['tipo_animal'];

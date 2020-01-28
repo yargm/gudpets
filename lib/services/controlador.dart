@@ -16,6 +16,10 @@ class Controller with ChangeNotifier {
 
   UsuarioModel get usuario => usuario_act;
 
+  notify(){
+    notifyListeners();
+  }
+
   signOut() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();

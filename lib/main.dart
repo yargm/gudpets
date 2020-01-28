@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
               iconTheme: IconThemeData(size: 30, color: secondaryDark),
               actionsIconTheme: IconThemeData(color: secondaryDark, size: 30),
               textTheme: GoogleFonts.josefinSansTextTheme(TextTheme(
-                  title: TextStyle(color: primaryText, fontSize: 30))),
+                  title: TextStyle(color: primaryText, fontSize: 20))),
               color: primaryDark),
           primarySwatch: Colors.blue,
         ),
@@ -101,6 +101,7 @@ class MyApp extends StatelessWidget {
           '/registro_perdido': (BuildContext context) => RegistroPerdido(),
           '/mapaejemplo': (BuildContext context) => MapSample(),
           '/avisos': (BuildContext context) => AvisosList(),
+          '/publicaciones': (BuildContext context) => PublicacionList(),
           '/perfil': (BuildContext context) => Perfil(),
           '/favoritos': (BuildContext context) => FavoritosList()
         },

@@ -105,7 +105,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
 
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('Registro Rescate'),),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(left: 20, right: 20),
@@ -445,7 +445,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                             }
                             if (_image != null &&
                                 form_rescate['tipoAnimal'] != null) {
-                              final String fileName = form_rescate['userName'] +
+                              final String fileName = controlador1.usuario.correo +
                                   '/rescate/' +
                                   DateTime.now().toString();
 
@@ -549,7 +549,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
   }
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
     setState(() {
       _image = image;
     });
