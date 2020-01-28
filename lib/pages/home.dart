@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           controlador1.pestana_act == 0
-              ? print(' ir a registro adopcion')
+              ? Navigator.of(context).pushNamed('/registro_adopcion')
               : controlador1.pestana_act == 1
                   ? print('ir a registro perdido')
                   : controlador1.pestana_act == 2

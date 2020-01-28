@@ -211,6 +211,9 @@ class AdopcionModel {
   bool convivenciaotros;
   String documentId;
   DocumentReference reference;
+  DateTime fecha;
+  String userId;
+  String userName;
 
   AdopcionModel(
       {this.titulo,
@@ -223,21 +226,27 @@ class AdopcionModel {
       this.vacunacion,
       this.desparacitacion,
       this.convivenciaotros,
-      this.documentId});
+      this.fecha,
+      this.documentId,
+      this.userName,
+      this.userId});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
-
+    userName = data['userName'];
     favoritos = data['favoritos'] ?? [''];
     descripcion = data['descripcion'];
-    tipoAnimal = data['tipo_animal'];
+    tipoAnimal = data['tipoAnimal'];
     foto = data['foto'];
     sexo = data['sexo'];
     edad = data['edad'];
+    fecha = data['fecha'].toDate();
+
     esterilizacion = data['esterilizacion'];
-    vacunacion = data['vacunacion'];
+    vacunacion = data['vacunacion'] ;
     desparacitacion = data['desparacitacion'];
     convivenciaotros = data['convivenciaotros'];
+    userId = data['userId'];
     documentId = data.documentID.toString();
     reference = data.reference;
   }

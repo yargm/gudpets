@@ -21,3 +21,4 @@ export 'avisosList.dart';
 
 export 'favoritosList.dart';
 
+export 'interesadosAdopcion.dart';
