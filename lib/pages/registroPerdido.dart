@@ -6,19 +6,20 @@ import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:location/location.dart';
 import 'mapaejemplo.dart';
 import 'package:adoption_app/services/services.dart';
+import 'package:adoption_app/shared/shared.dart';
 
-
-
-class RegistroEmergencia extends StatefulWidget {
+class RegistroPerdido extends StatefulWidget {
   @override
-  _RegistroEmergenciaState createState() => _RegistroEmergenciaState();
+  _RegistroPerdidoState createState() => _RegistroPerdidoState();
 }
 
-class _RegistroEmergenciaState extends State<RegistroEmergencia> {
+class _RegistroPerdidoState extends State<RegistroPerdido> {
   UserLocation _currentLocation;
   var location = Location();
   double latitud;
   double longitud;
+  final TextEditingController textEditingControllerFecha =
+      TextEditingController();
 
   Future<UserLocation> getLocation() async {
     try {
@@ -34,27 +35,47 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
     }
   }
 
-  var _image;
-  final _emergenciakey = GlobalKey<FormState>();
+  File _image = null;
+  final _perdidokey = GlobalKey<FormState>();
   String tipotemp = '';
   bool isLoadig = false;
   bool isLoadig2 = false;
   bool boton = true;
-  String or = '';
-  String tipoA = '';
 
-  Map<String, dynamic> form_emergencia = {
+  Map<String, dynamic> form_perdido = {
     'foto': null,
     'titulo': null,
     'descripcion': null,
     'tipoAnimal': null,
-    'tipoEmergencia': null,
+    'raza': null,
+    'sexo': null,
+    'senasPart': null,
+    'fechaExtravio': null,
+    'recompensa': false,
     'ubicacion': null,
     'userName': null,
     'fecha': null,
     'favoritos': [],
-    'userId': null,
   };
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2018),
+      lastDate: DateTime.now(),
+    );
+
+    setState(() {
+      form_perdido['fechaExtravio'] = picked;
+      textEditingControllerFecha.text = 'Fecha extravío' +
+          picked.day.toString() +
+          '/' +
+          picked.month.toString() +
+          '/' +
+          picked.year.toString();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +88,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
         child: Container(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: Form(
-            key: _emergenciakey,
+            key: _perdidokey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -121,7 +142,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                 TextFormField(
                   initialValue: null,
                   onSaved: (String value) {
-                    form_emergencia['titulo'] = value;
+                    form_perdido['titulo'] = value;
                   },
                   validator: (String value) {
                     if (value.isEmpty) {
@@ -129,7 +150,9 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: '* Titulo de la emergencia',
+                    labelText: '* Titulo de la publicación',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0)),
                   ),
                 ),
                 SizedBox(
@@ -139,7 +162,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                 TextFormField(
                   initialValue: null,
                   onSaved: (String value) {
-                    form_emergencia['descripcion'] = value;
+                    form_perdido['descripcion'] = value;
                   },
                   validator: (String value) {
                     if (value.isEmpty) {
@@ -147,8 +170,9 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: '* Desripción',
-                  ),
+                      labelText: '* Desripción',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0))),
                 ),
                 SizedBox(
                   height: 15,
@@ -162,29 +186,116 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                       labels: <String>['perro', 'gato', 'ave', 'otro'],
                       onSelected: (String opcion) {
                         setState(() {
-                          form_emergencia['tipoAnimal'] = opcion;
+                          form_perdido['tipoAnimal'] = opcion;
                         });
                       }),
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                //Tipo de emergencia
-                Text('* Selecciona el tipo de emergencia'),
+                //Raza
+                TextFormField(
+                  initialValue: null,
+                  onSaved: (String value) {
+                    form_perdido['raza'] = value;
+                  },
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return 'Raza vacía';
+                    }
+                  },
+                  decoration: InputDecoration(
+                      labelText: '* Raza',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0))),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                //Sexo
+                Text('* Selecciona el sexo'),
                 RadioButtonGroup(
                     picked: null,
                     orientation: GroupedButtonsOrientation.VERTICAL,
                     labels: <String>[
-                      'Perra gestante o cachorros',
-                      'Abuso y maltrato',
-                      'Emergencia de salud',
-                      'Otro'
+                      'Hembra',
+                      'Macho',
                     ],
                     onSelected: (String opcion) {
                       setState(() {
-                        form_emergencia['tipoEmergencia'] = opcion;
+                        form_perdido['sexo'] = opcion;
                       });
                     }),
+                SizedBox(
+                  height: 15,
+                ),
+                //Señas particulares
+                TextFormField(
+                  initialValue: null,
+                  onSaved: (String value) {
+                    form_perdido['senasPart'] = value;
+                  },
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return 'Señas particulares vacías';
+                    }
+                  },
+                  decoration: InputDecoration(
+                      labelText: '* Señas particulares',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0))),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                //Fecha de extravio
+                TextFormField(
+                  controller: textEditingControllerFecha,
+                  onTap: () => _selectDate(context),
+                  readOnly: true,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      labelText: '* Fecha de extravío',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0))),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                //Recompensa
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text('¿Se ofrece recompensa?'),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Switch(
+                      activeColor: secondaryLight,
+                      onChanged: (bool valor) {
+                        setState(() {
+                          form_perdido['recompensa'] = valor;
+                        });
+                      },
+                      value: form_perdido['recompensa'],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                //Teléfono
+                TextFormField(
+                  enabled: false,
+                  initialValue: controlador1.usuario.telefono.toString(),
+                  onSaved: (String value) {
+                    form_perdido['telefono'] = value;
+                  },
+                  decoration: InputDecoration(
+                      labelText: '* Teléfono',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0))),
+                ),
                 SizedBox(
                   height: 15,
                 ),
@@ -248,13 +359,13 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                           label: Text('Guardar'),
                           onPressed: () async {
                             setState(() {
-                              form_emergencia['userName'] =
+                              form_perdido['userName'] =
                                   controlador1.usuario.nombre;
-                              form_emergencia['fecha'] = DateTime.now();
+                              form_perdido['fecha'] = DateTime.now();
                               isLoadig = true;
                             });
 
-                            if (!_emergenciakey.currentState.validate()) {
+                            if (!_perdidokey.currentState.validate()) {
                               setState(() {
                                 isLoadig = false;
                               });
@@ -264,12 +375,11 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                             if (_image != null &&
                                 controlador1.latitudfinal != null &&
                                 controlador1.longitudfinal != null &&
-                                form_emergencia['tipoAnimal'] != null &&
-                                form_emergencia['tipoEmergencia'] != null) {
-                              final String fileName =
-                                  form_emergencia['userName'] +
-                                      '/emergencia/' +
-                                      DateTime.now().toString();
+                                form_perdido['tipoAnimal'] != null &&
+                                form_perdido['sexo'] != null) {
+                              final String fileName = form_perdido['userName'] +
+                                  '/perdido/' +
+                                  DateTime.now().toString();
 
                               StorageReference storageRef = FirebaseStorage
                                   .instance
@@ -288,10 +398,10 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                   (await downloadUrl.ref.getDownloadURL());
                               print('URL Is $url');
                               setState(() {
-                                form_emergencia['foto'] = url;
-                                form_emergencia['userId'] =
+                                form_perdido['foto'] = url;
+                                form_perdido['userId'] =
                                     controlador1.usuario.documentId;
-                                form_emergencia['ubicacion'] = GeoPoint(
+                                form_perdido['ubicacion'] = GeoPoint(
                                     controlador1.latitudfinal,
                                     controlador1.longitudfinal);
                               });
@@ -303,7 +413,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                       child: ListBody(
                                         children: <Widget>[
                                           Text(
-                                              'Todos los campos son obligatorios. Por favor, completa la información que se solicita.'),
+                                              'Algunos campos son obligatorios. Por favor, completa la información que se solicita.'),
                                         ],
                                       ),
                                     ),
@@ -322,11 +432,11 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                   ));
                             }
 
-                            _emergenciakey.currentState.save();
+                            _perdidokey.currentState.save();
 
                             var agregar = await Firestore.instance
-                                .collection('emergencias')
-                                .add(form_emergencia)
+                                .collection('perdidos')
+                                .add(form_perdido)
                                 .then((value) {
                               if (value != null) {
                                 return true;
@@ -351,8 +461,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
   }
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       _image = image;
     });

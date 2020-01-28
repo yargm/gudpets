@@ -21,11 +21,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryTextTheme: GoogleFonts.josefinSansTextTheme(),
           scaffoldBackgroundColor: primaryColor,
-          primaryColor: primaryColor,
+          primaryColor: secondaryLight,
           accentColor: primaryDark,
           disabledColor: primaryDark,
           primaryColorDark: primaryDark,
           primaryColorLight: primaryLight,
+
           highlightColor: secondaryColor,
           indicatorColor: secondaryColor,
           focusColor: secondaryColor,
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15)),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
+
           //botones
           buttonTheme: ButtonThemeData(
             textTheme: ButtonTextTheme.primary,
@@ -68,9 +70,10 @@ class MyApp extends StatelessWidget {
             body2: TextStyle(fontSize: 18),
           )),
           //flotante
-        
-          floatingActionButtonTheme:
-              FloatingActionButtonThemeData(backgroundColor: secondaryColor, ),
+
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: secondaryColor,
+          ),
           //appbar
 
           appBarTheme: AppBarTheme(
@@ -95,6 +98,7 @@ class MyApp extends StatelessWidget {
           '/registro_emergencia': (BuildContext context) =>
               RegistroEmergencia(),
           '/registro_rescate': (BuildContext context) => RegistroRescate(),
+          '/registro_perdido': (BuildContext context) => RegistroPerdido(),
           '/mapaejemplo': (BuildContext context) => MapSample(),
           '/avisos': (BuildContext context) => AvisosList(),
           '/perfil': (BuildContext context) => Perfil(),
