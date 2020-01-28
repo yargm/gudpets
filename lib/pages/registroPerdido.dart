@@ -83,7 +83,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
 
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('Registro Extravio'),),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(left: 20, right: 20),
@@ -116,25 +116,43 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                   height: 15,
                 ),
                 //Foto
-                Text('* Toca la imagen para añadir una foto: '),
+                 Text(_image == null
+                    ? '* Seleccione una imagen para la mascota extraviada '
+                    : 'Imagen seleccionada'),
+                SizedBox(height: 10,),
                 GestureDetector(
                   onTap: () {
                     getImage();
                   },
                   child: Center(
-                    child: Container(
-                        width: 150.0,
-                        height: 150.0,
-                        margin: EdgeInsets.only(top: 25.0, bottom: 10.0),
-                        child: CircleAvatar(
-                          radius: 45.0,
-                          backgroundImage: _image == null
-                              ? AssetImage('assets/perriti_pic.png')
-                              : FileImage(_image),
-                          backgroundColor: Colors.transparent,
-                        )),
+                    child: SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            width: 150.0,
+                            height: 150.0,
+                            child: CircleAvatar(
+                              backgroundImage: _image == null
+                                  ? AssetImage('assets/perriti_pic.png')
+                                  : FileImage(_image),
+                              backgroundColor: Colors.transparent,
+                            ),
+                          ),
+                          CircleAvatar(
+                            backgroundColor: secondaryColor,
+                            child: IconButton(
+                              icon: Icon(Icons.photo_camera),
+                              onPressed: () => getImage(),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                 ),
+                SizedBox(height: 10,),
                 SizedBox(
                   height: 15,
                 ),
@@ -377,7 +395,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                 controlador1.longitudfinal != null &&
                                 form_perdido['tipoAnimal'] != null &&
                                 form_perdido['sexo'] != null) {
-                              final String fileName = form_perdido['userName'] +
+                              final String fileName = controlador1.usuario.correo +
                                   '/perdido/' +
                                   DateTime.now().toString();
 
@@ -461,7 +479,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
   }
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
     setState(() {
       _image = image;
     });

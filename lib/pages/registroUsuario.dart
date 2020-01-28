@@ -33,6 +33,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
     'descripcion': null,
     'tipo': null,
     'user_id': null,
+    'fotoStorageRef': null,
   };
 
   Future<Null> _selectDate(BuildContext context) async {
@@ -367,9 +368,9 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                         _usuarioform.currentState.save();
 
                         if (imagen != null) {
-                          final String fileName = form_usuario['nombre'] +
-                              '/evidencia/' +
-                              DateTime.now().toString();
+                          final String fileName = form_usuario['correo'] +
+                              '/perfil/PP' + 
+                              DateTime.now().toString() ;
 
                           StorageReference storageRef =
                               FirebaseStorage.instance.ref().child(fileName);
@@ -387,6 +388,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                           print('URL Is $url');
 
                           form_usuario['foto'] = url;
+                          form_usuario['fotoStorageRef'] = downloadUrl.ref.path;
                         } else {
                           form_usuario['foto'] = controlador1.imageUrl;
                         }
