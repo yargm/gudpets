@@ -20,10 +20,13 @@ class MyDrawer extends StatelessWidget {
           DrawerHeader(
             child: Column(
               children: <Widget>[
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage:
-                      NetworkImage(controlador1.usuario.foto ?? ''),
+                Hero(
+                  tag: controlador1.usuario.documentId,
+                                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundImage:
+                        NetworkImage(controlador1.usuario.foto ?? ''),
+                  ),
                 ),
                 SizedBox(
                   height: 5,
@@ -48,7 +51,7 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(Icons.person),
             title: Text('Perfil'),
             onTap: () {
-              print('perfil');
+              Navigator.of(context).pushNamed('/perfil');
             },
           ),
           ListTile(
@@ -59,7 +62,7 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(FontAwesomeIcons.solidHeart),
+            leading: Hero(tag: 'favoritos', child: Icon(FontAwesomeIcons.solidHeart)),
             title: Text('Favoritos'),
             onTap: () {
               Navigator.of(context).pushNamed('/favoritos');

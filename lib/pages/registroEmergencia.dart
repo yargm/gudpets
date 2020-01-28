@@ -1,7 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:adoption_app/shared/shared.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:location/location.dart';
 import 'mapaejemplo.dart';
@@ -32,7 +32,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
     }
   }
 
-  File _image = null;
+  var _image;
   final _emergenciakey = GlobalKey<FormState>();
   String tipotemp = '';
   bool isLoadig = false;
@@ -60,7 +60,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
 
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('Registro Emergencia'),),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(left: 20, right: 20),
@@ -93,23 +93,38 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                   height: 15,
                 ),
                 //Foto
-                Text('* Toca la imagen para añadir una foto: '),
+                Text(_image == null
+                    ? '* Seleccione una imagen para la emergencia '
+                    : 'Imagen seleccionada'),
+                    SizedBox(height: 10,),
                 GestureDetector(
-                  onTap: () {
-                    getImage();
-                  },
+                  onTap: () => getImage(),
                   child: Center(
-                    child: Container(
-                        width: 150.0,
-                        height: 150.0,
-                        margin: EdgeInsets.only(top: 25.0, bottom: 10.0),
-                        child: CircleAvatar(
-                          radius: 45.0,
-                          backgroundImage: _image == null
-                              ? AssetImage('assets/perriti_pic.png')
-                              : FileImage(_image),
-                          backgroundColor: Colors.transparent,
-                        )),
+                    child: SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            width: 150.0,
+                            height: 150.0,
+                            child: CircleAvatar(
+                              backgroundImage: _image == null
+                                  ? AssetImage('assets/perriti_pic.png')
+                                  : FileImage(_image),
+                              backgroundColor: Colors.transparent,
+                            ),
+                          ),
+                          CircleAvatar(
+                            backgroundColor: secondaryColor,
+                            child: IconButton(
+                              icon: Icon(Icons.photo_camera),
+                              onPressed: () => getImage(),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -128,8 +143,6 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                   },
                   decoration: InputDecoration(
                     labelText: '* Titulo de la emergencia',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0)),
                   ),
                 ),
                 SizedBox(
@@ -137,7 +150,8 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                 ),
                 //Descripcion
                 TextFormField(
-                  initialValue: null,
+                  maxLines: 10,
+                  minLines: 2,
                   onSaved: (String value) {
                     form_emergencia['descripcion'] = value;
                   },
@@ -147,9 +161,8 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                     }
                   },
                   decoration: InputDecoration(
-                      labelText: '* Desripción',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0))),
+                    labelText: '* Desripción',
+                  ),
                 ),
                 SizedBox(
                   height: 15,
@@ -196,7 +209,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                       : RaisedButton.icon(
                           icon: Icon(Icons.location_on),
                           label: Text('Capturar ubicación'),
-                          onPressed: boton == true
+                          onPressed: boton
                               ? () async {
                                   setState(() {
                                     isLoadig2 = true;
@@ -209,33 +222,42 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                   print('la ongitud actual es:' +
                                       controlador1.longitudfinal.toString());
                                   showDialog(
+                                      barrierDismissible: false,
                                       context: context,
-                                      child: AlertDialog(
-                                        content: Text(
-                                            'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.'),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('OK'),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MapSample(
-                                                          latitud: latitud,
-                                                          longitud: longitud,
-                                                          controlador1:
-                                                              controlador1,
-                                                        )),
-                                              );
-                                              setState(() {
-                                                isLoadig2 = false;
-                                                boton = false;
-                                              });
-                                            },
-                                          ),
-                                        ],
+                                      child: WillPopScope(
+                                        onWillPop: () async {
+                                          setState(() {
+                                            isLoadig2= false;
+                                          });
+                                          return true;
+                                        },
+                                        child: AlertDialog(
+                                          content: Text(
+                                              'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.'),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text('OK'),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MapSample(
+                                                            latitud: latitud,
+                                                            longitud: longitud,
+                                                            controlador1:
+                                                                controlador1,
+                                                          )),
+                                                );
+                                                setState(() {
+                                                  isLoadig2 = false;
+                                                  boton = false;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ));
                                 }
                               : null),
@@ -268,7 +290,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                 form_emergencia['tipoAnimal'] != null &&
                                 form_emergencia['tipoEmergencia'] != null) {
                               final String fileName =
-                                  form_emergencia['userName'] +
+                                  controlador1.usuario.correo +
                                       '/emergencia/' +
                                       DateTime.now().toString();
 
@@ -298,6 +320,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                               });
                             } else {
                               return showDialog(
+                                  barrierDismissible: false,
                                   context: context,
                                   child: AlertDialog(
                                     content: SingleChildScrollView(
@@ -352,7 +375,8 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
   }
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
     setState(() {
       _image = image;
     });

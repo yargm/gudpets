@@ -19,13 +19,28 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryTextTheme: GoogleFonts.telexTextTheme(),
+          primaryTextTheme: GoogleFonts.josefinSansTextTheme(),
           scaffoldBackgroundColor: primaryColor,
           primaryColor: secondaryLight,
           accentColor: primaryDark,
           disabledColor: primaryDark,
           primaryColorDark: primaryDark,
           primaryColorLight: primaryLight,
+
+          highlightColor: secondaryColor,
+          indicatorColor: secondaryColor,
+          focusColor: secondaryColor,
+          hintColor: secondaryColor,
+          inputDecorationTheme: InputDecorationTheme(
+              labelStyle: TextStyle(color: secondaryColor),
+              focusColor: secondaryColor,
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: secondaryColor,
+                  ),
+                  borderRadius: BorderRadius.circular(15)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
 
           //botones
           buttonTheme: ButtonThemeData(
@@ -43,10 +58,10 @@ class MyApp extends StatelessWidget {
           accentIconTheme: IconThemeData(color: Colors.white, size: 25),
           iconTheme: IconThemeData(
             size: 25,
-            color: secondaryDark,
+            color: secondaryColor,
           ),
           primaryIconTheme: IconThemeData(
-            color: secondaryDark,
+            color: secondaryColor,
           ),
           //texto
           textTheme: GoogleFonts.josefinSansTextTheme(TextTheme(
@@ -55,15 +70,18 @@ class MyApp extends StatelessWidget {
             body2: TextStyle(fontSize: 18),
           )),
           //flotante
-          floatingActionButtonTheme:
-              FloatingActionButtonThemeData(backgroundColor: secondaryColor),
+
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: secondaryColor,
+          ),
           //appbar
+
           appBarTheme: AppBarTheme(
-              elevation: 1,
+              elevation: 0,
               iconTheme: IconThemeData(size: 30, color: secondaryDark),
               actionsIconTheme: IconThemeData(color: secondaryDark, size: 30),
               textTheme: GoogleFonts.josefinSansTextTheme(TextTheme(
-                  title: TextStyle(color: primaryText, fontSize: 30))),
+                  title: TextStyle(color: primaryText, fontSize: 20))),
               color: primaryDark),
           primarySwatch: Colors.blue,
         ),
@@ -83,8 +101,9 @@ class MyApp extends StatelessWidget {
           '/registro_perdido': (BuildContext context) => RegistroPerdido(),
           '/mapaejemplo': (BuildContext context) => MapSample(),
           '/avisos': (BuildContext context) => AvisosList(),
-          '/favoritos': (BuildContext context) => FavoritosList(),
           '/publicaciones': (BuildContext context) => PublicacionList(),
+          '/perfil': (BuildContext context) => Perfil(),
+          '/favoritos': (BuildContext context) => FavoritosList()
         },
       ),
     );
