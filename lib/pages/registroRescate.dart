@@ -1,5 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -9,7 +10,7 @@ import 'mapaejemplo.dart';
 import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
-
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class RegistroRescate extends StatefulWidget {
   @override
@@ -21,6 +22,12 @@ class _RegistroRescateState extends State<RegistroRescate> {
   var location = Location();
   double latitud;
   double longitud;
+  List<Asset> images = List<Asset>();
+  String _error = 'No Error Dectected';
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future<UserLocation> getLocation() async {
     try {
@@ -36,27 +43,60 @@ class _RegistroRescateState extends State<RegistroRescate> {
     }
   }
 
+  Future<void> loadAssets() async {
+    List<Asset> resultList = List<Asset>();
+    String error = 'No Error Dectected';
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 3,
+        enableCamera: true,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#FF795548",
+          actionBarTitle: "Adopción App",
+          allViewTitle: "Todas las fotos",
+          useDetailsView: true,
+          selectCircleStrokeColor: "#FFFFFF",
+        ),
+      );
+    } on Exception catch (e) {
+      error = e.toString();
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+      _error = error;
+    });
+  }
+
   bool capturaubicacion = false;
 
   File _image = null;
   final _rescatekey = GlobalKey<FormState>();
   String tipotemp = '';
   bool isLoadig = false;
-   bool isLoadig2 = false;
-   bool boton= true;
+  bool isLoadig2 = false;
+  bool boton = true;
   String or = '';
   String tipoA = '';
   Map<String, dynamic> form_rescate = {
     'titulo': null,
-    'ubicacion': null,
+    'ubicacion': <GeoPoint>[],
     'telefono': null,
     'foto': null,
     'descripcion': null,
     'tipoAnimal': null,
     'fecha': null,
     'userName': null,
-    'fotos': [],
-    'favoritos': [],
+    'fotos': <String>[],
+    'favoritos': <String>[],
     'userId': null,
   };
   @override
@@ -94,7 +134,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                   'Los campos marcados con * son obligatorios.',
                   style: TextStyle(color: Colors.red),
                 ),
-                 Text('* Toca la Imagen para añadir una Foto: '),
+                Text('* Toca la Imagen para añadir una Foto: '),
                 GestureDetector(
                   onTap: () {
                     getImage();
@@ -199,120 +239,136 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                 });
                               }),
                           or == 'Si'
-                              ?     Center(
-                  child: isLoadig2
-                      ? CircularProgressIndicator()
-                      : RaisedButton.icon(
-                          icon: Icon(Icons.location_on),
-                          label: Text('Capturar ubicación'),
-                          onPressed: boton == true
-                              ? () async {
-                                  setState(() {
-                                    isLoadig2 = true;
-                                  });
-                                  await getLocation();
-                                  controlador1.latitudfinal = latitud;
-                                  controlador1.longitudfinal = longitud;
-                                  print('la latitud actual es:' +
-                                      controlador1.latitudfinal.toString());
-                                  print('la ongitud actual es:' +
-                                      controlador1.longitudfinal.toString());
-                                  showDialog(
-                                      context: context,
-                                      child: AlertDialog(
-                                        content: Text(
-                                            'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.'),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('OK'),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MapSample(
-                                                          latitud: latitud,
-                                                          longitud: longitud,
-                                                          controlador1:
-                                                              controlador1,
-                                                        )),
-                                              );
-                                              setState(() {
-                                                isLoadig2 = false;
-                                                boton = false;
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ));
-                                }
-                              : null),
-                )
+                              ? Center(
+                                  child: isLoadig2
+                                      ? CircularProgressIndicator()
+                                      : RaisedButton.icon(
+                                          icon: Icon(Icons.location_on),
+                                          label: Text('Capturar ubicación'),
+                                          onPressed: boton == true
+                                              ? () async {
+                                                  setState(() {
+                                                    isLoadig2 = true;
+                                                  });
+                                                  await getLocation();
+                                                  controlador1.latitudfinal =
+                                                      latitud;
+                                                  controlador1.longitudfinal =
+                                                      longitud;
+                                                  print(
+                                                      'la latitud actual es:' +
+                                                          controlador1
+                                                              .latitudfinal
+                                                              .toString());
+                                                  print(
+                                                      'la ongitud actual es:' +
+                                                          controlador1
+                                                              .longitudfinal
+                                                              .toString());
+                                                  showDialog(
+                                                      context: context,
+                                                      child: AlertDialog(
+                                                        content: Text(
+                                                            'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.'),
+                                                        actions: <Widget>[
+                                                          FlatButton(
+                                                            child: Text('OK'),
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            MapSample(
+                                                                              latitud: latitud,
+                                                                              longitud: longitud,
+                                                                              controlador1: controlador1,
+                                                                            )),
+                                                              );
+                                                              setState(() {
+                                                                isLoadig2 =
+                                                                    false;
+                                                                boton = false;
+                                                              });
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ));
+                                                }
+                                              : null),
+                                )
                               : SizedBox(
                                   width: 5,
                                 ),
                         ],
                       )
                     : tipotemp == 'Veterinaria U Otros'
-                        ?     Center(
-                  child: isLoadig2
-                      ? CircularProgressIndicator()
-                      : RaisedButton.icon(
-                          icon: Icon(Icons.location_on),
-                          label: Text('Capturar ubicación'),
-                          onPressed: boton == true
-                              ? () async {
-                                  setState(() {
-                                    isLoadig2 = true;
-                                  });
-                                  await getLocation();
-                                  controlador1.latitudfinal = latitud;
-                                  controlador1.longitudfinal = longitud;
-                                  print('la latitud actual es:' +
-                                      controlador1.latitudfinal.toString());
-                                  print('la ongitud actual es:' +
-                                      controlador1.longitudfinal.toString());
-                                  showDialog(
-                                      context: context,
-                                      child: AlertDialog(
-                                        content: Text(
-                                            'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.'),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('OK'),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MapSample(
-                                                          latitud: latitud,
-                                                          longitud: longitud,
-                                                          controlador1:
-                                                              controlador1,
-                                                        )),
-                                              );
-                                              setState(() {
-                                                isLoadig2 = false;
-                                                boton = false;
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ));
-                                }
-                              : null),
-                )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[Text('Agradecemos tu Apoyo')],
+                        ? Center(
+                            child: isLoadig2
+                                ? CircularProgressIndicator()
+                                : RaisedButton.icon(
+                                    icon: Icon(Icons.location_on),
+                                    label: Text('Capturar ubicación'),
+                                    onPressed: boton == true
+                                        ? () async {
+                                            setState(() {
+                                              isLoadig2 = true;
+                                            });
+                                            await getLocation();
+                                            controlador1.latitudfinal = latitud;
+                                            controlador1.longitudfinal =
+                                                longitud;
+                                            print('la latitud actual es:' +
+                                                controlador1.latitudfinal
+                                                    .toString());
+                                            print('la ongitud actual es:' +
+                                                controlador1.longitudfinal
+                                                    .toString());
+                                            showDialog(
+                                                context: context,
+                                                child: AlertDialog(
+                                                  content: Text(
+                                                      'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.'),
+                                                  actions: <Widget>[
+                                                    FlatButton(
+                                                      child: Text('OK'),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      MapSample(
+                                                                        latitud:
+                                                                            latitud,
+                                                                        longitud:
+                                                                            longitud,
+                                                                        controlador1:
+                                                                            controlador1,
+                                                                      )),
+                                                        );
+                                                        setState(() {
+                                                          isLoadig2 = false;
+                                                          boton = false;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                ));
+                                          }
+                                        : null),
+                          )
+                        : Center(
+                            child: Text('Agradecemos tu Apoyo'),
                           ),
                 SizedBox(
                   height: 15,
                 ),
                 TextFormField(
+                  enabled: false,
                   keyboardType: TextInputType.number,
                   initialValue: controlador1.usuario.telefono.toString(),
                   onSaved: (String value) {
@@ -338,7 +394,24 @@ class _RegistroRescateState extends State<RegistroRescate> {
                 SizedBox(
                   height: 15,
                 ),
-               
+                RaisedButton(
+                    onPressed: loadAssets, child: Text('Más imagenes')),
+                images.isNotEmpty
+                    ? GridView.builder(
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(
+                            parent: NeverScrollableScrollPhysics()),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (context, index) => AssetThumb(
+                          asset: images[index],
+                          width: 300,
+                          height: 300,
+                        ),
+                        itemCount: images.length,
+                      )
+                    : Text('No hay fotos para mostrar'),
                 SizedBox(
                   height: 15,
                 ),
@@ -355,6 +428,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                               });
                               return;
                             }
+
                             setState(() {
                               form_rescate['userName'] =
                                   controlador1.usuario.nombre;
@@ -362,8 +436,13 @@ class _RegistroRescateState extends State<RegistroRescate> {
                               isLoadig = true;
                             });
 
-                            
-
+                            if (images != null) {
+                              for (var im in images) {
+                                var url = await saveImage(im);
+                                form_rescate['fotos'].add(url);
+                              }
+                              print(form_rescate['fotos'].toString());
+                            }
                             if (_image != null &&
                                 form_rescate['tipoAnimal'] != null) {
                               final String fileName = form_rescate['userName'] +
@@ -390,16 +469,20 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                 form_rescate['foto'] = url;
                                 form_rescate['userId'] =
                                     controlador1.usuario.documentId;
-                                 form_rescate['ubicacion'] = GeoPoint(
-                                    controlador1.latitudfinal,
-                                    controlador1.longitudfinal);
+                                if (controlador1.latitudfinal != null && controlador1.longitudfinal != null) {
+                                  form_rescate['ubicacion'] = GeoPoint(
+                                      controlador1.latitudfinal,
+                                      controlador1.longitudfinal);
+                                } else {
+ form_rescate['ubicacion'] = GeoPoint(0,0);
+
+                                }
                               });
                             } else {
                               setState(() {
-                                isLoadig=false;
+                                isLoadig = false;
                               });
                               return showDialog(
-
                                   context: context,
                                   child: AlertDialog(
                                     content: SingleChildScrollView(
@@ -413,20 +496,16 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                     actions: <Widget>[
                                       FlatButton(
                                         child: Text('Regresar'),
-                                        
                                         onPressed: () {
                                           setState(() {
                                             isLoadig = false;
                                           });
                                           Navigator.of(context).pop();
-                                          
                                         },
                                       ),
                                     ],
                                     title: Text('Has olvidado añadir algo'),
                                   ));
-                                 
-                                  
                             }
 
                             _rescatekey.currentState.save();
@@ -443,8 +522,9 @@ class _RegistroRescateState extends State<RegistroRescate> {
                             });
 
                             if (agregar) {
-                               controlador1.latitudfinal = null;
+                              controlador1.latitudfinal = null;
                               controlador1.longitudfinal = null;
+                              images.clear();
                               Navigator.pop(context);
                             }
                           }),
@@ -455,6 +535,17 @@ class _RegistroRescateState extends State<RegistroRescate> {
         ),
       ),
     );
+  }
+
+  Future saveImage(Asset asset) async {
+    ByteData byteData = await asset.getThumbByteData(500, 500, quality: 100);
+    List<int> imageData = byteData.buffer.asUint8List();
+    final String fileName =
+        form_rescate['userName'] + '/rescate/' + DateTime.now().toString();
+    StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = ref.putData(imageData);
+
+    return await (await uploadTask.onComplete).ref.getDownloadURL();
   }
 
   Future getImage() async {

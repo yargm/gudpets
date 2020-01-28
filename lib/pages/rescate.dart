@@ -37,6 +37,7 @@ class _RescateState extends State<Rescate> {
         margin: EdgeInsets.only(bottom: 20, top: 20, right: 10, left: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.bottomRight,
@@ -76,6 +77,7 @@ class _RescateState extends State<Rescate> {
             Padding(
                 padding: EdgeInsets.only(left: 20, top: 10, right: 20.0),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,19 +164,18 @@ class _RescateState extends State<Rescate> {
                                   style: TextStyle(
                                     fontSize: 20.0,
                                   )),
-                                  SizedBox(height: 10,),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Text(
-                               
                                 widget.objeto.fecha.day.toString() +
                                     '/' +
                                     widget.objeto.fecha.month.toString() +
                                     '/' +
-                                    widget.objeto.fecha.year.toString() ,
-
-                                    textAlign: TextAlign.center,
+                                    widget.objeto.fecha.year.toString(),
+                                textAlign: TextAlign.center,
                                 style:
                                     TextStyle(color: Colors.grey, fontSize: 18),
-                                    
                               ),
                             ],
                           ),
@@ -187,15 +188,29 @@ class _RescateState extends State<Rescate> {
                     Text('Mas Fotos',
                         style: TextStyle(
                           fontSize: 20.0,
-                        )),
+                        )),SizedBox(height:20),
+                        widget.objeto.fotos.isNotEmpty ?
                     Container(
                       width: double.infinity,
-                      height: 350.0,
-                      decoration: BoxDecoration(
+                      height: 350,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) => Container(
+                          width: 350,
+                          height: 350,
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+
                           image: DecorationImage(
-                              image: NetworkImage(widget.objeto.foto),
-                              fit: BoxFit.cover)),
-                    ),
+                             image: NetworkImage(widget.objeto.fotos[index]),
+                              fit: BoxFit.contain)
+                         
+                        )),
+                        itemCount: widget.objeto.fotos.length,
+                      ),
+                    ): Text ('No hay nada para mostrar', style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),),
                     SizedBox(
                       height: 20,
                     ),
@@ -206,6 +221,7 @@ class _RescateState extends State<Rescate> {
                     SizedBox(
                       height: 5.0,
                     ),
+                    widget.objeto.ubicacion.latitude != 0 ?
                     Container(
                       height: 300.0,
                       width: 400.0,
@@ -223,7 +239,7 @@ class _RescateState extends State<Rescate> {
                           _controller.complete(controller);
                         },
                       ),
-                    ),
+                    ) : Text("No hay ubicación para mostrar"),
                     SizedBox(
                       height: 20.0,
                     ),
