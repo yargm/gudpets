@@ -21,3 +21,5 @@ export 'avisosList.dart';
 
 export 'favoritosList.dart';
 
+export 'perfil.dart';
+

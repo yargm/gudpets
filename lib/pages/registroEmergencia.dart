@@ -7,10 +7,8 @@ import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:location/location.dart';
 import 'mapaejemplo.dart';
-
-import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/shared/shared.dart';
+import 'package:image/image.dart';
 
 class RegistroEmergencia extends StatefulWidget {
   @override
@@ -37,7 +35,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
     }
   }
 
-  File _image = null;
+  var _image;
   final _emergenciakey = GlobalKey<FormState>();
   String tipotemp = '';
   bool isLoadig = false;
@@ -132,8 +130,6 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                   },
                   decoration: InputDecoration(
                     labelText: '* Titulo de la emergencia',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0)),
                   ),
                 ),
                 SizedBox(
@@ -151,9 +147,8 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                     }
                   },
                   decoration: InputDecoration(
-                      labelText: '* Desripción',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0))),
+                    labelText: '* Desripción',
+                  ),
                 ),
                 SizedBox(
                   height: 15,
@@ -354,7 +349,8 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
   }
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
     setState(() {
       _image = image;
     });
