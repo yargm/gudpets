@@ -94,10 +94,12 @@ class _RegistroRescateState extends State<RegistroRescate> {
     'descripcion': null,
     'tipoAnimal': null,
     'fecha': null,
-    'userName': null,
     'fotos': <String>[],
     'favoritos': <String>[],
-    'userId': null,
+    'reffoto': null,
+    'albumrefs' :<String>[],
+    'userId' : null,
+    'userName' : null
   };
   @override
   Widget build(BuildContext context) {
@@ -430,6 +432,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                             }
 
                             setState(() {
+
                               form_rescate['userName'] =
                                   controlador1.usuario.nombre;
                               form_rescate['fecha'] = DateTime.now();
@@ -438,8 +441,11 @@ class _RegistroRescateState extends State<RegistroRescate> {
 
                             if (images != null) {
                               for (var im in images) {
-                                var url = await saveImage(im);
-                                form_rescate['fotos'].add(url);
+
+                                var fotos = await saveImage(im,controlador1);
+
+                                form_rescate['fotos'].add(fotos['url']);
+                                form_rescate['albumrefs'].add(fotos['ref']);
                               }
                               print(form_rescate['fotos'].toString());
                             }
@@ -464,9 +470,11 @@ class _RegistroRescateState extends State<RegistroRescate> {
 
                               final String url =
                                   (await downloadUrl.ref.getDownloadURL());
+                                  final String fotoref = downloadUrl.ref.path;
                               print('URL Is $url');
                               setState(() {
                                 form_rescate['foto'] = url;
+                                form_rescate['reffoto'] = fotoref;
                                 form_rescate['userId'] =
                                     controlador1.usuario.documentId;
                                 if (controlador1.latitudfinal != null && controlador1.longitudfinal != null) {
@@ -537,15 +545,21 @@ class _RegistroRescateState extends State<RegistroRescate> {
     );
   }
 
-  Future saveImage(Asset asset) async {
+  Future saveImage(Asset asset, Controller controlador1) async {
+    Map<String,String> fotosRef = {
+      'url': null,
+      'ref': null
+    };
     ByteData byteData = await asset.getThumbByteData(500, 500, quality: 100);
     List<int> imageData = byteData.buffer.asUint8List();
     final String fileName =
-        form_rescate['userName'] + '/rescate/' + DateTime.now().toString();
+        controlador1.usuario.correo + '/rescate/' + DateTime.now().toString();
     StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = ref.putData(imageData);
 
-    return await (await uploadTask.onComplete).ref.getDownloadURL();
+      fotosRef['url'] = await (await uploadTask.onComplete).ref.getDownloadURL();
+      fotosRef['ref'] =  (await uploadTask.onComplete).ref.path;
+    return fotosRef;
   }
 
   Future getImage() async {

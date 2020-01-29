@@ -90,7 +90,6 @@ class RescateModel {
   GeoPoint ubicacion;
   int telefono;
   List<dynamic> favoritos = [];
-  dynamic fotos;
   String tipoAnimal;
   String titulo;
   String foto;
@@ -98,6 +97,9 @@ class RescateModel {
   DateTime fecha;
   String userName;
   String userId;
+  dynamic albumrefs;
+  String reffoto;
+   dynamic fotos;
 
   DocumentReference reference;
   RescateModel(
@@ -111,14 +113,15 @@ class RescateModel {
       this.documentId,
       this.fecha,
       this.userName,
-      this.userId});
+      this.userId,
+      this.albumrefs,
+      this.reffoto});
 
   RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'] ?? '';
     favoritos = data['favoritos'] ?? [''];
     ubicacion = data['ubicacion'] ?? [''];
     descripcion = data['descripcion'];
-    fotos = data['fotos'] ?? [''];
     tipoAnimal = data['tipoAnimal'];
     foto = data['foto'];
     documentId = data.documentID.toString();
@@ -126,6 +129,9 @@ class RescateModel {
     fecha = data['fecha'].toDate();
     userName = data['userName'];
     userId = data['userId'];
+    fotos = data['fotos'] ?? [''];
+    albumrefs = data['albumrefs'] ?? [''];
+    reffoto = data['reffoto'];
   }
 }
 
@@ -248,7 +254,9 @@ class AdopcionModel {
   DocumentReference reference;
   DateTime fecha;
   String userId;
-  
+   dynamic albumrefs;
+  String reffoto;
+   dynamic fotos;
 
   AdopcionModel(
       {this.titulo,
@@ -264,7 +272,7 @@ class AdopcionModel {
       this.fecha,
       this.documentId,
       this.userName,
-      this.userId});
+      this.userId,this.albumrefs,this.reffoto,this.fotos});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -276,7 +284,9 @@ class AdopcionModel {
     sexo = data['sexo'];
     edad = data['edad'];
     fecha = data['fecha'].toDate();
-
+  fotos = data['fotos'] ?? [''];
+    albumrefs = data['albumrefs'] ?? [''];
+    reffoto = data['reffoto'];
     esterilizacion = data['esterilizacion'];
     vacunacion = data['vacunacion'] ;
     desparacitacion = data['desparacitacion'];

@@ -199,26 +199,49 @@ class _RescateState extends State<Rescate> {
                           fontSize: 20.0,
                         )),SizedBox(height:20),
                         widget.objeto.fotos.isNotEmpty ?
-                    Container(
-                      width: double.infinity,
-                      height: 350,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) => Container(
-                          width: 350,
-                          height: 350,
-                          margin: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-
-                          image: DecorationImage(
-                             image: NetworkImage(widget.objeto.fotos[index]),
-                              fit: BoxFit.contain)
-                         
-                        )),
-                        itemCount: widget.objeto.fotos.length,
-                      ),
-                    ): Text ('No hay nada para mostrar', style:
+                   Column(
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Text(
+                                              "Desliza hacia la Derecha ",
+                                              style: TextStyle(
+                                                  color: Colors.grey, fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10,),
+                                        Container(
+                                          width: double.infinity,
+                                          height: 350,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) =>
+                                                Stack(
+                                                  
+                                                  alignment: Alignment.centerRight,
+                                                  
+                                                  children: <Widget>[
+                                                        FadeInImage(
+                                              fit: BoxFit.contain,
+                                              placeholder: AssetImage(
+                                                    'assets/perriti_pic.png'),
+                                              width: 300,
+                                              height: 300,
+                                              image: NetworkImage(
+                                                    widget.objeto.fotos[index]),
+                                            ),
+                                            Icon(FontAwesomeIcons.chevronCircleRight,size: 30,)
+                                                  ],                   
+                                                ),
+                                            itemCount:
+                                                widget.objeto.fotos.length,
+                                          ),
+                                          
+                                        )
+                                      ],
+                                    ): Text ('No hay nada para mostrar', style:
                                     TextStyle(color: Colors.grey, fontSize: 18),),
                     SizedBox(
                       height: 20,
