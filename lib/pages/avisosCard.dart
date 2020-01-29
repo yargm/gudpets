@@ -13,7 +13,9 @@ class AvisosCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
+        margin: EdgeInsets.only(left:5, right: 5, top: 10),
         child: Card(
+          elevation: 0,
           color: Colors.white,
           child: GestureDetector(
             onTap: () => launch(objeto.link),

@@ -16,6 +16,23 @@ class _FavoritosListState extends State<FavoritosList> {
     Controller controlador1 = Provider.of<Controller>(context);
 
     return Scaffold(
+      // appBar: AppBar(
+      //    leading: IconButton(
+      //     onPressed: () => Navigator.of(context).pop(),
+      //     icon: Icon(Icons.arrow_back_ios),
+      //   ),
+      //   // centerTitle: true,
+      //   // actions: <Widget>[
+      //   //   Icon(Icons.favorite, color: Colors.pink,),
+      //   //   SizedBox(width: 30,)
+      //   // ],
+      //   backgroundColor: Colors.transparent,
+      //   // title: Text(
+      //   //   'Tus Favoritos',
+      //   //   style: TextStyle(fontSize: 30),
+      //   // ),
+      // ),
+      extendBodyBehindAppBar: true,
       body: Card(
         margin: EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 15),
         child: Container(
@@ -25,17 +42,21 @@ class _FavoritosListState extends State<FavoritosList> {
             child: Column(
               children: <Widget>[
                 ListTile(
-                  trailing: Icon(
-                    Icons.favorite,
-                    color: Colors.pink,
+                  trailing: Hero(
+                    tag: 'favoritos',
+                                      child: Icon(
+                      Icons.favorite,
+                      color: Colors.pink,
+                    ),
                   ),
                   leading: IconButton(
+                    
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(Icons.arrow_back_ios),
+                    icon: Icon(Icons.arrow_back_ios, color: secondaryColor,),
                   ),
                   title: Text(
                     'Tus Favoritos',
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 25),
                   ),
                 ),
                 StreamBuilder(
@@ -43,7 +64,7 @@ class _FavoritosListState extends State<FavoritosList> {
                   builder: (context, snapshot) {
                     if (!snapshot.hasData)
                       return const CircularProgressIndicator();
-                    print(snapshot.data['adopciones']);
+                   
                     return ListView(
                       physics:
                           ScrollPhysics(parent: NeverScrollableScrollPhysics()),
@@ -55,8 +76,7 @@ class _FavoritosListState extends State<FavoritosList> {
                                 titulo: 'Adopciones',
                                 iconData: Icons.home,
                                 list: snapshot.data['adopciones'],
-                                controlador1: controlador1
-                              )
+                                controlador1: controlador1)
                             : Container(),
                         snapshot.data['perdidos'] != null &&
                                 snapshot.data['perdidos'].isNotEmpty
@@ -64,8 +84,7 @@ class _FavoritosListState extends State<FavoritosList> {
                                 titulo: 'Perdidos',
                                 iconData: FontAwesomeIcons.searchLocation,
                                 list: snapshot.data['perdidos'],
-                                controlador1: controlador1
-                              )
+                                controlador1: controlador1)
                             : Container(),
                         snapshot.data['rescates'] != null &&
                                 snapshot.data['rescates'].isNotEmpty
@@ -73,8 +92,7 @@ class _FavoritosListState extends State<FavoritosList> {
                                 titulo: 'Rescates',
                                 iconData: FontAwesomeIcons.handHoldingHeart,
                                 list: snapshot.data['rescates'],
-                                controlador1: controlador1
-                              )
+                                controlador1: controlador1)
                             : Container(),
                         snapshot.data['emergencias'] != null &&
                                 snapshot.data['emergencias'].isNotEmpty
@@ -82,8 +100,7 @@ class _FavoritosListState extends State<FavoritosList> {
                                 titulo: 'Emergencias',
                                 iconData: FontAwesomeIcons.ambulance,
                                 list: snapshot.data['emergencias'],
-                                controlador1: controlador1
-                              )
+                                controlador1: controlador1)
                             : Container()
                       ],
                     );
@@ -97,10 +114,11 @@ class _FavoritosListState extends State<FavoritosList> {
     );
   }
 
-  Widget favoriteTile( {String titulo,
-  IconData iconData,
-   List<dynamic> list, Controller controlador1}){
-
+  Widget favoriteTile(
+      {String titulo,
+      IconData iconData,
+      List<dynamic> list,
+      Controller controlador1}) {
     return ExpansionTile(
       leading: Icon(iconData),
       title: Text(
@@ -120,16 +138,15 @@ class _FavoritosListState extends State<FavoritosList> {
                     .collection(titulo.toLowerCase())
                     .document(list[index]['documentId'])
                     .updateData({
-                  'favoritos': FieldValue.arrayRemove([controlador1.usuario.documentId]),
+                  'favoritos':
+                      FieldValue.arrayRemove([controlador1.usuario.documentId]),
                 });
                 await controlador1.usuario.reference.updateData(
                   {
                     titulo.toLowerCase(): FieldValue.arrayRemove([list[index]])
                   },
                 );
-                setState(() {
-                  
-                });
+                setState(() {});
               },
               icon: Icon(
                 Icons.favorite,
@@ -196,8 +213,5 @@ class _FavoritosListState extends State<FavoritosList> {
         )
       ],
     );
+  }
 }
-}
-
-
-

@@ -11,6 +11,7 @@ export 'rescateList.dart';
 
 export 'perdido.dart';
 export 'perdidoList.dart';
+export 'registroPerdido.dart';
 
 export 'adopcion.dart';
 export 'adopcionList.dart';
@@ -20,5 +21,8 @@ export 'avisosCard.dart';
 export 'avisosList.dart';
 
 export 'favoritosList.dart';
+export 'publicacionList.dart';
+
+export 'perfil.dart';
 
 export 'interesadosAdopcion.dart';

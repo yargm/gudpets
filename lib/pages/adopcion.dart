@@ -7,6 +7,7 @@ import 'dart:async';
 class Adopcion extends StatefulWidget {
   final AdopcionModel objeto;
   bool favorito;
+
   Adopcion({this.objeto, this.favorito});
 
   @override
@@ -19,27 +20,39 @@ class _AdopcionState extends State<Adopcion> {
     Controller controlador1 = Provider.of<Controller>(context);
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(
+            FontAwesomeIcons.chevronCircleLeft,
+          ),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
+      extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
-          child: Card(
-        margin: EdgeInsets.only(bottom: 20, top: 20, right: 10, left: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Stack(
+
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: double.maxFinite,
+            height: 350,
+            child: Stack(
               alignment: Alignment.bottomRight,
               children: <Widget>[
                 Hero(
-                  tag: widget.objeto.documentId,
-                  child: Container(
-                    width: double.infinity,
-                    height: 350.0,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(widget.objeto.foto),
-                            fit: BoxFit.cover)),
-                  ),
-                ),
+                    tag: widget.objeto.documentId,
+                    child: FadeInImage(
+                      fit: BoxFit.cover,
+                      placeholder: AssetImage('assets/perriti_pic.png'),
+                      width: double.maxFinite,
+                      height: 350,
+                      image: NetworkImage(widget.objeto.foto),
+                    )),
+
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -47,6 +60,7 @@ class _AdopcionState extends State<Adopcion> {
                       ),
                       color: Colors.brown[300]),
                   padding: EdgeInsets.all(10.0),
+
                   width: 175.0,
                   alignment: Alignment.bottomRight,
                   child: Wrap(
@@ -57,10 +71,12 @@ class _AdopcionState extends State<Adopcion> {
                         style: TextStyle(fontSize: 16.0, color: Colors.white),
                       ),
                     ],
+
                   ),
                 ),
               ],
             ),
+
             Padding(
                 padding: EdgeInsets.only(left: 20, top: 10, right: 20.0),
                 child: Column(
@@ -264,6 +280,7 @@ class _AdopcionState extends State<Adopcion> {
                 )),
           ],
         ),
+
       )),
     );
   }

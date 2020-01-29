@@ -17,6 +17,7 @@ class UsuarioModel {
   int edad;
   DateTime fnacimiento;
   String foto;
+  String fotoStorageRef;
   String nombre;
   String sexo;
   int telefono;
@@ -66,12 +67,13 @@ class UsuarioModel {
     reference = data.reference;
     documentId = data.documentID.toString();
     fnacimiento = data['fnacimiento'].toDate();
+    fotoStorageRef = data['fotoStorageRef'];
   }
 }
 
 class RescateModel {
   String descripcion;
-  String ubicacion;
+  GeoPoint ubicacion;
   int telefono;
   List<dynamic> favoritos = [];
   dynamic fotos;
@@ -81,6 +83,8 @@ class RescateModel {
   String documentId;
   DateTime fecha;
   String userName;
+  String userId;
+
   DocumentReference reference;
   RescateModel(
       {this.fotos,
@@ -92,7 +96,8 @@ class RescateModel {
       this.foto,
       this.documentId,
       this.fecha,
-      this.userName});
+      this.userName,
+      this.userId});
 
   RescateModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'] ?? '';
@@ -106,6 +111,7 @@ class RescateModel {
     reference = data.reference;
     fecha = data['fecha'].toDate();
     userName = data['userName'];
+    userId = data['userId'];
   }
 }
 
@@ -115,25 +121,26 @@ class EmergenciaModel {
   String descripcion;
   String tipoAnimal;
   String tipoEmergencia;
-  String userName;
   GeoPoint ubicacion;
   DateTime fecha;
 
+  String userName;
+  String userId;
   String documentId;
   List<dynamic> favoritos = [];
   DocumentReference reference;
 
-  EmergenciaModel({
-    this.foto,
-    this.titulo,
-    this.descripcion,
-    this.tipoAnimal,
-    this.tipoEmergencia,
-    this.userName,
-    this.ubicacion,
-    this.fecha,
-    this.documentId,
-  });
+  EmergenciaModel(
+      {this.foto,
+      this.titulo,
+      this.descripcion,
+      this.tipoAnimal,
+      this.tipoEmergencia,
+      this.ubicacion,
+      this.fecha,
+      this.userName,
+      this.documentId,
+      this.userId});
 
   EmergenciaModel.fromDocumentSnapshot(DocumentSnapshot data) {
     foto = data['foto'];
@@ -144,7 +151,8 @@ class EmergenciaModel {
     userName = data['userName'];
     ubicacion = data['ubicacion'];
     fecha = data['fecha'].toDate();
-    
+    userId = data['userId'];
+
     favoritos = data['favoritos'] ?? [''];
     documentId = data.documentID.toString();
     reference = data.reference;
@@ -153,45 +161,57 @@ class EmergenciaModel {
 
 class PerdidoModel {
   String titulo;
+  String foto;
   String descripcion;
   String tipoAnimal;
-  String ubicacion;
-  String foto;
-  bool recompensa;
   String raza;
-  String senasPart;
   String sexo;
-  List<dynamic> favoritos = [];
-  Timestamp fechaExtravio;
+  String senasPart;
+  DateTime fechaExtravio;
+  DateTime fecha;
+  GeoPoint ubicacion;
+  bool recompensa;
+  int telefono;
+  String userId;
+  String userName;
   String documentId;
+  List<dynamic> favoritos = [];
   DocumentReference reference;
 
-  PerdidoModel({
-    this.titulo,
-    this.descripcion,
-    this.tipoAnimal,
-    this.ubicacion,
-    this.foto,
-    this.recompensa,
-    this.raza,
-    this.senasPart,
-    this.sexo,
-    this.fechaExtravio,
-    this.documentId,
-  });
+  PerdidoModel(
+      {this.titulo,
+      this.foto,
+      this.descripcion,
+      this.tipoAnimal,
+      this.ubicacion,
+      this.recompensa,
+      this.raza,
+      this.sexo,
+      this.senasPart,
+      this.fechaExtravio,
+      this.fecha,
+      this.userName,
+      this.documentId,
+      this.telefono,
+      this.userId});
 
   PerdidoModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
-    favoritos = data['favoritos'] ?? [''];
-    descripcion = data['descripcion'];
-    tipoAnimal = data['tipo_animal'];
-    ubicacion = data['ubicacion'];
     foto = data['foto'];
-    recompensa = data['recompensa'];
+    descripcion = data['descripcion'];
+    fechaExtravio = data['fechaExtravio'].toDate();
     raza = data['raza'];
-    senasPart = data['senas_part'];
+    recompensa = data['recompensa'];
     sexo = data['sexo'];
-    fechaExtravio = data['fecha_extravio'];
+    senasPart = data['senasPart'];
+    tipoAnimal = data['tipoAnimal'];
+    ubicacion = data['ubicacion'];
+    fecha = data['fecha'].toDate();
+    userName = data['userName'];
+    telefono = data['telefono'];
+    userId = data['userId'];
+
+    favoritos = data['favoritos'] ?? [''];
     documentId = data.documentID.toString();
     reference = data.reference;
   }
@@ -199,6 +219,7 @@ class PerdidoModel {
 
 class AdopcionModel {
   String titulo;
+  String userName;
   List<dynamic> favoritos = [];
   String descripcion;
   String tipoAnimal;

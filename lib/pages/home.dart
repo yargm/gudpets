@@ -53,7 +53,7 @@ class _HomeState extends State<Home> {
           controlador1.pestana_act == 0
               ? Navigator.of(context).pushNamed('/registro_adopcion')
               : controlador1.pestana_act == 1
-                  ? print('ir a registro perdido')
+                  ? Navigator.of(context).pushNamed('/registro_perdido')
                   : controlador1.pestana_act == 2
                       ? Navigator.of(context).pushNamed('/registro_rescate')
                       : Navigator.of(context).pushNamed('/registro_emergencia');

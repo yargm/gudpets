@@ -71,8 +71,8 @@ class _ListCardState extends State<ListCard> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => Perdido(
-                                                objeto: widget.objeto,
-                                              )),
+                                              objeto: widget.objeto,
+                                              favorito: favorito)),
                                     )
                                   : controlador1.pestana_act == 2
                                       ? Navigator.push(
@@ -80,6 +80,7 @@ class _ListCardState extends State<ListCard> {
                                           MaterialPageRoute(
                                               builder: (context) => Rescate(
                                                     objeto: widget.objeto,
+                                                    favorito: favorito,
                                                   )),
                                         )
                                       : Navigator.push(
@@ -90,28 +91,29 @@ class _ListCardState extends State<ListCard> {
                                                   favorito: favorito)),
                                         );
                         },
-                        child: Container(
-                          width: double.maxFinite,
-                          height: 200,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: leftAligned
-                                    ? Radius.circular(0)
-                                    : Radius.circular(40.0),
-                                topRight: leftAligned
-                                    ? Radius.circular(40.0)
-                                    : Radius.circular(0),
-                                bottomLeft: leftAligned
-                                    ? Radius.circular(0)
-                                    : Radius.circular(40.0),
-                                bottomRight: leftAligned
-                                    ? Radius.circular(40.0)
-                                    : Radius.circular(0),
-                              ),
-                              image: DecorationImage(
-                                image: NetworkImage(widget.objeto.foto),
-                                fit: BoxFit.cover,
-                              )),
+                        child: ClipRRect(
+                          clipBehavior: Clip.hardEdge,
+                          borderRadius: BorderRadius.only(
+                            topLeft: leftAligned
+                                ? Radius.circular(0)
+                                : Radius.circular(40.0),
+                            topRight: leftAligned
+                                ? Radius.circular(40.0)
+                                : Radius.circular(0),
+                            bottomLeft: leftAligned
+                                ? Radius.circular(0)
+                                : Radius.circular(40.0),
+                            bottomRight: leftAligned
+                                ? Radius.circular(40.0)
+                                : Radius.circular(0),
+                          ),
+                          child: FadeInImage(
+                            placeholder: AssetImage('assets/perriti_pic.png'),
+                            width: double.maxFinite,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            image: NetworkImage(widget.objeto.foto),
+                          ),
                         ),
                       ),
                     ),

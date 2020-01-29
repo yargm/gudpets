@@ -9,13 +9,14 @@ class AvisosList extends StatelessWidget {
     var avisos = Firestore.instance.collection('avisos').snapshots();
     // TODO: implement build
     return Scaffold(
+      backgroundColor: primaryColor,
       appBar: AppBar(
         title: Text('Avisos'),
-        backgroundColor: primaryColor,
+    
       ),
       body: SingleChildScrollView(
         child: Container(
-            color: background,
+            color: primaryColor,
             child: StreamBuilder(
               stream: avisos,
               builder: (context, snapshot) {

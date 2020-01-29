@@ -33,47 +33,55 @@ class _EmergenciaState extends State<Emergencia> {
 
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(
+            FontAwesomeIcons.chevronCircleLeft,
+          ),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
+      extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
           child: Card(
-        margin: EdgeInsets.only(bottom: 20, top: 20, right: 10, left: 10),
+        margin: EdgeInsets.only(bottom: 20, top: 30, right: 10, left: 10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Stack(
-              alignment: Alignment.bottomRight,
-              children: <Widget>[
-                Hero(
-                  tag: widget.objeto.documentId,
-                  child: Container(
-                    width: double.infinity,
-                    height: 350.0,
+            SizedBox(
+              width: double.maxFinite,
+              height: 350,
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: <Widget>[
+                  Hero(
+                      tag: widget.objeto.documentId,
+                      child: FadeInImage(
+                        fit: BoxFit.cover,
+                        placeholder: AssetImage('assets/perriti_pic.png'),
+                        width: double.maxFinite,
+                        height: 350,
+                        image: NetworkImage(widget.objeto.foto),
+                      )),
+                  Container(
                     decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(widget.objeto.foto),
-                            fit: BoxFit.cover)),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                        ),
+                        color: Colors.brown[300]),
+                    padding: EdgeInsets.all(10.0),
+                    width: widget.objeto.userName.length * 11.1,
+                    height: 40,
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      widget.objeto.userName,
+                      style: TextStyle(fontSize: 16.0, color: Colors.white),
+                    ),
                   ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                      ),
-                      color: Colors.brown[300]),
-                  padding: EdgeInsets.all(10.0),
-                  width: 175.0,
-                  alignment: Alignment.bottomRight,
-                  child: Wrap(
-                    direction: Axis.horizontal,
-                    children: <Widget>[
-                      Text(
-                        widget.objeto.userName,
-                        style: TextStyle(fontSize: 16.0, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
             Padding(
                 padding: EdgeInsets.only(left: 20, top: 10, right: 20.0),
@@ -198,8 +206,8 @@ class _EmergenciaState extends State<Emergencia> {
                       height: 300.0,
                       width: 400.0,
                       child: GoogleMap(
-                        zoomGesturesEnabled: true,
-                        scrollGesturesEnabled: true,
+                        zoomGesturesEnabled: false,
+                        scrollGesturesEnabled: false,
                         markers: Set.from(marcador),
                         mapType: MapType.normal,
                         initialCameraPosition: CameraPosition(
