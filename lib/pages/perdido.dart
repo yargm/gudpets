@@ -72,7 +72,7 @@ class _PerdidoState extends State<Perdido> {
                         ),
                         color: Colors.brown[300]),
                     padding: EdgeInsets.all(10.0),
-                    width: widget.objeto.userName.length * 11.5,
+                    width: widget.objeto.userName.length * 10.5,
                     height: 40,
                     alignment: Alignment.bottomRight,
                     child: Text(
