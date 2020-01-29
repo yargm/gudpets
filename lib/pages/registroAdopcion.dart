@@ -1,5 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,7 @@ import 'package:location/location.dart';
 import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class RegistroAdopcion extends StatefulWidget {
   @override
@@ -16,10 +18,44 @@ class RegistroAdopcion extends StatefulWidget {
 }
 
 class _RegistroAdopcionState extends State<RegistroAdopcion> {
+   List<Asset> images = List<Asset>();
+  String _error = 'No Error Dectected';
   UserLocation _currentLocation;
   var location = Location();
   double latitud;
   double longitud;
+ Future<void> loadAssets() async {
+    List<Asset> resultList = List<Asset>();
+    String error = 'No Error Dectected';
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 3,
+        enableCamera: true,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#FF795548",
+          actionBarTitle: "Adopción App",
+          allViewTitle: "Todas las fotos",
+          useDetailsView: true,
+          selectCircleStrokeColor: "#FFFFFF",
+        ),
+      );
+    } on Exception catch (e) {
+      error = e.toString();
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+      _error = error;
+    });
+  }
 
   Future<UserLocation> getLocation() async {
     try {
@@ -56,9 +92,13 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     'sexo': null,
     'tipoAnimal': null,
     'titulo': null,
-    'userName': null,
+    'correo': null,
     'vacunacion': null,
-    'userId': null
+    'userId': null,
+    'fotos': null,
+    'reffoto': null,
+    'albumrefs' :<String>[],
+    'userName' :null
   };
 
   @override
@@ -298,6 +338,27 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                 SizedBox(
                   height: 15,
                 ),
+                RaisedButton(
+                    onPressed: loadAssets, child: Text('Más imagenes')),
+                images.isNotEmpty
+                    ? GridView.builder(
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(
+                            parent: NeverScrollableScrollPhysics()),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (context, index) => AssetThumb(
+                          asset: images[index],
+                          width: 300,
+                          height: 300,
+                        ),
+                        itemCount: images.length,
+                      )
+                    : Text('No hay fotos para mostrar'),
+                SizedBox(
+                  height: 15,
+                ),
                 //Guardar
                 Center(
                   child: isLoadig
@@ -313,16 +374,24 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                               isLoadig = true;
                             });
 
+
                             if (!_adopcionkey.currentState.validate()) {
                               setState(() {
                                 isLoadig = false;
                               });
                               return;
                             }
-
+                            if (images != null) {
+                              for (var im in images) {
+                                var fotos = await saveImage(im,controlador1);
+                                form_adopcion['fotos'].add(fotos['url']);
+                                form_adopcion['albumrefs'].add(fotos['ref']);
+                              print(form_adopcion['fotos'].toString());
+                            }
+                            }
                             if (_image != null ) {
                               final String fileName =
-                                  form_adopcion['userName'] +
+                                  controlador1.usuario.correo +
                                       '/adopcion/' +
                                       DateTime.now().toString();
 
@@ -338,16 +407,21 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
 
                               final StorageTaskSnapshot downloadUrl =
                                   (await uploadTask.onComplete);
+                                   final String fotoref = downloadUrl.ref.path;
 
                               final String url =
                                   (await downloadUrl.ref.getDownloadURL());
                               print('URL Is $url');
                               setState(() {
                                 form_adopcion['foto'] = url;
+                                form_adopcion['reffoto'] = fotoref;
                                 form_adopcion['userId'] =
                                     controlador1.usuario.documentId;
                               });
                             } else {
+                               setState(() {
+                                isLoadig = false;
+                              });
                               return showDialog(
                                   context: context,
                                   child: AlertDialog(
@@ -387,6 +461,8 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                               }
                             });
                             if (agregar) {
+                             
+                                images.clear();
                               Navigator.pop(context);
                             }
                           }),
@@ -399,6 +475,23 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     );
   }
 
+Future saveImage(Asset asset,Controller controlador) async {
+Map<String,String> fotosRef = {
+      'url': null,
+      'ref': null
+    };
+      
+    ByteData byteData = await asset.getThumbByteData(500, 500, quality: 100);
+    List<int> imageData = byteData.buffer.asUint8List();
+    final String fileName =
+        controlador.usuario.nombre+ '/adopcion/' + DateTime.now().toString();
+    StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = ref.putData(imageData);
+
+    fotosRef['url'] = await (await uploadTask.onComplete).ref.getDownloadURL();
+      fotosRef['ref'] =  (await uploadTask.onComplete).ref.path;
+    return fotosRef;
+  }
   Future getImage() async {
     var image = await ImagePicker.pickImage(
         source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
