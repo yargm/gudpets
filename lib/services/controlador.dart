@@ -8,6 +8,7 @@ class Controller with ChangeNotifier {
   String name;
   String email;
   String imageUrl;
+  bool loading = false;
 
   UsuarioModel usuario_act = UsuarioModel(
     nombre: 'No name',

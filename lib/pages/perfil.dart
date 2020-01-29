@@ -55,7 +55,7 @@ class _PerfilState extends State<Perfil> {
                             onPressed: () => showDialog(
                               child: WillPopScope(
                                 onWillPop: () async {
-                                  return false;
+                                  return controlador1.loading ? false : true;
                                 },
                                 child: SimpleDialog(
                                   children: <Widget>[
@@ -237,7 +237,7 @@ class _DialogContentState extends State<DialogContent> {
             ),
           ),
         ),
-        !loading
+        !controlador1.loading
             ? Column(
                 children: <Widget>[
                   ButtonBar(
@@ -245,6 +245,7 @@ class _DialogContentState extends State<DialogContent> {
                     children: <Widget>[
                       FloatingActionButton.extended(
                         onPressed: () async {
+                          
                           imagen = await getImage();
                           setState(() {
                             imagen = imagen;
@@ -260,6 +261,7 @@ class _DialogContentState extends State<DialogContent> {
                     children: <Widget>[
                       FloatingActionButton.extended(
                         onPressed: () async {
+                         
                           imagen = await getImageCamera();
                           setState(() {
                             imagen = imagen;
@@ -275,9 +277,9 @@ class _DialogContentState extends State<DialogContent> {
                     children: <Widget>[
                       FloatingActionButton.extended(
                         onPressed: () async {
-                          setState(() {
-                            loading = true;
-                          });
+                           controlador1.loading = true;
+                          controlador1.notify();
+                       
                           final String fileName = controlador1.usuario.correo +
                               '/perfil/PP' +
                               DateTime.now().toString();
@@ -313,6 +315,8 @@ class _DialogContentState extends State<DialogContent> {
                           controlador1.usuario.foto = url;
                           controlador1.usuario.fotoStorageRef =
                               downloadUrl.ref.path;
+
+                          controlador1.loading = false;
                           controlador1.notify();
 
                           Navigator.of(context).pop();

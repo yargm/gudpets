@@ -234,7 +234,7 @@ class AdopcionModel {
   DocumentReference reference;
   DateTime fecha;
   String userId;
-  String userName;
+  
 
   AdopcionModel(
       {this.titulo,

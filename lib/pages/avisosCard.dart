@@ -13,6 +13,7 @@ class AvisosCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
+        width: double.maxFinite,
         margin: EdgeInsets.only(left:5, right: 5, top: 10),
         child: Card(
           elevation: 0,

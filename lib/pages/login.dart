@@ -164,8 +164,8 @@ class _LogInState extends State<LogIn> {
                                                             onValue.documents
                                                                 .first));
                                                 Navigator.of(context)
-                                                    .pushReplacementNamed(
-                                                        '/home');
+                                                    .pushNamedAndRemoveUntil(
+                                                        '/home', ModalRoute.withName('/home')  );
                                               }
                                             });
                                           }
