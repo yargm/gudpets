@@ -63,6 +63,7 @@ class _ListCardState extends State<ListCard> {
                                   MaterialPageRoute(
                                       builder: (context) => Adopcion(
                                             objeto: widget.objeto,
+                                            favorito: favorito,
                                           )),
                                 )
                               : controlador1.pestana_act == 1

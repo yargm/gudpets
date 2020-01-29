@@ -1,4 +1,5 @@
 import 'package:adoption_app/pages/mapaejemplo.dart';
+import 'package:adoption_app/pages/registroAdopcion.dart';
 import 'package:flutter/material.dart';
 import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
@@ -98,12 +99,15 @@ class MyApp extends StatelessWidget {
           '/registro_emergencia': (BuildContext context) =>
               RegistroEmergencia(),
           '/registro_rescate': (BuildContext context) => RegistroRescate(),
+          '/registro_adopcion':(BuildContext context) => RegistroAdopcion(),
+          '/interesados_adopcion':(BuildContext context) => InteresadosAdopcion(),
           '/registro_perdido': (BuildContext context) => RegistroPerdido(),
           '/mapaejemplo': (BuildContext context) => MapSample(),
           '/avisos': (BuildContext context) => AvisosList(),
           '/publicaciones': (BuildContext context) => PublicacionList(),
           '/perfil': (BuildContext context) => Perfil(),
           '/favoritos': (BuildContext context) => FavoritosList()
+
         },
       ),
     );

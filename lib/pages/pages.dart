@@ -25,3 +25,4 @@ export 'publicacionList.dart';
 
 export 'perfil.dart';
 
+export 'interesadosAdopcion.dart';
