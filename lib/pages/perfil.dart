@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
@@ -128,7 +130,12 @@ class _PerfilState extends State<Perfil> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text('Información básica'),
+                  Text(
+                    'Información básica',
+                    style: TextStyle(
+                      fontSize: 25,
+                    ),
+                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -235,6 +242,7 @@ class _PerfilState extends State<Perfil> {
                   Text(
                     'Información necesaria para trámites de adopción',
                     textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 25),
                   ),
                   SizedBox(
                     height: 10,
@@ -375,7 +383,15 @@ class _PerfilState extends State<Perfil> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          'Galeria Fotos',
+                          'Galeria Fotos de tu hogar',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 25),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Estas fotos son necesarias para realizar un trámite de adopción, y estas fotos deben de mostrar el lugar en donde viviran las mascotas que desees adoptar, estas fotos sirven para comprobar que la mascota tendra un hogar adecuado',
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(
@@ -391,13 +407,33 @@ class _PerfilState extends State<Perfil> {
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 3,
                                 ),
-                                itemBuilder: (context, index) => Image(
-                                  image: NetworkImage(
-                                    controlador1.usuario.galeriaFotos[index],
+                                itemBuilder: (context, index) =>
+                                    GestureDetector(
+                                  onTap: () => showDialog(
+                                      context: context,
+                                      child: WillPopScope(
+                                        onWillPop: () async {
+                                          return controlador1.loading
+                                              ? false
+                                              : true;
+                                        },
+                                        child: Dialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: DialogContent(
+                                            index: index,
+                                          ),
+                                        ),
+                                      )),
+                                  child: Image(
+                                    image: NetworkImage(
+                                      controlador1.usuario.galeriaFotos[index],
+                                    ),
+                                    height: 150,
+                                    width: 150,
+                                    fit: BoxFit.cover,
                                   ),
-                                  height: 150,
-                                  width: 150,
-                                  fit: BoxFit.cover,
                                 ),
                                 itemCount:
                                     controlador1.usuario.galeriaFotos.length,
@@ -406,23 +442,35 @@ class _PerfilState extends State<Perfil> {
                         SizedBox(
                           height: 30,
                         ),
-                        FloatingActionButton.extended(
-                          elevation: 0,
-                          backgroundColor: primaryColor,
-                          onPressed: () => showDialog(
-                              context: context,
-                              child: Dialog(
-                                child: DialogMultiImage(),
-                              )),
-                          label: Text(
-                            'Añadir fotos',
-                            style: TextStyle(color: secondaryLight),
-                          ),
-                          icon: Icon(
-                            Icons.add_a_photo,
-                            color: secondaryLight,
-                          ),
-                        )
+                        controlador1.usuario.galeriaFotos.length < 6
+                            ? FloatingActionButton.extended(
+                                elevation: 0,
+                                backgroundColor: primaryColor,
+                                onPressed: () => showDialog(
+                                    context: context,
+                                    child: WillPopScope(
+                                      onWillPop: () async {
+                                        return controlador1.loading
+                                            ? false
+                                            : true;
+                                      },
+                                      child: Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: DialogMultiImage(),
+                                      ),
+                                    )),
+                                label: Text(
+                                  'Añadir fotos',
+                                  style: TextStyle(color: secondaryLight),
+                                ),
+                                icon: Icon(
+                                  Icons.add_a_photo,
+                                  color: secondaryLight,
+                                ),
+                              )
+                            : Container()
                       ],
                     ),
                   )
@@ -437,50 +485,51 @@ class _PerfilState extends State<Perfil> {
 }
 
 class DialogMultiImage extends StatefulWidget {
-  
   @override
   _DialogMultiImageState createState() => _DialogMultiImageState();
 }
 
 class _DialogMultiImageState extends State<DialogMultiImage> {
   List<Asset> images = List<Asset>();
+  List<String> galeriaFotos = <String>[];
+  List<String> galeriaFotosRefs = <String>[];
 
   @override
   Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
 
-  Future<void> loadAssets() async {
-    List<Asset> resultList = List<Asset>();
-    String error = 'No Error Dectected';
+    Future<void> loadAssets() async {
+      List<Asset> resultList = List<Asset>();
+      String error = 'No Error Dectected';
 
-    try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 6,
-        enableCamera: true,
-        selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-        materialOptions: MaterialOptions(
-          actionBarColor: "#FF795548",
-          actionBarTitle: "Adopción App",
-          allViewTitle: "Todas las fotos",
-          useDetailsView: true,
-          selectCircleStrokeColor: "#FFFFFF",
-        ),
-      );
-    } on Exception catch (e) {
-      error = e.toString();
+      try {
+        resultList = await MultiImagePicker.pickImages(
+          maxImages: 6 - (controlador1.usuario.galeriaFotos.length ?? 0),
+          enableCamera: true,
+          selectedAssets: images,
+          cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+          materialOptions: MaterialOptions(
+            actionBarColor: "#FF795548",
+            actionBarTitle: "Adopción App",
+            allViewTitle: "Todas las fotos",
+            useDetailsView: true,
+            selectCircleStrokeColor: "#FFFFFF",
+          ),
+        );
+      } on Exception catch (e) {
+        error = e.toString();
+      }
+
+      // If the widget was removed from the tree while the asynchronous platform
+      // message was in flight, we want to discard the reply rather than calling
+      // setState to update our non-existent appearance.
+      if (!mounted) return;
+
+      setState(() {
+        images = resultList;
+      });
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      images = resultList;
-      
-    });
-  }
-    Controller controlador1 = Provider.of<Controller>(context);
     // TODO: implement build
     return Container(
       margin: EdgeInsets.all(20),
@@ -503,29 +552,99 @@ class _DialogMultiImageState extends State<DialogMultiImage> {
                   itemCount: images.length,
                 )
               : Text('No hay fotos para mostrar'),
-              SizedBox(height: 30,),
-          FloatingActionButton.extended(
-            elevation: 0,
-            backgroundColor: primaryColor,
-            onPressed: () => loadAssets(),
-            label: Text(
-              'Añadir fotos',
-              style: TextStyle(color: secondaryLight),
-            ),
-            icon: Icon(
-              Icons.add_a_photo,
-              color: secondaryLight,
-            ),
-          )
+          SizedBox(
+            height: 30,
+          ),
+          controlador1.loading
+              ? CircularProgressIndicator()
+              : Column(
+                  children: <Widget>[
+                    FloatingActionButton.extended(
+                      elevation: 0,
+                      backgroundColor: primaryColor,
+                      onPressed: () => loadAssets(),
+                      label: Text(
+                        'Añadir fotos',
+                        style: TextStyle(color: secondaryLight),
+                      ),
+                      icon: Icon(
+                        Icons.add_a_photo,
+                        color: secondaryLight,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    FloatingActionButton.extended(
+                      elevation: 0,
+                      backgroundColor: secondaryLight,
+                      onPressed: () async {
+                        controlador1.loading = true;
+                        controlador1.notify();
+                        for (var image in images) {
+                          Map<String, String> fotosRef =
+                              await saveImage(image, controlador1);
+                          galeriaFotos.add(fotosRef['url']);
+                          galeriaFotosRefs.add(fotosRef['ref']);
+                        }
+                        await controlador1.usuario.reference.updateData({
+                          'galeriaFotos': FieldValue.arrayUnion(galeriaFotos),
+                          'galeriaFotosRefs':
+                              FieldValue.arrayUnion(galeriaFotosRefs)
+                        });
+                        List<dynamic> urls =
+                            controlador1.usuario.galeriaFotos.toList();
+                        List<dynamic> refs =
+                            controlador1.usuario.galeriaFotosRefs.toList();
+                        for (var foto in galeriaFotos) {
+                          urls.add(foto);
+                        }
+                        for (var fotoRef in galeriaFotosRefs) {
+                          refs.add(fotoRef);
+                        }
+                        controlador1.usuario.galeriaFotos = urls;
+                        controlador1.usuario.galeriaFotosRefs = refs;
+
+                        controlador1.loading = false;
+                        controlador1.notify();
+                        Navigator.of(context).pop();
+                      },
+                      label: Text(
+                        'Subir fotos',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      icon: Icon(
+                        Icons.cloud_upload,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                )
         ],
       ),
     );
+  }
+
+  Future saveImage(Asset asset, Controller controlador1) async {
+    Map<String, String> fotosRef = {'url': null, 'ref': null};
+    ByteData byteData = await asset.getThumbByteData(500, 500, quality: 100);
+    List<int> imageData = byteData.buffer.asUint8List();
+    final String fileName = controlador1.usuario.correo +
+        '/perfil/galeria/foto' +
+        DateTime.now().toString();
+    StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = ref.putData(imageData);
+
+    fotosRef['url'] = await (await uploadTask.onComplete).ref.getDownloadURL();
+    fotosRef['ref'] = (await uploadTask.onComplete).ref.path;
+    return fotosRef;
   }
 }
 
 class DialogContent extends StatefulWidget {
   final String foto;
-  DialogContent({this.foto});
+  final int index;
+  DialogContent({this.foto, this.index});
   @override
   _DialogContentState createState() => _DialogContentState();
 }
@@ -539,165 +658,233 @@ class _DialogContentState extends State<DialogContent> {
 
     // TODO: implement build
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Container(
           margin: EdgeInsets.all(15),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: FadeInImage(
-              width: 250,
-              height: 250,
-              fit: BoxFit.cover,
+              width: 350,
+              height: 350,
+              fit: widget.foto == 'PP' || widget.index != null
+                  ? BoxFit.cover
+                  : null,
               image: imagen == null
                   ? NetworkImage(widget.foto == 'PP'
                       ? controlador1.usuario.foto
                       : widget.foto == 'INE'
                           ? (controlador1.usuario.fotoINE ?? '')
-                          : (controlador1.usuario.fotoCompDomi ?? ''))
+                          : widget.index != null
+                              ? controlador1.usuario.galeriaFotos[widget.index]
+                              : (controlador1.usuario.fotoCompDomi ?? ''))
                   : FileImage(imagen),
               placeholder: AssetImage('assets/perriti_pic.png'),
             ),
           ),
         ),
-        !controlador1.loading
-            ? Column(
-                children: <Widget>[
-                  ButtonBar(
-                    alignment: MainAxisAlignment.center,
+        widget.index != null
+            ? Container()
+            : controlador1.loading
+                ? CircularProgressIndicator()
+                : Column(
                     children: <Widget>[
-                      FloatingActionButton.extended(
-                        backgroundColor: primaryColor,
-                        onPressed: () async {
-                          imagen = await getImage();
-                          setState(() {
-                            imagen = imagen;
-                          });
-                        },
-                        label: Text(
-                          'Foto Galeria',
-                          style: TextStyle(color: secondaryLight),
-                        ),
-                        icon: Icon(
-                          Icons.photo_library,
-                          color: secondaryLight,
-                        ),
+                      ButtonBar(
+                        alignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FloatingActionButton.extended(
+                            backgroundColor: primaryColor,
+                            onPressed: () async {
+                              imagen = await getImage();
+                              setState(() {
+                                imagen = imagen;
+                              });
+                            },
+                            label: Text(
+                              'Foto Galeria',
+                              style: TextStyle(color: secondaryLight),
+                            ),
+                            icon: Icon(
+                              Icons.photo_library,
+                              color: secondaryLight,
+                            ),
+                          )
+                        ],
+                      ),
+                      ButtonBar(
+                        alignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FloatingActionButton.extended(
+                            backgroundColor: primaryColor,
+                            onPressed: () async {
+                              imagen = await getImageCamera();
+                              setState(() {
+                                imagen = imagen;
+                              });
+                            },
+                            label: Text(
+                              'Foto Camara',
+                              style: TextStyle(color: secondaryLight),
+                            ),
+                            icon: Icon(
+                              Icons.photo_camera,
+                              color: secondaryLight,
+                            ),
+                          )
+                        ],
+                      ),
+                      ButtonBar(
+                        alignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FloatingActionButton.extended(
+                            backgroundColor: primaryColor,
+                            onPressed: () async {
+                              controlador1.loading = true;
+                              controlador1.notify();
+
+                              final String fileName =
+                                  controlador1.usuario.correo +
+                                      '/perfil/${widget.foto}' +
+                                      DateTime.now().toString();
+                              StorageReference storageRef = FirebaseStorage
+                                  .instance
+                                  .ref()
+                                  .child(fileName);
+
+                              final StorageUploadTask uploadTask =
+                                  storageRef.putFile(
+                                imagen,
+                              );
+
+                              final StorageTaskSnapshot downloadUrl =
+                                  (await uploadTask.onComplete);
+
+                              if ((widget.foto == 'PP'
+                                      ? controlador1.usuario.fotoStorageRef
+                                      : widget.foto == 'INE'
+                                          ? controlador1.usuario.fotoINERef
+                                          : controlador1
+                                              .usuario.fotoCompDomiRef) !=
+                                  null) {
+                                await FirebaseStorage.instance
+                                    .ref()
+                                    .child((widget.foto == 'PP'
+                                        ? controlador1.usuario.fotoStorageRef
+                                        : widget.foto == 'INE'
+                                            ? controlador1.usuario.fotoINERef
+                                            : controlador1
+                                                .usuario.fotoCompDomiRef))
+                                    .delete()
+                                    .catchError((onError) {
+                                  print(onError);
+                                });
+                              }
+
+                              final String url =
+                                  (await downloadUrl.ref.getDownloadURL());
+                              if (widget.foto == 'PP') {
+                                await controlador1.usuario.reference
+                                    .updateData({
+                                  'foto': url,
+                                  'fotoStorageRef': downloadUrl.ref.path
+                                });
+
+                                controlador1.usuario.foto = url;
+                                controlador1.usuario.fotoStorageRef =
+                                    downloadUrl.ref.path;
+                              } else if (widget.foto == 'INE') {
+                                await controlador1.usuario.reference
+                                    .updateData({
+                                  'fotoINE': url,
+                                  'fotoINERef': downloadUrl.ref.path
+                                });
+
+                                controlador1.usuario.fotoINE = url;
+                                controlador1.usuario.fotoINERef =
+                                    downloadUrl.ref.path;
+                              } else {
+                                await controlador1.usuario.reference
+                                    .updateData({
+                                  'fotoCompDomi': url,
+                                  'fotoCompDomiRef': downloadUrl.ref.path
+                                });
+
+                                controlador1.usuario.fotoCompDomi = url;
+                                controlador1.usuario.fotoCompDomiRef =
+                                    downloadUrl.ref.path;
+                              }
+
+                              controlador1.loading = false;
+                              controlador1.notify();
+
+                              Navigator.of(context).pop();
+                            },
+                            label: Text(
+                              'Guardar',
+                              style: TextStyle(color: secondaryLight),
+                            ),
+                            icon: Icon(
+                              Icons.save,
+                              color: secondaryLight,
+                            ),
+                          )
+                        ],
                       )
                     ],
                   ),
-                  ButtonBar(
-                    alignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FloatingActionButton.extended(
-                        backgroundColor: primaryColor,
-                        onPressed: () async {
-                          imagen = await getImageCamera();
-                          setState(() {
-                            imagen = imagen;
-                          });
-                        },
-                        label: Text(
-                          'Foto Camara',
-                          style: TextStyle(color: secondaryLight),
-                        ),
-                        icon: Icon(
-                          Icons.photo_camera,
-                          color: secondaryLight,
-                        ),
-                      )
-                    ],
-                  ),
-                  ButtonBar(
-                    alignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FloatingActionButton.extended(
-                        backgroundColor: primaryColor,
-                        onPressed: () async {
-                          controlador1.loading = true;
-                          controlador1.notify();
+        widget.index != null && !controlador1.loading
+            ? FloatingActionButton.extended(
+                backgroundColor: primaryColor,
+                onPressed: () async {
+                  print(controlador1.usuario.galeriaFotosRefs.length);
+                  controlador1.loading = true;
+                  controlador1.notify();
+                  await FirebaseStorage.instance
+                      .ref()
+                      .child(
+                          controlador1.usuario.galeriaFotosRefs[widget.index])
+                      .delete()
+                      .catchError((onError) {
+                    print(onError);
+                  });
 
-                          final String fileName = controlador1.usuario.correo +
-                              '/perfil/${widget.foto}' +
-                              DateTime.now().toString();
-                          StorageReference storageRef =
-                              FirebaseStorage.instance.ref().child(fileName);
+                  await controlador1.usuario.reference.updateData({
+                    'galeriaFotos': FieldValue.arrayRemove(
+                        [controlador1.usuario.galeriaFotos[widget.index]]),
+                    'galeriaFotosRefs': FieldValue.arrayRemove(
+                        [controlador1.usuario.galeriaFotosRefs[widget.index]])
+                  });
+                    List<dynamic> urls =
+                            controlador1.usuario.galeriaFotos.toList();
+                        List<dynamic> refs =
+                            controlador1.usuario.galeriaFotosRefs.toList();
+                  urls.removeAt(widget.index);
+                  refs.removeAt(widget.index);
 
-                          final StorageUploadTask uploadTask =
-                              storageRef.putFile(
-                            imagen,
-                          );
-
-                          final StorageTaskSnapshot downloadUrl =
-                              (await uploadTask.onComplete);
-
-                          if ((widget.foto == 'PP'
-                                  ? controlador1.usuario.fotoStorageRef
-                                  : widget.foto == 'INE'
-                                      ? controlador1.usuario.fotoINERef
-                                      : controlador1.usuario.fotoCompDomiRef) !=
-                              null) {
-                            await FirebaseStorage.instance
-                                .ref()
-                                .child((widget.foto == 'PP'
-                                    ? controlador1.usuario.fotoStorageRef
-                                    : widget.foto == 'INE'
-                                        ? controlador1.usuario.fotoINERef
-                                        : controlador1.usuario.fotoCompDomiRef))
-                                .delete()
-                                .catchError((onError) {
-                              print(onError);
-                            });
-                          }
-
-                          final String url =
-                              (await downloadUrl.ref.getDownloadURL());
-                          if (widget.foto == 'PP') {
-                            await controlador1.usuario.reference.updateData({
-                              'foto': url,
-                              'fotoStorageRef': downloadUrl.ref.path
-                            });
-
-                            controlador1.usuario.foto = url;
-                            controlador1.usuario.fotoStorageRef =
-                                downloadUrl.ref.path;
-                          } else if (widget.foto == 'INE') {
-                            await controlador1.usuario.reference.updateData({
-                              'fotoINE': url,
-                              'fotoINERef': downloadUrl.ref.path
-                            });
-
-                            controlador1.usuario.fotoINE = url;
-                            controlador1.usuario.fotoINERef =
-                                downloadUrl.ref.path;
-                          } else {
-                            await controlador1.usuario.reference.updateData({
-                              'fotoCompDomi': url,
-                              'fotoCompDomiRef': downloadUrl.ref.path
-                            });
-
-                            controlador1.usuario.fotoCompDomi = url;
-                            controlador1.usuario.fotoCompDomiRef =
-                                downloadUrl.ref.path;
-                          }
-
-                          controlador1.loading = false;
-                          controlador1.notify();
-
-                          Navigator.of(context).pop();
-                        },
-                        label: Text(
-                          'Guardar',
-                          style: TextStyle(color: secondaryLight),
-                        ),
-                        icon: Icon(
-                          Icons.save,
-                          color: secondaryLight,
-                        ),
-                      )
-                    ],
-                  )
-                ],
+                  controlador1.usuario.galeriaFotos = urls;
+                  controlador1.usuario.galeriaFotosRefs = refs;
+                  controlador1.loading = false;
+                  setState(() {
+                    
+                  });
+                  controlador1.notify();
+                  Navigator.of(context).pop();
+                },
+                label: Text(
+                  'Eliminar foto',
+                  style: TextStyle(color: secondaryLight),
+                ),
+                icon: Icon(
+                  Icons.delete_forever,
+                  color: secondaryLight,
+                ),
               )
-            : CircularProgressIndicator(),
+            : controlador1.loading && widget.index != null
+                ? CircularProgressIndicator()
+                : Container(),
+        SizedBox(
+          height: 15,
+        )
       ],
     );
   }

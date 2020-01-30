@@ -28,10 +28,10 @@ class UsuarioModel {
   String fotoINERef;
   String fotoCompDomi;
   String fotoCompDomiRef;
-  List<String> fotosHogar;
-  List<String> fotosHogarRefs;
-  List<String> galeriaFotos;
-  List<String> galeriaFotosRefs;
+  List<dynamic> fotosHogar;
+  List<dynamic> fotosHogarRefs;
+  List<dynamic> galeriaFotos;
+  List<dynamic> galeriaFotosRefs;
 
   UsuarioModel(
       {this.contrasena,
@@ -81,7 +81,7 @@ class UsuarioModel {
     fotoINE = data['fotoINE'];
     fotoINERef = data['fotoINERef'];
     galeriaFotos = data['galeriaFotos'] ?? [];
-    galeriaFotosRefs = data['galeriaFotosRef'] ?? [];
+    galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
   }
 }
 
