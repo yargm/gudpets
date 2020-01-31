@@ -237,7 +237,9 @@ class _PerdidoState extends State<Perdido> {
                                         fontSize: 20.0,
                                       )),
                                   Text(
-                                    widget.objeto.recompensa ? 'Sí' : 'No',
+                                    widget.objeto.recompensa != null
+                                        ? widget.objeto.recompensa
+                                        : 'No',
                                     style: TextStyle(
                                         color: Colors.grey, fontSize: 18),
                                   ),
@@ -246,23 +248,7 @@ class _PerdidoState extends State<Perdido> {
                               SizedBox(
                                 height: 20.0,
                               ),
-                              //Fecha
-                              Text('Fecha de publicación: ',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                  )),
-                              Text(
-                                widget.objeto.fecha.day.toString() +
-                                    '/' +
-                                    widget.objeto.fecha.month.toString() +
-                                    '/' +
-                                    widget.objeto.fecha.year.toString(),
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 20.0,
-                              ),
+
                               //Teléfono
                               Row(
                                 children: <Widget>[
@@ -287,6 +273,26 @@ class _PerdidoState extends State<Perdido> {
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 18),
                                 ),
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              //Fecha publicación
+                              Text('Fecha de publicación: ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  )),
+                              Text(
+                                widget.objeto.fecha.day.toString() +
+                                    '/' +
+                                    widget.objeto.fecha.month.toString() +
+                                    '/' +
+                                    widget.objeto.fecha.year.toString(),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20.0,
                               ),
                             ],
                           ),

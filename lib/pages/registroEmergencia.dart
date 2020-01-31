@@ -13,19 +13,18 @@ class RegistroEmergencia extends StatefulWidget {
 }
 
 class _RegistroEmergenciaState extends State<RegistroEmergencia> {
-  UserLocation _currentLocation;
+  GeoPoint _currentLocation;
   var location = Location();
   double latitud;
   double longitud;
 
-  Future<UserLocation> getLocation() async {
+  Future<GeoPoint> getLocation() async {
     try {
       var userLocation = await location.getLocation();
       setState(() {
-        _currentLocation = UserLocation(
-            latitud: userLocation.latitude, longitud: userLocation.longitude);
-        latitud = _currentLocation.latitud;
-        longitud = _currentLocation.longitud;
+        _currentLocation = GeoPoint(userLocation.latitude, userLocation.longitude);
+        latitud = _currentLocation.latitude;
+        longitud = _currentLocation.longitude;
       });
     } catch (e) {
       print(e.toString());
@@ -47,12 +46,13 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
     'descripcion': null,
     'tipoAnimal': null,
     'tipoEmergencia': null,
-    'fotoStorageRef' : null,
+    'fotoStorageRef': null,
     'ubicacion': null,
     'userName': null,
     'fecha': null,
     'favoritos': [],
     'userId': null,
+    'reffoto': null,
   };
 
   @override
@@ -61,7 +61,9 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
 
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text('Registro Emergencia'),),
+      appBar: AppBar(
+        title: Text('Registro Emergencia'),
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(left: 20, right: 20),
@@ -97,7 +99,9 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                 Text(_image == null
                     ? '* Seleccione una imagen para la emergencia '
                     : 'Imagen seleccionada'),
-                    SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 GestureDetector(
                   onTap: () => getImage(),
                   child: Center(
@@ -228,7 +232,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                       child: WillPopScope(
                                         onWillPop: () async {
                                           setState(() {
-                                            isLoadig2= false;
+                                            isLoadig2 = false;
                                           });
                                           return true;
                                         },
@@ -307,12 +311,14 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
 
                               final StorageTaskSnapshot downloadUrl =
                                   (await uploadTask.onComplete);
+                              final String fotoref = downloadUrl.ref.path;
 
                               final String url =
                                   (await downloadUrl.ref.getDownloadURL());
                               print('URL Is $url');
                               setState(() {
                                 form_emergencia['foto'] = url;
+                                form_emergencia['reffoto'] = fotoref;
                                 form_emergencia['userId'] =
                                     controlador1.usuario.documentId;
                                 form_emergencia['ubicacion'] = GeoPoint(
