@@ -40,7 +40,6 @@ dependencies:
   google_maps_flutter: ^0.5.21+15
   location: ^2.3.5
   multi_image_picker: ^4.6.1
-  pinch_zoom_image: ^0.2.5
   
 
 

@@ -5,7 +5,6 @@ import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
-import 'package:pinch_zoom_image/pinch_zoom_image.dart';
 
 class Emergencia extends StatefulWidget {
   final EmergenciaModel objeto;
@@ -222,27 +221,24 @@ class _EmergenciaState extends State<Emergencia> {
                       ),
                     ),
                     widget.objeto.tipoEmergencia == 'Abuso y maltrato'
-                        ? Column(
-                            children: <Widget>[
-                              SizedBox(
-                                height: 15.0,
-                              ),
-                              Text('¿Cómo denunciar?',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                  )),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Container(
-                                  height: 200.0,
-                                  width: 400.0,
-                                  child: PinchZoomImage(
-                                      image:
-                                          Image.asset('assets/denuncia2.jpg'))),
-                            ],
-                          )
-                        : Container(),
+                        ?  Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 15.0,
+                                ),
+                                Text('¿Cómo denunciar?',
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                    )),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Container(
+                                    height: 200.0,
+                                    width: 400.0,
+                                    child: Image.asset('assets/denuncia2.jpg')),
+                              ],
+                            ): Container(),
                     SizedBox(
                       height: 20.0,
                     ),
