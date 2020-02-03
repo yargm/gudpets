@@ -142,7 +142,7 @@ class _PerfilState extends State<Perfil> {
                   ListTile(
                     leading: Icon(Icons.description),
                     subtitle: Text(controlador1.usuario.descripcion),
-                    title: Text('Descrcipcion'),
+                    title: Text('Descripción'),
                     trailing: IconButton(
                       onPressed: () => showDialog(
                         context: context,
