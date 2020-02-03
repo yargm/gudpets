@@ -45,14 +45,7 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            FirebaseMessage(),
-             _widgetOptions.elementAt(seleccionado)
-          ],
-        ),
-      ),
+      body: _widgetOptions.elementAt(seleccionado),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           controlador1.pestana_act == 0
