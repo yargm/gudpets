@@ -15,6 +15,14 @@ class UsuarioModel {
   DocumentReference reference;
   String tipo;
   String documentId;
+  String fotoINE;
+  String fotoINERef;
+  String fotoCompDomi;
+  String fotoCompDomiRef;
+  List<dynamic> fotosHogar;
+  List<dynamic> fotosHogarRefs;
+  List<dynamic> galeriaFotos;
+  List<dynamic> galeriaFotosRefs;
 
   UsuarioModel(
       {this.contrasena,
@@ -59,6 +67,12 @@ class UsuarioModel {
     documentId = data.documentID.toString();
     fnacimiento = data['fnacimiento'].toDate();
     fotoStorageRef = data['fotoStorageRef'];
+    fotoCompDomi = data['fotoCompDomi'];
+    fotoCompDomiRef = data['fotoCompDomiRef'];
+    fotoINE = data['fotoINE'];
+    fotoINERef = data['fotoINERef'];
+    galeriaFotos = data['galeriaFotos'] ?? [];
+    galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
   }
 }
 
