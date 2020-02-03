@@ -76,7 +76,6 @@ class MyApp extends StatelessWidget {
             backgroundColor: secondaryColor,
           ),
           //appbar
-
           appBarTheme: AppBarTheme(
               elevation: 0,
               iconTheme: IconThemeData(size: 30, color: secondaryDark),

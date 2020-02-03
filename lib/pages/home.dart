@@ -46,7 +46,12 @@ class _HomeState extends State<Home> {
         ],
       ),
       body: Center(
-        child: _widgetOptions.elementAt(seleccionado),
+        child: Column(
+          children: <Widget>[
+            FirebaseMessage(),
+             _widgetOptions.elementAt(seleccionado)
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
