@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:adoption_app/services/services.dart';
 
-import 'package:location/location.dart';
-
-class UserLocation {
-  final double latitud;
-  final double longitud;
-
-  UserLocation({this.latitud, this.longitud});
-}
-
 class UsuarioModel {
   String contrasena;
   String correo;
@@ -99,7 +90,7 @@ class RescateModel {
   String userId;
   dynamic albumrefs;
   String reffoto;
-   dynamic fotos;
+  dynamic fotos;
 
   DocumentReference reference;
   RescateModel(
@@ -132,6 +123,7 @@ class RescateModel {
     fotos = data['fotos'] ?? [''];
     albumrefs = data['albumrefs'] ?? [''];
     reffoto = data['reffoto'];
+    telefono = data['telefono'];
   }
 }
 
@@ -143,6 +135,7 @@ class EmergenciaModel {
   String tipoEmergencia;
   GeoPoint ubicacion;
   DateTime fecha;
+  String reffoto;
 
   String userName;
   String userId;
@@ -160,7 +153,8 @@ class EmergenciaModel {
       this.fecha,
       this.userName,
       this.documentId,
-      this.userId});
+      this.userId,
+      this.reffoto});
 
   EmergenciaModel.fromDocumentSnapshot(DocumentSnapshot data) {
     foto = data['foto'];
@@ -172,6 +166,7 @@ class EmergenciaModel {
     ubicacion = data['ubicacion'];
     fecha = data['fecha'].toDate();
     userId = data['userId'];
+    reffoto = data['reffoto'];
 
     favoritos = data['favoritos'] ?? [''];
     documentId = data.documentID.toString();
@@ -180,6 +175,7 @@ class EmergenciaModel {
 }
 
 class PerdidoModel {
+  String reffoto;
   String titulo;
   String foto;
   String descripcion;
@@ -190,7 +186,7 @@ class PerdidoModel {
   DateTime fechaExtravio;
   DateTime fecha;
   GeoPoint ubicacion;
-  bool recompensa;
+  String recompensa;
   int telefono;
   String userId;
   String userName;
@@ -213,7 +209,8 @@ class PerdidoModel {
       this.userName,
       this.documentId,
       this.telefono,
-      this.userId});
+      this.userId,
+      this.reffoto});
 
   PerdidoModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -221,7 +218,7 @@ class PerdidoModel {
     descripcion = data['descripcion'];
     fechaExtravio = data['fechaExtravio'].toDate();
     raza = data['raza'];
-    recompensa = data['recompensa'];
+    recompensa = data['recompensa'] ?? [''];
     sexo = data['sexo'];
     senasPart = data['senasPart'];
     tipoAnimal = data['tipoAnimal'];
@@ -230,6 +227,7 @@ class PerdidoModel {
     userName = data['userName'];
     telefono = data['telefono'];
     userId = data['userId'];
+    reffoto = data['reffoto'];
 
     favoritos = data['favoritos'] ?? [''];
     documentId = data.documentID.toString();
@@ -254,9 +252,9 @@ class AdopcionModel {
   DocumentReference reference;
   DateTime fecha;
   String userId;
-   dynamic albumrefs;
+  dynamic albumrefs;
   String reffoto;
-   dynamic fotos;
+  dynamic fotos;
 
   AdopcionModel(
       {this.titulo,
@@ -272,7 +270,10 @@ class AdopcionModel {
       this.fecha,
       this.documentId,
       this.userName,
-      this.userId,this.albumrefs,this.reffoto,this.fotos});
+      this.userId,
+      this.albumrefs,
+      this.reffoto,
+      this.fotos});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -284,11 +285,11 @@ class AdopcionModel {
     sexo = data['sexo'];
     edad = data['edad'];
     fecha = data['fecha'].toDate();
-  fotos = data['fotos'] ?? [''];
+    fotos = data['fotos'] ?? [''];
     albumrefs = data['albumrefs'] ?? [''];
     reffoto = data['reffoto'];
     esterilizacion = data['esterilizacion'];
-    vacunacion = data['vacunacion'] ;
+    vacunacion = data['vacunacion'];
     desparacitacion = data['desparacitacion'];
     convivenciaotros = data['convivenciaotros'];
     userId = data['userId'];

@@ -144,41 +144,51 @@ class _AdopcionState extends State<Adopcion> {
                               )),
                         ),
                         SizedBox(
-                          height: 5.0,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                          height: 10,
+                        )
+                      ],
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+                      child: Text(widget.objeto.descripcion,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.grey,
+                          )),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Sexo: ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  )),
+                              Text(widget.objeto.sexo,
+                                  style: TextStyle(
+                                      fontSize: 18.0, color: Colors.grey)),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Text('Edad: ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  )),
+                              Text(widget.objeto.edad,
+                                  style: TextStyle(
+                                      fontSize: 18.0, color: Colors.grey)),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Row(
                                 children: <Widget>[
-                                  Text('Fecha de publicación: ',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                      )),
-                                  Text(
-                                    widget.objeto.fecha.day.toString() +
-                                        '/' +
-                                        widget.objeto.fecha.month.toString() +
-                                        '/' +
-                                        widget.objeto.fecha.year.toString(),
-                                    style:
-                                        TextStyle(color: Colors.grey, fontSize: 18),
-                                  ),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Text('Edad: ',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                      )),
-                                  Text(widget.objeto.edad,
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.grey)),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
                                   Text('Convivencia con otros: ',
                                       style: TextStyle(
                                         fontSize: 20.0,
@@ -186,11 +196,16 @@ class _AdopcionState extends State<Adopcion> {
                                   widget.objeto.convivenciaotros
                                       ? Text('Sí',
                                           style: TextStyle(
-                                              fontSize: 18.0, color: Colors.grey))
+                                              fontSize: 18.0,
+                                              color: Colors.grey))
                                       : Text('No'),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Row(
+                                children: <Widget>[
                                   Text('Desparacitado: ',
                                       style: TextStyle(
                                         fontSize: 20.0,
@@ -198,13 +213,19 @@ class _AdopcionState extends State<Adopcion> {
                                   widget.objeto.desparacitacion
                                       ? Text('Sí',
                                           style: TextStyle(
-                                              fontSize: 18.0, color: Colors.grey))
+                                              fontSize: 18.0,
+                                              color: Colors.grey))
                                       : Text('No',
                                           style: TextStyle(
-                                              fontSize: 18.0, color: Colors.grey)),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
+                                              fontSize: 18.0,
+                                              color: Colors.grey)),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Row(
+                                children: <Widget>[
                                   Text('Vacunado: ',
                                       style: TextStyle(
                                         fontSize: 20.0,
@@ -212,13 +233,19 @@ class _AdopcionState extends State<Adopcion> {
                                   widget.objeto.vacunacion
                                       ? Text('Sí',
                                           style: TextStyle(
-                                              fontSize: 18.0, color: Colors.grey))
+                                              fontSize: 18.0,
+                                              color: Colors.grey))
                                       : Text('No',
                                           style: TextStyle(
-                                              fontSize: 18.0, color: Colors.grey)),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
+                                              fontSize: 18.0,
+                                              color: Colors.grey)),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Row(
+                                children: <Widget>[
                                   Text('Esterilizado: ',
                                       style: TextStyle(
                                         fontSize: 20.0,
@@ -226,75 +253,102 @@ class _AdopcionState extends State<Adopcion> {
                                   widget.objeto.esterilizacion
                                       ? Text('Si',
                                           style: TextStyle(
-                                              fontSize: 18.0, color: Colors.grey))
+                                              fontSize: 18.0,
+                                              color: Colors.grey))
                                       : Text('No',
                                           style: TextStyle(
-                                              fontSize: 18.0, color: Colors.grey)),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Text('Sexo: ',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                      )),
-                                  Text(widget.objeto.sexo,
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.grey)),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Text('Mas Fotos',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                      )),
-                                  SizedBox(height: 20),
-                                  widget.objeto.fotos.isNotEmpty
-                                      ? Column(
-                                          children: <Widget>[
-                                            Row(
-                                              children: <Widget>[
-                                                Text(
-                                                  "Desliza hacia la Derecha ",
-                                                  style: TextStyle(
-                                                      color: Colors.grey, fontSize: 18),
-                                                ),
-                                                Icon(Icons.arrow_right)
-                                              ],
-                                            ),SizedBox(height: 10,),
-                                            Container(
-                                              width: double.infinity,
-                                              height: 350,
-                                              child: ListView.builder(
-                                                scrollDirection: Axis.horizontal,
-                                                shrinkWrap: true,
-                                                itemBuilder: (context, index) =>
-                                                    FadeInImage(
-                                                  fit: BoxFit.contain,
-                                                  placeholder: AssetImage(
-                                                      'assets/perriti_pic.png'),
-                                                  width: 350,
-                                                  height: 350,
-                                                  image: NetworkImage(
-                                                      widget.objeto.fotos[index]),
-                                                ),
-                                                itemCount:
-                                                    widget.objeto.fotos.length,
-                                              ),
-                                            )
-                                          ],
-                                        )
-                                      : Text(
-                                          'No hay nada para mostrar',
+                                              fontSize: 18.0,
+                                              color: Colors.grey)),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Center(
+                                child: Text('Álbum',
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                    )),
+                              ),
+                              SizedBox(height: 5),
+                              widget.objeto.fotos.isNotEmpty
+                                  ? Column(
+                                      children: <Widget>[
+                                        Text(
+                                          "Desliza hacia la derecha ",
                                           style: TextStyle(
                                               color: Colors.grey, fontSize: 18),
                                         ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                ],
+                                        Container(
+                                          width: double.infinity,
+                                          height: 350,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) =>
+                                                Stack(
+                                              alignment: Alignment.centerRight,
+                                              children: <Widget>[
+                                                FadeInImage(
+                                                  fit: BoxFit.contain,
+                                                  placeholder: AssetImage(
+                                                      'assets/perriti_pic.png'),
+                                                  width: 300,
+                                                  height: 300,
+                                                  image: NetworkImage(widget
+                                                      .objeto.fotos[index]),
+                                                ),
+                                                Icon(
+                                                  FontAwesomeIcons
+                                                      .chevronCircleRight,
+                                                  size: 30,
+                                                )
+                                              ],
+                                            ),
+                                            itemCount:
+                                                widget.objeto.fotos.length,
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : Text(
+                                      'No hay nada para mostrar',
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 18),
+                                    ),
+                              SizedBox(
+                                height: 10,
                               ),
-                            ),
-                          ]),
+                              Text('Fecha de publicación: ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  )),
+                              Text(
+                                widget.objeto.fecha.day.toString() +
+                                    '/' +
+                                    widget.objeto.fecha.month.toString() +
+                                    '/' +
+                                    widget.objeto.fecha.year.toString(),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ]),
+                    ),
+                    ButtonBar(
+                      children: <Widget>[
+                        RaisedButton.icon(
+                          icon: Icon(FontAwesomeIcons.userFriends),
+                          label: Text('Solicitudes'),
+                          onPressed: () {
+                            return Navigator.of(context)
+                                .pushNamed('/interesados_adopcion');
+                          },
                         ),
                         SizedBox(
                           height: 20.0,

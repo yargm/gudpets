@@ -18,13 +18,13 @@ class RegistroAdopcion extends StatefulWidget {
 }
 
 class _RegistroAdopcionState extends State<RegistroAdopcion> {
-   List<Asset> images = List<Asset>();
+  List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
-  UserLocation _currentLocation;
+  GeoPoint _currentLocation;
   var location = Location();
   double latitud;
   double longitud;
- Future<void> loadAssets() async {
+  Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();
     String error = 'No Error Dectected';
 
@@ -57,14 +57,14 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     });
   }
 
-  Future<UserLocation> getLocation() async {
+  Future<GeoPoint> getLocation() async {
     try {
       var userLocation = await location.getLocation();
       setState(() {
-        _currentLocation = UserLocation(
-            latitud: userLocation.latitude, longitud: userLocation.longitude);
-        latitud = _currentLocation.latitud;
-        longitud = _currentLocation.longitud;
+        _currentLocation =
+            GeoPoint(userLocation.latitude, userLocation.longitude);
+        latitud = _currentLocation.latitude;
+        longitud = _currentLocation.longitude;
       });
     } catch (e) {
       print(e.toString());
@@ -92,13 +92,12 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     'sexo': null,
     'tipoAnimal': null,
     'titulo': null,
-    'correo': null,
     'vacunacion': null,
     'userId': null,
-    'fotos': null,
+    'fotos': <String>[],
     'reffoto': null,
-    'albumrefs' :<String>[],
-    'userName' :null
+    'albumrefs': <String>[],
+    'userName': null
   };
 
   @override
@@ -139,24 +138,75 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                   height: 15,
                 ),
                 //Foto
-                Text('* Toca la imagen para añadir una foto: '),
+                Text('* Selecciona una imagen de la mascota en adopción: '),
                 GestureDetector(
                   onTap: () {
                     getImage();
                   },
                   child: Center(
-                    child: Container(
-                        width: 150.0,
-                        height: 150.0,
-                        margin: EdgeInsets.only(top: 25.0, bottom: 10.0),
-                        child: CircleAvatar(
-                          radius: 45.0,
-                          backgroundImage: _image == null
-                              ? AssetImage('assets/perriti_pic.png')
-                              : FileImage(_image),
-                          backgroundColor: Colors.transparent,
-                        )),
+                    child: SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            width: 150.0,
+                            height: 150.0,
+                            child: CircleAvatar(
+                              backgroundImage: _image == null
+                                  ? AssetImage('assets/perriti_pic.png')
+                                  : FileImage(_image),
+                              backgroundColor: Colors.transparent,
+                            ),
+                          ),
+                          CircleAvatar(
+                            backgroundColor: secondaryColor,
+                            child: IconButton(
+                              icon: Icon(Icons.photo_camera),
+                              onPressed: () => getImage(),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                //Botón fotos
+                images.isNotEmpty
+                    ? Text('Fotos del álbum')
+                    : Text(' ¿Deseas crear un álbum? (opcional)'),
+                SizedBox(
+                  height: 15,
+                ),
+                images.isNotEmpty
+                    ? GridView.builder(
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(
+                            parent: NeverScrollableScrollPhysics()),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (context, index) => AssetThumb(
+                          asset: images[index],
+                          width: 300,
+                          height: 300,
+                        ),
+                        itemCount: images.length,
+                      )
+                    : Center(
+                        child: Text(
+                        'No hay fotos para mostrar',
+                        style: TextStyle(color: Colors.grey),
+                      )),
+                SizedBox(
+                  height: 15,
+                ),
+                Center(
+                  child: RaisedButton(
+                      onPressed: loadAssets, child: Text('Añadir imagenes')),
                 ),
                 SizedBox(
                   height: 15,
@@ -216,8 +266,25 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                 SizedBox(
                   height: 20,
                 ),
+                //Sexo
+                Text('* Sexo '),
+                RadioButtonGroup(
+                    picked: null,
+                    orientation: GroupedButtonsOrientation.VERTICAL,
+                    labels: <String>[
+                      'Macho ',
+                      ' Hembra',
+                    ],
+                    onSelected: (String opcion) {
+                      setState(() {
+                        form_adopcion['sexo'] = opcion;
+                      });
+                    }),
+                SizedBox(
+                  height: 15,
+                ),
                 //Convivencia con otros?
-                Text('* ¿La mascota onvive con otros animales?'),
+                Text('* ¿La mascota convive con otros animales?'),
                 RadioButtonGroup(
                     picked: null,
                     orientation: GroupedButtonsOrientation.HORIZONTAL,
@@ -301,7 +368,6 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                   height: 15,
                 ),
                 //Edad
-                Text('* Edad de la mascota'),
                 TextFormField(
                   initialValue: null,
                   onSaved: (String value) {
@@ -313,49 +379,11 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: 'Ej. 1 año',
+                    labelText: 'Edad (Ej. 1 año)',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0)),
                   ),
                 ),
-                SizedBox(
-                  height: 15,
-                ),                
-                //Sexo
-                Text('* Sexo '),
-                RadioButtonGroup(
-                    picked: null,
-                    orientation: GroupedButtonsOrientation.HORIZONTAL,
-                    labels: <String>[
-                      'Macho ',
-                      ' Hembra',
-                    ],
-                    onSelected: (String opcion) {
-                      setState(() {
-                        form_adopcion['sexo'] = opcion;
-                      });
-                    }),
-                SizedBox(
-                  height: 15,
-                ),
-                RaisedButton(
-                    onPressed: loadAssets, child: Text('Más imagenes')),
-                images.isNotEmpty
-                    ? GridView.builder(
-                        shrinkWrap: true,
-                        physics: ScrollPhysics(
-                            parent: NeverScrollableScrollPhysics()),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                        ),
-                        itemBuilder: (context, index) => AssetThumb(
-                          asset: images[index],
-                          width: 300,
-                          height: 300,
-                        ),
-                        itemCount: images.length,
-                      )
-                    : Text('No hay fotos para mostrar'),
                 SizedBox(
                   height: 15,
                 ),
@@ -374,7 +402,6 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                               isLoadig = true;
                             });
 
-
                             if (!_adopcionkey.currentState.validate()) {
                               setState(() {
                                 isLoadig = false;
@@ -383,13 +410,13 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                             }
                             if (images != null) {
                               for (var im in images) {
-                                var fotos = await saveImage(im,controlador1);
+                                var fotos = await saveImage(im, controlador1);
                                 form_adopcion['fotos'].add(fotos['url']);
                                 form_adopcion['albumrefs'].add(fotos['ref']);
+                              }
                               print(form_adopcion['fotos'].toString());
                             }
-                            }
-                            if (_image != null ) {
+                            if (_image != null) {
                               final String fileName =
                                   controlador1.usuario.correo +
                                       '/adopcion/' +
@@ -407,7 +434,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
 
                               final StorageTaskSnapshot downloadUrl =
                                   (await uploadTask.onComplete);
-                                   final String fotoref = downloadUrl.ref.path;
+                              final String fotoref = downloadUrl.ref.path;
 
                               final String url =
                                   (await downloadUrl.ref.getDownloadURL());
@@ -419,7 +446,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                     controlador1.usuario.documentId;
                               });
                             } else {
-                               setState(() {
+                              setState(() {
                                 isLoadig = false;
                               });
                               return showDialog(
@@ -461,8 +488,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                               }
                             });
                             if (agregar) {
-                             
-                                images.clear();
+                              images.clear();
                               Navigator.pop(context);
                             }
                           }),
@@ -475,23 +501,21 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     );
   }
 
-Future saveImage(Asset asset,Controller controlador) async {
-Map<String,String> fotosRef = {
-      'url': null,
-      'ref': null
-    };
-      
+  Future saveImage(Asset asset, Controller controlador) async {
+    Map<String, String> fotosRef = {'url': null, 'ref': null};
+
     ByteData byteData = await asset.getThumbByteData(500, 500, quality: 100);
     List<int> imageData = byteData.buffer.asUint8List();
     final String fileName =
-        controlador.usuario.nombre+ '/adopcion/' + DateTime.now().toString();
+        controlador.usuario.correo + '/adopcion/' + DateTime.now().toString();
     StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = ref.putData(imageData);
 
     fotosRef['url'] = await (await uploadTask.onComplete).ref.getDownloadURL();
-      fotosRef['ref'] =  (await uploadTask.onComplete).ref.path;
+    fotosRef['ref'] = (await uploadTask.onComplete).ref.path;
     return fotosRef;
   }
+
   Future getImage() async {
     var image = await ImagePicker.pickImage(
         source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
