@@ -367,7 +367,7 @@ class _PublicacionListState extends State<PublicacionList> {
             FlatButton(
               child: Text('Borrar'),
               onPressed: () {
-                _deleteData(tabla, objeto);
+                deleteData(tabla, objeto);
                 Navigator.of(context).pop();
               },
             ),
@@ -380,7 +380,7 @@ class _PublicacionListState extends State<PublicacionList> {
         ));
   }
 
-  _deleteData(String tabla, dynamic objeto) async {
+  deleteData(String tabla, dynamic objeto) async {
     await FirebaseStorage.instance
         .ref()
         .child(objeto['reffoto'])

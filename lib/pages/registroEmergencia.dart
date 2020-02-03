@@ -46,7 +46,6 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
     'descripcion': null,
     'tipoAnimal': null,
     'tipoEmergencia': null,
-    'fotoStorageRef': null,
     'ubicacion': null,
     'userName': null,
     'fecha': null,
