@@ -4,8 +4,10 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 class Home extends StatefulWidget {
+  Controller controlador1;
+  Home({this.controlador1});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -20,12 +22,21 @@ class _HomeState extends State<Home> {
     EmergenciaList(),
   ];
 
+
   _onItemTapped(int index, Controller controlador1) {
     setState(() {
       seleccionado = index;
       controlador1.pestana_act = index;
       print('Estoy en : ' + controlador1.pestana_act.toString());
+      
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    
   }
 
   @override
