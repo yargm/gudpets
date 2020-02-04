@@ -18,7 +18,7 @@ class RegistroRescate extends StatefulWidget {
 }
 
 class _RegistroRescateState extends State<RegistroRescate> {
-  UserLocation _currentLocation;
+  GeoPoint _currentLocation;
   var location = Location();
   double latitud;
   double longitud;
@@ -29,14 +29,14 @@ class _RegistroRescateState extends State<RegistroRescate> {
     super.initState();
   }
 
-  Future<UserLocation> getLocation() async {
+  Future<GeoPoint> getLocation() async {
     try {
       var userLocation = await location.getLocation();
       setState(() {
-        _currentLocation = UserLocation(
-            latitud: userLocation.latitude, longitud: userLocation.longitude);
-        latitud = _currentLocation.latitud;
-        longitud = _currentLocation.longitud;
+        _currentLocation =
+            GeoPoint(userLocation.latitude, userLocation.longitude);
+        latitud = _currentLocation.latitude;
+        longitud = _currentLocation.longitude;
       });
     } catch (e) {
       print(e.toString());
@@ -94,10 +94,12 @@ class _RegistroRescateState extends State<RegistroRescate> {
     'descripcion': null,
     'tipoAnimal': null,
     'fecha': null,
-    'userName': null,
     'fotos': <String>[],
     'favoritos': <String>[],
+    'reffoto': null,
+    'albumrefs': <String>[],
     'userId': null,
+    'userName': null
   };
   @override
   Widget build(BuildContext context) {
@@ -105,7 +107,9 @@ class _RegistroRescateState extends State<RegistroRescate> {
 
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text('Registro Rescate'),),
+      appBar: AppBar(
+        title: Text('Registro Rescate'),
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(left: 20, right: 20),
@@ -134,24 +138,78 @@ class _RegistroRescateState extends State<RegistroRescate> {
                   'Los campos marcados con * son obligatorios.',
                   style: TextStyle(color: Colors.red),
                 ),
-                Text('* Toca la Imagen para añadir una Foto: '),
+                SizedBox(
+                  height: 15,
+                ),
+                Text('* Selecciona una imagen de la mascota rescatada: '),
                 GestureDetector(
                   onTap: () {
                     getImage();
                   },
                   child: Center(
-                    child: Container(
-                        width: 150.0,
-                        height: 150.0,
-                        margin: EdgeInsets.only(top: 25.0, bottom: 10.0),
-                        child: CircleAvatar(
-                          radius: 45.0,
-                          backgroundImage: _image == null
-                              ? AssetImage('assets/perriti_pic.png')
-                              : FileImage(_image),
-                          backgroundColor: Colors.transparent,
-                        )),
+                    child: SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            width: 150.0,
+                            height: 150.0,
+                            child: CircleAvatar(
+                              backgroundImage: _image == null
+                                  ? AssetImage('assets/dog.png')
+                                  : FileImage(_image),
+                              backgroundColor: Colors.transparent,
+                            ),
+                          ),
+                          CircleAvatar(
+                            backgroundColor: secondaryColor,
+                            child: IconButton(
+                              icon: Icon(Icons.photo_camera),
+                              onPressed: () => getImage(),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                //Botón fotos
+                images.isNotEmpty
+                    ? Text('Fotos del álbum')
+                    : Text(' ¿Deseas crear un álbum? (opcional)'),
+                SizedBox(
+                  height: 15,
+                ),
+                images.isNotEmpty
+                    ? GridView.builder(
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(
+                            parent: NeverScrollableScrollPhysics()),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (context, index) => AssetThumb(
+                          asset: images[index],
+                          width: 300,
+                          height: 300,
+                        ),
+                        itemCount: images.length,
+                      )
+                    : Center(
+                        child: Text(
+                        'No hay fotos para mostrar',
+                        style: TextStyle(color: Colors.grey),
+                      )),
+                SizedBox(
+                  height: 15,
+                ),
+                Center(
+                  child: RaisedButton(
+                      onPressed: loadAssets, child: Text('Añadir imagenes')),
                 ),
                 SizedBox(
                   height: 15,
@@ -167,7 +225,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                     }
                   },
                   decoration: InputDecoration(
-                      labelText: '* Titulo del Rescate',
+                      labelText: '* Titulo del rescate',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25))),
                 ),
@@ -192,7 +250,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                 SizedBox(
                   height: 15,
                 ),
-                Text('* Selecciona el tipo de Animal'),
+                Text('* Selecciona el tipo de animal'),
                 FittedBox(
                   child: RadioButtonGroup(
                       picked: null,
@@ -207,25 +265,25 @@ class _RegistroRescateState extends State<RegistroRescate> {
                 SizedBox(
                   height: 20,
                 ),
-                Text('¿En qué lugar Resguardas  la Mascota?'),
+                Text('¿En qué lugar resguardas la mascota?'),
                 RadioButtonGroup(
                     picked: null,
                     orientation: GroupedButtonsOrientation.VERTICAL,
                     labels: <String>[
-                      'En tu Hogar',
-                      'Veterinaria U Otros',
+                      'En tu hogar',
+                      'Veterinaria u otros',
                     ],
                     onSelected: (String opcion) {
                       setState(() {
                         tipotemp = opcion;
                       });
                     }),
-                tipotemp == 'En tu Hogar'
+                tipotemp == 'En tu hogar'
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                              '¿Quieres que las personas Puedan ver la ubicación de tu Hogar?'),
+                              '¿Quieres que las personas puedan ver la ubicación de tu hogar?'),
                           RadioButtonGroup(
                               picked: null,
                               orientation: GroupedButtonsOrientation.VERTICAL,
@@ -304,7 +362,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                 ),
                         ],
                       )
-                    : tipotemp == 'Veterinaria U Otros'
+                    : tipotemp == 'Veterinaria u otros'
                         ? Center(
                             child: isLoadig2
                                 ? CircularProgressIndicator()
@@ -327,36 +385,51 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                                 controlador1.longitudfinal
                                                     .toString());
                                             showDialog(
+                                                barrierDismissible: false,
                                                 context: context,
-                                                child: AlertDialog(
-                                                  content: Text(
-                                                      'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.'),
-                                                  actions: <Widget>[
-                                                    FlatButton(
-                                                      child: Text('OK'),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      MapSample(
-                                                                        latitud:
-                                                                            latitud,
-                                                                        longitud:
-                                                                            longitud,
-                                                                        controlador1:
-                                                                            controlador1,
-                                                                      )),
-                                                        );
-                                                        setState(() {
-                                                          isLoadig2 = false;
-                                                          boton = false;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
+                                                child: WillPopScope(
+                                                  onWillPop: () async {
+                                                    setState(() {
+                                                      isLoadig2 = false;
+                                                    });
+                                                    return true;
+                                                  },
+                                                  child: AlertDialog(
+                                                    title: Text('Importante',
+                                                        style: TextStyle(
+                                                            color: Colors.red)),
+                                                    content: Text(
+                                                        'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                    actions: <Widget>[
+                                                      FlatButton(
+                                                        child: Text('OK'),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        MapSample(
+                                                                          latitud:
+                                                                              latitud,
+                                                                          longitud:
+                                                                              longitud,
+                                                                          controlador1:
+                                                                              controlador1,
+                                                                        )),
+                                                          );
+                                                          setState(() {
+                                                            isLoadig2 = false;
+                                                            boton = false;
+                                                          });
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ));
                                           }
                                         : null),
@@ -372,7 +445,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                   keyboardType: TextInputType.number,
                   initialValue: controlador1.usuario.telefono.toString(),
                   onSaved: (String value) {
-                    form_rescate['telefono'] = value;
+                    form_rescate['telefono'] = int.parse(value);
                   },
                   validator: (String value) {
                     if (value.isEmpty) {
@@ -385,33 +458,8 @@ class _RegistroRescateState extends State<RegistroRescate> {
                       labelText: '* Teléfono',
                       prefixIcon: Icon(Icons.phone),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10))),
+                          borderRadius: BorderRadius.circular(25))),
                 ),
-                Text(
-                  'Protegemos tus datos. Tu número telefónico no aparecerá en tu perfil, sólo será visible cuando hagas un rescate o tengas animales en adopción',
-                  style: TextStyle(color: Colors.grey, fontSize: 13),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                RaisedButton(
-                    onPressed: loadAssets, child: Text('Más imagenes')),
-                images.isNotEmpty
-                    ? GridView.builder(
-                        shrinkWrap: true,
-                        physics: ScrollPhysics(
-                            parent: NeverScrollableScrollPhysics()),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                        ),
-                        itemBuilder: (context, index) => AssetThumb(
-                          asset: images[index],
-                          width: 300,
-                          height: 300,
-                        ),
-                        itemCount: images.length,
-                      )
-                    : Text('No hay fotos para mostrar'),
                 SizedBox(
                   height: 15,
                 ),
@@ -438,16 +486,19 @@ class _RegistroRescateState extends State<RegistroRescate> {
 
                             if (images != null) {
                               for (var im in images) {
-                                var url = await saveImage(im);
-                                form_rescate['fotos'].add(url);
+                                var fotos = await saveImage(im, controlador1);
+
+                                form_rescate['fotos'].add(fotos['url']);
+                                form_rescate['albumrefs'].add(fotos['ref']);
                               }
                               print(form_rescate['fotos'].toString());
                             }
                             if (_image != null &&
                                 form_rescate['tipoAnimal'] != null) {
-                              final String fileName = controlador1.usuario.correo +
-                                  '/rescate/' +
-                                  DateTime.now().toString();
+                              final String fileName =
+                                  controlador1.usuario.correo +
+                                      '/rescate/' +
+                                      DateTime.now().toString();
 
                               StorageReference storageRef = FirebaseStorage
                                   .instance
@@ -464,18 +515,20 @@ class _RegistroRescateState extends State<RegistroRescate> {
 
                               final String url =
                                   (await downloadUrl.ref.getDownloadURL());
+                              final String fotoref = downloadUrl.ref.path;
                               print('URL Is $url');
                               setState(() {
                                 form_rescate['foto'] = url;
+                                form_rescate['reffoto'] = fotoref;
                                 form_rescate['userId'] =
                                     controlador1.usuario.documentId;
-                                if (controlador1.latitudfinal != null && controlador1.longitudfinal != null) {
+                                if (controlador1.latitudfinal != null &&
+                                    controlador1.longitudfinal != null) {
                                   form_rescate['ubicacion'] = GeoPoint(
                                       controlador1.latitudfinal,
                                       controlador1.longitudfinal);
                                 } else {
- form_rescate['ubicacion'] = GeoPoint(0,0);
-
+                                  form_rescate['ubicacion'] = GeoPoint(0, 0);
                                 }
                               });
                             } else {
@@ -537,19 +590,23 @@ class _RegistroRescateState extends State<RegistroRescate> {
     );
   }
 
-  Future saveImage(Asset asset) async {
+  Future saveImage(Asset asset, Controller controlador1) async {
+    Map<String, String> fotosRef = {'url': null, 'ref': null};
     ByteData byteData = await asset.getThumbByteData(500, 500, quality: 100);
     List<int> imageData = byteData.buffer.asUint8List();
     final String fileName =
-        form_rescate['userName'] + '/rescate/' + DateTime.now().toString();
+        controlador1.usuario.correo + '/rescate/' + DateTime.now().toString();
     StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = ref.putData(imageData);
 
-    return await (await uploadTask.onComplete).ref.getDownloadURL();
+    fotosRef['url'] = await (await uploadTask.onComplete).ref.getDownloadURL();
+    fotosRef['ref'] = (await uploadTask.onComplete).ref.path;
+    return fotosRef;
   }
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
     setState(() {
       _image = image;
     });

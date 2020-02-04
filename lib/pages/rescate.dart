@@ -5,6 +5,7 @@ import 'package:adoption_app/shared/shared.dart';
 import '../shared/colores.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+import 'package:url_launcher/url_launcher.dart';
 
 class Rescate extends StatefulWidget {
   final RescateModel objeto;
@@ -60,7 +61,7 @@ class _RescateState extends State<Rescate> {
                       tag: widget.objeto.documentId,
                       child: FadeInImage(
                         fit: BoxFit.cover,
-                        placeholder: AssetImage('assets/perriti_pic.png'),
+                        placeholder: AssetImage('assets/dog.png'),
                         width: double.maxFinite,
                         height: 350,
                         image: NetworkImage(widget.objeto.foto),
@@ -164,11 +165,36 @@ class _RescateState extends State<Rescate> {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              SizedBox(
-                                height: 15,
+                              //Teléfono
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.call,
+                                    size: 18,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text('Teléfono: ',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                      )),
+                                ],
                               ),
+                              GestureDetector(
+                                onTap: () => launch("tel://" +
+                                    widget.objeto.telefono.toString()),
+                                child: Text(
+                                  widget.objeto.telefono.toString(),
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 18),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              //Fecha publicación
                               Text('Fecha de publicación: ',
                                   style: TextStyle(
                                     fontSize: 20.0,
@@ -176,6 +202,7 @@ class _RescateState extends State<Rescate> {
                               SizedBox(
                                 height: 10,
                               ),
+
                               Text(
                                 widget.objeto.fecha.day.toString() +
                                     '/' +
@@ -194,32 +221,48 @@ class _RescateState extends State<Rescate> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    Text('Mas Fotos',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        )),SizedBox(height:20),
-                        widget.objeto.fotos.isNotEmpty ?
-                    Container(
-                      width: double.infinity,
-                      height: 350,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) => Container(
-                          width: 350,
-                          height: 350,
-                          margin: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-
-                          image: DecorationImage(
-                             image: NetworkImage(widget.objeto.fotos[index]),
-                              fit: BoxFit.contain)
-                         
-                        )),
-                        itemCount: widget.objeto.fotos.length,
-                      ),
-                    ): Text ('No hay nada para mostrar', style:
-                                    TextStyle(color: Colors.grey, fontSize: 18),),
+                    Center(
+                      child: Text('Álbum',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          )),
+                    ),
+                    SizedBox(height: 5),
+                    widget.objeto.fotos.isNotEmpty
+                        ? Column(
+                            children: <Widget>[
+                              Text(
+                                "Desliza hacia la derecha ",
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),
+                              ),
+                              Container(
+                                height: 350,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  physics: ScrollPhysics(
+                                      parent: BouncingScrollPhysics(
+                                          parent:
+                                              AlwaysScrollableScrollPhysics())),
+                                  itemBuilder: (context, index) => FadeInImage(
+                                    fit: BoxFit.cover,
+                                    placeholder: AssetImage('assets/dog.png'),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.85,
+                                    height: 300,
+                                    image: NetworkImage(
+                                        widget.objeto.fotos[index]),
+                                  ),
+                                  itemCount: widget.objeto.fotos.length,
+                                ),
+                              )
+                            ],
+                          )
+                        : Text(
+                            'No hay nada para mostrar',
+                            style: TextStyle(color: Colors.grey, fontSize: 18),
+                          ),
                     SizedBox(
                       height: 20,
                     ),
@@ -230,25 +273,26 @@ class _RescateState extends State<Rescate> {
                     SizedBox(
                       height: 5.0,
                     ),
-                    widget.objeto.ubicacion.latitude != 0 ?
-                    Container(
-                      height: 300.0,
-                      width: 400.0,
-                      child: GoogleMap(
-                        zoomGesturesEnabled: false,
-                        scrollGesturesEnabled: false,
-                        markers: Set.from(marcador),
-                        mapType: MapType.normal,
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(widget.objeto.ubicacion.latitude,
-                              widget.objeto.ubicacion.longitude),
-                          zoom: 16,
-                        ),
-                        onMapCreated: (GoogleMapController controller) {
-                          _controller.complete(controller);
-                        },
-                      ),
-                    ) : Text("No hay ubicación para mostrar"),
+                    widget.objeto.ubicacion.latitude != 0
+                        ? Container(
+                            height: 300.0,
+                            width: 400.0,
+                            child: GoogleMap(
+                              zoomGesturesEnabled: false,
+                              scrollGesturesEnabled: false,
+                              markers: Set.from(marcador),
+                              mapType: MapType.normal,
+                              initialCameraPosition: CameraPosition(
+                                target: LatLng(widget.objeto.ubicacion.latitude,
+                                    widget.objeto.ubicacion.longitude),
+                                zoom: 16,
+                              ),
+                              onMapCreated: (GoogleMapController controller) {
+                                _controller.complete(controller);
+                              },
+                            ),
+                          )
+                        : Text("No hay ubicación para mostrar"),
                     SizedBox(
                       height: 20.0,
                     ),

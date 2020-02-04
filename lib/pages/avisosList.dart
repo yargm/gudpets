@@ -6,6 +6,7 @@ import 'package:adoption_app/shared/shared.dart';
 class AvisosList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+   
     var avisos = Firestore.instance.collection('avisos').snapshots();
     // TODO: implement build
     return Scaffold(

@@ -13,8 +13,10 @@ class _AdopcionListState extends State<AdopcionList> {
 
   @override
   Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
     return ListView(
       children: <Widget>[
+        FirebaseMessage(),
         SizedBox(height: 40),
         StreamBuilder(
           stream: adopciones,
@@ -25,6 +27,7 @@ class _AdopcionListState extends State<AdopcionList> {
               );
             return ListView.builder(
               itemBuilder: (context, index) => ListCard(
+                controlador1: controlador1,
                   objeto: AdopcionModel.fromDocumentSnapshot(
                       snapshot.data.documents[index]),
                   posicion: index),

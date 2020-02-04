@@ -1,5 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
@@ -14,21 +15,22 @@ class RegistroPerdido extends StatefulWidget {
 }
 
 class _RegistroPerdidoState extends State<RegistroPerdido> {
-  UserLocation _currentLocation;
+  GeoPoint _currentLocation;
   var location = Location();
   double latitud;
   double longitud;
+
   final TextEditingController textEditingControllerFecha =
       TextEditingController();
 
-  Future<UserLocation> getLocation() async {
+  Future<GeoPoint> getLocation() async {
     try {
       var userLocation = await location.getLocation();
       setState(() {
-        _currentLocation = UserLocation(
-            latitud: userLocation.latitude, longitud: userLocation.longitude);
-        latitud = _currentLocation.latitud;
-        longitud = _currentLocation.longitud;
+        _currentLocation =
+            GeoPoint(userLocation.latitude, userLocation.longitude);
+        latitud = _currentLocation.latitude;
+        longitud = _currentLocation.longitude;
       });
     } catch (e) {
       print(e.toString());
@@ -41,9 +43,11 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
   bool isLoadig = false;
   bool isLoadig2 = false;
   bool boton = true;
+  bool recompensa = false;
 
   Map<String, dynamic> form_perdido = {
     'foto': null,
+    'reffoto': null,
     'titulo': null,
     'descripcion': null,
     'tipoAnimal': null,
@@ -51,7 +55,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
     'sexo': null,
     'senasPart': null,
     'fechaExtravio': null,
-    'recompensa': false,
+    'recompensa': null,
     'ubicacion': null,
     'userName': null,
     'fecha': null,
@@ -83,7 +87,9 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
 
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text('Registro Extravio'),),
+      appBar: AppBar(
+        title: Text('Registro Extravio'),
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(left: 20, right: 20),
@@ -116,10 +122,12 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                   height: 15,
                 ),
                 //Foto
-                 Text(_image == null
+                Text(_image == null
                     ? '* Seleccione una imagen para la mascota extraviada '
                     : 'Imagen seleccionada'),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 GestureDetector(
                   onTap: () {
                     getImage();
@@ -135,7 +143,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                             height: 150.0,
                             child: CircleAvatar(
                               backgroundImage: _image == null
-                                  ? AssetImage('assets/perriti_pic.png')
+                                  ? AssetImage('assets/dog.png')
                                   : FileImage(_image),
                               backgroundColor: Colors.transparent,
                             ),
@@ -152,7 +160,9 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 SizedBox(
                   height: 15,
                 ),
@@ -211,6 +221,23 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                 SizedBox(
                   height: 20,
                 ),
+                //Sexo
+                Text('* Selecciona el sexo'),
+                RadioButtonGroup(
+                    picked: null,
+                    orientation: GroupedButtonsOrientation.VERTICAL,
+                    labels: <String>[
+                      'Hembra',
+                      'Macho',
+                    ],
+                    onSelected: (String opcion) {
+                      setState(() {
+                        form_perdido['sexo'] = opcion;
+                      });
+                    }),
+                SizedBox(
+                  height: 15,
+                ),
                 //Raza
                 TextFormField(
                   initialValue: null,
@@ -230,23 +257,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                 SizedBox(
                   height: 15,
                 ),
-                //Sexo
-                Text('* Selecciona el sexo'),
-                RadioButtonGroup(
-                    picked: null,
-                    orientation: GroupedButtonsOrientation.VERTICAL,
-                    labels: <String>[
-                      'Hembra',
-                      'Macho',
-                    ],
-                    onSelected: (String opcion) {
-                      setState(() {
-                        form_perdido['sexo'] = opcion;
-                      });
-                    }),
-                SizedBox(
-                  height: 15,
-                ),
+
                 //Señas particulares
                 TextFormField(
                   initialValue: null,
@@ -292,13 +303,31 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                       activeColor: secondaryLight,
                       onChanged: (bool valor) {
                         setState(() {
-                          form_perdido['recompensa'] = valor;
+                          recompensa = valor;
                         });
                       },
-                      value: form_perdido['recompensa'],
+                      value: recompensa,
                     ),
                   ],
                 ),
+                recompensa
+                    ? TextFormField(
+                        keyboardType: TextInputType.number,
+                        initialValue: null,
+                        onSaved: (String value) {
+                          form_perdido['recompensa'] = value;
+                        },
+                        validator: (String value) {
+                          if (value.isEmpty) {
+                            return 'Cantidad vacía';
+                          }
+                        },
+                        decoration: InputDecoration(
+                            labelText: '* Cantidad',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0))),
+                      )
+                    : Container(),
                 SizedBox(
                   height: 15,
                 ),
@@ -337,33 +366,46 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                   print('la ongitud actual es:' +
                                       controlador1.longitudfinal.toString());
                                   showDialog(
+                                      barrierDismissible: false,
                                       context: context,
-                                      child: AlertDialog(
-                                        content: Text(
-                                            'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.'),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('OK'),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MapSample(
-                                                          latitud: latitud,
-                                                          longitud: longitud,
-                                                          controlador1:
-                                                              controlador1,
-                                                        )),
-                                              );
-                                              setState(() {
-                                                isLoadig2 = false;
-                                                boton = false;
-                                              });
-                                            },
-                                          ),
-                                        ],
+                                      child: WillPopScope(
+                                        onWillPop: () async {
+                                          setState(() {
+                                            isLoadig2 = false;
+                                          });
+                                          return true;
+                                        },
+                                        child: AlertDialog(
+                                          title: Text('Importante',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                          content: Text(
+                                              'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
+                                              style: TextStyle(fontSize: 20)),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text('OK'),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MapSample(
+                                                            latitud: latitud,
+                                                            longitud: longitud,
+                                                            controlador1:
+                                                                controlador1,
+                                                          )),
+                                                );
+                                                setState(() {
+                                                  isLoadig2 = false;
+                                                  boton = false;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ));
                                 }
                               : null),
@@ -395,9 +437,10 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                 controlador1.longitudfinal != null &&
                                 form_perdido['tipoAnimal'] != null &&
                                 form_perdido['sexo'] != null) {
-                              final String fileName = controlador1.usuario.correo +
-                                  '/perdido/' +
-                                  DateTime.now().toString();
+                              final String fileName =
+                                  controlador1.usuario.correo +
+                                      '/perdido/' +
+                                      DateTime.now().toString();
 
                               StorageReference storageRef = FirebaseStorage
                                   .instance
@@ -411,6 +454,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
 
                               final StorageTaskSnapshot downloadUrl =
                                   (await uploadTask.onComplete);
+                              final String fotoref = downloadUrl.ref.path;
 
                               final String url =
                                   (await downloadUrl.ref.getDownloadURL());
@@ -419,6 +463,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                 form_perdido['foto'] = url;
                                 form_perdido['userId'] =
                                     controlador1.usuario.documentId;
+                                form_perdido['reffoto'] = fotoref;
                                 form_perdido['ubicacion'] = GeoPoint(
                                     controlador1.latitudfinal,
                                     controlador1.longitudfinal);
@@ -479,7 +524,8 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
   }
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
     setState(() {
       _image = image;
     });

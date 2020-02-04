@@ -4,8 +4,10 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 class Home extends StatefulWidget {
+  Controller controlador1;
+  Home({this.controlador1});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -20,12 +22,21 @@ class _HomeState extends State<Home> {
     EmergenciaList(),
   ];
 
+
   _onItemTapped(int index, Controller controlador1) {
     setState(() {
       seleccionado = index;
       controlador1.pestana_act = index;
       print('Estoy en : ' + controlador1.pestana_act.toString());
+      
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    
   }
 
   @override
@@ -34,20 +45,37 @@ class _HomeState extends State<Home> {
     // TODO: implement build
     return Scaffold(
       drawer: MyDrawer(controlador1: controlador1),
-      appBar: AppBar(
+      appBar: controlador1.pestana_act == 0 || controlador1.pestana_act == 1 ? AppBar(
+        actions: <Widget>[
+          IconButton(onPressed: () {
+        showSearch(
+          context: context,
+          delegate: CustomSearchDelegate(),
+        );
+      }, icon: Icon(Icons.search),),
+          IconButton(
+            onPressed: () {
+              return Navigator.of(context).pushNamed('/avisos');
+              // print('avisos');
+            },
+            icon: Icon(FontAwesomeIcons.bullhorn,size: 20,),
+          )
+        ],
+      ) :AppBar(
         actions: <Widget>[
           IconButton(
             onPressed: () {
               return Navigator.of(context).pushNamed('/avisos');
               // print('avisos');
             },
-            icon: Icon(FontAwesomeIcons.bullhorn),
+            icon: Icon(FontAwesomeIcons.bullhorn,size: 20,),
           )
         ],
-      ),
+      ) ,
       body: Center(
         child: _widgetOptions.elementAt(seleccionado),
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           controlador1.pestana_act == 0

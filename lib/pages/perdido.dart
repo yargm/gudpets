@@ -60,7 +60,7 @@ class _PerdidoState extends State<Perdido> {
                       tag: widget.objeto.documentId,
                       child: FadeInImage(
                         fit: BoxFit.cover,
-                        placeholder: AssetImage('assets/perriti_pic.png'),
+                        placeholder: AssetImage('assets/dog.png'),
                         width: double.maxFinite,
                         height: 350,
                         image: NetworkImage(widget.objeto.foto),
@@ -72,7 +72,7 @@ class _PerdidoState extends State<Perdido> {
                         ),
                         color: Colors.brown[300]),
                     padding: EdgeInsets.all(10.0),
-                    width: widget.objeto.userName.length * 11.5,
+                    width: widget.objeto.userName.length * 10.5,
                     height: 40,
                     alignment: Alignment.bottomRight,
                     child: Text(
@@ -237,7 +237,9 @@ class _PerdidoState extends State<Perdido> {
                                         fontSize: 20.0,
                                       )),
                                   Text(
-                                    widget.objeto.recompensa ? 'Sí' : 'No',
+                                    widget.objeto.recompensa != null
+                                        ? widget.objeto.recompensa
+                                        : 'No',
                                     style: TextStyle(
                                         color: Colors.grey, fontSize: 18),
                                   ),
@@ -246,23 +248,7 @@ class _PerdidoState extends State<Perdido> {
                               SizedBox(
                                 height: 20.0,
                               ),
-                              //Fecha
-                              Text('Fecha de publicación: ',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                  )),
-                              Text(
-                                widget.objeto.fecha.day.toString() +
-                                    '/' +
-                                    widget.objeto.fecha.month.toString() +
-                                    '/' +
-                                    widget.objeto.fecha.year.toString(),
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 20.0,
-                              ),
+
                               //Teléfono
                               Row(
                                 children: <Widget>[
@@ -287,6 +273,26 @@ class _PerdidoState extends State<Perdido> {
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 18),
                                 ),
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              //Fecha publicación
+                              Text('Fecha de publicación: ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  )),
+                              Text(
+                                widget.objeto.fecha.day.toString() +
+                                    '/' +
+                                    widget.objeto.fecha.month.toString() +
+                                    '/' +
+                                    widget.objeto.fecha.year.toString(),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20.0,
                               ),
                             ],
                           ),

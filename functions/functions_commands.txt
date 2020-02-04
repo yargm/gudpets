@@ -1,0 +1,13 @@
+//Inicializar funciones
+1 Primer paso instalar node y firebase en el entorno
+2 firebase login (firebase logout /pasalir)
+3  Crear carpeta para las funciones , y situarse ahi
+4 firebase init functions 
+5 Elegir el proyecto existente
+6 darle no a la opcion  'Do you want to use ESLint to catch probable bugs and enforce style?'
+7 darle si a descargar los paquetes 'Do you want to install dependencies with npm now?'
+
+
+//Subir funciones
+
+firebase deploy --only functions

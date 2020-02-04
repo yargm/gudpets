@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/pages/pages.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:adoption_app/shared/shared.dart';
 
 class PublicacionList extends StatefulWidget {
@@ -100,6 +101,7 @@ class _PublicacionListState extends State<PublicacionList> {
                                               context,
                                               snapshot.data.documents[index],
                                               tabla);
+                                          setState(() {});
                                         },
                                         icon: Icon(
                                           Icons.delete,
@@ -177,6 +179,7 @@ class _PublicacionListState extends State<PublicacionList> {
                                               context,
                                               snapshot.data.documents[index],
                                               tabla);
+                                          setState(() {});
                                         },
                                         icon: Icon(
                                           Icons.delete,
@@ -254,6 +257,7 @@ class _PublicacionListState extends State<PublicacionList> {
                                               context,
                                               snapshot.data.documents[index],
                                               tabla);
+                                          setState(() {});
                                         },
                                         icon: Icon(
                                           Icons.delete,
@@ -331,6 +335,7 @@ class _PublicacionListState extends State<PublicacionList> {
                                               context,
                                               snapshot.data.documents[index],
                                               tabla);
+                                          setState(() {});
                                         },
                                         icon: Icon(
                                           Icons.delete,
@@ -361,12 +366,9 @@ class _PublicacionListState extends State<PublicacionList> {
           actions: <Widget>[
             FlatButton(
               child: Text('Borrar'),
-              onPressed: () => () async {
-                await Firestore.instance
-                    .collection(tabla)
-                    .document(objeto['documentId'])
-                    .delete();
-                setState(() {});
+              onPressed: () {
+                deleteData(tabla, objeto);
+                Navigator.of(context).pop();
               },
             ),
             FlatButton(
@@ -376,6 +378,36 @@ class _PublicacionListState extends State<PublicacionList> {
                 })
           ],
         ));
+  }
+
+  deleteData(String tabla, dynamic objeto) async {
+    await FirebaseStorage.instance
+        .ref()
+        .child(objeto['reffoto'])
+        .delete()
+        .catchError((onError) {
+      print(onError);
+    });
+
+    if (tabla == 'rescates' || tabla == 'adopciones') {
+      for (var elemento in objeto['albumrefs']) {
+        await FirebaseStorage.instance
+            .ref()
+            .child(elemento)
+            .delete()
+            .catchError((onError) {
+          print('error en album ref');
+        });
+      }
+    }
+
+    await Firestore.instance
+        .collection(tabla)
+        .document(objeto.documentID)
+        .delete()
+        .catchError((onError) {
+      print('error en base de datos');
+    });
   }
 
   _favorito(dynamic favoritobjeto, Controller controlador1) {
@@ -389,8 +421,7 @@ class _PublicacionListState extends State<PublicacionList> {
         }
       });
     }
-    print(favoritobjeto.toString());
-    print(favorito.toString());
+
     return favorito;
   }
 }

@@ -13,6 +13,7 @@ class _PerdidoListState extends State<PerdidoList> {
 
   @override
   Widget build(BuildContext context) {
+     Controller controlador1 = Provider.of<Controller>(context);
     return ListView(
       children: <Widget>[
         SizedBox(height: 40),
@@ -25,6 +26,7 @@ class _PerdidoListState extends State<PerdidoList> {
               );
             return ListView.builder(
               itemBuilder: (context, index) => ListCard(
+                controlador1: controlador1,
                   objeto: PerdidoModel.fromDocumentSnapshot(
                       snapshot.data.documents[index]),
                   posicion: index),
