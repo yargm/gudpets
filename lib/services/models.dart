@@ -25,6 +25,15 @@ class UsuarioModel {
   String tipo;
   String documentId;
 
+  String fotoINE;
+  String fotoINERef;
+  String fotoCompDomi;
+  String fotoCompDomiRef;
+  List<dynamic> fotosHogar;
+  List<dynamic> fotosHogarRefs;
+  List<dynamic> galeriaFotos;
+  List<dynamic> galeriaFotosRefs;
+
   UsuarioModel(
       {this.contrasena,
       this.correo,
@@ -68,6 +77,13 @@ class UsuarioModel {
     documentId = data.documentID.toString();
     fnacimiento = data['fnacimiento'].toDate();
     fotoStorageRef = data['fotoStorageRef'];
+
+    fotoCompDomi = data['fotoCompDomi'];
+    fotoCompDomiRef = data['fotoCompDomiRef'];
+    fotoINE = data['fotoINE'];
+    fotoINERef = data['fotoINERef'];
+    galeriaFotos = data['galeriaFotos'] ?? [];
+    galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
   }
 }
 
@@ -234,7 +250,6 @@ class AdopcionModel {
   DocumentReference reference;
   DateTime fecha;
   String userId;
-  
 
   AdopcionModel(
       {this.titulo,
@@ -264,7 +279,7 @@ class AdopcionModel {
     fecha = data['fecha'].toDate();
 
     esterilizacion = data['esterilizacion'];
-    vacunacion = data['vacunacion'] ;
+    vacunacion = data['vacunacion'];
     desparacitacion = data['desparacitacion'];
     convivenciaotros = data['convivenciaotros'];
     userId = data['userId'];
@@ -272,7 +287,82 @@ class AdopcionModel {
     reference = data.reference;
   }
 }
+class SolicitudModel{
+  String correo;
+  String descripcion;
+  int edad;
+  DateTime fnacimiento;
+  String foto;
+  String fotoStorageRef;
+  String nombre;
+  String sexo;
+  int telefono;
+  DocumentReference reference;
+  String tipo;
+  String documentId;
 
+  String fotoINE;
+  String fotoINERef;
+  String fotoCompDomi;
+  String fotoCompDomiRef;
+  List<dynamic> fotosHogar;
+  List<dynamic> fotosHogarRefs;
+  List<dynamic> galeriaFotos;
+  List<dynamic> galeriaFotosRefs;
+
+  SolicitudModel(
+      {
+      this.correo,
+      this.descripcion,
+      this.edad,
+      this.foto,
+      this.nombre,
+      this.sexo,
+      this.telefono,
+      this.tipo,
+      this.documentId});
+
+  int calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age;
+  }
+
+  SolicitudModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    
+    correo = data['correo'];
+    descripcion = data['descripcion'];
+    edad = calculateAge(data['fnacimiento'].toDate());
+    foto = data['foto'];
+    nombre = data['nombre'];
+    sexo = data['sexo'];
+    telefono = data['telefono'];
+    tipo = data['tipo'];
+    reference = data.reference;
+    documentId = data.documentID.toString();
+    fnacimiento = data['fnacimiento'].toDate();
+    fotoStorageRef = data['fotoStorageRef'];
+
+    fotoCompDomi = data['fotoCompDomi'];
+    fotoCompDomiRef = data['fotoCompDomiRef'];
+    fotoINE = data['fotoINE'];
+    fotoINERef = data['fotoINERef'];
+    galeriaFotos = data['galeriaFotos'] ?? [];
+    galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
+  }
+
+}
 class AvisoModel {
   String imagen;
   String link;

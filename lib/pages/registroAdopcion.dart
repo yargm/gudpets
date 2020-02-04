@@ -288,7 +288,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                     orientation: GroupedButtonsOrientation.HORIZONTAL,
                     labels: <String>[
                       'Macho ',
-                      ' Hembra',
+                      'Hembra',
                     ],
                     onSelected: (String opcion) {
                       setState(() {

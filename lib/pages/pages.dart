@@ -25,4 +25,5 @@ export 'publicacionList.dart';
 
 export 'perfil.dart';
 
-export 'interesadosAdopcion.dart';
+export 'solicitudesAdopcionList.dart';
+export 'solicitudesAdopcionVista.dart';
