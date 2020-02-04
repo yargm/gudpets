@@ -16,6 +16,7 @@ class _AdopcionListState extends State<AdopcionList> {
     Controller controlador1 = Provider.of<Controller>(context);
     return ListView(
       children: <Widget>[
+        FirebaseMessage(),
         SizedBox(height: 40),
         StreamBuilder(
           stream: adopciones,

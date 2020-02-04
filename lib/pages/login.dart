@@ -60,8 +60,8 @@ class _LogInState extends State<LogIn> {
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                      'http://www.petcarevets.ie/wp-content/uploads/2019/08/Happy-Pets-PNG.png'),
+                                  image: AssetImage('assets/gudpetsfirstNoText.png')
+
                                 )),
                           ),
                           SizedBox(

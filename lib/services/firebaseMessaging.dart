@@ -15,9 +15,7 @@ class _FirebaseMessagingState extends State<FirebaseMessage> {
     // TODO: implement initState
     super.initState();
 
-    _firebaseMessaging.getToken().then((token) {
-      print(token);
-    });
+    
 
     _firebaseMessaging.configure(
         onResume: (Map<String, dynamic> message) async {},
