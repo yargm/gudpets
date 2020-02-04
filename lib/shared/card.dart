@@ -3,6 +3,7 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
+
 class ListCard extends StatefulWidget {
   final dynamic objeto;
   final int posicion;
