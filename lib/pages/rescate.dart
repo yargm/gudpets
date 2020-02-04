@@ -61,7 +61,7 @@ class _RescateState extends State<Rescate> {
                       tag: widget.objeto.documentId,
                       child: FadeInImage(
                         fit: BoxFit.cover,
-                        placeholder: AssetImage('assets/perriti_pic.png'),
+                        placeholder: AssetImage('assets/dog.png'),
                         width: double.maxFinite,
                         height: 350,
                         image: NetworkImage(widget.objeto.foto),
@@ -237,28 +237,22 @@ class _RescateState extends State<Rescate> {
                                     TextStyle(color: Colors.grey, fontSize: 18),
                               ),
                               Container(
-                                width: double.infinity,
                                 height: 350,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   shrinkWrap: true,
-                                  itemBuilder: (context, index) => Stack(
-                                    alignment: Alignment.centerRight,
-                                    children: <Widget>[
-                                      FadeInImage(
-                                        fit: BoxFit.contain,
-                                        placeholder: AssetImage(
-                                            'assets/perriti_pic.png'),
-                                        width: 300,
-                                        height: 300,
-                                        image: NetworkImage(
-                                            widget.objeto.fotos[index]),
-                                      ),
-                                      Icon(
-                                        FontAwesomeIcons.chevronCircleRight,
-                                        size: 30,
-                                      )
-                                    ],
+                                  physics: ScrollPhysics(
+                                      parent: BouncingScrollPhysics(
+                                          parent:
+                                              AlwaysScrollableScrollPhysics())),
+                                  itemBuilder: (context, index) => FadeInImage(
+                                    fit: BoxFit.cover,
+                                    placeholder: AssetImage('assets/dog.png'),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.85,
+                                    height: 300,
+                                    image: NetworkImage(
+                                        widget.objeto.fotos[index]),
                                   ),
                                   itemCount: widget.objeto.fotos.length,
                                 ),

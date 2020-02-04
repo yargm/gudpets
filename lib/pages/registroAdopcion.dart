@@ -105,7 +105,9 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     Controller controlador1 = Provider.of<Controller>(context);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Registro Adopción'),
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(left: 20, right: 20),
@@ -154,7 +156,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                             height: 150.0,
                             child: CircleAvatar(
                               backgroundImage: _image == null
-                                  ? AssetImage('assets/perriti_pic.png')
+                                  ? AssetImage('assets/dog.png')
                                   : FileImage(_image),
                               backgroundColor: Colors.transparent,
                             ),
@@ -273,7 +275,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                     orientation: GroupedButtonsOrientation.VERTICAL,
                     labels: <String>[
                       'Macho ',
-                      ' Hembra',
+                      'Hembra',
                     ],
                     onSelected: (String opcion) {
                       setState(() {

@@ -120,7 +120,7 @@ class _ListCardState extends State<ListCard> {
                                 : Radius.circular(0),
                           ),
                           child: FadeInImage(
-                            placeholder: AssetImage('assets/perriti_pic.png'),
+                            placeholder: AssetImage('assets/dog.png'),
                             width: double.maxFinite,
                             height: 200,
                             fit: BoxFit.cover,

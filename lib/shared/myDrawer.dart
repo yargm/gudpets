@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-
 class MyDrawer extends StatelessWidget {
   const MyDrawer({
     Key key,
@@ -22,7 +21,7 @@ class MyDrawer extends StatelessWidget {
               children: <Widget>[
                 Hero(
                   tag: controlador1.usuario.documentId,
-                                  child: CircleAvatar(
+                  child: CircleAvatar(
                     radius: 40,
                     backgroundImage:
                         NetworkImage(controlador1.usuario.foto ?? ''),
@@ -62,10 +61,20 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Hero(tag: 'favoritos', child: Icon(FontAwesomeIcons.solidHeart)),
+            leading: Hero(
+                tag: 'favoritos', child: Icon(FontAwesomeIcons.solidHeart)),
             title: Text('Favoritos'),
             onTap: () {
               Navigator.of(context).pushNamed('/favoritos');
+            },
+          ),
+          ListTile(
+            title: Text('Información'),
+            leading: Icon(
+              Icons.info,
+            ),
+            onTap: () {
+              Navigator.of(context).pushNamed('/info');
             },
           ),
           ListTile(

@@ -143,7 +143,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                             height: 150.0,
                             child: CircleAvatar(
                               backgroundImage: _image == null
-                                  ? AssetImage('assets/perriti_pic.png')
+                                  ? AssetImage('assets/dog.png')
                                   : FileImage(_image),
                               backgroundColor: Colors.transparent,
                             ),
@@ -366,33 +366,46 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                   print('la ongitud actual es:' +
                                       controlador1.longitudfinal.toString());
                                   showDialog(
+                                      barrierDismissible: false,
                                       context: context,
-                                      child: AlertDialog(
-                                        content: Text(
-                                            'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.'),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('OK'),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MapSample(
-                                                          latitud: latitud,
-                                                          longitud: longitud,
-                                                          controlador1:
-                                                              controlador1,
-                                                        )),
-                                              );
-                                              setState(() {
-                                                isLoadig2 = false;
-                                                boton = false;
-                                              });
-                                            },
-                                          ),
-                                        ],
+                                      child: WillPopScope(
+                                        onWillPop: () async {
+                                          setState(() {
+                                            isLoadig2 = false;
+                                          });
+                                          return true;
+                                        },
+                                        child: AlertDialog(
+                                          title: Text('Importante',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                          content: Text(
+                                              'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
+                                              style: TextStyle(fontSize: 20)),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text('OK'),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MapSample(
+                                                            latitud: latitud,
+                                                            longitud: longitud,
+                                                            controlador1:
+                                                                controlador1,
+                                                          )),
+                                                );
+                                                setState(() {
+                                                  isLoadig2 = false;
+                                                  boton = false;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ));
                                 }
                               : null),

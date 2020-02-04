@@ -24,5 +24,5 @@ export 'favoritosList.dart';
 export 'publicacionList.dart';
 
 export 'perfil.dart';
-
+export 'info.dart';
 export 'interesadosAdopcion.dart';

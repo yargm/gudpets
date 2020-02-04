@@ -47,7 +47,7 @@ class _PerfilState extends State<Perfil> {
                             borderRadius: BorderRadius.circular(180),
                             child: FadeInImage(
                               fit: BoxFit.cover,
-                              placeholder: AssetImage('assets/perriti_pic.png'),
+                              placeholder: AssetImage('assets/dog.png'),
                               width: 120,
                               height: 120,
                               image: NetworkImage(controlador1.usuario.foto),
@@ -263,7 +263,7 @@ class _PerfilState extends State<Perfil> {
                                 image: NetworkImage(
                                     controlador1.usuario.fotoINE ?? ''),
                                 placeholder:
-                                    AssetImage('assets/perriti_pic.png'),
+                                    AssetImage('assets/dog.png'),
                               ),
                               CircleAvatar(
                                 backgroundColor: secondaryColor,
@@ -326,7 +326,7 @@ class _PerfilState extends State<Perfil> {
                                 image: NetworkImage(
                                     controlador1.usuario.fotoCompDomi ?? ''),
                                 placeholder:
-                                    AssetImage('assets/perriti_pic.png'),
+                                    AssetImage('assets/dog.png'),
                               ),
                               CircleAvatar(
                                 backgroundColor: secondaryColor,
@@ -391,7 +391,7 @@ class _PerfilState extends State<Perfil> {
                           height: 10,
                         ),
                         Text(
-                          'Estas fotos son necesarias para realizar un trámite de adopción, y estas fotos deben de mostrar el lugar en donde viviran las mascotas que desees adoptar, estas fotos sirven para comprobar que la mascota tendra un hogar adecuado',
+                          'Estas imágenes son necesarias para realizar un trámite de adopción, en ellas se debe mostrar el lugar en donde vivirán las mascotas que desees adoptar. Esta información se usa para comprobar que la mascota tendrá un hogar adecuado',
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(
@@ -679,7 +679,7 @@ class _DialogContentState extends State<DialogContent> {
                               ? controlador1.usuario.galeriaFotos[widget.index]
                               : (controlador1.usuario.fotoCompDomi ?? ''))
                   : FileImage(imagen),
-              placeholder: AssetImage('assets/perriti_pic.png'),
+              placeholder: AssetImage('assets/dog.png'),
             ),
           ),
         ),
