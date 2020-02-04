@@ -61,7 +61,6 @@ class _HomeState extends State<Home> {
             icon: Icon(FontAwesomeIcons.bullhorn,size: 20,),
           )
         ],
-<<<<<<< HEAD
       ) :AppBar(
         actions: <Widget>[
           IconButton(
@@ -76,10 +75,7 @@ class _HomeState extends State<Home> {
       body: Center(
         child: _widgetOptions.elementAt(seleccionado),
       ),
-=======
-      ),
-      body: _widgetOptions.elementAt(seleccionado),
->>>>>>> dd95ebdbdd0e9d85521d05ffa478bf893d188473
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           controlador1.pestana_act == 0

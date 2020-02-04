@@ -1,9 +1,11 @@
+import 'package:adoption_app/shared/card.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'services.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
   @override
+  var query1 = '';
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
@@ -17,6 +19,12 @@ class CustomSearchDelegate extends SearchDelegate {
             children: <Widget>[
               Text('Elije tus filtros de búsqueda'),
               SizedBox(height: 10,),
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed:(){
+                  query = 'jjhh';
+                },
+              )
               
               ],
           )),
@@ -37,35 +45,35 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    if (query.length < 8) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: Text(
-              "NĂºmero de control incompleto.",
-            ),
-          )
-        ],
-      );
-    }
+    // if (query.length < 8) {
+    //   return Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     children: <Widget>[
+    //       Center(
+    //         child: Text(
+    //           "NĂºmero de control incompleto.",
+    //         ),
+    //       )
+    //     ],
+    //   );
+    // }
 
     //Add the search term to the searchBloc.
     //The Bloc will then handle the searching and add the results to the searchResults stream.
     //This is the equivalent of submitting the search term to whatever search service you are using
-//  InheritedBlocs.of(context)
-//         .searchBloc
-//         .searchTerm
-//         .add(query);
+// InheritedBlocs.of(context)
+//       .searchBloc
+//     .searchTerm
+//     .add(query);
+
+
 
     return Column(
       children: <Widget>[
         //Build the results based on the searchResults stream in the searchBloc
         StreamBuilder(
-          stream: Firestore.instance
-              .collection('usuarios')
-              .where('usuario', isEqualTo: query)
-              .snapshots(),
+        
+          stream:  Firestore.instance.collection('adopciones').where('titulo',isGreaterThanOrEqualTo: query).snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Column(
@@ -89,7 +97,7 @@ class CustomSearchDelegate extends SearchDelegate {
                 shrinkWrap: true,
                 itemCount: results.length,
                 itemBuilder: (context, index) {
-                  // return CardUsuario(usuario: Usuario.fromSnapshot(results[index]),);
+                 return ListCard(objeto: AdopcionModel.fromDocumentSnapshot(results[index]), posicion: index);
                 },
               );
             }
