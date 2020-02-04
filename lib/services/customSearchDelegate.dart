@@ -18,15 +18,14 @@ class CustomSearchDelegate extends SearchDelegate {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text('Elije tus filtros de búsqueda'),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               IconButton(
                 icon: Icon(Icons.search),
-                onPressed:(){
-                  query = 'jjhh';
-                },
+                onPressed: () => null
               )
-              
-              ],
+            ],
           )),
         ),
       ),
@@ -45,6 +44,7 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
     // if (query.length < 8) {
     //   return Column(
     //     mainAxisAlignment: MainAxisAlignment.center,
@@ -66,23 +66,14 @@ class CustomSearchDelegate extends SearchDelegate {
 //     .searchTerm
 //     .add(query);
 
-
-
-    return Column(
-      children: <Widget>[
-        //Build the results based on the searchResults stream in the searchBloc
-        StreamBuilder(
-        
-          stream:  Firestore.instance.collection('adopciones').where('titulo',isGreaterThanOrEqualTo: query).snapshots(),
+    return   StreamBuilder(
+          stream: Firestore.instance
+              .collection('adopciones')
+              .where('titulo', isGreaterThanOrEqualTo: query)
+              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Center(child: CircularProgressIndicator()),
-                ],
-              );
+              return Center(child: CircularProgressIndicator());
             } else if (snapshot.data.documents.length == 0) {
               return Column(
                 children: <Widget>[
@@ -97,14 +88,16 @@ class CustomSearchDelegate extends SearchDelegate {
                 shrinkWrap: true,
                 itemCount: results.length,
                 itemBuilder: (context, index) {
-                 return ListCard(objeto: AdopcionModel.fromDocumentSnapshot(results[index]), posicion: index);
+                  return ListCard(
+                    controlador1: controlador1,
+                      objeto:
+                          AdopcionModel.fromDocumentSnapshot(results[index]),
+                      posicion: index);
                 },
               );
             }
           },
-        ),
-      ],
-    );
+        );
   }
 
   @override
