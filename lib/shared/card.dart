@@ -7,8 +7,9 @@ import 'package:adoption_app/shared/shared.dart';
 class ListCard extends StatefulWidget {
   final dynamic objeto;
   final int posicion;
+  final Controller controlador1;
 
-  ListCard({this.objeto, this.posicion});
+  ListCard({this.objeto, this.posicion, this.controlador1});
 
   @override
   _ListCardState createState() => _ListCardState();
@@ -20,23 +21,33 @@ class _ListCardState extends State<ListCard> {
   final double containerPadding2 = 80;
 
   final double containerBorderRadius = 15;
+  bool favorito = false;
+    
 
   @override
-  Widget build(BuildContext context) {
-    bool favorito = false;
-
-    var leftAligned = (widget.posicion % 2 == 0) ? true : false;
-    Controller controlador1 = Provider.of<Controller>(context);
-
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     for (var usuario in widget.objeto.favoritos) {
       setState(() {
-        if (controlador1.usuario.documentId == usuario) {
+        if (widget.controlador1.usuario.documentId == usuario) {
           favorito = true;
         } else {
           favorito = false;
         }
       });
     }
+  }
+  
+
+  @override
+  Widget build(BuildContext context) {
+  
+
+    var leftAligned = (widget.posicion % 2 == 0) ? true : false;
+    Controller controlador1 = Provider.of<Controller>(context);
+
+    
 
     // TODO: implement build
     return Container(

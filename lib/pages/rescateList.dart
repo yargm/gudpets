@@ -13,6 +13,7 @@ class _RescateListState extends State<RescateList> {
 
   @override
   Widget build(BuildContext context) {
+     Controller controlador1 = Provider.of<Controller>(context);
     return ListView(
       children: <Widget>[
         SizedBox(height: 40),
@@ -25,6 +26,7 @@ class _RescateListState extends State<RescateList> {
               );
             return ListView.builder(
               itemBuilder: (context, index) => ListCard(
+                  controlador1: controlador1,
                   objeto: RescateModel.fromDocumentSnapshot(
                       snapshot.data.documents[index]),
                   posicion: index),
