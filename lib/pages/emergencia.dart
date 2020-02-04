@@ -220,6 +220,25 @@ class _EmergenciaState extends State<Emergencia> {
                         },
                       ),
                     ),
+                    widget.objeto.tipoEmergencia == 'Abuso y maltrato'
+                        ?  Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 15.0,
+                                ),
+                                Text('¿Cómo denunciar?',
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                    )),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Container(
+                                    height: 200.0,
+                                    width: 400.0,
+                                    child: Image.asset('assets/denuncia2.jpg')),
+                              ],
+                            ): Container(),
                     SizedBox(
                       height: 20.0,
                     ),

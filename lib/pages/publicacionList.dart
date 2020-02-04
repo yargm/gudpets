@@ -366,35 +366,8 @@ class _PublicacionListState extends State<PublicacionList> {
           actions: <Widget>[
             FlatButton(
               child: Text('Borrar'),
-              onPressed: () async {
-
-                await FirebaseStorage.instance
-                    .ref()
-                    .child(objeto['reffoto'])
-                    .delete()
-                    .catchError((onError) {
-                  print(onError);
-                });
-
-                if (tabla == 'rescates' || tabla == 'adopciones') {
-                  for (var elemento in objeto['albumrefs']) {
-                    await FirebaseStorage.instance
-                        .ref()
-                        .child(elemento)
-                        .delete()
-                        .catchError((onError) {
-                      print('error en album ref');
-                    });
-                  }
-                }
-
-                await Firestore.instance
-                    .collection(tabla)
-                    .document(objeto.documentID)
-                    .delete().catchError((onError) {
-                      print('error en base de datos');
-                    });
-
+              onPressed: () {
+                deleteData(tabla, objeto);
                 Navigator.of(context).pop();
               },
             ),
@@ -405,6 +378,36 @@ class _PublicacionListState extends State<PublicacionList> {
                 })
           ],
         ));
+  }
+
+  deleteData(String tabla, dynamic objeto) async {
+    await FirebaseStorage.instance
+        .ref()
+        .child(objeto['reffoto'])
+        .delete()
+        .catchError((onError) {
+      print(onError);
+    });
+
+    if (tabla == 'rescates' || tabla == 'adopciones') {
+      for (var elemento in objeto['albumrefs']) {
+        await FirebaseStorage.instance
+            .ref()
+            .child(elemento)
+            .delete()
+            .catchError((onError) {
+          print('error en album ref');
+        });
+      }
+    }
+
+    await Firestore.instance
+        .collection(tabla)
+        .document(objeto.documentID)
+        .delete()
+        .catchError((onError) {
+      print('error en base de datos');
+    });
   }
 
   _favorito(dynamic favoritobjeto, Controller controlador1) {
@@ -418,7 +421,7 @@ class _PublicacionListState extends State<PublicacionList> {
         }
       });
     }
-    
+
     return favorito;
   }
 }

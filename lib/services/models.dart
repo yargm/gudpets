@@ -218,7 +218,7 @@ class PerdidoModel {
     descripcion = data['descripcion'];
     fechaExtravio = data['fechaExtravio'].toDate();
     raza = data['raza'];
-    recompensa = data['recompensa'] ?? [''];
+    recompensa = data['recompensa'] ?? '';
     sexo = data['sexo'];
     senasPart = data['senasPart'];
     tipoAnimal = data['tipoAnimal'];
