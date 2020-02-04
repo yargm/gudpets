@@ -76,7 +76,6 @@ class MyApp extends StatelessWidget {
             backgroundColor: secondaryColor,
           ),
           //appbar
-
           appBarTheme: AppBarTheme(
               elevation: 0,
               iconTheme: IconThemeData(size: 30, color: secondaryDark),
@@ -87,11 +86,11 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         initialRoute: '/login',
-        home: Home(),
+        home: Home(controlador1: controller,),
         routes: {
           '/login': (BuildContext context) => LogIn(),
           '/registro_usuario': (BuildContext context) => RegistroUsuario(),
-          '/home': (BuildContext context) => Home(),
+          '/home': (BuildContext context) => Home(controlador1: controller,),
           '/adopcion': (BuildContext context) => Adopcion(),
           '/perdido': (BuildContext context) => Perdido(),
           '/rescate': (BuildContext context) => Rescate(),
