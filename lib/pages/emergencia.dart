@@ -60,7 +60,7 @@ class _EmergenciaState extends State<Emergencia> {
                       tag: widget.objeto.documentId,
                       child: FadeInImage(
                         fit: BoxFit.cover,
-                        placeholder: AssetImage('assets/perriti_pic.png'),
+                        placeholder: AssetImage('assets/dog.png'),
                         width: double.maxFinite,
                         height: 350,
                         image: NetworkImage(widget.objeto.foto),

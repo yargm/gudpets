@@ -86,11 +86,15 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         initialRoute: '/login',
-        home: Home(controlador1: controller,),
+        home: Home(
+          controlador1: controller,
+        ),
         routes: {
           '/login': (BuildContext context) => LogIn(),
           '/registro_usuario': (BuildContext context) => RegistroUsuario(),
-          '/home': (BuildContext context) => Home(controlador1: controller,),
+          '/home': (BuildContext context) => Home(
+                controlador1: controller,
+              ),
           '/adopcion': (BuildContext context) => Adopcion(),
           '/perdido': (BuildContext context) => Perdido(),
           '/rescate': (BuildContext context) => Rescate(),
@@ -98,8 +102,9 @@ class MyApp extends StatelessWidget {
           '/registro_emergencia': (BuildContext context) =>
               RegistroEmergencia(),
           '/registro_rescate': (BuildContext context) => RegistroRescate(),
-          '/registro_adopcion':(BuildContext context) => RegistroAdopcion(),
-          '/interesados_adopcion':(BuildContext context) => InteresadosAdopcion(),
+          '/registro_adopcion': (BuildContext context) => RegistroAdopcion(),
+          '/interesados_adopcion': (BuildContext context) =>
+              InteresadosAdopcion(),
           '/registro_perdido': (BuildContext context) => RegistroPerdido(),
           '/mapaejemplo': (BuildContext context) => MapSample(),
           '/avisos': (BuildContext context) => AvisosList(),
@@ -107,7 +112,6 @@ class MyApp extends StatelessWidget {
           '/perfil': (BuildContext context) => Perfil(),
           '/favoritos': (BuildContext context) => FavoritosList(),
           '/info': (BuildContext context) => Info()
-
         },
       ),
     );

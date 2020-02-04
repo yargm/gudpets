@@ -74,7 +74,7 @@ class MyDrawer extends StatelessWidget {
               Icons.info,
             ),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed('/info');
+              Navigator.of(context).pushNamed('/info');
             },
           ),
           ListTile(

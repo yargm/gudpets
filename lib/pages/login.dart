@@ -250,7 +250,7 @@ class _LogInState extends State<LogIn> {
               Padding(
                 padding: const EdgeInsets.only(left: 15),
                 child: Text(
-                  'Registrate con Google',
+                  'Acceder con Google',
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.grey,

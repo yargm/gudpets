@@ -22,7 +22,8 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
     try {
       var userLocation = await location.getLocation();
       setState(() {
-        _currentLocation = GeoPoint(userLocation.latitude, userLocation.longitude);
+        _currentLocation =
+            GeoPoint(userLocation.latitude, userLocation.longitude);
         latitud = _currentLocation.latitude;
         longitud = _currentLocation.longitude;
       });
@@ -114,7 +115,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                             height: 150.0,
                             child: CircleAvatar(
                               backgroundImage: _image == null
-                                  ? AssetImage('assets/perriti_pic.png')
+                                  ? AssetImage('assets/dog.png')
                                   : FileImage(_image),
                               backgroundColor: Colors.transparent,
                             ),
@@ -236,8 +237,12 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                           return true;
                                         },
                                         child: AlertDialog(
+                                          title: Text('Importante',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
                                           content: Text(
-                                              'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.'),
+                                              'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
+                                              style: TextStyle(fontSize: 20)),
                                           actions: <Widget>[
                                             FlatButton(
                                               child: Text('OK'),
