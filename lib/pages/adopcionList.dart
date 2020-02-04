@@ -15,6 +15,7 @@ class _AdopcionListState extends State<AdopcionList> {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
+        FirebaseMessage(),
         SizedBox(height: 40),
         StreamBuilder(
           stream: adopciones,
