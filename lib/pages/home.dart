@@ -45,18 +45,37 @@ class _HomeState extends State<Home> {
     // TODO: implement build
     return Scaffold(
       drawer: MyDrawer(controlador1: controlador1),
-      appBar: AppBar(
+      appBar: controlador1.pestana_act == 0 || controlador1.pestana_act == 1 ? AppBar(
+        actions: <Widget>[
+          IconButton(onPressed: () {
+        showSearch(
+          context: context,
+          delegate: CustomSearchDelegate(),
+        );
+      }, icon: Icon(Icons.search),),
+          IconButton(
+            onPressed: () {
+              return Navigator.of(context).pushNamed('/avisos');
+              // print('avisos');
+            },
+            icon: Icon(FontAwesomeIcons.bullhorn,size: 20,),
+          )
+        ],
+      ) :AppBar(
         actions: <Widget>[
           IconButton(
             onPressed: () {
               return Navigator.of(context).pushNamed('/avisos');
               // print('avisos');
             },
-            icon: Icon(FontAwesomeIcons.bullhorn),
+            icon: Icon(FontAwesomeIcons.bullhorn,size: 20,),
           )
         ],
+      ) ,
+      body: Center(
+        child: _widgetOptions.elementAt(seleccionado),
       ),
-      body: _widgetOptions.elementAt(seleccionado),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           controlador1.pestana_act == 0
