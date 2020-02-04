@@ -44,6 +44,8 @@ exports.nuevaEmergencia = functions.firestore.document('/emergencias/{emergencia
     })
 })
 
+
+
 exports.nuevoPerdido = functions.firestore.document('/perdidos/{perdido}'
 ).onCreate((snapshot, context) => {
     var perdidoData = snapshot.data();
@@ -85,6 +87,7 @@ exports.nuevoPerdido = functions.firestore.document('/perdidos/{perdido}'
     })
 })
 
+
 exports.emergenciaEliminada = functions.firestore.document('/emergencias/{emergencia}'
 ).onDelete((snapshot, context) => {
     var emergenciaData = snapshot.data();
@@ -112,6 +115,61 @@ exports.emergenciaEliminada = functions.firestore.document('/emergencias/{emerge
     })
 })
 
+exports.rescateEliminada = functions.firestore.document('/rescates/{rescate}'
+).onDelete((snapshot, context) => {
+    var emergenciaData = snapshot.data();
+    var rescateID = snapshot.id;
+
+    admin.firestore().collection('usuarios').get().then((snapshot) => {
+        var listaUsuarios = snapshot.docs;
+        for (var usuario of listaUsuarios) {
+            if (usuario.data().rescates != undefined) {
+                if (usuario.data().rescates != null) {
+                    for (var rescate of usuario.data().rescates) {
+                        var documentID = rescate['documentId'];
+                        console.log(rescate['documentId']);
+                        if (documentID == rescateID) {
+                            usuario.ref.update({ rescates : admin.firestore.FieldValue.arrayRemove(rescate)}
+                            ).then(() => {
+                                console.log('deleted from ' + usuario.data().correo)
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        console.log('deleted all the registers')
+    })
+})
+
+exports.adopcionEliminada = functions.firestore.document('/adopciones/{adopcion}'
+).onDelete((snapshot, context) => {
+    var emergenciaData = snapshot.data();
+    var rescateID = snapshot.id;
+
+    admin.firestore().collection('usuarios').get().then((snapshot) => {
+        var listaUsuarios = snapshot.docs;
+        for (var usuario of listaUsuarios) {
+            if (usuario.data().adopciones != undefined) {
+                if (usuario.data().adopciones != null) {
+                    for (var adopcion of usuario.data().adopciones) {
+                        var documentID = adopcion['documentId'];
+                        console.log(adopcion['documentId']);
+                        if (documentID == adopcionID) {
+                            usuario.ref.update({ adopciones : admin.firestore.FieldValue.arrayRemove(adopcion)}
+                            ).then(() => {
+                                console.log('deleted from ' + usuario.data().correo)
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        console.log('deleted all the registers')
+    })
+})
+
+
 exports.perdidoEliminado = functions.firestore.document('/perdidos/{perdido}'
 ).onDelete((snapshot, context) => {
     
@@ -124,7 +182,7 @@ exports.perdidoEliminado = functions.firestore.document('/perdidos/{perdido}'
                 if (usuario.data().perdidos != null) {
                     for (var perdido of usuario.data().perdidos) {
                         var documentID = perdido['documentId'];
-                        console.log(adopcion['documentId']);
+                        console.log(perdido['documentId']);
                         if (documentID == perdidoID) {
                             usuario.ref.update({ perdidos : admin.firestore.FieldValue.arrayRemove(perdido)}
                             ).then(() => {
