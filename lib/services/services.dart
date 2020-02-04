@@ -4,3 +4,4 @@ export 'controlador.dart';
 export 'package:provider/provider.dart';
 export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'sign_in.dart';
+export 'customSearchDelegate.dart';
