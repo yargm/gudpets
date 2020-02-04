@@ -108,7 +108,7 @@ class _InfoState extends State<Info> {
               Text(
                   'Para externar tus dudas, sugerencias e ideas, puedes escribirnos al correo: AQUÍ VA EL CORREO DE GUDTECH',
                   style: TextStyle(fontSize: 18.0, color: Colors.grey)),
-                  SizedBox(
+              SizedBox(
                 height: 15,
               ),
               Text(
@@ -121,9 +121,33 @@ class _InfoState extends State<Info> {
               SizedBox(
                 height: 10,
               ),
-              Text(
-                  '',
-                  style: TextStyle(fontSize: 18.0, color: Colors.grey)),
+              Row(
+                children: <Widget>[
+                  Container(
+                width: 50.0,
+                height: 50.0,
+                child: CircleAvatar(
+                  backgroundImage: AssetImage('assets/gudtech.jpg'),
+                  backgroundColor: Colors.transparent,
+                ),
+              ),
+                  Text('Icon made by',
+                      style: TextStyle(fontSize: 18.0, color: Colors.grey)),
+                  GestureDetector(
+                    onTap: () =>
+                        launch('https://www.flaticon.com/authors/freepik'),
+                    child: Text('Freepik ',
+                        style: TextStyle(fontSize: 18.0, color: Colors.brown)),
+                  ),
+                  Text('www.flaticon.com',
+                      style: TextStyle(fontSize: 18.0, color: Colors.grey)),
+                  GestureDetector(
+                    onTap: () => launch('https://www.flaticon.com/'),
+                    child: Text('Freepik ',
+                        style: TextStyle(fontSize: 18.0, color: Colors.brown)),
+                  )
+                ],
+              ),
             ],
           ),
         ),
