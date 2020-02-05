@@ -114,6 +114,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                             width: 150.0,
                             height: 150.0,
                             child: CircleAvatar(
+                              radius: 45,
                               backgroundImage: _image == null
                                   ? AssetImage('assets/dog.png')
                                   : FileImage(_image),

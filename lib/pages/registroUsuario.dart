@@ -98,9 +98,48 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   SizedBox(
                     height: 15,
                   ),
+                  Text('* Foto: '),
+                      GestureDetector(
+                  onTap: () => getImage(),
+                  child: Center(
+                    child: SizedBox(
+                      width: 150,
+                      height: 150,
+                     child: Stack(
+                          children: <Widget>[
+                            Container(
+                              width: 150.0,
+                              height: 150.0,
+                              child: CircleAvatar(
+                            radius: 45.0,
+                            backgroundImage: controlador1.imageUrl.isEmpty &&
+                                    imagen == null
+                                ? AssetImage(
+                                    'assets/dog.png')
+                                : controlador1.imageUrl.isNotEmpty &&
+                                        imagen == null
+                                    ? NetworkImage(controlador1.imageUrl)
+                                    : FileImage(imagen),
+                            backgroundColor: Colors.transparent,
+                          )
+                            ),
+                            CircleAvatar(
+                              backgroundColor: secondaryColor,
+                              child: IconButton(
+                                icon: Icon(Icons.photo_camera),
+                                onPressed: () => getImage(),
+                              ),
+                            )
+                          ],
+                        ),
+                        ),
+                  ),
+                ),
+                   
+                      SizedBox(height: 15,),
                   TextFormField(
                     initialValue:
-                        controlador1.name.isNotEmpty ? controlador1.name : null,
+                        controlador1.name.isEmpty ? null:controlador1.name,
                     onSaved: (String value) {
                       form_usuario['nombre'] = value;
                     },
@@ -154,14 +193,13 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     height: 15,
                   ),
                   TextFormField(
-                    initialValue: controlador1.email.isNotEmpty
-                        ? controlador1.email
-                        : null,
+                    initialValue: controlador1.email.isEmpty
+                        ? null :controlador1.email,
                     onSaved: (String value) {
                       form_usuario['correo'] = value;
                     },
                     decoration: InputDecoration(
-                        labelText: 'Correo electrónico (opcional)',
+                        labelText: 'Correo electrónico ',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10))),
                   ),
@@ -217,28 +255,28 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   SizedBox(
                     height: 15,
                   ),
-                  Text('* Foto: '),
-                  GestureDetector(
-                    onTap: () {
-                      getImage();
-                    },
-                    child: Container(
-                        width: 150.0,
-                        height: 150.0,
-                        margin: EdgeInsets.only(top: 25.0, bottom: 10.0),
-                        child: CircleAvatar(
-                          radius: 45.0,
-                          backgroundImage: controlador1.imageUrl.isEmpty &&
-                                  imagen == null
-                              ? NetworkImage(
-                                  'http://mjcnuapada.com/wp-content/uploads/2018/03/no-photo-925faf7029ff24e9d19075149c4f2dfe.jpeg')
-                              : controlador1.imageUrl.isNotEmpty &&
-                                      imagen == null
-                                  ? NetworkImage(controlador1.imageUrl)
-                                  : FileImage(imagen),
-                          backgroundColor: Colors.transparent,
-                        )),
-                  ),
+                  
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     getImage();
+                  //   },
+                  //   child: Container(
+                  //       width: 150.0,
+                  //       height: 150.0,
+                  //       margin: EdgeInsets.only(top: 25.0, bottom: 10.0),
+                  //       child: CircleAvatar(
+                  //         radius: 45.0,
+                  //         backgroundImage: controlador1.imageUrl.isEmpty &&
+                  //                 imagen == null
+                  //             ? AssetImage(
+                  //                 'assets/dog.png')
+                  //             : controlador1.imageUrl.isNotEmpty &&
+                  //                     imagen == null
+                  //                 ? NetworkImage(controlador1.imageUrl)
+                  //                 : FileImage(imagen),
+                  //         backgroundColor: Colors.transparent,
+                  //       )),
+                  // ),
                   SizedBox(
                     height: 15,
                   ),

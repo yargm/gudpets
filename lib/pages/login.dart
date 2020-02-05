@@ -1,6 +1,7 @@
 
 import 'package:adoption_app/services/models.dart';
 import 'package:adoption_app/services/services.dart';
+import 'package:adoption_app/shared/colores.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -68,9 +69,11 @@ class _LogInState extends State<LogIn> {
                             height: 30,
                           ),
                           Text(
-                            'Nombre e la App no?',
+                            'GudPets',
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(color: secondaryColor,fontSize: 70, fontWeight: FontWeight.bold),
+
+                            
                           ),
                           SizedBox(
                             height: 30.0,
@@ -200,10 +203,10 @@ class _LogInState extends State<LogIn> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => {},
+        onPressed: () =>  Navigator.of(context).pushReplacementNamed('/registro_usuario'),
         label: Text(' Registrate'),
         icon: Icon(FontAwesomeIcons.userPlus),
-        backgroundColor: Colors.brown[300],
+        backgroundColor: secondaryColor,
       ),
     );
   }
