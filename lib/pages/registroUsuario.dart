@@ -21,7 +21,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   bool isLoadig = false;
   final _usuarioform = GlobalKey<FormState>();
   String tipotemp = '';
-
+  bool correov = false;
   Map<String, dynamic> form_usuario = {
     'nombre': null,
     'fnacimiento': null,
@@ -99,30 +99,29 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     height: 15,
                   ),
                   Text('* Foto: '),
-                      GestureDetector(
-                  onTap: () => getImage(),
-                  child: Center(
-                    child: SizedBox(
-                      width: 150,
-                      height: 150,
-                     child: Stack(
+                  GestureDetector(
+                    onTap: () => getImage(),
+                    child: Center(
+                      child: SizedBox(
+                        width: 150,
+                        height: 150,
+                        child: Stack(
                           children: <Widget>[
                             Container(
-                              width: 150.0,
-                              height: 150.0,
-                              child: CircleAvatar(
-                            radius: 45.0,
-                            backgroundImage: controlador1.imageUrl.isEmpty &&
-                                    imagen == null
-                                ? AssetImage(
-                                    'assets/dog.png')
-                                : controlador1.imageUrl.isNotEmpty &&
-                                        imagen == null
-                                    ? NetworkImage(controlador1.imageUrl)
-                                    : FileImage(imagen),
-                            backgroundColor: Colors.transparent,
-                          )
-                            ),
+                                width: 150.0,
+                                height: 150.0,
+                                child: CircleAvatar(
+                                  radius: 45.0,
+                                  backgroundImage: controlador1
+                                              .imageUrl.isEmpty &&
+                                          imagen == null
+                                      ? AssetImage('assets/dog.png')
+                                      : controlador1.imageUrl.isNotEmpty &&
+                                              imagen == null
+                                          ? NetworkImage(controlador1.imageUrl)
+                                          : FileImage(imagen),
+                                  backgroundColor: Colors.transparent,
+                                )),
                             CircleAvatar(
                               backgroundColor: secondaryColor,
                               child: IconButton(
@@ -132,14 +131,16 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                             )
                           ],
                         ),
-                        ),
+                      ),
+                    ),
                   ),
-                ),
-                   
-                      SizedBox(height: 15,),
+
+                  SizedBox(
+                    height: 15,
+                  ),
                   TextFormField(
                     initialValue:
-                        controlador1.name.isEmpty ? null:controlador1.name,
+                        controlador1.name.isEmpty ? null : controlador1.name,
                     onSaved: (String value) {
                       form_usuario['nombre'] = value;
                     },
@@ -183,7 +184,6 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     onTap: () => _selectDate(context),
                     readOnly: true,
                     keyboardType: TextInputType.number,
-                   
                     decoration: InputDecoration(
                         labelText: '* Fecha de nacimiento',
                         border: OutlineInputBorder(
@@ -193,11 +193,18 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     height: 15,
                   ),
                   TextFormField(
-                    initialValue: controlador1.email.isEmpty
-                        ? null :controlador1.email,
+                    initialValue:
+                        controlador1.email.isEmpty ? null : controlador1.email,
                     onSaved: (String value) {
-                      form_usuario['correo'] = value;
+                      form_usuario['correo'] = value.trim();
                     },
+                    validator: (String value) {
+                      if (correov == false) {
+                        return 'Correo existente';
+                      }
+                    },
+                    maxLines: 1,
+                    minLines: 1,
                     decoration: InputDecoration(
                         labelText: 'Correo electrónico ',
                         border: OutlineInputBorder(
@@ -231,7 +238,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     height: 15,
                   ),
                   TextFormField(
-                    keyboardType: TextInputType.number,
+                    maxLength: 10,
+                    keyboardType: TextInputType.phone,
                     initialValue: null,
                     onSaved: (String value) {
                       form_usuario['telefono'] = int.parse(value);
@@ -255,7 +263,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   SizedBox(
                     height: 15,
                   ),
-                  
+
                   // GestureDetector(
                   //   onTap: () {
                   //     getImage();
@@ -369,8 +377,13 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     children: <Widget>[
                       saveButton(controlador1),
                       FlatButton(
-                        child: Container(child: ListTile(title: Text('Cancelar Registro'), leading: Icon(Icons.cancel),), width: double.maxFinite,),
-                        
+                        child: Container(
+                          child: ListTile(
+                            title: Text('Cancelar Registro'),
+                            leading: Icon(Icons.cancel),
+                          ),
+                          width: double.maxFinite,
+                        ),
                         onPressed: () {
                           signOutGoogle();
                           Navigator.of(context).pushReplacementNamed('/login');
@@ -378,7 +391,6 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       ),
                     ],
                   ),
-                 
                 ],
               ),
             ),
@@ -389,71 +401,94 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   }
 
   Widget saveButton(Controller controlador1) {
-    return  isLoadig ? CircularProgressIndicator() : RaisedButton.icon(
-                      icon: Icon(Icons.check),
-                      label: Text('Guardar'),
-                      onPressed: () async {
-                        setState(() {
-                          isLoadig = true;
-                        });
-                        if (!_usuarioform.currentState.validate()) {
-                          setState(() {
-                            isLoadig = false;
-                          });
-                          return;
-                        }
+    return isLoadig
+        ? CircularProgressIndicator()
+        : RaisedButton.icon(
+            icon: Icon(Icons.check),
+            label: Text('Guardar'),
+            onPressed: () async {
+              setState(() {
+                isLoadig = true;
+              });
+              _usuarioform.currentState.save();
 
-                        _usuarioform.currentState.save();
+              await _validatorEmail(form_usuario['correo']);
 
-                        if (imagen != null) {
-                          final String fileName = form_usuario['correo'] +
-                              '/perfil/PP' + 
-                              DateTime.now().toString() ;
+              if (!_usuarioform.currentState.validate()) {
+                setState(() {
+                  isLoadig = false;
+                });
+                return;
+              }
+              _usuarioform.currentState.save();
 
-                          StorageReference storageRef =
-                              FirebaseStorage.instance.ref().child(fileName);
+              if (imagen != null) {
+                final String fileName = form_usuario['correo'] +
+                    '/perfil/PP' +
+                    DateTime.now().toString();
 
-                          final StorageUploadTask uploadTask =
-                              storageRef.putFile(
-                            imagen,
-                          );
+                StorageReference storageRef =
+                    FirebaseStorage.instance.ref().child(fileName);
 
-                          final StorageTaskSnapshot downloadUrl =
-                              (await uploadTask.onComplete);
+                final StorageUploadTask uploadTask = storageRef.putFile(
+                  imagen,
+                );
 
-                          final String url =
-                              (await downloadUrl.ref.getDownloadURL());
-                          print('URL Is $url');
+                final StorageTaskSnapshot downloadUrl =
+                    (await uploadTask.onComplete);
 
-                          form_usuario['foto'] = url;
-                          form_usuario['fotoStorageRef'] = downloadUrl.ref.path;
-                        } else {
-                          form_usuario['foto'] = controlador1.imageUrl;
-                        }
+                final String url = (await downloadUrl.ref.getDownloadURL());
+                print('URL Is $url');
 
-                        var agregar = await Firestore.instance
-                            .collection('usuarios')
-                            .add(form_usuario)
-                            .then((value) async {
-                          if (value != null) {
-                            var dsUsuario = await value.get();
-                            controlador1.agregausuario(
-                                UsuarioModel.fromDocumentSnapshot(dsUsuario));
-                            controlador1.signIn();
-                            Navigator.of(context).pushReplacementNamed('/home');
+                form_usuario['foto'] = url;
+                form_usuario['fotoStorageRef'] = downloadUrl.ref.path;
+              } else {
+                form_usuario['foto'] = controlador1.imageUrl;
+              }
 
-                            return true;
-                          } else {
-                            return false;
-                          }
-                        });
-                      });
+              var agregar = await Firestore.instance
+                  .collection('usuarios')
+                  .add(form_usuario)
+                  .then((value) async {
+                if (value != null) {
+                  var dsUsuario = await value.get();
+                  controlador1.agregausuario(
+                      UsuarioModel.fromDocumentSnapshot(dsUsuario));
+                  controlador1.signIn();
+                  Navigator.of(context).pushReplacementNamed('/home');
+
+                  return true;
+                } else {
+                  return false;
+                }
+              });
+            });
   }
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       imagen = image;
+    });
+  }
+
+  Future _validatorEmail(String value) async {
+    print(value);
+    await Firestore.instance
+        .collection('usuarios')
+        .where('correo', isEqualTo: value)
+        .getDocuments()
+        .then((onValue) {
+      if (onValue.documents.isNotEmpty) {
+        print('correo existente');
+        setState(() {
+          correov = false;
+        });
+      } else {
+        setState(() {
+          correov = true;
+        });
+      }
     });
   }
 }

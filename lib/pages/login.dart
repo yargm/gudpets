@@ -32,7 +32,7 @@ class _LogInState extends State<LogIn> {
         isLoading = true;
       });
       if (onValue) {
-        Navigator.of(context).pushReplacementNamed('/');
+        Navigator.of(context).pushReplacementNamed('/home');
       } else {
         setState(() {
           isLoading = false;
@@ -229,7 +229,7 @@ class _LogInState extends State<LogIn> {
               controlador1.usuario_act =
                   UsuarioModel.fromDocumentSnapshot(onValue.documents.first);
               controlador1.signIn();
-              Navigator.of(context).pushReplacementNamed('/');
+              Navigator.of(context).pushReplacementNamed('/home');
             }
           });
         }).catchError((onError) {
