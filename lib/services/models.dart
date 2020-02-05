@@ -19,8 +19,6 @@ class UsuarioModel {
   String fotoINERef;
   String fotoCompDomi;
   String fotoCompDomiRef;
-  List<dynamic> fotosHogar;
-  List<dynamic> fotosHogarRefs;
   List<dynamic> galeriaFotos;
   List<dynamic> galeriaFotosRefs;
 
@@ -310,7 +308,7 @@ class SolicitudModel {
   int telefono;
   DocumentReference reference;
   String tipo;
-  String documentId;
+  String userId;
   String fotoINE;
   String fotoINERef;
   String fotoCompDomi;
@@ -331,9 +329,9 @@ class SolicitudModel {
       this.sexo,
       this.telefono,
       this.tipo,
-      this.documentId,
       this.userIdPub,
-      this.tituloPub});
+      this.tituloPub,
+      this.userId});
 
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
@@ -362,7 +360,7 @@ class SolicitudModel {
     telefono = data['telefono'];
     tipo = data['tipo'];
     reference = data.reference;
-    documentId = data.documentID.toString();
+    userId = data['userId'];
     fnacimiento = data['fnacimiento'].toDate();
     fotoStorageRef = data['fotoStorageRef'];
 
