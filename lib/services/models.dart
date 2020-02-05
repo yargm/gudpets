@@ -24,14 +24,7 @@ class UsuarioModel {
   List<dynamic> galeriaFotos;
   List<dynamic> galeriaFotosRefs;
 
-  String fotoINE;
-  String fotoINERef;
-  String fotoCompDomi;
-  String fotoCompDomiRef;
-  List<dynamic> fotosHogar;
-  List<dynamic> fotosHogarRefs;
-  List<dynamic> galeriaFotos;
-  List<dynamic> galeriaFotosRefs;
+  
 
   UsuarioModel(
       {this.contrasena,
@@ -391,3 +384,4 @@ class AvisoModel {
     link = data['link'];
   }
 }
+
