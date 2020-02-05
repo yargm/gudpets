@@ -32,16 +32,27 @@ class PerfilAdopcion extends StatelessWidget {
                     width: 140,
                     child: Stack(
                       children: <Widget>[
-                        Hero(
-                          tag: objeto.documentId,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(180),
-                            child: FadeInImage(
-                              fit: BoxFit.cover,
-                              placeholder: AssetImage('assets/perriti_pic.png'),
-                              width: 120,
-                              height: 120,
-                              image: NetworkImage(objeto.foto),
+                        GestureDetector(
+                          onTap: () => showDialog(
+                            context: context,
+                            child: DialogBody(
+                              controlador1: controlador1,
+                              objeto: objeto,
+                              foto: objeto.foto ?? '',
+                            ),
+                          ),
+                          child: Hero(
+                            tag: objeto.documentId,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(180),
+                              child: FadeInImage(
+                                fit: BoxFit.cover,
+                                placeholder:
+                                    AssetImage('assets/perriti_pic.png'),
+                                width: 120,
+                                height: 120,
+                                image: NetworkImage(objeto.foto),
+                              ),
                             ),
                           ),
                         ),
@@ -139,66 +150,87 @@ class PerfilAdopcion extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 130,
-                          width: 210,
-                          child: Stack(
-                            children: <Widget>[
-                              FadeInImage(
-                                height: 110,
-                                width: 210,
-                                fit: BoxFit.cover,
-                                image: NetworkImage(objeto.fotoINE ?? ''),
-                                placeholder:
-                                    AssetImage('assets/perriti_pic.png'),
-                              ),
-                            ],
+                  GestureDetector(
+                    onTap: () => showDialog(
+                      context: context,
+                      child: DialogBody(
+                        controlador1: controlador1,
+                        objeto: objeto,
+                        foto: objeto.fotoINE ?? '',
+                      ),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 130,
+                            width: 210,
+                            child: Stack(
+                              children: <Widget>[
+                                FadeInImage(
+                                  height: 110,
+                                  width: 210,
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(objeto.fotoINE ?? ''),
+                                  placeholder:
+                                      AssetImage('assets/perriti_pic.png'),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                            child: Text(
-                          'Foto INE',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ))
-                      ],
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                              child: Text(
+                            'Foto INE',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ))
+                        ],
+                      ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 130,
-                          width: 210,
-                          child: Stack(
-                            children: <Widget>[
-                              FadeInImage(
-                                height: 110,
-                                width: 210,
-                                fit: BoxFit.cover,
-                                image: NetworkImage(objeto.fotoCompDomi ?? ''),
-                                placeholder:
-                                    AssetImage('assets/perriti_pic.png'),
-                              ),
-                            ],
+                  GestureDetector(
+                    onTap: () => showDialog(
+                      context: context,
+                      child: DialogBody(
+                        controlador1: controlador1,
+                        objeto: objeto,
+                        foto: objeto.fotoCompDomi ?? '',
+                      ),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 130,
+                            width: 210,
+                            child: Stack(
+                              children: <Widget>[
+                                FadeInImage(
+                                  height: 110,
+                                  width: 210,
+                                  fit: BoxFit.cover,
+                                  image:
+                                      NetworkImage(objeto.fotoCompDomi ?? ''),
+                                  placeholder:
+                                      AssetImage('assets/perriti_pic.png'),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                            child: Text(
-                          'Foto Comprobante de domicilio',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ))
-                      ],
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                              child: Text(
+                            'Foto Comprobante de domicilio',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ))
+                        ],
+                      ),
                     ),
                   ),
                   Divider(
@@ -236,16 +268,10 @@ class PerfilAdopcion extends StatelessWidget {
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () => showDialog(
                                 context: context,
-                                child: WillPopScope(
-                                  onWillPop: () async {
-                                    return controlador1.loading ? false : true;
-                                  },
-                                  child: Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Container(),
-                                  ),
+                                child: DialogBody(
+                                  controlador1: controlador1,
+                                  objeto: objeto,
+                                  foto: objeto.galeriaFotos[index],
                                 )),
                             child: Image(
                               image: NetworkImage(
@@ -269,6 +295,53 @@ class PerfilAdopcion extends StatelessWidget {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class DialogBody extends StatelessWidget {
+  const DialogBody(
+      {Key key,
+      @required this.controlador1,
+      @required this.objeto,
+      @required this.foto})
+      : super(key: key);
+
+  final Controller controlador1;
+  final SolicitudModel objeto;
+  final String foto;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 10,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          UserBanner(
+            controlador1: controlador1,
+            usuario: objeto,
+          ),
+          Divider(
+            thickness: 1,
+          ),
+          Container(
+            margin: EdgeInsets.all(10),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: FadeInImage(
+                image: NetworkImage(foto),
+                placeholder: AssetImage('assets/dog.png'),
+                width: double.maxFinite,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+        ],
       ),
     );
   }

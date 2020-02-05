@@ -9,6 +9,7 @@ exports.nuevaEmergencia = functions.firestore.document('/emergencias/{emergencia
     var listaTokens = [];
 
     admin.firestore().collection('usuarios').get().then((snapshot) => {
+        
         var listaUsuarios = snapshot.docs;
         for (var usuario of listaUsuarios) {
             if (usuario.data().tokens != undefined) {
@@ -144,8 +145,17 @@ exports.rescateEliminada = functions.firestore.document('/rescates/{rescate}'
 
 exports.adopcionEliminada = functions.firestore.document('/adopciones/{adopcion}'
 ).onDelete((snapshot, context) => {
-    var emergenciaData = snapshot.data();
-    var rescateID = snapshot.id;
+    var adopcionData = snapshot.data();
+    var adopcionID = snapshot.id;
+
+    admin.firestore().collection('adopciones').doc(adopcionData.id).collection('solicitudes').get().then((snapshot) => {
+        for(var solicitud of snapshot.docs){
+            var data = solicitud.data();
+            admin.firestore().collection('adopciones').doc(adopcionData.id).collection('solicitudes').doc(data.id).delete().then(() =>{
+                console.log('documento in subcollection eliminado');
+            })
+        }
+    })
 
     admin.firestore().collection('usuarios').get().then((snapshot) => {
         var listaUsuarios = snapshot.docs;

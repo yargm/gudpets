@@ -400,6 +400,7 @@ class _PublicacionListState extends State<PublicacionList> {
         });
       }
     }
+    
 
     await Firestore.instance
         .collection(tabla)

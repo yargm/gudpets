@@ -51,7 +51,7 @@ class _FavoritosListState extends State<FavoritosList> {
                   ),
                   leading: IconButton(
                     
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.of(context).pushReplacementNamed('/home'),
                     icon: Icon(Icons.arrow_back_ios, color: secondaryColor,),
                   ),
                   title: Text(

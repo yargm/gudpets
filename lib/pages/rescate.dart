@@ -120,28 +120,28 @@ class _RescateState extends State<Rescate> {
                         SizedBox(
                           width: 10,
                         ),
-                        IconButton(
-                          icon: Icon(widget.favorito
-                              ? Icons.favorite
-                              : Icons.favorite_border),
-                          iconSize: 30.0,
-                          color: Colors.pink,
-                          onPressed: () {
-                            !widget.favorito
-                                ? _favtrue(widget.favorito, controlador1,
-                                    widget.objeto)
-                                : _favfalse(widget.favorito, controlador1,
-                                    widget.objeto);
+                        // IconButton(
+                        //   icon: Icon(widget.favorito
+                        //       ? Icons.favorite
+                        //       : Icons.favorite_border),
+                        //   iconSize: 30.0,
+                        //   color: Colors.pink,
+                        //   onPressed: () {
+                        //     !widget.favorito
+                        //         ? _favtrue(widget.favorito, controlador1,
+                        //             widget.objeto)
+                        //         : _favfalse(widget.favorito, controlador1,
+                        //             widget.objeto);
 
-                            setState(() {
-                              widget.favorito
-                                  ? widget.favorito = false
-                                  : widget.favorito = true;
-                            });
+                        //     setState(() {
+                        //       widget.favorito
+                        //           ? widget.favorito = false
+                        //           : widget.favorito = true;
+                        //     });
 
-                            print(widget.favorito.toString());
-                          },
-                        ),
+                        //     print(widget.favorito.toString());
+                        //   },
+                        // ),
                         SizedBox(
                           height: 10,
                         )

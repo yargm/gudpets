@@ -169,7 +169,7 @@ class _PerfilState extends State<Perfil> {
                                     controlador1.notify();
                                     await controlador1.usuario.reference
                                         .updateData({
-                                      'descripción': textEditingController.text
+                                      'descripcion': textEditingController.text
                                     });
                                     controlador1.usuario.descripcion =
                                         textEditingController.text;
@@ -660,6 +660,10 @@ class _DialogContentState extends State<DialogContent> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
+        UserBanner(controlador1: controlador1, usuario: controlador1.usuario),
+        Divider(
+          thickness: 1,
+        ),
         Container(
           margin: EdgeInsets.all(15),
           child: ClipRRect(
@@ -903,6 +907,8 @@ class _DialogContentState extends State<DialogContent> {
     return image;
   }
 }
+
+
 
 class DialogChangePhone extends StatefulWidget {
   @override
