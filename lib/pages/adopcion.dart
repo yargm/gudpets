@@ -373,7 +373,7 @@ class _AdopcionState extends State<Adopcion> {
                                           null ||
                                       controlador1.usuario.fotoINERef == null ||
                                       controlador1.usuario.galeriaFotosRefs ==
-                                          null) {
+                                          null || controlador1.usuario.galeriaFotosRefs.isEmpty) {
                                     showDialog(
                                         context: context,
                                         builder: (_) => AlertDialog(
