@@ -322,8 +322,7 @@ class _AdopcionState extends State<Adopcion> {
                 ),
                 ButtonBar(
                   children: <Widget>[
-                    controlador1.usuario.reference.documentID ==
-                            widget.objeto.userId
+                    controlador1.usuario.documentId == widget.objeto.userId
                         ? RaisedButton.icon(
                             icon: Icon(FontAwesomeIcons.userFriends),
                             label: Text('Ver solicitudes'),
@@ -343,14 +342,13 @@ class _AdopcionState extends State<Adopcion> {
                             label: Text('Adoptar'),
                             onPressed: () async {
                               print('boton adoptar');
-                              var query = Firestore.instance
-                                  .collectionGroup('solicitudes')
+                              var query = widget.objeto.reference
+                                  .collection('solicitudes')
                                   .where('userId',
                                       isEqualTo:
                                           controlador1.usuario.documentId)
                                   .getDocuments();
                               query.then((onValue) {
-                                print('query');
                                 if (onValue.documents.isNotEmpty) {
                                   return showDialog(
                                       context: context,
@@ -410,7 +408,7 @@ class _AdopcionState extends State<Adopcion> {
                                         controlador1.usuario.sexo;
                                     form_solicitud['telefono'] =
                                         controlador1.usuario.telefono;
-                                    form_solicitud['documentId'] =
+                                    form_solicitud['userId'] =
                                         controlador1.usuario.documentId;
                                     form_solicitud['referencia'] =
                                         controlador1.usuario.reference;
@@ -448,13 +446,14 @@ class _AdopcionState extends State<Adopcion> {
                                             '¡Tu solicitud fue enviada!',
                                           ),
                                           content: Text(
-                                              'Gracias por enviar tus datos, te notificaremos cuando tu solicitud sea aceptada.',
-                                              ),
+                                            'Gracias por enviar tus datos, te notificaremos cuando tu solicitud sea aceptada.',
+                                          ),
                                           actions: <Widget>[
                                             FlatButton(
                                               child: Text('OK'),
                                               onPressed: () {
-                                                Navigator.popAndPushNamed(context, '/home');
+                                                Navigator.popAndPushNamed(
+                                                    context, '/home');
                                               },
                                             ),
                                           ],

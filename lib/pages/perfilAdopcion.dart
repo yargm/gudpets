@@ -1,6 +1,5 @@
 import 'pages.dart';
 import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/shared/shared.dart';
 import 'package:flutter/material.dart';
 
 class PerfilAdopcion extends StatelessWidget {
@@ -33,12 +32,12 @@ class PerfilAdopcion extends StatelessWidget {
                     child: Stack(
                       children: <Widget>[
                         Hero(
-                          tag: objeto.documentId,
+                          tag: objeto.userId,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(180),
                             child: FadeInImage(
                               fit: BoxFit.cover,
-                              placeholder: AssetImage('assets/perriti_pic.png'),
+                              placeholder: AssetImage('assets/dog.png'),
                               width: 120,
                               height: 120,
                               image: NetworkImage(objeto.foto),
@@ -153,8 +152,7 @@ class PerfilAdopcion extends StatelessWidget {
                                 width: 210,
                                 fit: BoxFit.cover,
                                 image: NetworkImage(objeto.fotoINE ?? ''),
-                                placeholder:
-                                    AssetImage('assets/perriti_pic.png'),
+                                placeholder: AssetImage('assets/dog.png'),
                               ),
                             ],
                           ),
@@ -184,8 +182,7 @@ class PerfilAdopcion extends StatelessWidget {
                                 width: 210,
                                 fit: BoxFit.cover,
                                 image: NetworkImage(objeto.fotoCompDomi ?? ''),
-                                placeholder:
-                                    AssetImage('assets/perriti_pic.png'),
+                                placeholder: AssetImage('assets/dog.png'),
                               ),
                             ],
                           ),
@@ -216,13 +213,6 @@ class PerfilAdopcion extends StatelessWidget {
                           style: TextStyle(fontSize: 25),
                         ),
                         SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Estas fotos son necesarias para realizar un trámite de adopción, y estas fotos deben de mostrar el lugar en donde viviran las mascotas que desees adoptar, estas fotos sirven para comprobar que la mascota tendra un hogar adecuado',
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
                           height: 20,
                         ),
                         GridView.builder(
@@ -244,7 +234,31 @@ class PerfilAdopcion extends StatelessWidget {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    child: Container(),
+                                    child: Card(
+                                      child: Column(
+                                        children: <Widget>[
+                                          SizedBox(height: 15),
+                                          Row(
+                                            children: <Widget>[
+                                              SizedBox(height: 15,),
+                                              CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    objeto.foto),
+                                              ),
+                                              SizedBox(
+                                                height: 40,
+                                              ),
+                                              Text(objeto.nombre)
+                                            ],
+                                          ),
+                                          SizedBox(height: 20,),
+                                          Image(
+                                            image: NetworkImage(
+                                                objeto.galeriaFotos[index]),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 )),
                             child: Image(

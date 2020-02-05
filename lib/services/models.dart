@@ -311,7 +311,7 @@ class SolicitudModel{
   int telefono;
   DocumentReference reference;
   String tipo;
-  String documentId;
+  String userId;
 
   String fotoINE;
   String fotoINERef;
@@ -332,7 +332,7 @@ class SolicitudModel{
       this.sexo,
       this.telefono,
       this.tipo,
-      this.documentId});
+      this.userId});
 
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
@@ -362,7 +362,7 @@ class SolicitudModel{
     telefono = data['telefono'];
     tipo = data['tipo'];
     reference = data.reference;
-    documentId = data.documentID.toString();
+    userId = data['userId'];
     fnacimiento = data['fnacimiento'].toDate();
     fotoStorageRef = data['fotoStorageRef'];
 
