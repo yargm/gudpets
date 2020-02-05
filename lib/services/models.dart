@@ -24,8 +24,6 @@ class UsuarioModel {
   List<dynamic> galeriaFotos;
   List<dynamic> galeriaFotosRefs;
 
-  
-
   UsuarioModel(
       {this.contrasena,
       this.correo,
@@ -299,7 +297,8 @@ class AdopcionModel {
     reference = data.reference;
   }
 }
-class SolicitudModel{
+
+class SolicitudModel {
   String correo;
   String descripcion;
   int edad;
@@ -312,7 +311,6 @@ class SolicitudModel{
   DocumentReference reference;
   String tipo;
   String documentId;
-
   String fotoINE;
   String fotoINERef;
   String fotoCompDomi;
@@ -321,10 +319,11 @@ class SolicitudModel{
   List<dynamic> fotosHogarRefs;
   List<dynamic> galeriaFotos;
   List<dynamic> galeriaFotosRefs;
+  String userIdPub;
+  String tituloPub;
 
   SolicitudModel(
-      {
-      this.correo,
+      {this.correo,
       this.descripcion,
       this.edad,
       this.foto,
@@ -332,7 +331,9 @@ class SolicitudModel{
       this.sexo,
       this.telefono,
       this.tipo,
-      this.documentId});
+      this.documentId,
+      this.userIdPub,
+      this.tituloPub});
 
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
@@ -352,7 +353,6 @@ class SolicitudModel{
   }
 
   SolicitudModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    
     correo = data['correo'];
     descripcion = data['descripcion'];
     edad = calculateAge(data['fnacimiento'].toDate());
@@ -372,9 +372,11 @@ class SolicitudModel{
     fotoINERef = data['fotoINERef'];
     galeriaFotos = data['galeriaFotos'] ?? [];
     galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
+    userIdPub = data['userIdPub'];
+    tituloPub = data['tituloPub'];
   }
-
 }
+
 class AvisoModel {
   String imagen;
   String link;
@@ -384,4 +386,3 @@ class AvisoModel {
     link = data['link'];
   }
 }
-

@@ -362,7 +362,7 @@ class _PublicacionListState extends State<PublicacionList> {
         child: AlertDialog(
           title: Text('Borrarás la publicación'),
           content: Text(
-              'Los datos de esta publicación no podrán restausarse en el futuro'),
+              'Los datos de esta publicación no podrán restaurarse en el futuro'),
           actions: <Widget>[
             FlatButton(
               child: Text('Borrar'),

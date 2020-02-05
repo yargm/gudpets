@@ -147,8 +147,9 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: '* Titulo de la emergencia',
-                  ),
+                      labelText: '* Titulo de la emergencia',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0))),
                 ),
                 SizedBox(
                   height: 15,
@@ -166,8 +167,9 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: '* Desripción',
-                  ),
+                      labelText: '* Desripción',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0))),
                 ),
                 SizedBox(
                   height: 15,

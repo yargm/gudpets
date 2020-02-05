@@ -428,6 +428,10 @@ class _AdopcionState extends State<Adopcion> {
                                         controlador1.usuario.galeriaFotos;
                                     form_solicitud['galeriaFotosRefs'] =
                                         controlador1.usuario.galeriaFotosRefs;
+                                    form_solicitud['userIdPub'] =
+                                        widget.objeto.userId;
+                                    form_solicitud['tituloPub'] =
+                                        widget.objeto.titulo;
 
                                     var agregar = widget.objeto.reference
                                         .collection('solicitudes')
@@ -448,13 +452,14 @@ class _AdopcionState extends State<Adopcion> {
                                             '¡Tu solicitud fue enviada!',
                                           ),
                                           content: Text(
-                                              'Gracias por enviar tus datos, te notificaremos cuando tu solicitud sea aceptada.',
-                                              ),
+                                            'Gracias por enviar tus datos, te notificaremos cuando tu solicitud sea aceptada.',
+                                          ),
                                           actions: <Widget>[
                                             FlatButton(
                                               child: Text('OK'),
                                               onPressed: () {
-                                                Navigator.popAndPushNamed(context, '/home');
+                                                Navigator.popAndPushNamed(
+                                                    context, '/home');
                                               },
                                             ),
                                           ],
