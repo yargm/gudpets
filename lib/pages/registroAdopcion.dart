@@ -388,6 +388,24 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                 ),
                 SizedBox(
                   height: 15,
+
+                ),                
+                //Sexo
+                Text('* Sexo '),
+                RadioButtonGroup(
+                    picked: null,
+                    orientation: GroupedButtonsOrientation.HORIZONTAL,
+                    labels: <String>[
+                      'Macho ',
+                      'Hembra',
+                    ],
+                    onSelected: (String opcion) {
+                      setState(() {
+                        form_adopcion['sexo'] = opcion;
+                      });
+                    }),
+                SizedBox(
+                  height: 15,
                 ),
                 //Guardar
                 Center(

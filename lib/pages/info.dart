@@ -134,13 +134,13 @@ class _InfoState extends State<Info> {
                     Container(
                       width: 40.0,
                       height: 40.0,
-                      child: CircleAvatar(
-                        backgroundImage:
-                            AssetImage('assets/gudpetsfirstNoText.png'),
-                        backgroundColor: Colors.transparent,
+                      child: Image(
+                        image: AssetImage('assets/bulldog.png'),
                       ),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Column(
                       children: <Widget>[
                         Row(
@@ -179,12 +179,13 @@ class _InfoState extends State<Info> {
                     Container(
                       width: 40.0,
                       height: 40.0,
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage('assets/dog.png'),
-                        backgroundColor: Colors.transparent,
+                      child: Image(
+                        image: AssetImage('assets/dog.png'),
                       ),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Column(
                       children: <Widget>[
                         Row(
@@ -222,3 +223,4 @@ class _InfoState extends State<Info> {
     );
   }
 }
+
