@@ -64,8 +64,8 @@ class _AdopcionState extends State<Adopcion> {
                             ),
                             color: Colors.brown[300]),
                         padding: EdgeInsets.all(10.0),
-                        width: widget.objeto.userName.length * 10.5,
-                        height: 40,
+                        width: widget.objeto.userName.length * 11.5,
+                        height: 37,
                         alignment: Alignment.bottomRight,
                         child: Text(
                           widget.objeto.userName,
@@ -109,28 +109,6 @@ class _AdopcionState extends State<Adopcion> {
                           ),
                           SizedBox(
                             width: 10,
-                          ),
-                          IconButton(
-                            icon: Icon(widget.favorito
-                                ? Icons.favorite
-                                : Icons.favorite_border),
-                            iconSize: 30.0,
-                            color: Colors.pink,
-                            onPressed: () {
-                              !widget.favorito
-                                  ? _favtrue(widget.favorito, controlador1,
-                                      widget.objeto)
-                                  : _favfalse(widget.favorito, controlador1,
-                                      widget.objeto);
-
-                              setState(() {
-                                widget.favorito
-                                    ? widget.favorito = false
-                                    : widget.favorito = true;
-                              });
-
-                              print(widget.favorito.toString());
-                            },
                           ),
                           SizedBox(
                             height: 10,
@@ -543,6 +521,16 @@ class _AdopcionState extends State<Adopcion> {
                             }),
                   ],
                 ),
+                widget.objeto.adoptanteNombre != null ? UserBanner(
+                  usuario: UsuarioModel(
+                      foto: widget.objeto.adoptanteFoto ?? '',
+                      nombre: widget.objeto.adoptanteNombre ??'',
+                      correo: widget.objeto.adoptanteCorreo ?? '',
+                      telefono: widget.objeto.adoptanteTelefono ?? 0,
+                      fotoINE: widget.objeto.adoptanteINE ?? ''
+                      ),
+                      extended: true,
+                ) : Container()
               ],
             ),
           ),

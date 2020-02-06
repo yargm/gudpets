@@ -32,7 +32,8 @@ class UsuarioModel {
       this.sexo,
       this.telefono,
       this.tipo,
-      this.documentId});
+      this.documentId,
+      this.fotoINE});
 
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
@@ -255,11 +256,13 @@ class AdopcionModel {
   dynamic fotos;
   String status;
   String adoptanteNombre;
+
   int adoptanteTelefono;
   String adoptanteINE;
   String adoptanteFoto;
   String adoptanteCorreo;
   String adoptanteId;
+
 
   AdopcionModel(
       {this.titulo,
@@ -345,6 +348,7 @@ class AdopcionModel {
       'adoptanteCorreo':adoptanteCorreo,
 
     };
+
   }
 }
 

@@ -9,6 +9,7 @@ class Controller with ChangeNotifier {
   String name = '';
   String email = '';
   String imageUrl= '';
+  String activeToken;
   bool loading = false;
   String sexo;
   String tipo;
@@ -29,6 +30,7 @@ AdopcionModel adopcion;
   storeToken() async {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging();
     firebaseMessaging.getToken().then((value) {
+      activeToken = value;
       usuario.reference.updateData({
         'tokens': FieldValue.arrayUnion([value])
       });
@@ -37,6 +39,10 @@ AdopcionModel adopcion;
 
   signOut() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await googleSignIn.signOut();
+    await usuario.reference.updateData({
+      'tokens' : FieldValue.arrayRemove([activeToken])
+    });
     prefs.clear();
   }
 

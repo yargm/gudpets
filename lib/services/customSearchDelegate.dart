@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'services.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
- 
-
+  String coleccion;
+  CustomSearchDelegate(this.coleccion);
   @override
   var query1 = '';
   List<Widget> buildActions(BuildContext context) {
@@ -13,20 +13,19 @@ class CustomSearchDelegate extends SearchDelegate {
     return [
       IconButton(
         icon: Icon(Icons.tune),
-        onPressed: () => showDialog(
-          context: context,
-          child: DialogBody()
-        ),
+        onPressed: () => showDialog(context: context, child: DialogBody()).whenComplete(() => buildResults(context)),
       ),
     ];
   }
 
   @override
   Widget buildLeading(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
     return IconButton(
       icon: Icon(Icons.arrow_back),
       onPressed: () {
-        close(context, null);
+        controlador1.pestana_act = 0;
+        Navigator.of(context).pushReplacementNamed('/home');
       },
     );
   }
@@ -54,12 +53,19 @@ class CustomSearchDelegate extends SearchDelegate {
 //       .searchBloc
 //     .searchTerm
 //     .add(query);
-
+    var stream = coleccion == 'adopciones' ? Firestore.instance
+          .collection(coleccion).where('tipoAnimal', isEqualTo: controlador1.tipo == null ? null : controlador1.tipo.toLowerCase() )
+          .where('sexo', isEqualTo: controlador1.sexo )
+          .where('titulo',  isGreaterThanOrEqualTo:query).where('status', isEqualTo: 'en adopcion')
+          .snapshots() : Firestore.instance
+          .collection(coleccion).where('tipoAnimal', isEqualTo: controlador1.tipo == null ? null : controlador1.tipo.toLowerCase() )
+          .where('sexo', isEqualTo: controlador1.sexo )
+          .where('titulo',  isGreaterThanOrEqualTo:query)
+          .snapshots();
+    
+    print(query);
     return StreamBuilder(
-      stream: Firestore.instance
-          .collection('adopciones')
-          .where('titulo', isGreaterThanOrEqualTo: query)
-          .snapshots(),
+      stream: stream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator());
@@ -67,7 +73,7 @@ class CustomSearchDelegate extends SearchDelegate {
           return Column(
             children: <Widget>[
               Text(
-                "Usuario no encontrado.",
+                "No hay mascotas con esa caracteristicas.",
               ),
             ],
           );
@@ -79,7 +85,7 @@ class CustomSearchDelegate extends SearchDelegate {
             itemBuilder: (context, index) {
               return ListCard(
                   controlador1: controlador1,
-                  objeto: AdopcionModel.fromDocumentSnapshot(results[index]),
+                  objeto: coleccion == 'adopciones' ? AdopcionModel.fromDocumentSnapshot(results[index]) :PerdidoModel.fromDocumentSnapshot(results[index]),
                   posicion: index);
             },
           );
@@ -96,54 +102,106 @@ class CustomSearchDelegate extends SearchDelegate {
   }
 }
 
-class DialogBody extends StatefulWidget{
+class DialogBody extends StatefulWidget {
   @override
   _DialogBodyState createState() => _DialogBodyState();
 }
 
 class _DialogBodyState extends State<DialogBody> {
-   String dropDownValue = 'Hombre';
+ 
 
   @override
   Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
+    
     // TODO: implement build
     return Dialog(
-              child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(20),
-                child: Column(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Elije tus filtros de búsqueda'),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
                   children: <Widget>[
-                    Text('Elije tus filtros de búsqueda'),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    Text('Sexo:'),
+                    SizedBox(width: 20,),
                     DropdownButton(
-                      value: dropDownValue,
+                      value: controlador1.sexo,
                       onChanged: ((value) {
                         setState(() {
-                          dropDownValue = value;
+                          controlador1.sexo = value;
+                          
                         });
-                        
                       }),
                       items: [
                         DropdownMenuItem(
-                          value: 'Hombre',
-                          child: Text('Hombre'),
+                          value: 'Hembra',
+                          child: Text('Hembra'),
                         ),
                         DropdownMenuItem(
-                          value: 'Hembro',
-                          child: Text('Hembro'),
+                          value: 'Macho',
+                          child: Text('Macho'),
                         )
                       ],
                     ),
-                    IconButton(icon: Icon(Icons.search), onPressed: () => null)
                   ],
                 ),
-              )
-            ],
-          ),);
+                Row(
+                  children: <Widget>[
+                    Text('Tipo:'),
+                    SizedBox(width: 20,),
+                    DropdownButton(
+                      value: controlador1.tipo ,
+                      onChanged: ((value) {
+                        setState(() {
+                        
+                          controlador1.tipo = value;
+
+                        });
+                      }),
+                      items: [
+                        DropdownMenuItem(
+                          value: 'Perro',
+                          child: Text('Perro'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Gato',
+                          child: Text('Gato'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Ave',
+                          child: Text('Ave'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Otro',
+                          child: Text('Otro'),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                RaisedButton(
+                  onPressed: () {
+                  
+                    controlador1.notify();
+                    Navigator.of(context).pop();
+                  },
+
+                  child: Text('Filtrar lista'),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

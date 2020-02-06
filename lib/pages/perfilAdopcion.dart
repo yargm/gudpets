@@ -420,8 +420,8 @@ class DialogBody extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           UserBanner(
-            controlador1: controlador1,
             usuario: objeto,
+            extended: false,
           ),
           Divider(
             thickness: 1,
@@ -431,6 +431,8 @@ class DialogBody extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: FadeInImage(
+                height: 300,
+                fit: BoxFit.fitWidth,
                 image: NetworkImage(foto),
                 placeholder: AssetImage('assets/dog.png'),
                 width: double.maxFinite,

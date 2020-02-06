@@ -50,7 +50,7 @@ class _HomeState extends State<Home> {
           IconButton(onPressed: () {
         showSearch(
           context: context,
-          delegate: CustomSearchDelegate(),
+          delegate: CustomSearchDelegate(controlador1.pestana_act == 0 ? 'adopciones' : controlador1.pestana_act == 1 ? 'perdidos' : ''),
         );
       }, icon: Icon(Icons.search),),
           IconButton(
