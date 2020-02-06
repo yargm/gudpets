@@ -32,16 +32,16 @@ class MyApp extends StatelessWidget {
           indicatorColor: secondaryColor,
           focusColor: secondaryColor,
           hintColor: secondaryColor,
-          inputDecorationTheme: InputDecorationTheme(
-              labelStyle: TextStyle(color: secondaryColor),
-              focusColor: secondaryColor,
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: secondaryColor,
-                  ),
-                  borderRadius: BorderRadius.circular(15)),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
+          // inputDecorationTheme: InputDecorationTheme(
+          //     labelStyle: TextStyle(color: secondaryColor),
+          //     focusColor: secondaryColor,
+          //     focusedBorder: OutlineInputBorder(
+          //         borderSide: BorderSide(
+          //           color: secondaryColor,
+          //         ),
+          //         borderRadius: BorderRadius.circular(15)),
+          //     border:
+          //         OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
 
           //botones
           buttonTheme: ButtonThemeData(

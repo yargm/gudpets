@@ -262,8 +262,7 @@ class _PerfilState extends State<Perfil> {
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
                                     controlador1.usuario.fotoINE ?? ''),
-                                placeholder:
-                                    AssetImage('assets/dog.png'),
+                                placeholder: AssetImage('assets/dog.png'),
                               ),
                               CircleAvatar(
                                 backgroundColor: secondaryColor,
@@ -325,8 +324,7 @@ class _PerfilState extends State<Perfil> {
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
                                     controlador1.usuario.fotoCompDomi ?? ''),
-                                placeholder:
-                                    AssetImage('assets/dog.png'),
+                                placeholder: AssetImage('assets/dog.png'),
                               ),
                               CircleAvatar(
                                 backgroundColor: secondaryColor,
@@ -366,9 +364,10 @@ class _PerfilState extends State<Perfil> {
                               ? '* No cuentas con foto de tu comprobante de domicilio y es necesaria para realizar un trámite de adopción'
                               : 'Foto Comprobante de domicilio',
                           style: TextStyle(
-                              fontWeight: controlador1.usuario.fotoCompDomi== null
-                                  ? FontWeight.bold
-                                  : null),
+                              fontWeight:
+                                  controlador1.usuario.fotoCompDomi == null
+                                      ? FontWeight.bold
+                                      : null),
                         ))
                       ],
                     ),
@@ -660,7 +659,10 @@ class _DialogContentState extends State<DialogContent> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        UserBanner(controlador1: controlador1, usuario: controlador1.usuario),
+        UserBanner(
+          usuario: controlador1.usuario,
+          extended: false,
+        ),
         Divider(
           thickness: 1,
         ),
@@ -765,19 +767,13 @@ class _DialogContentState extends State<DialogContent> {
 
                               if ((widget.foto == 'PP'
                                       ? controlador1.usuario.fotoStorageRef
-                                      : widget.foto == 'INE'
-                                          ? controlador1.usuario.fotoINERef
-                                          : controlador1
-                                              .usuario.fotoCompDomiRef) !=
-                                  null) {
+                                      : controlador1.usuario.fotoCompDomiRef) !=
+                                  null && widget.foto != 'INE') {
                                 await FirebaseStorage.instance
                                     .ref()
                                     .child((widget.foto == 'PP'
                                         ? controlador1.usuario.fotoStorageRef
-                                        : widget.foto == 'INE'
-                                            ? controlador1.usuario.fotoINERef
-                                            : controlador1
-                                                .usuario.fotoCompDomiRef))
+                                        : controlador1.usuario.fotoCompDomiRef))
                                     .delete()
                                     .catchError((onError) {
                                   print(onError);
@@ -858,19 +854,17 @@ class _DialogContentState extends State<DialogContent> {
                     'galeriaFotosRefs': FieldValue.arrayRemove(
                         [controlador1.usuario.galeriaFotosRefs[widget.index]])
                   });
-                    List<dynamic> urls =
-                            controlador1.usuario.galeriaFotos.toList();
-                        List<dynamic> refs =
-                            controlador1.usuario.galeriaFotosRefs.toList();
+                  List<dynamic> urls =
+                      controlador1.usuario.galeriaFotos.toList();
+                  List<dynamic> refs =
+                      controlador1.usuario.galeriaFotosRefs.toList();
                   urls.removeAt(widget.index);
                   refs.removeAt(widget.index);
 
                   controlador1.usuario.galeriaFotos = urls;
                   controlador1.usuario.galeriaFotosRefs = refs;
                   controlador1.loading = false;
-                  setState(() {
-                    
-                  });
+                  setState(() {});
                   controlador1.notify();
                   Navigator.of(context).pop();
                 },
@@ -907,8 +901,6 @@ class _DialogContentState extends State<DialogContent> {
     return image;
   }
 }
-
-
 
 class DialogChangePhone extends StatefulWidget {
   @override
