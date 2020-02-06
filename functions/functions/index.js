@@ -129,6 +129,47 @@ exports.nuevaSolicitud = functions.firestore.document('adopciones/{adopcion}/sol
     })
 })
 
+exports.nuevaSolicitud = functions.firestore.document('adopciones/{adopcion}'
+).onUpdate((snapshot, context) => {
+    var adopcionData = snapshot.data();
+    var listaTokens = [];
+
+    admin.firestore().collection('usuarios').doc(adopcionData.adoptanteId).get().then((snapshot) => {
+        var usuario = snapshot;
+        if (usuario.data().tokens != undefined) {
+            console.log('tokens definido');
+            if (usuario.data().tokens != null) {
+                console.log('tokens no nulo');
+                for (var token of usuario.data().tokens) {
+                    console.log('adding token');
+                    listaTokens.push(token);
+                }
+            }
+        }
+
+
+
+        var payload = {
+            "notification": {
+                "title": "¡Felicitaciones!",
+                "body": "Fuiste aceptado como adoptante en la publicación " + adopcionData.titulo + ". Revisa la lista Mis adopciones en el menú principal.",
+                "sound": "default"
+            },
+            "data": {
+                "sendername": adopcionData.adoptanteNombre,
+                "message": adopcionData.adoptanteNombre,
+            }
+        }
+
+        return admin.messaging().sendToDevice(listaTokens, payload).then((response) => {
+            console.log('Se enviaron todas las notificaciones');
+
+        }).catch((err) => {
+            console.log(err);
+        });
+    })
+})
+
 
 
 exports.nuevoPerdido = functions.firestore.document('/perdidos/{perdido}'

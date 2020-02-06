@@ -69,6 +69,15 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            title: Text('Mis adopciones'),
+            leading: Icon(
+              FontAwesomeIcons.paw,
+            ),
+            onTap: () {
+              Navigator.of(context).pushNamed('/adoptadosList');
+            },
+          ),
+          ListTile(
             title: Text('Información'),
             leading: Icon(
               Icons.info,
