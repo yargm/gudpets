@@ -68,7 +68,7 @@ exports.nuevaSolicitud = functions.firestore.document('adopciones/{adopcion}/sol
         var payload = {
             "notification": {
                 "title": "Nueva solicitud de adopción",
-                "body": solicitudData.nombre + " quiere adoptar en tu publicación" + solicitudData.tituloPub,
+                "body": solicitudData.nombre + " quiere adoptar en tu publicación " + solicitudData.tituloPub,
                 "sound": "default"
             },
             "data": {
@@ -190,10 +190,10 @@ exports.adopcionEliminada = functions.firestore.document('/adopciones/{adopcion}
     var adopcionID = snapshot.id;
 
 
-    admin.firestore().collection('adopciones').doc(adopcionData.id).collection('solicitudes').get().then((snapshot) => {
+    admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').get().then((snapshot) => {
         for(var solicitud of snapshot.docs){
-            var data = solicitud.data();
-            admin.firestore().collection('adopciones').doc(adopcionData.id).collection('solicitudes').doc(data.id).delete().then(() =>{
+            var data = solicitud.id;
+            admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').doc(data).delete().then(() =>{
                 console.log('documento in subcollection eliminado');
             })
         }

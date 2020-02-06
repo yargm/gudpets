@@ -44,15 +44,20 @@ class _FavoritosListState extends State<FavoritosList> {
                 ListTile(
                   trailing: Hero(
                     tag: 'favoritos',
-                                      child: Icon(
+                    child: Icon(
                       Icons.favorite,
                       color: Colors.pink,
                     ),
                   ),
                   leading: IconButton(
-                    
-                    onPressed: () => Navigator.of(context).pushReplacementNamed('/home'),
-                    icon: Icon(Icons.arrow_back_ios, color: secondaryColor,),
+                    onPressed: () {
+                      controlador1.pestana_act = 0;
+                      Navigator.of(context).pushReplacementNamed('/home');
+                    },
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: secondaryColor,
+                    ),
                   ),
                   title: Text(
                     'Tus Favoritos',
@@ -64,7 +69,7 @@ class _FavoritosListState extends State<FavoritosList> {
                   builder: (context, snapshot) {
                     if (!snapshot.hasData)
                       return const CircularProgressIndicator();
-                   
+
                     return ListView(
                       physics:
                           ScrollPhysics(parent: NeverScrollableScrollPhysics()),

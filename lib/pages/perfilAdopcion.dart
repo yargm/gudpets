@@ -333,6 +333,8 @@ class DialogBody extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: FadeInImage(
+                height: 300,
+                fit: BoxFit.fitWidth,
                 image: NetworkImage(foto),
                 placeholder: AssetImage('assets/dog.png'),
                 width: double.maxFinite,
