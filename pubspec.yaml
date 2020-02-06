@@ -42,6 +42,7 @@ dependencies:
   multi_image_picker: ^4.6.1
   firebase_messaging: ^6.0.9
   flutter_launcher_icons: "^0.7.3"
+  permission_handler: ^4.2.0+hotfix.3
   
 
 

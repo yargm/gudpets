@@ -9,7 +9,7 @@ exports.nuevaEmergencia = functions.firestore.document('/emergencias/{emergencia
     var listaTokens = [];
 
     admin.firestore().collection('usuarios').get().then((snapshot) => {
-        
+
         var listaUsuarios = snapshot.docs;
         for (var usuario of listaUsuarios) {
             if (usuario.data().tokens != undefined) {
@@ -44,6 +44,49 @@ exports.nuevaEmergencia = functions.firestore.document('/emergencias/{emergencia
         });
     })
 })
+
+exports.nuevoAviso = functions.firestore.document('/avisos/{aviso}'
+).onCreate((snapshot, context) => {
+    var avisoData = snapshot.data();
+    var listaTokens = [];
+
+    admin.firestore().collection('usuarios').get().then((snapshot) => {
+
+        var listaUsuarios = snapshot.docs;
+        for (var usuario of listaUsuarios) {
+            if (usuario.data().tokens != undefined) {
+                console.log('tokens definido');
+                if (usuario.data().tokens != null) {
+                    console.log('tokens no nulo');
+                    for (var token of usuario.data().tokens) {
+                        console.log('adding token');
+                        listaTokens.push(token);
+                    }
+                }
+            }
+
+        }
+        var payload = {
+            "notification": {
+                "title": "¡Nuevo aviso!",
+                "body": 'Hay un nuevo aviso que podría interesarte.',
+                "sound": "default"
+            },
+            "data": {
+                "sendername": 'aviso',
+                "message": 'idk',
+            }
+        }
+
+        return admin.messaging().sendToDevice(listaTokens, payload).then((response) => {
+            console.log('Se enviaron todas las notificaciones');
+
+        }).catch((err) => {
+            console.log(err);
+        });
+    })
+})
+
 
 exports.nuevaSolicitud = functions.firestore.document('adopciones/{adopcion}/solicitudes/{solicitud}'
 ).onCreate((snapshot, context) => {
@@ -191,9 +234,15 @@ exports.adopcionEliminada = functions.firestore.document('/adopciones/{adopcion}
 
 
     admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').get().then((snapshot) => {
+<<<<<<< HEAD
         for(var solicitud of snapshot.docs){
             var data = solicitud.id;
             admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').doc(data).delete().then(() =>{
+=======
+        for (var solicitud of snapshot.docs) {
+            var data = solicitud.id;
+            admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').doc(data).delete().then(() => {
+>>>>>>> 653958406eb014fa3fc044cb601799e37ca62ca9
                 console.log('documento in subcollection eliminado');
             })
         }
