@@ -447,6 +447,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                 form_adopcion['reffoto'] = fotoref;
                                 form_adopcion['userId'] =
                                     controlador1.usuario.documentId;
+                                form_adopcion['status'] = 'en adopcion';
                               });
                             } else {
                               setState(() {

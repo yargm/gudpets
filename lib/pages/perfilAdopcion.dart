@@ -104,7 +104,12 @@ class PerfilAdopcion extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  Text('Información básica'),
+                  Text(
+                    'Información básica',
+                    style: TextStyle(
+                      fontSize: 25,
+                    ),
+                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -282,7 +287,108 @@ class PerfilAdopcion extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
+                  ),
+                  Divider(
+                    endIndent: 20,
+                    indent: 20,
+                    thickness: 1,
+                  ),
+                  Text('¿Deseas que esta persona adopte a tu mascota?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 20)),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: RaisedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("¿Estas seguro de esta decisión?"),
+                              content: Text(
+                                  "Una vez que aceptes a este usuario tu publicación en la sección de Adopción desaparecerá y no podrá ser restablecida. Esta decisión es muy importante tanto para ti como para la mascota. Recuerda que es tu responsabilidad verificar que esta persona cumpla con todo los requisitos necesarios que conlleva una adopción. Para confirmar da click sobre el botón Aceptar."),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text("CANCELAR"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text("ACEPTAR"),
+                                  onPressed: () async {
+                                    await controlador1.adopcion.reference
+                                        .updateData({
+                                      'status': 'adoptado',
+                                      'adoptanteNombre': objeto.nombre,
+                                      'adoptanteINE': objeto.fotoINE,
+                                      'adoptanteCorreo': objeto.correo,
+                                      'adoptanteFoto': objeto.foto,
+                                      'adoptanteTelefono': objeto.telefono,
+                                      'adoptanteId': objeto.userId
+                                    });
+
+                                    controlador1.adopcion.adoptanteNombre =
+                                        controlador1.usuario.nombre;
+                                    controlador1.adopcion.adoptanteTelefono =
+                                        controlador1.usuario.telefono;
+                                    controlador1.adopcion.adoptanteCorreo =
+                                        controlador1.usuario.correo;
+                                    controlador1.adopcion.adoptanteFoto =
+                                        controlador1.usuario.foto;
+                                    controlador1.adopcion.adoptanteINE =
+                                        controlador1.usuario.fotoINE;
+                                    controlador1.adopcion.adoptanteId =
+                                        controlador1.usuario.documentId;
+                                    await Firestore.instance
+                                        .collection('usuarios')
+                                        .document(objeto.userId)
+                                        .collection('adoptados')
+                                        .add(controlador1.adopcion.toMap());
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        child: WillPopScope(
+                                            onWillPop: () async {
+                                              return false;
+                                            },
+                                            child: AlertDialog(
+                                              title: Text('Proceso concluido ',
+                                                  style: TextStyle(
+                                                      color: Colors.red)),
+                                              content: Text(
+                                                  'El proceso de Adopción se completó con éxito',
+                                                  style:
+                                                      TextStyle(fontSize: 20)),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                    child: Text('OK'),
+                                                    onPressed: () {
+                                                      Navigator
+                                                          .pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                Home()),
+                                                        ModalRoute.withName(
+                                                            '/home'),
+                                                      );
+                                                    })
+                                              ],
+                                            )));
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Text('Aceptar'),
+                    ),
+                  ),
                 ],
               ),
             )

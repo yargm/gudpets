@@ -48,8 +48,9 @@ class _SolicitudAdopcionState extends State<SolicitudAdopcion> {
                           ScrollPhysics(parent: NeverScrollableScrollPhysics()),
                       shrinkWrap: true,
                       itemBuilder: (contex, index) => SolicitudAdopcionVista(
-                          objeto: SolicitudModel.fromDocumentSnapshot(
-                              snapshot.data.documents[index])),
+                        objeto: SolicitudModel.fromDocumentSnapshot(
+                            snapshot.data.documents[index]),                        
+                      ),
                       itemCount: snapshot.data.documents.length,
                     );
                   },
