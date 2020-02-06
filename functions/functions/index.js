@@ -234,15 +234,9 @@ exports.adopcionEliminada = functions.firestore.document('/adopciones/{adopcion}
 
 
     admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').get().then((snapshot) => {
-<<<<<<< HEAD
         for(var solicitud of snapshot.docs){
             var data = solicitud.id;
             admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').doc(data).delete().then(() =>{
-=======
-        for (var solicitud of snapshot.docs) {
-            var data = solicitud.id;
-            admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').doc(data).delete().then(() => {
->>>>>>> 653958406eb014fa3fc044cb601799e37ca62ca9
                 console.log('documento in subcollection eliminado');
             })
         }

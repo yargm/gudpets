@@ -53,14 +53,19 @@ class CustomSearchDelegate extends SearchDelegate {
 //       .searchBloc
 //     .searchTerm
 //     .add(query);
-    
-    print(query);
-    return StreamBuilder(
-      stream: Firestore.instance
+    var stream = coleccion == 'adopciones' ? Firestore.instance
+          .collection(coleccion).where('tipoAnimal', isEqualTo: controlador1.tipo == null ? null : controlador1.tipo.toLowerCase() )
+          .where('sexo', isEqualTo: controlador1.sexo )
+          .where('titulo',  isGreaterThanOrEqualTo:query).where('status', isEqualTo: 'en adopcion')
+          .snapshots() : Firestore.instance
           .collection(coleccion).where('tipoAnimal', isEqualTo: controlador1.tipo == null ? null : controlador1.tipo.toLowerCase() )
           .where('sexo', isEqualTo: controlador1.sexo )
           .where('titulo',  isGreaterThanOrEqualTo:query)
-          .snapshots(),
+          .snapshots();
+    
+    print(query);
+    return StreamBuilder(
+      stream: stream,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator());

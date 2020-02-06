@@ -32,7 +32,6 @@ class PerfilAdopcion extends StatelessWidget {
                     width: 140,
                     child: Stack(
                       children: <Widget>[
-
                         GestureDetector(
                           onTap: () => showDialog(
                             context: context,
@@ -54,7 +53,6 @@ class PerfilAdopcion extends StatelessWidget {
                                 height: 120,
                                 image: NetworkImage(objeto.foto),
                               ),
-
                             ),
                           ),
                         ),
@@ -152,7 +150,6 @@ class PerfilAdopcion extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-
                   GestureDetector(
                     onTap: () => showDialog(
                       context: context,
@@ -181,7 +178,6 @@ class PerfilAdopcion extends StatelessWidget {
                                 ),
                               ],
                             ),
-
                           ),
                           SizedBox(
                             width: 20,
@@ -195,7 +191,6 @@ class PerfilAdopcion extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   GestureDetector(
                     onTap: () => showDialog(
                       context: context,
@@ -225,7 +220,6 @@ class PerfilAdopcion extends StatelessWidget {
                                 ),
                               ],
                             ),
-
                           ),
                           SizedBox(
                             width: 20,
@@ -267,12 +261,10 @@ class PerfilAdopcion extends StatelessWidget {
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () => showDialog(
                                 context: context,
-
                                 child: DialogBody(
                                   controlador1: controlador1,
                                   objeto: objeto,
                                   foto: objeto.galeriaFotos[index],
-
                                 )),
                             child: Image(
                               image: NetworkImage(
@@ -322,8 +314,8 @@ class DialogBody extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           UserBanner(
-            controlador1: controlador1,
             usuario: objeto,
+            extended: false,
           ),
           Divider(
             thickness: 1,
