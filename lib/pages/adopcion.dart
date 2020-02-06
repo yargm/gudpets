@@ -20,6 +20,7 @@ class _AdopcionState extends State<Adopcion> {
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
+    controlador1.adopcion = widget.objeto;
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
@@ -357,23 +358,24 @@ class _AdopcionState extends State<Adopcion> {
                                             content: Text(
                                                 'Ya te encuentras postulado'),
                                             actions: <Widget>[
-                                              RaisedButton(
+                                              FlatButton(
                                                 onPressed: () {
                                                   return Navigator.of(context)
                                                       .pop();
                                                 },
-                                                child: Text('Cerrar'),
+                                                child: Text('CERRAR'),
                                               )
                                             ],
                                           ));
                                 } else {
                                   print('boton para adoptar');
-                                  if (
-                                      controlador1.usuario.fotoCompDomiRef ==
+                                  if (controlador1.usuario.fotoCompDomiRef ==
                                           null ||
                                       controlador1.usuario.fotoINERef == null ||
                                       controlador1.usuario.galeriaFotosRefs ==
-                                          null || controlador1.usuario.galeriaFotosRefs.isEmpty) {
+                                          null ||
+                                      controlador1
+                                          .usuario.galeriaFotosRefs.isEmpty) {
                                     showDialog(
                                         context: context,
                                         builder: (_) => AlertDialog(
@@ -382,87 +384,159 @@ class _AdopcionState extends State<Adopcion> {
                                               content: Text(
                                                   'Para postularte es necesario completar tu información.'),
                                               actions: <Widget>[
-                                                RaisedButton(
+                                                FlatButton(
                                                   onPressed: () {
                                                     return Navigator.of(context)
                                                         .pushNamed('/perfil');
                                                   },
-                                                  child: Text('Ir a perfil'),
+                                                  child: Text('IR A PERFIL'),
                                                 )
                                               ],
                                             ));
                                   } else {
-                                    print('solicitud valida');
-                                    form_solicitud['correo'] =
-                                        controlador1.usuario.correo;
-                                    form_solicitud['descripcion'] =
-                                        controlador1.usuario.descripcion;
-                                    form_solicitud['fnacimiento'] =
-                                        controlador1.usuario.fnacimiento;
-                                    form_solicitud['foto'] =
-                                        controlador1.usuario.foto;
-                                    form_solicitud['nombre'] =
-                                        controlador1.usuario.nombre;
-                                    form_solicitud['sexo'] =
-                                        controlador1.usuario.sexo;
-                                    form_solicitud['telefono'] =
-                                        controlador1.usuario.telefono;
-                                    form_solicitud['userId'] =
-                                        controlador1.usuario.documentId;
-                                    form_solicitud['referencia'] =
-                                        controlador1.usuario.reference;
-                                    form_solicitud['fotoStorageRef'] =
-                                        controlador1.usuario.fotoStorageRef;
-                                    form_solicitud['fotoCompDomi'] =
-                                        controlador1.usuario.fotoCompDomi;
-                                    form_solicitud['fotoCompDomiRef'] =
-                                        controlador1.usuario.fotoCompDomiRef;
-                                    form_solicitud['fotoINE'] =
-                                        controlador1.usuario.fotoINE;
-                                    form_solicitud['fotoINERef'] =
-                                        controlador1.usuario.fotoINERef;
-                                    form_solicitud['galeriaFotos'] =
-                                        controlador1.usuario.galeriaFotos;
-                                    form_solicitud['galeriaFotosRefs'] =
-                                        controlador1.usuario.galeriaFotosRefs;
-                                    form_solicitud['userIdPub'] =
-                                        widget.objeto.userId;
-                                    form_solicitud['tituloPub'] =
-                                        widget.objeto.titulo;
-
-                                    var agregar = widget.objeto.reference
-                                        .collection('solicitudes')
-                                        .add(form_solicitud)
-                                        .then((value) {
-                                      if (value != null) {
-                                        return true;
-                                      } else {
-                                        return false;
-                                      }
-                                    });
-                                    if (agregar != null) {
-                                      showDialog(
-                                        barrierDismissible: false,
+                                    showDialog(
                                         context: context,
-                                        child: AlertDialog(
-                                          title: Text(
-                                            '¡Tu solicitud fue enviada!',
-                                          ),
-                                          content: Text(
-                                            'Gracias por enviar tus datos, te notificaremos cuando tu solicitud sea aceptada.',
-                                          ),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              child: Text('OK'),
-                                              onPressed: () {
-                                                Navigator.popAndPushNamed(
-                                                    context, '/home');
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
+                                        builder: (_) => AlertDialog(
+                                              title: Text(
+                                                  'Al solicitar una adopción de esta mascota aceptas lo siguiente:',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                                              content: SingleChildScrollView(
+                                                child: Text(
+                                                    '''1. No tendrás a la mascota aislada, ya sea en azoteas, balcones, patios o para cuidar establecimientos. La mascota requiere de un ambiente familiar.
+
+                                                      2. No mutilar cola u orejas de la mascota.
+
+                                                      3. Todos en el hogar en el que la mascota vivirá deben estar de acuerdo con su adopción. 
+
+                                                      4. La mascota no es un objeto, no puedes regalarla o venderla a terceras personas.
+
+                                                      5. La convivencia de la mascota con menores de edad siempre debe ser supervisada por un adulto. 
+
+                                                      6. Es obligatorio continuar con el cuadro médico de la mascota, esto incluye desparacitación, vacunación y esterilización. 
+
+                                                      7. No adopte con fines reproductivos o de venta, no lucre con la vida de un animal. 
+
+                                                      8. En caso de que el actual poseedor de la mascota considere necesario, este puede hacer visitas de rutina a su nuevo hogar para supervisar el progreso o adaptación de este.
+
+                                                      Por favor, adopta con amor, paciencia y responsabilidad. Tener una mascota es un compromiso a largo plazo que requiere tiempo, dinero y esfuerzo.'''),
+                                              ),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  onPressed: () {
+                                                    return Navigator.of(context)
+                                                        .pop();
+                                                  },
+                                                  child: Text('CANCELAR'),
+                                                ),
+                                                FlatButton(
+                                                  onPressed: () {
+                                                    print('solicitud valida');
+                                                    form_solicitud['correo'] =
+                                                        controlador1
+                                                            .usuario.correo;
+                                                    form_solicitud[
+                                                            'descripcion'] =
+                                                        controlador1.usuario
+                                                            .descripcion;
+                                                    form_solicitud[
+                                                            'fnacimiento'] =
+                                                        controlador1.usuario
+                                                            .fnacimiento;
+                                                    form_solicitud['foto'] =
+                                                        controlador1
+                                                            .usuario.foto;
+                                                    form_solicitud['nombre'] =
+                                                        controlador1
+                                                            .usuario.nombre;
+                                                    form_solicitud['sexo'] =
+                                                        controlador1
+                                                            .usuario.sexo;
+                                                    form_solicitud['telefono'] =
+                                                        controlador1
+                                                            .usuario.telefono;
+                                                    form_solicitud['userId'] =
+                                                        controlador1
+                                                            .usuario.documentId;
+                                                    form_solicitud[
+                                                            'referencia'] =
+                                                        controlador1
+                                                            .usuario.reference;
+                                                    form_solicitud[
+                                                            'fotoStorageRef'] =
+                                                        controlador1.usuario
+                                                            .fotoStorageRef;
+                                                    form_solicitud[
+                                                            'fotoCompDomi'] =
+                                                        controlador1.usuario
+                                                            .fotoCompDomi;
+                                                    form_solicitud[
+                                                            'fotoCompDomiRef'] =
+                                                        controlador1.usuario
+                                                            .fotoCompDomiRef;
+                                                    form_solicitud['fotoINE'] =
+                                                        controlador1
+                                                            .usuario.fotoINE;
+                                                    form_solicitud[
+                                                            'fotoINERef'] =
+                                                        controlador1
+                                                            .usuario.fotoINERef;
+                                                    form_solicitud[
+                                                            'galeriaFotos'] =
+                                                        controlador1.usuario
+                                                            .galeriaFotos;
+                                                    form_solicitud[
+                                                            'galeriaFotosRefs'] =
+                                                        controlador1.usuario
+                                                            .galeriaFotosRefs;
+                                                    form_solicitud[
+                                                            'userIdPub'] =
+                                                        widget.objeto.userId;
+                                                    form_solicitud[
+                                                            'tituloPub'] =
+                                                        widget.objeto.titulo;
+
+                                                    var agregar = widget
+                                                        .objeto.reference
+                                                        .collection(
+                                                            'solicitudes')
+                                                        .add(form_solicitud)
+                                                        .then((value) {
+                                                      if (value != null) {
+                                                        return true;
+                                                      } else {
+                                                        return false;
+                                                      }
+                                                    });
+                                                    if (agregar != null) {
+                                                      showDialog(
+                                                        barrierDismissible:
+                                                            false,
+                                                        context: context,
+                                                        child: AlertDialog(
+                                                          title: Text(
+                                                            '¡Tu solicitud fue enviada!',
+                                                          ),
+                                                          content: Text(
+                                                            'Gracias por enviar tus datos, te notificaremos cuando tu solicitud sea aceptada.',
+                                                          ),
+                                                          actions: <Widget>[
+                                                            FlatButton(
+                                                              child: Text('OK'),
+                                                              onPressed: () {
+                                                                Navigator
+                                                                    .popAndPushNamed(
+                                                                        context,
+                                                                        '/home');
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  child: Text('ACEPTAR'),
+                                                ),
+                                              ],
+                                            ));
                                   }
                                 }
                               });

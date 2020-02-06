@@ -24,6 +24,8 @@ class Controller with ChangeNotifier {
     notifyListeners();
   }
 
+AdopcionModel adopcion;
+
   storeToken() async {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging();
     firebaseMessaging.getToken().then((value) {

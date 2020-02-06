@@ -7,6 +7,7 @@ import 'package:adoption_app/shared/shared.dart';
 class SolicitudAdopcionVista extends StatefulWidget {
   final SolicitudModel objeto;
 
+
   SolicitudAdopcionVista({this.objeto});
 
   @override

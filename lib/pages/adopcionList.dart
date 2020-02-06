@@ -9,7 +9,7 @@ class AdopcionList extends StatefulWidget {
 }
 
 class _AdopcionListState extends State<AdopcionList> {
-  var adopciones = Firestore.instance.collection('adopciones').snapshots();
+  var adopciones = Firestore.instance.collection('adopciones').where('status',isEqualTo: 'en adopcion' ).snapshots();
 
   @override
   Widget build(BuildContext context) {

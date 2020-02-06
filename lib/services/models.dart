@@ -253,6 +253,13 @@ class AdopcionModel {
   dynamic albumrefs;
   String reffoto;
   dynamic fotos;
+  String status;
+  String adoptanteNombre;
+  int adoptanteTelefono;
+  String adoptanteINE;
+  String adoptanteFoto;
+  String adoptanteCorreo;
+  String adoptanteId;
 
   AdopcionModel(
       {this.titulo,
@@ -271,7 +278,13 @@ class AdopcionModel {
       this.userId,
       this.albumrefs,
       this.reffoto,
-      this.fotos});
+      this.fotos, 
+      this.status,
+      this.adoptanteNombre,
+      this.adoptanteINE,
+      this.adoptanteFoto,
+      this.adoptanteTelefono,
+      this.adoptanteId, this.adoptanteCorreo});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -293,6 +306,45 @@ class AdopcionModel {
     userId = data['userId'];
     documentId = data.documentID.toString();
     reference = data.reference;
+    status = data['status'];
+    adoptanteNombre = data['adoptanteNombre'];
+    adoptanteINE = data['adoptanteINE'];
+    adoptanteTelefono = data['adoptanteTelefono'];
+    adoptanteId = data['adoptanteId'];
+    adoptanteFoto =data['adoptanteFoto'];
+    adoptanteCorreo =data['adoptanteCorreo'];
+  }
+
+  Map<String,dynamic> toMap(){
+    return {
+      'titulo' : titulo,
+      'userName' : userName,
+      'favoritos':favoritos,
+      'descripcion':descripcion,
+      'tipoAnimal':tipoAnimal,
+      'foto':foto,
+      'sexo':sexo,
+      'edad':edad,
+      'fecha': fecha,
+      'fotos': fotos,
+      'albumrefs':albumrefs,
+      'reffoto':reffoto,
+      'esterilizacion':esterilizacion,
+      'vacunacion': vacunacion,
+      'desparacitacion':desparacitacion,
+      'convivenciaotros':convivenciaotros,
+      'userId':userId,
+      'documentId':documentId,
+      'reference':reference,
+      'status':status,
+      'adoptanteNombre': adoptanteNombre,
+      'adoptanteINE': adoptanteINE,
+      'adoptanteTelefono': adoptanteTelefono,
+      'adoptanteId': adoptanteId,
+      'adoptanteFoto':adoptanteFoto,
+      'adoptanteCorreo':adoptanteCorreo,
+
+    };
   }
 }
 
