@@ -188,7 +188,7 @@ exports.adopcionEliminada = functions.firestore.document('/adopciones/{adopcion}
 ).onDelete((snapshot, context) => {
     var adopcionData = snapshot.data();
     var adopcionID = snapshot.id;
-<<<<<<< HEAD
+
 
     admin.firestore().collection('adopciones').doc(adopcionData.id).collection('solicitudes').get().then((snapshot) => {
         for(var solicitud of snapshot.docs){
@@ -198,8 +198,7 @@ exports.adopcionEliminada = functions.firestore.document('/adopciones/{adopcion}
             })
         }
     })
-=======
->>>>>>> 0fd11a43df2e424eb8b58faddf8c55b3f2699875
+
 
     admin.firestore().collection('usuarios').get().then((snapshot) => {
         var listaUsuarios = snapshot.docs;
