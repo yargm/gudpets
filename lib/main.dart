@@ -86,9 +86,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         initialRoute: '/login',
-        home: Home(
-          controlador1: controller,
-        ),
+        // home: Home(
+        //   controlador1: controller,
+        // ),
         routes: {
           '/login': (BuildContext context) => LogIn(),
           '/registro_usuario': (BuildContext context) => RegistroUsuario(),

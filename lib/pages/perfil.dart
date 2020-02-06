@@ -362,11 +362,11 @@ class _PerfilState extends State<Perfil> {
                         ),
                         Expanded(
                             child: Text(
-                          controlador1.usuario.fotoINE == null
+                          controlador1.usuario.fotoCompDomi == null
                               ? '* No cuentas con foto de tu comprobante de domicilio y es necesaria para realizar un trámite de adopción'
                               : 'Foto Comprobante de domicilio',
                           style: TextStyle(
-                              fontWeight: controlador1.usuario.fotoINE == null
+                              fontWeight: controlador1.usuario.fotoCompDomi== null
                                   ? FontWeight.bold
                                   : null),
                         ))

@@ -1,7 +1,7 @@
 import 'pages.dart';
 import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/shared/shared.dart';
 import 'package:flutter/material.dart';
+import 'package:adoption_app/shared/shared.dart';
 
 class PerfilAdopcion extends StatelessWidget {
   final SolicitudModel objeto;
@@ -32,6 +32,7 @@ class PerfilAdopcion extends StatelessWidget {
                     width: 140,
                     child: Stack(
                       children: <Widget>[
+
                         GestureDetector(
                           onTap: () => showDialog(
                             context: context,
@@ -42,7 +43,7 @@ class PerfilAdopcion extends StatelessWidget {
                             ),
                           ),
                           child: Hero(
-                            tag: objeto.documentId,
+                            tag: objeto.userId,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(180),
                               child: FadeInImage(
@@ -53,6 +54,7 @@ class PerfilAdopcion extends StatelessWidget {
                                 height: 120,
                                 image: NetworkImage(objeto.foto),
                               ),
+
                             ),
                           ),
                         ),
@@ -150,6 +152,7 @@ class PerfilAdopcion extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
+
                   GestureDetector(
                     onTap: () => showDialog(
                       context: context,
@@ -178,6 +181,7 @@ class PerfilAdopcion extends StatelessWidget {
                                 ),
                               ],
                             ),
+
                           ),
                           SizedBox(
                             width: 20,
@@ -191,6 +195,7 @@ class PerfilAdopcion extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   GestureDetector(
                     onTap: () => showDialog(
                       context: context,
@@ -220,6 +225,7 @@ class PerfilAdopcion extends StatelessWidget {
                                 ),
                               ],
                             ),
+
                           ),
                           SizedBox(
                             width: 20,
@@ -248,13 +254,6 @@ class PerfilAdopcion extends StatelessWidget {
                           style: TextStyle(fontSize: 25),
                         ),
                         SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Estas fotos son necesarias para realizar un trámite de adopción, y estas fotos deben de mostrar el lugar en donde viviran las mascotas que desees adoptar, estas fotos sirven para comprobar que la mascota tendra un hogar adecuado',
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
                           height: 20,
                         ),
                         GridView.builder(
@@ -268,10 +267,12 @@ class PerfilAdopcion extends StatelessWidget {
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () => showDialog(
                                 context: context,
+
                                 child: DialogBody(
                                   controlador1: controlador1,
                                   objeto: objeto,
                                   foto: objeto.galeriaFotos[index],
+
                                 )),
                             child: Image(
                               image: NetworkImage(

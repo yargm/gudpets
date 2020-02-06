@@ -5,10 +5,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 class Controller with ChangeNotifier {
   int pestana_act = 0;
-  String uid;
-  String name;
-  String email;
-  String imageUrl;
+  String uid = '';
+  String name = '';
+  String email = '';
+  String imageUrl= '';
   bool loading = false;
   String sexo;
   String tipo;

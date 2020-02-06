@@ -3,7 +3,6 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 
-
 class ListCard extends StatefulWidget {
   final dynamic objeto;
   final int posicion;
@@ -22,7 +21,6 @@ class _ListCardState extends State<ListCard> {
 
   final double containerBorderRadius = 15;
   bool favorito = false;
-    
 
   @override
   void initState() {
@@ -38,16 +36,11 @@ class _ListCardState extends State<ListCard> {
       });
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
-  
-
     var leftAligned = (widget.posicion % 2 == 0) ? true : false;
     Controller controlador1 = Provider.of<Controller>(context);
-
-    
 
     // TODO: implement build
     return Container(
@@ -296,6 +289,7 @@ class _ListCardState extends State<ListCard> {
               child: Padding(
                 padding: EdgeInsets.only(left: 20, right: 30, bottom: 20.0),
                 child: Text(widget.objeto.descripcion,
+                    maxLines: 2,
                     style: TextStyle(
                       fontSize: 16.0,
                       color: Colors.grey,

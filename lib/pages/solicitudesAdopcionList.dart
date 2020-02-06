@@ -32,7 +32,7 @@ class _SolicitudAdopcionState extends State<SolicitudAdopcion> {
                     icon: Icon(Icons.arrow_back_ios),
                   ),
                   title: Text(
-                    'Personas Interesadas',
+                    'Solicitudes',
                     style: TextStyle(fontSize: 30),
                   ),
                 ),

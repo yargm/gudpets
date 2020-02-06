@@ -309,6 +309,121 @@ class _AdopcionState extends State<Adopcion> {
                       SizedBox(
                         height: 20.0,
                       ),
+<<<<<<< HEAD
+=======
+                    ),
+                  ]),
+                ),
+                ButtonBar(
+                  children: <Widget>[
+                    controlador1.usuario.documentId == widget.objeto.userId
+                        ? RaisedButton.icon(
+                            icon: Icon(FontAwesomeIcons.userFriends),
+                            label: Text('Ver solicitudes'),
+                            onPressed: () {
+                              print(widget.objeto.documentId);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SolicitudAdopcion(
+                                          docId: widget.objeto.reference,
+                                        )),
+                              );
+                            },
+                          )
+                        : RaisedButton.icon(
+                            icon: Icon(FontAwesomeIcons.home),
+                            label: Text('Adoptar'),
+                            onPressed: () async {
+                              print('boton adoptar');
+                              var query = widget.objeto.reference
+                                  .collection('solicitudes')
+                                  .where('userId',
+                                      isEqualTo:
+                                          controlador1.usuario.documentId)
+                                  .getDocuments();
+                              query.then((onValue) {
+                                if (onValue.documents.isNotEmpty) {
+                                  return showDialog(
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                            title: Text('Solicitud realizada '),
+                                            content: Text(
+                                                'Ya te encuentras postulado'),
+                                            actions: <Widget>[
+                                              RaisedButton(
+                                                onPressed: () {
+                                                  return Navigator.of(context)
+                                                      .pop();
+                                                },
+                                                child: Text('Cerrar'),
+                                              )
+                                            ],
+                                          ));
+                                } else {
+                                  print('boton para adoptar');
+                                  if (
+                                      controlador1.usuario.fotoCompDomiRef ==
+                                          null ||
+                                      controlador1.usuario.fotoINERef == null ||
+                                      controlador1.usuario.galeriaFotosRefs ==
+                                          null || controlador1.usuario.galeriaFotosRefs.isEmpty) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title:
+                                                  Text('No puedes postularte'),
+                                              content: Text(
+                                                  'Para postularte es necesario completar tu información.'),
+                                              actions: <Widget>[
+                                                RaisedButton(
+                                                  onPressed: () {
+                                                    return Navigator.of(context)
+                                                        .pushNamed('/perfil');
+                                                  },
+                                                  child: Text('Ir a perfil'),
+                                                )
+                                              ],
+                                            ));
+                                  } else {
+                                    print('solicitud valida');
+                                    form_solicitud['correo'] =
+                                        controlador1.usuario.correo;
+                                    form_solicitud['descripcion'] =
+                                        controlador1.usuario.descripcion;
+                                    form_solicitud['fnacimiento'] =
+                                        controlador1.usuario.fnacimiento;
+                                    form_solicitud['foto'] =
+                                        controlador1.usuario.foto;
+                                    form_solicitud['nombre'] =
+                                        controlador1.usuario.nombre;
+                                    form_solicitud['sexo'] =
+                                        controlador1.usuario.sexo;
+                                    form_solicitud['telefono'] =
+                                        controlador1.usuario.telefono;
+                                    form_solicitud['userId'] =
+                                        controlador1.usuario.documentId;
+                                    form_solicitud['referencia'] =
+                                        controlador1.usuario.reference;
+                                    form_solicitud['fotoStorageRef'] =
+                                        controlador1.usuario.fotoStorageRef;
+                                    form_solicitud['fotoCompDomi'] =
+                                        controlador1.usuario.fotoCompDomi;
+                                    form_solicitud['fotoCompDomiRef'] =
+                                        controlador1.usuario.fotoCompDomiRef;
+                                    form_solicitud['fotoINE'] =
+                                        controlador1.usuario.fotoINE;
+                                    form_solicitud['fotoINERef'] =
+                                        controlador1.usuario.fotoINERef;
+                                    form_solicitud['galeriaFotos'] =
+                                        controlador1.usuario.galeriaFotos;
+                                    form_solicitud['galeriaFotosRefs'] =
+                                        controlador1.usuario.galeriaFotosRefs;
+                                    form_solicitud['userIdPub'] =
+                                        widget.objeto.userId;
+                                    form_solicitud['tituloPub'] =
+                                        widget.objeto.titulo;
+>>>>>>> 0fd11a43df2e424eb8b58faddf8c55b3f2699875
 
                       //Aquí, no mames
                     ],
@@ -379,12 +494,22 @@ class _AdopcionState extends State<Adopcion> {
                                           title:
                                               Text('No puedes postularte'),
                                           content: Text(
+<<<<<<< HEAD
                                               'Para postularte es necesario completar tu información.'),
+=======
+                                            'Gracias por enviar tus datos, te notificaremos cuando tu solicitud sea aceptada.',
+                                          ),
+>>>>>>> 0fd11a43df2e424eb8b58faddf8c55b3f2699875
                                           actions: <Widget>[
                                             RaisedButton(
                                               onPressed: () {
+<<<<<<< HEAD
                                                 return Navigator.of(context)
                                                     .pushNamed('/perfil');
+=======
+                                                Navigator.popAndPushNamed(
+                                                    context, '/home');
+>>>>>>> 0fd11a43df2e424eb8b58faddf8c55b3f2699875
                                               },
                                               child: Text('Ir a perfil'),
                                             )
