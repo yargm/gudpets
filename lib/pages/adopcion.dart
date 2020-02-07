@@ -395,6 +395,8 @@ class _AdopcionState extends State<Adopcion> {
 
                                                       8. En caso de que el actual poseedor de la mascota considere necesario, este puede hacer visitas de rutina a su nuevo hogar para supervisar el progreso o adaptación de este.
 
+                                                      9. En caso de especies exóticas NO están permitida la publicación o adopción de éstos.
+
                                                       Por favor, adopta con amor, paciencia y responsabilidad. Tener una mascota es un compromiso a largo plazo que requiere tiempo, dinero y esfuerzo.'''),
                                               ),
                                               actions: <Widget>[
@@ -489,24 +491,31 @@ class _AdopcionState extends State<Adopcion> {
                                                         barrierDismissible:
                                                             false,
                                                         context: context,
-                                                        child: AlertDialog(
-                                                          title: Text(
-                                                            '¡Tu solicitud fue enviada!',
-                                                          ),
-                                                          content: Text(
-                                                            'Gracias por enviar tus datos, te notificaremos cuando tu solicitud sea aceptada.',
-                                                          ),
-                                                          actions: <Widget>[
-                                                            FlatButton(
-                                                              child: Text('OK'),
-                                                              onPressed: () {
-                                                                Navigator
-                                                                    .popAndPushNamed(
-                                                                        context,
-                                                                        '/home');
-                                                              },
+                                                        child: WillPopScope(
+                                                          onWillPop: () async{
+                                                            return false;
+                                                          },
+                                                                                                                  child: AlertDialog(
+                                                            title: Text(
+                                                              '¡Tu solicitud fue enviada!',
                                                             ),
-                                                          ],
+                                                            content: Text(
+                                                              'Gracias por enviar tus datos, te notificaremos cuando tu solicitud sea aceptada.',
+                                                            ),
+                                                            actions: <Widget>[
+                                                              FlatButton(
+                                                                child: Text('OK'),
+                                                                onPressed: () {
+                                                                  Navigator
+                                                                      .pushAndRemoveUntil(
+                                                                        context,
+                                                                        MaterialPageRoute(builder: (BuildContext context) =>Home()),ModalRoute.withName('/home')
+                                                                        );
+                                                                         
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       );
                                                     }
