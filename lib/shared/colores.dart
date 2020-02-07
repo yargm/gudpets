@@ -10,3 +10,4 @@ const primaryText = const Color(0xFF000000);
 const secondaryText = const Color(0xFFFFFFFF);
 const backgroundCard = const Color(0xFFF5F5F6);
 const background = const Color(0xFFE1E2E1);
+const gudtech = const Color(0xFF1aad72);

@@ -342,6 +342,7 @@ class PerfilAdopcion extends StatelessWidget {
                                         controlador1.usuario.fotoINE;
                                     controlador1.adopcion.adoptanteId =
                                         controlador1.usuario.documentId;
+                                    controlador1.adopcion.status = 'adoptado';
                                     await Firestore.instance
                                         .collection('usuarios')
                                         .document(objeto.userId)
