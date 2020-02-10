@@ -21,432 +21,394 @@ class _PerfilState extends State<Perfil> {
 
     // TODO: implement build
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
       ),
-      extendBodyBehindAppBar: true,
-      body: Card(
-        margin: EdgeInsets.only(bottom: 10, top: 20, right: 5, left: 5),
-        child: ListView(
-          addSemanticIndexes: true,
-          addRepaintBoundaries: true,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  SizedBox(
-                    height: 140,
-                    width: 140,
-                    child: Stack(
-                      children: <Widget>[
-                        Hero(
-                          tag: controlador1.usuario.documentId,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(180),
-                            child: FadeInImage(
-                              fit: BoxFit.cover,
-                              placeholder: AssetImage('assets/dog.png'),
-                              width: 120,
-                              height: 120,
-                              image: NetworkImage(controlador1.usuario.foto),
-                            ),
+   
+      body: ListView(
+        addSemanticIndexes: true,
+        addRepaintBoundaries: true,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                SizedBox(
+                  height: 140,
+                  width: 140,
+                  child: Stack(
+                    children: <Widget>[
+                      Hero(
+                        tag: controlador1.usuario.documentId,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(180),
+                          child: FadeInImage(
+                            fit: BoxFit.cover,
+                            placeholder: AssetImage('assets/dog.png'),
+                            width: 120,
+                            height: 120,
+                            image: NetworkImage(controlador1.usuario.foto),
                           ),
                         ),
-                        CircleAvatar(
-                          backgroundColor: secondaryColor,
-                          child: IconButton(
-                            icon: Icon(Icons.photo_camera),
-                            onPressed: () => showDialog(
-                              child: WillPopScope(
-                                onWillPop: () async {
-                                  return controlador1.loading ? false : true;
-                                },
-                                child: SimpleDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  children: <Widget>[
-                                    DialogContent(
-                                      foto: 'PP',
-                                    ),
-                                  ],
-                                ),
+                      ),
+                      CircleAvatar(
+                        backgroundColor: secondaryColor,
+                        child: IconButton(
+                          icon: Icon(Icons.photo_camera),
+                          onPressed: () => showDialog(
+                            child: WillPopScope(
+                              onWillPop: () async {
+                                return controlador1.loading ? false : true;
+                              },
+                              child: SimpleDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                children: <Widget>[
+                                  DialogContent(
+                                    foto: 'PP',
+                                  ),
+                                ],
                               ),
-                              context: context,
                             ),
+                            context: context,
                           ),
-                        )
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    // decoration: BoxDecoration(
+                    //   border: Border(
+                    //     bottom: BorderSide(color: secondaryColor),
+                    //   ),
+                    // ),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(FontAwesomeIcons.dog),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(FontAwesomeIcons.cat),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(FontAwesomeIcons.dove),
+                          ],
+                        ),
+                        Text(
+                          controlador1.usuario.nombre,
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Text(controlador1.usuario.correo)
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 20,
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            endIndent: 20,
+            indent: 20,
+            thickness: 1,
+          ),
+          Container(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Información básica',
+                  style: TextStyle(
+                    fontSize: 25,
                   ),
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      // decoration: BoxDecoration(
-                      //   border: Border(
-                      //     bottom: BorderSide(color: secondaryColor),
-                      //   ),
-                      // ),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                ListTile(
+                  leading: Icon(Icons.description),
+                  subtitle: Text(controlador1.usuario.descripcion),
+                  title: Text('Descripción'),
+                  trailing: IconButton(
+                    onPressed: () => showDialog(
+                      context: context,
+                      child: Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Container(
+                          margin: EdgeInsets.all(20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Icon(FontAwesomeIcons.dog),
-                              SizedBox(
-                                width: 5,
+                              TextField(
+                                maxLength: 50,
+                                decoration:
+                                    InputDecoration(labelText: 'Descripción'),
+                                controller: textEditingController,
                               ),
-                              Icon(FontAwesomeIcons.cat),
                               SizedBox(
-                                width: 5,
+                                height: 15,
                               ),
-                              Icon(FontAwesomeIcons.dove),
+                              FloatingActionButton.extended(
+                                backgroundColor: primaryColor,
+                                onPressed: () async {
+                                  controlador1.loading = true;
+                                  controlador1.notify();
+                                  await controlador1.usuario.reference
+                                      .updateData({
+                                    'descripcion': textEditingController.text
+                                  });
+                                  controlador1.usuario.descripcion =
+                                      textEditingController.text;
+                                  controlador1.loading = false;
+                                  controlador1.notify();
+                                  Navigator.of(context).pop();
+                                },
+                                label: Text(
+                                  'Actualizar',
+                                  style: TextStyle(color: secondaryLight),
+                                ),
+                                icon: Icon(
+                                  Icons.system_update_alt,
+                                  color: secondaryLight,
+                                ),
+                              )
                             ],
                           ),
-                          Text(
-                            controlador1.usuario.nombre,
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          Text(controlador1.usuario.correo)
-                        ],
+                        ),
                       ),
                     ),
+                    icon: Icon(Icons.edit),
                   ),
-                ],
-              ),
-            ),
-            Divider(
-              endIndent: 20,
-              indent: 20,
-              thickness: 1,
-            ),
-            Container(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Información básica',
-                    style: TextStyle(
-                      fontSize: 25,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.description),
-                    subtitle: Text(controlador1.usuario.descripcion),
-                    title: Text('Descripción'),
-                    trailing: IconButton(
-                      onPressed: () => showDialog(
-                        context: context,
+                ),
+                ListTile(
+                  leading: Icon(FontAwesomeIcons.calendar),
+                  subtitle: Text(controlador1.usuario.edad.toString()),
+                  title: Text('Edad'),
+                ),
+                ListTile(
+                  leading: Icon(FontAwesomeIcons.genderless),
+                  subtitle: Text(controlador1.usuario.sexo ?? '???'),
+                  title: Text('Sexo'),
+                ),
+                ListTile(
+                  leading: Icon(FontAwesomeIcons.phoneAlt),
+                  subtitle: Text(controlador1.usuario.telefono.toString()),
+                  title: Text('Telefono'),
+                  trailing: IconButton(
+                    onPressed: () => showDialog(
+                      context: context,
+                      child: WillPopScope(
+                        onWillPop: () async {
+                          return controlador1.loading ? false : true;
+                        },
                         child: Dialog(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
-                          child: Container(
-                            margin: EdgeInsets.all(20),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                TextField(
-                                  maxLength: 50,
-                                  decoration:
-                                      InputDecoration(labelText: 'Descripción'),
-                                  controller: textEditingController,
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                FloatingActionButton.extended(
-                                  backgroundColor: primaryColor,
-                                  onPressed: () async {
-                                    controlador1.loading = true;
-                                    controlador1.notify();
-                                    await controlador1.usuario.reference
-                                        .updateData({
-                                      'descripcion': textEditingController.text
-                                    });
-                                    controlador1.usuario.descripcion =
-                                        textEditingController.text;
-                                    controlador1.loading = false;
-                                    controlador1.notify();
-                                    Navigator.of(context).pop();
-                                  },
-                                  label: Text(
-                                    'Actualizar',
-                                    style: TextStyle(color: secondaryLight),
-                                  ),
-                                  icon: Icon(
-                                    Icons.system_update_alt,
-                                    color: secondaryLight,
-                                  ),
-                                )
-                              ],
+                          child: DialogChangePhone(),
+                        ),
+                      ),
+                    ),
+                    icon: Icon(Icons.edit),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            endIndent: 20,
+            indent: 20,
+            thickness: 1,
+          ),
+          Container(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Información necesaria para trámites de adopción',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 25),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: EdgeInsets.all(10),
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 130,
+                        width: 210,
+                        child: Stack(
+                          children: <Widget>[
+                            FadeInImage(
+                              height: 110,
+                              width: 210,
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  controlador1.usuario.fotoINE ?? ''),
+                              placeholder: AssetImage('assets/dog.png'),
                             ),
-                          ),
-                        ),
-                      ),
-                      icon: Icon(Icons.edit),
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(FontAwesomeIcons.calendar),
-                    subtitle: Text(controlador1.usuario.edad.toString()),
-                    title: Text('Edad'),
-                  ),
-                  ListTile(
-                    leading: Icon(FontAwesomeIcons.genderless),
-                    subtitle: Text(controlador1.usuario.sexo ?? '???'),
-                    title: Text('Sexo'),
-                  ),
-                  ListTile(
-                    leading: Icon(FontAwesomeIcons.phoneAlt),
-                    subtitle: Text(controlador1.usuario.telefono.toString()),
-                    title: Text('Telefono'),
-                    trailing: IconButton(
-                      onPressed: () => showDialog(
-                        context: context,
-                        child: WillPopScope(
-                          onWillPop: () async {
-                            return controlador1.loading ? false : true;
-                          },
-                          child: Dialog(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            child: DialogChangePhone(),
-                          ),
-                        ),
-                      ),
-                      icon: Icon(Icons.edit),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Divider(
-              endIndent: 20,
-              indent: 20,
-              thickness: 1,
-            ),
-            Container(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Información necesaria para trámites de adopción',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 130,
-                          width: 210,
-                          child: Stack(
-                            children: <Widget>[
-                              FadeInImage(
-                                height: 110,
-                                width: 210,
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    controlador1.usuario.fotoINE ?? ''),
-                                placeholder: AssetImage('assets/dog.png'),
-                              ),
-                              CircleAvatar(
-                                backgroundColor: secondaryColor,
-                                child: IconButton(
-                                  icon: Icon(Icons.photo_camera),
-                                  onPressed: () => showDialog(
-                                    child: WillPopScope(
-                                      onWillPop: () async {
-                                        return controlador1.loading
-                                            ? false
-                                            : true;
-                                      },
-                                      child: SimpleDialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        children: <Widget>[
-                                          DialogContent(
-                                            foto: 'INE',
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    context: context,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                            child: Text(
-                          controlador1.usuario.fotoINE == null
-                              ? '* No cuentas con foto de tu INE y es necesaria para realizar un trámite de adopción'
-                              : 'Foto INE',
-                          style: TextStyle(
-                              fontWeight: controlador1.usuario.fotoINE == null
-                                  ? FontWeight.bold
-                                  : null),
-                        ))
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 130,
-                          width: 210,
-                          child: Stack(
-                            children: <Widget>[
-                              FadeInImage(
-                                height: 110,
-                                width: 210,
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    controlador1.usuario.fotoCompDomi ?? ''),
-                                placeholder: AssetImage('assets/dog.png'),
-                              ),
-                              CircleAvatar(
-                                backgroundColor: secondaryColor,
-                                child: IconButton(
-                                  icon: Icon(Icons.photo_camera),
-                                  onPressed: () => showDialog(
-                                    child: WillPopScope(
-                                      onWillPop: () async {
-                                        return controlador1.loading
-                                            ? false
-                                            : true;
-                                      },
-                                      child: SimpleDialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        children: <Widget>[
-                                          DialogContent(
-                                            foto: 'CompDomi',
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    context: context,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                            child: Text(
-                          controlador1.usuario.fotoCompDomi == null
-                              ? '* No cuentas con foto de tu comprobante de domicilio y es necesaria para realizar un trámite de adopción'
-                              : 'Foto Comprobante de domicilio',
-                          style: TextStyle(
-                              fontWeight:
-                                  controlador1.usuario.fotoCompDomi == null
-                                      ? FontWeight.bold
-                                      : null),
-                        ))
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    endIndent: 20,
-                    indent: 20,
-                    thickness: 1,
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(20),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          'Galeria Fotos de tu hogar',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 25),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Estas imágenes son necesarias para realizar un trámite de adopción, en ellas se debe mostrar el lugar en donde vivirán las mascotas que desees adoptar. Esta información se usa para comprobar que la mascota tendrá un hogar adecuado',
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        controlador1.usuario.galeriaFotos.isNotEmpty &&
-                                controlador1.usuario.galeriaFotos != null
-                            ? GridView.builder(
-                                shrinkWrap: true,
-                                physics: ScrollPhysics(
-                                    parent: NeverScrollableScrollPhysics()),
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                ),
-                                itemBuilder: (context, index) =>
-                                    GestureDetector(
-                                  onTap: () => showDialog(
-                                      context: context,
-                                      child: WillPopScope(
-                                        onWillPop: () async {
-                                          return controlador1.loading
-                                              ? false
-                                              : true;
-                                        },
-                                        child: Dialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          child: DialogContent(
-                                            index: index,
-                                          ),
-                                        ),
-                                      )),
-                                  child: Image(
-                                    image: NetworkImage(
-                                      controlador1.usuario.galeriaFotos[index],
-                                    ),
-                                    height: 150,
-                                    width: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                itemCount:
-                                    controlador1.usuario.galeriaFotos.length,
-                              )
-                            : Text('No hay fotos para mostrar'),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        controlador1.usuario.galeriaFotos.length < 6
-                            ? FloatingActionButton.extended(
-                                elevation: 0,
-                                backgroundColor: primaryColor,
+                            CircleAvatar(
+                              backgroundColor: secondaryColor,
+                              child: IconButton(
+                                icon: Icon(Icons.photo_camera),
                                 onPressed: () => showDialog(
+                                  child: WillPopScope(
+                                    onWillPop: () async {
+                                      return controlador1.loading
+                                          ? false
+                                          : true;
+                                    },
+                                    child: SimpleDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      children: <Widget>[
+                                        DialogContent(
+                                          foto: 'INE',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  context: context,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Expanded(
+                          child: Text(
+                        controlador1.usuario.fotoINE == null
+                            ? '* No cuentas con foto de tu INE y es necesaria para realizar un trámite de adopción'
+                            : 'Foto INE',
+                        style: TextStyle(
+                            fontWeight: controlador1.usuario.fotoINE == null
+                                ? FontWeight.bold
+                                : null),
+                      ))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.all(10),
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 130,
+                        width: 210,
+                        child: Stack(
+                          children: <Widget>[
+                            FadeInImage(
+                              height: 110,
+                              width: 210,
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  controlador1.usuario.fotoCompDomi ?? ''),
+                              placeholder: AssetImage('assets/dog.png'),
+                            ),
+                            CircleAvatar(
+                              backgroundColor: secondaryColor,
+                              child: IconButton(
+                                icon: Icon(Icons.photo_camera),
+                                onPressed: () => showDialog(
+                                  child: WillPopScope(
+                                    onWillPop: () async {
+                                      return controlador1.loading
+                                          ? false
+                                          : true;
+                                    },
+                                    child: SimpleDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      children: <Widget>[
+                                        DialogContent(
+                                          foto: 'CompDomi',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  context: context,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Expanded(
+                          child: Text(
+                        controlador1.usuario.fotoCompDomi == null
+                            ? '* No cuentas con foto de tu comprobante de domicilio y es necesaria para realizar un trámite de adopción'
+                            : 'Foto Comprobante de domicilio',
+                        style: TextStyle(
+                            fontWeight:
+                                controlador1.usuario.fotoCompDomi == null
+                                    ? FontWeight.bold
+                                    : null),
+                      ))
+                    ],
+                  ),
+                ),
+                Divider(
+                  endIndent: 20,
+                  indent: 20,
+                  thickness: 1,
+                ),
+                Container(
+                  margin: EdgeInsets.all(20),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        'Galeria Fotos de tu hogar',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 25),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Estas imágenes son necesarias para realizar un trámite de adopción, en ellas se debe mostrar el lugar en donde vivirán las mascotas que desees adoptar. Esta información se usa para comprobar que la mascota tendrá un hogar adecuado',
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      controlador1.usuario.galeriaFotos.isNotEmpty &&
+                              controlador1.usuario.galeriaFotos != null
+                          ? GridView.builder(
+                              shrinkWrap: true,
+                              physics: ScrollPhysics(
+                                  parent: NeverScrollableScrollPhysics()),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                              ),
+                              itemBuilder: (context, index) =>
+                                  GestureDetector(
+                                onTap: () => showDialog(
                                     context: context,
                                     child: WillPopScope(
                                       onWillPop: () async {
@@ -458,27 +420,63 @@ class _PerfilState extends State<Perfil> {
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(20)),
-                                        child: DialogMultiImage(),
+                                        child: DialogContent(
+                                          index: index,
+                                        ),
                                       ),
                                     )),
-                                label: Text(
-                                  'Añadir fotos',
-                                  style: TextStyle(color: secondaryLight),
+                                child: Image(
+                                  image: NetworkImage(
+                                    controlador1.usuario.galeriaFotos[index],
+                                  ),
+                                  height: 150,
+                                  width: 150,
+                                  fit: BoxFit.cover,
                                 ),
-                                icon: Icon(
-                                  Icons.add_a_photo,
-                                  color: secondaryLight,
-                                ),
-                              )
-                            : Container()
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+                              ),
+                              itemCount:
+                                  controlador1.usuario.galeriaFotos.length,
+                            )
+                          : Text('No hay fotos para mostrar'),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      controlador1.usuario.galeriaFotos.length < 6
+                          ? FloatingActionButton.extended(
+                              elevation: 0,
+                              backgroundColor: primaryColor,
+                              onPressed: () => showDialog(
+                                  context: context,
+                                  child: WillPopScope(
+                                    onWillPop: () async {
+                                      return controlador1.loading
+                                          ? false
+                                          : true;
+                                    },
+                                    child: Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: DialogMultiImage(),
+                                    ),
+                                  )),
+                              label: Text(
+                                'Añadir fotos',
+                                style: TextStyle(color: secondaryLight),
+                              ),
+                              icon: Icon(
+                                Icons.add_a_photo,
+                                color: secondaryLight,
+                              ),
+                            )
+                          : Container()
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
