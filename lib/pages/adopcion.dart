@@ -121,8 +121,8 @@ class _AdopcionState extends State<Adopcion> {
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 20.0, horizontal: 20),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
                       child: Text(widget.objeto.descripcion,
                           style: TextStyle(
                             fontSize: 18.0,
@@ -146,9 +146,10 @@ class _AdopcionState extends State<Adopcion> {
                             style: TextStyle(
                               fontSize: 20.0,
                             )),
+
                         Text(widget.objeto.sexo,
-                            style: TextStyle(
-                                fontSize: 18.0, color: Colors.grey)),
+                            style:
+                                TextStyle(fontSize: 18.0, color: Colors.grey)),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -157,8 +158,8 @@ class _AdopcionState extends State<Adopcion> {
                               fontSize: 20.0,
                             )),
                         Text(widget.objeto.edad,
-                            style: TextStyle(
-                                fontSize: 18.0, color: Colors.grey)),
+                            style:
+                                TextStyle(fontSize: 18.0, color: Colors.grey)),
                         SizedBox(
                           height: 20.0,
                         ),
@@ -261,10 +262,9 @@ class _AdopcionState extends State<Adopcion> {
                                         fit: BoxFit.cover,
                                         placeholder:
                                             AssetImage('assets/dog.png'),
-                                        width: MediaQuery.of(context)
-                                                .size
-                                                .width *
-                                            0.85,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.85,
                                         height: 300,
                                         image: NetworkImage(
                                             widget.objeto.fotos[index]),
@@ -276,8 +276,8 @@ class _AdopcionState extends State<Adopcion> {
                               )
                             : Text(
                                 'No hay nada para mostrar',
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 18),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),
                               ),
                         SizedBox(
                           height: 10,
@@ -339,15 +339,14 @@ class _AdopcionState extends State<Adopcion> {
                                     return showDialog(
                                         context: context,
                                         builder: (_) => AlertDialog(
-                                              title: Text(
-                                                  'Solicitud realizada '),
+                                              title:
+                                                  Text('Solicitud realizada '),
                                               content: Text(
                                                   'Ya te encuentras postulado'),
                                               actions: <Widget>[
                                                 FlatButton(
                                                   onPressed: () {
-                                                    return Navigator.of(
-                                                            context)
+                                                    return Navigator.of(context)
                                                         .pop();
                                                   },
                                                   child: Text('CERRAR'),
@@ -356,16 +355,14 @@ class _AdopcionState extends State<Adopcion> {
                                             ));
                                   } else {
                                     print('boton para adoptar');
-                                    if (controlador1
-                                                .usuario.fotoCompDomiRef ==
+                                    if (controlador1.usuario.fotoCompDomiRef ==
                                             null ||
                                         controlador1.usuario.fotoINERef ==
                                             null ||
-                                        controlador1
-                                                .usuario.galeriaFotosRefs ==
+                                        controlador1.usuario.galeriaFotosRefs ==
                                             null ||
-                                        controlador1.usuario.galeriaFotosRefs
-                                            .isEmpty) {
+                                        controlador1
+                                            .usuario.galeriaFotosRefs.isEmpty) {
                                       showDialog(
                                           context: context,
                                           builder: (_) => AlertDialog(
@@ -378,11 +375,9 @@ class _AdopcionState extends State<Adopcion> {
                                                     onPressed: () {
                                                       return Navigator.of(
                                                               context)
-                                                          .pushNamed(
-                                                              '/perfil');
+                                                          .pushNamed('/perfil');
                                                     },
-                                                    child:
-                                                        Text('IR A PERFIL'),
+                                                    child: Text('IR A PERFIL'),
                                                   )
                                                 ],
                                               ));
@@ -397,8 +392,7 @@ class _AdopcionState extends State<Adopcion> {
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                content:
-                                                    SingleChildScrollView(
+                                                content: SingleChildScrollView(
                                                   child: Text(
                                                       '''1. No tendrás a la mascota aislada, ya sea en azoteas, balcones, patios o para cuidar establecimientos. La mascota requiere de un ambiente familiar.
 
@@ -416,6 +410,7 @@ class _AdopcionState extends State<Adopcion> {
 
                                                     8. En caso de que el actual poseedor de la mascota considere necesario, este puede hacer visitas de rutina a su nuevo hogar para supervisar el progreso o adaptación de este.
 
+
                                                     Por favor, adopta con amor, paciencia y responsabilidad. Tener una mascota es un compromiso a largo plazo que requiere tiempo, dinero y esfuerzo.'''),
                                                 ),
                                                 actions: <Widget>[
@@ -429,10 +424,8 @@ class _AdopcionState extends State<Adopcion> {
                                                   ),
                                                   FlatButton(
                                                     onPressed: () {
-                                                      print(
-                                                          'solicitud valida');
-                                                      form_solicitud[
-                                                              'correo'] =
+                                                      print('solicitud valida');
+                                                      form_solicitud['correo'] =
                                                           controlador1
                                                               .usuario.correo;
                                                       form_solicitud[
@@ -446,8 +439,7 @@ class _AdopcionState extends State<Adopcion> {
                                                       form_solicitud['foto'] =
                                                           controlador1
                                                               .usuario.foto;
-                                                      form_solicitud[
-                                                              'nombre'] =
+                                                      form_solicitud['nombre'] =
                                                           controlador1
                                                               .usuario.nombre;
                                                       form_solicitud['sexo'] =
@@ -455,10 +447,9 @@ class _AdopcionState extends State<Adopcion> {
                                                               .usuario.sexo;
                                                       form_solicitud[
                                                               'telefono'] =
-                                                          controlador1.usuario
-                                                              .telefono;
-                                                      form_solicitud[
-                                                              'userId'] =
+                                                          controlador1
+                                                              .usuario.telefono;
+                                                      form_solicitud['userId'] =
                                                           controlador1.usuario
                                                               .documentId;
                                                       form_solicitud[
@@ -479,8 +470,8 @@ class _AdopcionState extends State<Adopcion> {
                                                               .fotoCompDomiRef;
                                                       form_solicitud[
                                                               'fotoINE'] =
-                                                          controlador1.usuario
-                                                              .fotoINE;
+                                                          controlador1
+                                                              .usuario.fotoINE;
                                                       form_solicitud[
                                                               'fotoINERef'] =
                                                           controlador1.usuario
@@ -495,12 +486,10 @@ class _AdopcionState extends State<Adopcion> {
                                                               .galeriaFotosRefs;
                                                       form_solicitud[
                                                               'userIdPub'] =
-                                                          widget
-                                                              .objeto.userId;
+                                                          widget.objeto.userId;
                                                       form_solicitud[
                                                               'tituloPub'] =
-                                                          widget
-                                                              .objeto.titulo;
+                                                          widget.objeto.titulo;
 
                                                       var agregar = widget
                                                           .objeto.reference
@@ -528,10 +517,9 @@ class _AdopcionState extends State<Adopcion> {
                                                             ),
                                                             actions: <Widget>[
                                                               FlatButton(
-                                                                child: Text(
-                                                                    'OK'),
-                                                                onPressed:
-                                                                    () {
+                                                                child:
+                                                                    Text('OK'),
+                                                                onPressed: () {
                                                                   Navigator.popAndPushNamed(
                                                                       context,
                                                                       '/home');

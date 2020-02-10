@@ -223,7 +223,7 @@ exports.nuevoPerdido = functions.firestore.document('/perdidos/{perdido}'
         }
         var payload = {
             "notification": {
-                "title": "Nueva Emergencia!!!",
+                "title": "Hay una mascota Perdida!!!",
                 "body": perdidoData.titulo,
                 "sound": "default"
             },
