@@ -24,17 +24,11 @@ class _AdopcionState extends State<Adopcion> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          color: Colors.white,
-          onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(
-            FontAwesomeIcons.chevronCircleLeft,
-          ),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
+        
+    
+        backgroundColor: Colors.white,
       ),
-      extendBodyBehindAppBar: true,
+   
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.only(bottom: 20, top: 30, left: 10, right: 10),

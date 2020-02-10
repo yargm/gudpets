@@ -417,33 +417,35 @@ class DialogBody extends StatelessWidget {
     return Dialog(
       elevation: 10,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          UserBanner(
-            usuario: objeto,
-            extended: false,
-          ),
-          Divider(
-            thickness: 1,
-          ),
-          Container(
-            margin: EdgeInsets.all(10),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: FadeInImage(
-                height: 300,
-                fit: BoxFit.fitWidth,
-                image: NetworkImage(foto),
-                placeholder: AssetImage('assets/dog.png'),
-                width: double.maxFinite,
+      child: SingleChildScrollView(
+              child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            UserBanner(
+              usuario: objeto,
+              extended: false,
+            ),
+            Divider(
+              thickness: 1,
+            ),
+            Container(
+              margin: EdgeInsets.all(10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: FadeInImage(
+                  height: 300,
+                  fit: BoxFit.fitWidth,
+                  image: NetworkImage(foto),
+                  placeholder: AssetImage('assets/dog.png'),
+                  width: double.maxFinite,
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-        ],
+            SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
       ),
     );
   }
