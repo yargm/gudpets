@@ -5,6 +5,7 @@ import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
 class Home extends StatefulWidget {
   Controller controlador1;
   Home({this.controlador1});
@@ -22,13 +23,11 @@ class _HomeState extends State<Home> {
     EmergenciaList(),
   ];
 
-
   _onItemTapped(int index, Controller controlador1) {
     setState(() {
       seleccionado = index;
       controlador1.pestana_act = index;
       print('Estoy en : ' + controlador1.pestana_act.toString());
-      
     });
   }
 
@@ -36,7 +35,6 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    
   }
 
   @override
@@ -44,42 +42,62 @@ class _HomeState extends State<Home> {
     Controller controlador1 = Provider.of<Controller>(context);
     // TODO: implement build
     return WillPopScope(
+<<<<<<< HEAD
       onWillPop: () async{
         return false;
       },
           child: Scaffold(
+=======
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+>>>>>>> f942b549312e9168bc8fee65b833ac2c4c44e398
         drawer: MyDrawer(controlador1: controlador1),
-        appBar: controlador1.pestana_act == 0 || controlador1.pestana_act == 1 ? AppBar(
+        appBar: AppBar(
+          title: Row(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(2),
+                child: Image(
+                  image: AssetImage('assets/gudpetsfirstNoText.png'),
+                ),
+                width: 35,
+                height: 35,
+              ),
+              Text(
+                'GudPets',
+                style: TextStyle(color: secondaryDark),
+              )
+            ],
+          ),
           actions: <Widget>[
-            IconButton(onPressed: () {
-          showSearch(
-            context: context,
-            delegate: CustomSearchDelegate(controlador1.pestana_act == 0 ? 'adopciones' : controlador1.pestana_act == 1 ? 'perdidos' : ''),
-          );
-        }, icon: Icon(Icons.search),),
+            controlador1.pestana_act == 0 || controlador1.pestana_act == 1 ? IconButton(
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(controlador1.pestana_act == 0
+                      ? 'adopciones'
+                      : controlador1.pestana_act == 1 ? 'perdidos' : ''),
+                );
+              },
+              icon: Icon(Icons.search),
+            ) : Container(),
             IconButton(
               onPressed: () {
                 return Navigator.of(context).pushNamed('/avisos');
                 // print('avisos');
               },
-              icon: Icon(FontAwesomeIcons.bullhorn,size: 20,),
-            )
+              icon: Icon(
+                FontAwesomeIcons.bullhorn,
+                size: 20,
+              ),
+            ),
           ],
-        ) :AppBar(
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                return Navigator.of(context).pushNamed('/avisos');
-                // print('avisos');
-              },
-              icon: Icon(FontAwesomeIcons.bullhorn,size: 20,),
-            )
-          ],
-        ) ,
+        ),
         body: Center(
           child: _widgetOptions.elementAt(seleccionado),
         ),
-
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             controlador1.pestana_act == 0
@@ -88,7 +106,8 @@ class _HomeState extends State<Home> {
                     ? Navigator.of(context).pushNamed('/registro_perdido')
                     : controlador1.pestana_act == 2
                         ? Navigator.of(context).pushNamed('/registro_rescate')
-                        : Navigator.of(context).pushNamed('/registro_emergencia');
+                        : Navigator.of(context)
+                            .pushNamed('/registro_emergencia');
           },
           child: Icon(Icons.add, color: primaryLight),
         ),

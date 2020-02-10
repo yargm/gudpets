@@ -7,6 +7,7 @@ import 'package:adoption_app/pages/pages.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RegistroUsuario extends StatefulWidget {
   @override
@@ -20,8 +21,10 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   File imagen = null;
   bool isLoadig = false;
   final _usuarioform = GlobalKey<FormState>();
+  bool tos = false;
   String tipotemp = '';
-  bool correov = false;
+  bool correov = true;
+
   Map<String, dynamic> form_usuario = {
     'nombre': null,
     'fnacimiento': null,
@@ -54,6 +57,15 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
           picked.year.toString();
     });
   }
+
+  _launchURL() async {
+  const url = 'https://flutter.dev';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +172,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   SizedBox(
                     height: 15,
                   ),
-                  Text('* Sexo:'),
+                  Text('Sexo:'),
                   SizedBox(
                     height: 3,
                   ),
@@ -180,6 +192,13 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     height: 15,
                   ),
                   TextFormField(
+                    validator: (String value) {
+                      if (textEditingControllerFecha.text == '' ||
+                          textEditingControllerFecha.text == null ||
+                          textEditingControllerFecha.text.isEmpty) {
+                        return 'El campo fecha de nacimiento es obligatorio';
+                      }
+                    },
                     controller: textEditingControllerFecha,
                     onTap: () => _selectDate(context),
                     readOnly: true,
@@ -199,7 +218,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       form_usuario['correo'] = value.trim();
                     },
                     validator: (String value) {
-                      if (correov == false) {
+                      bool emailValid = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(value);
+                      if (value == null || value.isEmpty) {
+                        return 'llenar el campo correo electrónico es obligatorio';
+                      } else if (!emailValid) {
+                        return 'El correo electrónico es inválido';
+                      } else if (correov == false) {
                         return 'Correo existente';
                       }
                     },
@@ -247,7 +273,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Teléfono vacío';
-                      } else if (value.length > 10) {
+                      } else if (value.length != 10) {
                         return 'Ingrese 10 dígitos';
                       }
                     },
@@ -288,90 +314,32 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   SizedBox(
                     height: 15,
                   ),
-                  Text('* ¿Qué tipo de usuario eres?'),
-                  SizedBox(
-                    height: 3,
+
+                  Row(
+                    children: <Widget>[
+                      Switch(
+                        value: tos,
+                        onChanged: ((value) {
+                          setState(() {
+                            tos = value;
+                          });
+                        }),
+                      ),
+                      GestureDetector(
+                          onTap: () => _launchURL(),
+                          child: Text(
+                        'Aceptar terminos y condiciones',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )),
+                    ],
                   ),
-                  RadioButtonGroup(
-                      picked: null,
-                      orientation: GroupedButtonsOrientation.VERTICAL,
-                      labels: <String>[
-                        'Usuario independiente',
-                        'Represento a un refugio',
-                      ],
-                      onSelected: (String opcion) {
-                        setState(() {
-                          tipotemp = opcion;
-                        });
-                      }),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  tipotemp == 'Represento a un refugio'
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            TextFormField(
-                              initialValue: null,
-                              onSaved: (String value) {
-                                form_usuario['tipo'] = tipotemp;
-                                form_usuario['descripcion'] = value;
-                              },
-                              validator: (String value) {
-                                if (value.isEmpty) {
-                                  return 'Descripción vacía';
-                                } else if (value.length > 120) {
-                                  return 'Ingrese al menos 120 caracteres';
-                                }
-                              },
-                              decoration: InputDecoration(
-                                  labelText: '* Descripción',
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10))),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text('* Cantidad de mascotas refugiadas:'),
-                            RadioButtonGroup(
-                                picked: null,
-                                orientation: GroupedButtonsOrientation.VERTICAL,
-                                labels: <String>[
-                                  'Más de cinco',
-                                  'Más de veinte',
-                                  'Más de cuarenta'
-                                ],
-                                onSelected: (String opcion) {
-                                  setState(() {
-                                    form_usuario['cantidadmascotas'] = opcion;
-                                  });
-                                }),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text('*Ubicación (google maps)'),
-                            //Pendiente por hacer
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            TextFormField(
-                              initialValue: null,
-                              onSaved: (String value) {
-                                form_usuario['tipo'] = tipotemp;
-                                form_usuario['descripcion'] = value;
-                              },
-                              decoration: InputDecoration(
-                                  labelText: 'Descripción (opcional)',
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10))),
-                            ),
-                          ],
-                        ),
                   SizedBox(
                     height: 15,
                   ),
+                  tos
+                      ? Text('')
+                      : Text(
+                          '* Es necesario aceptar nuestros terminos y condiciones para concluir el registro *', style: TextStyle(textBaseline: TextBaseline.alphabetic, fontWeight: FontWeight.bold),),
                   ButtonBar(
                     alignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -407,20 +375,45 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
             icon: Icon(Icons.check),
             label: Text('Guardar'),
             onPressed: () async {
-              setState(() {
-                isLoadig = true;
-              });
-              _usuarioform.currentState.save();
-
-              await _validatorEmail(form_usuario['correo']);
-
+              correov = true;
               if (!_usuarioform.currentState.validate()) {
                 setState(() {
                   isLoadig = false;
                 });
                 return;
               }
+
               _usuarioform.currentState.save();
+
+              await _validatorEmail(form_usuario['correo']);
+
+              setState(() {
+                isLoadig = true;
+              });
+              if (!_usuarioform.currentState.validate()) {
+                setState(() {
+                  isLoadig = false;
+                });
+                return;
+              }
+
+              if (controlador1.imageUrl == null) {
+                setState(() {
+                  isLoadig = false;
+                });
+                return null;
+              }
+
+              if (!tos) {
+                setState(() {
+                  isLoadig = false;
+                });
+                return;
+              }
+              _usuarioform.currentState.save();
+              setState(() {
+                isLoadig = true;
+              });
 
               if (imagen != null) {
                 final String fileName = form_usuario['correo'] +
