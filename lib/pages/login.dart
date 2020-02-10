@@ -6,6 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
 
 class LogIn extends StatefulWidget {
   @override
@@ -21,7 +23,38 @@ class _LogInState extends State<LogIn> {
   bool isLoading = true;
 
   Map<String, dynamic> loginMap = {'user': null, 'password': null};
+  
+  void initState() {
+    super.initState();
+    PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.locationWhenInUse)
+        .then((status) {
+      print(status.toString());
+      if (status.toString() == 'PermissionStatus.denied' ||
+          status.toString() == 'PermissionStatus.unknown' ||
+          status.toString() == 'PermissionStatus.disabled') {
+        print('preguntar');
+        _askpermission();
+      } else {
+        print('ya me aceptaste antes');
+        return;
+      }
+    });
+  }
 
+  Future<bool> _askpermission() async {
+    await PermissionHandler()
+        .requestPermissions([PermissionGroup.locationWhenInUse]);
+    
+    await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.locationWhenInUse)
+        .then((status) {
+          if(status.toString() == 'PermissionStatus.denied'){
+            exit(0);
+          }
+        });
+    return true;
+  }
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
