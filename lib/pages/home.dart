@@ -42,17 +42,10 @@ class _HomeState extends State<Home> {
     Controller controlador1 = Provider.of<Controller>(context);
     // TODO: implement build
     return WillPopScope(
-<<<<<<< HEAD
-      onWillPop: () async{
-        return false;
-      },
-          child: Scaffold(
-=======
       onWillPop: () async {
         return false;
       },
       child: Scaffold(
->>>>>>> f942b549312e9168bc8fee65b833ac2c4c44e398
         drawer: MyDrawer(controlador1: controlador1),
         appBar: AppBar(
           title: Row(
