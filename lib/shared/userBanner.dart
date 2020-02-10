@@ -70,7 +70,7 @@ class UserBanner extends StatelessWidget {
                             SizedBox(
                               width: 5,
                             ),
-                            Text(usuario.correo),
+                            Flexible(child: Text(usuario.correo)),
                           ],
                         )
                       : Container(),

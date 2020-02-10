@@ -5,6 +5,7 @@ import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/shared.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
 class Home extends StatefulWidget {
   Controller controlador1;
   Home({this.controlador1});
@@ -22,13 +23,11 @@ class _HomeState extends State<Home> {
     EmergenciaList(),
   ];
 
-
   _onItemTapped(int index, Controller controlador1) {
     setState(() {
       seleccionado = index;
       controlador1.pestana_act = index;
       print('Estoy en : ' + controlador1.pestana_act.toString());
-      
     });
   }
 
@@ -36,7 +35,6 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    
   }
 
   @override
@@ -44,51 +42,84 @@ class _HomeState extends State<Home> {
     Controller controlador1 = Provider.of<Controller>(context);
     // TODO: implement build
     return WillPopScope(
-          onWillPop: () async {
-            return false;
-          },
-          child: Scaffold(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
         drawer: MyDrawer(controlador1: controlador1),
-        appBar: controlador1.pestana_act == 0 || controlador1.pestana_act == 1 ? AppBar(
-          actions: <Widget>[
-            IconButton(onPressed: () {
-          showSearch(
-            context: context,
-            delegate: CustomSearchDelegate(controlador1.pestana_act == 0 ? 'adopciones' : controlador1.pestana_act == 1 ? 'perdidos' : ''),
-          );
-        }, icon: Icon(Icons.search),),
-            IconButton(
-              onPressed: () {
-                return Navigator.of(context).pushNamed('/avisos');
-                // print('avisos');
-              },
-              icon: Icon(FontAwesomeIcons.bullhorn,size: 20,),
-            )
-          ],
-        ) :AppBar(
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                return Navigator.of(context).pushNamed('/avisos');
-                // print('avisos');
-              },
-              icon: Icon(FontAwesomeIcons.bullhorn,size: 20,),
-            )
-          ],
-        ) ,
+        appBar: controlador1.pestana_act == 0 || controlador1.pestana_act == 1
+            ? AppBar(
+                actions: <Widget>[
+                  IconButton(
+                    onPressed: () {
+                      showSearch(
+                        context: context,
+                        delegate: CustomSearchDelegate(
+                            controlador1.pestana_act == 0
+                                ? 'adopciones'
+                                : controlador1.pestana_act == 1
+                                    ? 'perdidos'
+                                    : ''),
+                      );
+                    },
+                    icon: Icon(Icons.search),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      return Navigator.of(context).pushNamed('/avisos');
+                      // print('avisos');
+                    },
+                    icon: Icon(
+                      FontAwesomeIcons.bullhorn,
+                      size: 20,
+                    ),
+                  )
+                ],
+              )
+            : AppBar(
+                actions: <Widget>[
+                  IconButton(
+                    onPressed: () {
+                      return Navigator.of(context).pushNamed('/avisos');
+                      // print('avisos');
+                    },
+                    icon: Icon(
+                      FontAwesomeIcons.bullhorn,
+                      size: 20,
+                    ),
+                  )
+                ],
+              ),
         body: Center(
           child: _widgetOptions.elementAt(seleccionado),
         ),
-
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             controlador1.pestana_act == 0
-                ? Navigator.of(context).pushNamed('/registro_adopcion')
+                ? controlador1.usuario.fotoINE != null
+                    ? Navigator.of(context).pushNamed('/registro_adopcion')
+                    : showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              title: Text('No puedes realizar una publicación en esta sección.'),
+                              content: Text(
+                                  'Para realizar una publicación es necesario completar tu información.'),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: () {
+                                    return Navigator.of(context)
+                                        .pushNamed('/perfil');
+                                  },
+                                  child: Text('IR A PERFIL'),
+                                )
+                              ],
+                            ))
                 : controlador1.pestana_act == 1
                     ? Navigator.of(context).pushNamed('/registro_perdido')
                     : controlador1.pestana_act == 2
                         ? Navigator.of(context).pushNamed('/registro_rescate')
-                        : Navigator.of(context).pushNamed('/registro_emergencia');
+                        : Navigator.of(context)
+                            .pushNamed('/registro_emergencia');
           },
           child: Icon(Icons.add, color: primaryLight),
         ),
