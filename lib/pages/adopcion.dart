@@ -157,11 +157,9 @@ class _AdopcionState extends State<Adopcion> {
                                   style: TextStyle(
                                     fontSize: 20.0,
                                   )),
-                              widget.objeto.convivenciaotros
-                                  ? Text('Sí',
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.grey))
-                                  : Text('No'),
+                              Text(widget.objeto.convivenciaotros ? 'Sí' : 'No',
+                                  style: TextStyle(
+                                      fontSize: 18.0, color: Colors.grey))
                             ],
                           ),
                           SizedBox(
@@ -173,13 +171,9 @@ class _AdopcionState extends State<Adopcion> {
                                   style: TextStyle(
                                     fontSize: 20.0,
                                   )),
-                              widget.objeto.desparacitacion
-                                  ? Text('Sí',
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.grey))
-                                  : Text('No',
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.grey)),
+                              Text(widget.objeto.desparacitacion ? 'Sí' : 'No',
+                                  style: TextStyle(
+                                      fontSize: 18.0, color: Colors.grey))
                             ],
                           ),
                           SizedBox(
@@ -191,13 +185,9 @@ class _AdopcionState extends State<Adopcion> {
                                   style: TextStyle(
                                     fontSize: 20.0,
                                   )),
-                              widget.objeto.vacunacion
-                                  ? Text('Sí',
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.grey))
-                                  : Text('No',
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.grey)),
+                              Text(widget.objeto.vacunacion ? 'Sí' : 'No',
+                                  style: TextStyle(
+                                      fontSize: 18.0, color: Colors.grey))
                             ],
                           ),
                           SizedBox(
@@ -209,13 +199,9 @@ class _AdopcionState extends State<Adopcion> {
                                   style: TextStyle(
                                     fontSize: 20.0,
                                   )),
-                              widget.objeto.esterilizacion
-                                  ? Text('Si',
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.grey))
-                                  : Text('No',
-                                      style: TextStyle(
-                                          fontSize: 18.0, color: Colors.grey)),
+                              Text(widget.objeto.esterilizacion ? 'Si' : 'No',
+                                  style: TextStyle(
+                                      fontSize: 18.0, color: Colors.grey)),
                             ],
                           ),
                           SizedBox(
@@ -548,8 +534,14 @@ class _AdopcionState extends State<Adopcion> {
                   margin: EdgeInsets.only(left: 20),
                   child: (widget.objeto.status == 'adoptado')
                       ? (widget.objeto.userId == controlador1.usuario.documentId
-                          ? Text('Usuario que adoptó a la mascota')
-                          : Text('Usuario que dio en adopción a tu mascota'))
+                          ? Text('Usuario que adoptó a la mascota',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                              ))
+                          : Text('Usuario que dio en adopción a tu mascota',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                              )))
                       : Container(),
                 ),
                 widget.objeto.adoptanteNombre != null
