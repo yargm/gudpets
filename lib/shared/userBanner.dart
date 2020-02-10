@@ -55,10 +55,11 @@ class UserBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(usuario.nombre),
+                  Text(usuario.nombre, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                   usuario.descripcion != null
                       ? Text(usuario.descripcion)
                       : Container(),
+                      SizedBox(height: 3,),
                   extended
                       ? Row(
                           children: <Widget>[
@@ -92,7 +93,7 @@ class UserBanner extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.details)
+            extended ? Icon(Icons.details) : Container()
           ],
         ),
       ),

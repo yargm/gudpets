@@ -55,7 +55,7 @@ class UsuarioModel {
   UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
     contrasena = data['tcontrasena'];
     correo = data['correo'];
-    descripcion = data['descripcion'];
+    descripcion = data['descripcion'] ?? '';
     edad = calculateAge(data['fnacimiento'].toDate());
     foto = data['foto'];
     nombre = data['nombre'];

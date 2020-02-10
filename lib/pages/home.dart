@@ -47,6 +47,7 @@ class _HomeState extends State<Home> {
       },
       child: Scaffold(
         drawer: MyDrawer(controlador1: controlador1),
+
         appBar: controlador1.pestana_act == 0 || controlador1.pestana_act == 1
             ? AppBar(
                 actions: <Widget>[
@@ -90,6 +91,7 @@ class _HomeState extends State<Home> {
                   )
                 ],
               ),
+
         body: Center(
           child: _widgetOptions.elementAt(seleccionado),
         ),
