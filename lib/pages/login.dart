@@ -1,11 +1,10 @@
-
 import 'package:adoption_app/services/models.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:adoption_app/shared/colores.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LogIn extends StatefulWidget {
@@ -44,41 +43,59 @@ class _LogInState extends State<LogIn> {
       backgroundColor: Colors.amber[100],
       body: WillPopScope(
         onWillPop: () async => false,
-              child: SingleChildScrollView(
+        child: SingleChildScrollView(
           child: Center(
             child: Container(
               width: double.maxFinite,
               margin: EdgeInsets.all(4.0),
               padding: const EdgeInsets.fromLTRB(0, 70, 0, 90),
               child: Form(
-                      key: key,
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            width: 190.0,
-                            height: 190.0,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage('assets/gudpetsfirstNoText.png')
-
-                                )),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Text(
-                            'GudPets',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: secondaryColor,fontSize: 70, fontWeight: FontWeight.bold),
-
-                            
-                          ),
-                          SizedBox(
-                            height: 30.0,
-                          ),
-                          isLoading ? CircularProgressIndicator() : Card(
+                key: key,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      width: 190.0,
+                      height: 190.0,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image:
+                                  AssetImage('assets/gudpetsfirstNoText.png'))),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      'GudPets',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: secondaryColor,
+                          fontSize: 70,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'DESARROLLADO POR',
+                          style: TextStyle(color: Colors.grey, fontSize: 15),
+                        ),
+                        Text(
+                          ' GUDTECH',
+                          style: TextStyle(color: gudtech, fontSize: 15),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    isLoading
+                        ? CircularProgressIndicator()
+                        : Card(
                             margin: EdgeInsets.symmetric(horizontal: 40),
                             elevation: 9.0,
                             shape: ContinuousRectangleBorder(
@@ -106,7 +123,8 @@ class _LogInState extends State<LogIn> {
                                       labelText: 'Usuario',
                                       prefixIcon: Icon(Icons.account_circle),
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
                                       ),
                                     ),
                                   ),
@@ -129,7 +147,8 @@ class _LogInState extends State<LogIn> {
                                       labelText: 'Contraseña',
                                       prefixIcon: Icon(Icons.lock),
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
                                       ),
                                     ),
                                   ),
@@ -144,33 +163,41 @@ class _LogInState extends State<LogIn> {
                                         width: 37,
                                       ),
                                       RaisedButton(
-                                        onPressed: () {
-                                          if (key.currentState.validate()) {
-                                            key.currentState.save();
-                                            var consulta = Firestore.instance
-                                                .collection('usuarios')
-                                                .where('correo',
-                                                    isEqualTo: loginMap['user'])
-                                                .where('contrasena',
-                                                    isEqualTo:
-                                                        loginMap['password'])
-                                                .getDocuments();
+                                        onPressed: () async {
+                                          if (!key.currentState
+                                              .validate()) {
+                                            return;
+                                          }
+                                          setState(() {
+                                            isLoading = true;
+                                          });
 
-                                            consulta.then((onValue) {
-                                              if (onValue.documents.isEmpty) {
-                                                print('Datos Incorrectos');
-                                                return;
-                                              } else {
-                                                controlador1.agregausuario(
-                                                    UsuarioModel
-                                                        .fromDocumentSnapshot(
-                                                            onValue.documents
-                                                                .first));
-                                                Navigator.of(context)
-                                                    .pushNamedAndRemoveUntil(
-                                                        '/home', ModalRoute.withName('/home')  );
-                                              }
+                                          key.currentState.save();
+                                          var query = await Firestore.instance
+                                              .collection('usuarios')
+                                              .where('correo',
+                                                  isEqualTo: loginMap['user'])
+                                              .where('contrasena',
+                                                  isEqualTo:
+                                                      loginMap['password'])
+                                              .getDocuments();
+
+                                          if (query.documents.isEmpty) {
+                                            print('Datos incorrectos');
+                                            setState(() {
+                                              isLoading = false;
                                             });
+                                            return;
+                                          } else {
+                                            setState(() {
+                                              isLoading = false;
+                                            });
+                                            var user = query.documents.first;
+                                            controlador1.usuario_act =
+                                                UsuarioModel
+                                                    .fromDocumentSnapshot(user);
+                                            await controlador1.signIn();
+                                            Navigator.of(context).pushNamedAndRemoveUntil('/home', ModalRoute.withName('/home'));
                                           }
                                         },
                                         color: Colors.brown[300],
@@ -195,15 +222,16 @@ class _LogInState extends State<LogIn> {
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () =>  Navigator.of(context).pushReplacementNamed('/registro_usuario'),
+        onPressed: () =>
+            Navigator.of(context).pushReplacementNamed('/registro_usuario'),
         label: Text(' Registrate'),
         icon: Icon(FontAwesomeIcons.userPlus),
         backgroundColor: secondaryColor,

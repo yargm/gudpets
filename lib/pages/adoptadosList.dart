@@ -30,49 +30,44 @@ class _AdoptadosListState extends State<AdoptadosList> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: Text('Cargando...'));
-                } else if (snapshot.data.documents.length == 0) {
-                  return Column(
-                    children: <Widget>[
-                      Center(
-                        child: Text(
-                          'No haz realizado ninguna adopción.',
-                        ),
-                      ),
-                    ],
+                }
+
+                if (snapshot.data.documents.length == 0) {
+                  return Text(
+                    'No haz realizado ninguna adopción.',
                   );
-                } else {
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics:
-                          ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                      itemCount: snapshot.data.documents.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(snapshot.data.documents[index]['titulo']),
-                          leading: Hero(
-                            tag: snapshot.data.documents[index].documentID,
-                            child: GestureDetector(
-                              onTap: () async {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) {
-                                  return Adopcion(
-                                    favorito: null,
-                                    objeto: AdopcionModel.fromDocumentSnapshot(
-                                        snapshot.data.documents[index]),
-                                  );
-                                }));
-                              },
-                              child: Image(
-                                width: 40,
-                                height: 40,
-                                image: NetworkImage(
-                                    snapshot.data.documents[index]['foto']),
-                              ),
+                }
+
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics:
+                        ScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(snapshot.data.documents[index]['titulo']),
+                        leading: Hero(
+                          tag: snapshot.data.documents[index].documentID,
+                          child: GestureDetector(
+                            onTap: () async {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Adopcion(
+                                        favorito: null,
+                                        objeto:
+                                            AdopcionModel.fromDocumentSnapshot(
+                                                snapshot.data.documents[index]),
+                                      )));
+                            },
+                            child: Image(
+                              width: 40,
+                              height: 40,
+                              image: NetworkImage(
+                                  snapshot.data.documents[index]['foto']),
                             ),
                           ),
-                        );
-                      });
-                }
+                        ),
+                      );
+                    });
               },
             ),
           ),

@@ -129,45 +129,74 @@ exports.nuevaSolicitud = functions.firestore.document('adopciones/{adopcion}/sol
     })
 })
 
-exports.nuevaSolicitud = functions.firestore.document('adopciones/{adopcion}'
+exports.adopcionAceptada = functions.firestore.document('adopciones/{adopcion}'
 ).onUpdate((snapshot, context) => {
-    var adopcionData = snapshot.data();
+    var adopcionData = snapshot.after.data();
     var listaTokens = [];
+    var adopcionID = snapshot.after.id;
 
-    admin.firestore().collection('usuarios').doc(adopcionData.adoptanteId).get().then((snapshot) => {
-        var usuario = snapshot;
-        if (usuario.data().tokens != undefined) {
-            console.log('tokens definido');
-            if (usuario.data().tokens != null) {
-                console.log('tokens no nulo');
-                for (var token of usuario.data().tokens) {
-                    console.log('adding token');
-                    listaTokens.push(token);
+    if(snapshot.before.data().status == 'en adopcion'){
+        admin.firestore().collection('usuarios').doc(adopcionData.adoptanteId).get().then((snapshot) => {
+            var usuario = snapshot;
+            if (usuario.data().tokens != undefined) {
+                console.log('tokens definido');
+                if (usuario.data().tokens != null) {
+                    console.log('tokens no nulo');
+                    for (var token of usuario.data().tokens) {
+                        console.log('adding token');
+                        listaTokens.push(token);
+                    }
                 }
             }
-        }
-
-
-
-        var payload = {
-            "notification": {
-                "title": "¡Felicitaciones!",
-                "body": "Fuiste aceptado como adoptante en la publicación " + adopcionData.titulo + ". Revisa la lista Mis adopciones en el menú principal.",
-                "sound": "default"
-            },
-            "data": {
-                "sendername": adopcionData.adoptanteNombre,
-                "message": adopcionData.adoptanteNombre,
+        
+            admin.firestore().collection('usuarios').get().then((snapshot) => {
+                var listaUsuarios = snapshot.docs;
+                for (var usuario of listaUsuarios) {
+                    if (usuario.data().adopciones != undefined) {
+                        if (usuario.data().adopciones != null) {
+                            for (var adopcion of usuario.data().adopciones) {
+                                var documentID = adopcion['documentId'];
+                                if (documentID == adopcionID) {
+                                    usuario.ref.update({ adopciones: admin.firestore.FieldValue.arrayRemove(adopcion) }
+                                    ).then(() => {
+                                        console.log('deleted from ' + usuario.data().correo)
+                                    });
+        
+                                }
+                            }
+                        }
+                    }
+        
+                }
+                console.log('deleted all the registers')
+            })
+    
+    
+    
+            var payload = {
+                "notification": {
+                    "title": "¡Felicitaciones!",
+                    "body": "Fuiste aceptado como adoptante en la publicación " + adopcionData.titulo + ". Revisa la lista Mis adopciones en el menú principal.",
+                    "sound": "default"
+                },
+                "data": {
+                    "sendername": adopcionData.adoptanteNombre,
+                    "message": adopcionData.adoptanteNombre,
+                }
             }
-        }
-
-        return admin.messaging().sendToDevice(listaTokens, payload).then((response) => {
-            console.log('Se enviaron todas las notificaciones');
-
-        }).catch((err) => {
-            console.log(err);
-        });
-    })
+    
+            return admin.messaging().sendToDevice(listaTokens, payload).then((response) => {
+                console.log('Se enviaron todas las notificaciones');
+    
+            }).catch((err) => {
+                console.log(err);
+            });
+        })
+    }
+    else{
+        return;
+    }
+    
 })
 
 
