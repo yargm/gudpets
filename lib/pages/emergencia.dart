@@ -281,10 +281,23 @@ class _EmergenciaState extends State<Emergencia> {
                             SizedBox(
                               height: 10.0,
                             ),
-                            Container(
-                                height: 200.0,
-                                width: 400.0,
-                                child: Image.asset('assets/denuncia2.jpg')),
+                            GestureDetector(
+                              onTap: () => showDialog(
+                                context: context,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Image.asset('assets/denuncia2.jpg', 
+                                  width: 700,
+                                  height: 500,
+                                    
+                                  ),
+                                )
+                              ),
+                                                          child: Container(
+                                  height: 200.0,
+                                  width: 400.0,
+                                  child: Image.asset('assets/denuncia2.jpg')),
+                            ),
                           ],
                         )
                       : Container(),

@@ -141,7 +141,7 @@ class _HomeState extends State<Home> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.home),
-              title: Text('Adopcion'),
+              title: Text('Adopción'),
             ),
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.searchLocation),
