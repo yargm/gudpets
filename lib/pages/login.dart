@@ -6,13 +6,47 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
 class LogIn extends StatefulWidget {
   @override
   _LogInState createState() => _LogInState();
 }
 
 class _LogInState extends State<LogIn> {
+  void initState() {
+    super.initState();
+    PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.locationWhenInUse)
+        .then((status) {
+      print(status.toString());
+      if (status.toString() == 'PermissionStatus.denied' ||
+          status.toString() == 'PermissionStatus.unknown' ||
+          status.toString() == 'PermissionStatus.disabled') {
+        print('preguntar');
+        _askpermission();
+      } else {
+        print('ya me aceptaste antes');
+        return;
+      }
+    });
+  }
+
+  Future<bool> _askpermission() async {
+    await PermissionHandler()
+        .requestPermissions([PermissionGroup.locationWhenInUse]);
+    await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.locationWhenInUse)
+        .then((status) {
+          print(status.toString());
+          if(status.toString() == 'PermissionStatus.denied'){
+            exit(0);
+          }
+        });
+    
+    return true;
+  }
+
   final key = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -164,8 +198,7 @@ class _LogInState extends State<LogIn> {
                                       ),
                                       RaisedButton(
                                         onPressed: () async {
-                                          if (!key.currentState
-                                              .validate()) {
+                                          if (!key.currentState.validate()) {
                                             return;
                                           }
                                           setState(() {
@@ -197,7 +230,11 @@ class _LogInState extends State<LogIn> {
                                                 UsuarioModel
                                                     .fromDocumentSnapshot(user);
                                             await controlador1.signIn();
-                                            Navigator.of(context).pushNamedAndRemoveUntil('/home', ModalRoute.withName('/home'));
+                                            Navigator.of(context)
+                                                .pushNamedAndRemoveUntil(
+                                                    '/home',
+                                                    ModalRoute.withName(
+                                                        '/home'));
                                           }
                                         },
                                         color: Colors.brown[300],
