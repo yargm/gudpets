@@ -34,10 +34,12 @@ class _LogInState extends State<LogIn> {
           status.toString() == 'PermissionStatus.unknown' ||
           status.toString() == 'PermissionStatus.disabled') {
         print('preguntar');
-        _askpermission();
+    _askpermission();
+      
       } else {
         print('ya me aceptaste antes');
         return;
+       
       }
     });
   }

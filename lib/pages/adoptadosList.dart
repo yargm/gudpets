@@ -64,8 +64,8 @@ class _AdoptadosListState extends State<AdoptadosList> {
                           leading: Hero(
                               tag: snapshot.data.documents[index].documentID,
                               child: Image(
-                                width: 100,
-                                height: 100,
+                                width: 40,
+                                height: 40,
                                 image: NetworkImage(
                                     snapshot.data.documents[index]['foto']),
                               )
