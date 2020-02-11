@@ -377,7 +377,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                   },
                   validator: (String value) {
                     if (value.isEmpty) {
-                      return 'Edad vacío';
+                      return 'Edad vacía';
                     }
                   },
                   decoration: InputDecoration(
