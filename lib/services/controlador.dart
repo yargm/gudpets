@@ -43,7 +43,11 @@ AdopcionModel adopcion;
     await usuario.reference.updateData({
       'tokens' : FieldValue.arrayRemove([activeToken])
     });
-    prefs.clear();
+    await prefs.clear();
+    uid = '';
+    name = '';
+    imageUrl = '';
+    email = '';
   }
 
   signIn() async {

@@ -90,7 +90,7 @@ class _InfoState extends State<Info> {
                 ),
                 FloatingActionButton.extended(
                   onPressed: () => launch(
-                      'http://gudtech.tech/es/sample-page/home-spanish/'),
+                      'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CKVCWLMCRCFTN&source=url'),
                   label: Text('Donar'),
                   icon: Icon(FontAwesomeIcons.paypal),
                 ),
