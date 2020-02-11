@@ -59,7 +59,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   }
 
   _launchURL() async {
-  const url = 'https://flutter.dev';
+  const url = 'https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/Pol%C3%ADticas%20de%20privacidad.pdf?alt=media&token=ff41a4f7-c898-4426-95e6-fa5bd7d45099';
   if (await canLaunch(url)) {
     await launch(url);
   } else {

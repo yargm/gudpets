@@ -44,27 +44,33 @@ class _AdoptadosListState extends State<AdoptadosList> {
                         ScrollPhysics(parent: NeverScrollableScrollPhysics()),
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(snapshot.data.documents[index]['titulo']),
-                        leading: Hero(
-                          tag: snapshot.data.documents[index].documentID,
-                          child: GestureDetector(
-                            onTap: () async {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Adopcion(
-                                        favorito: null,
-                                        objeto:
-                                            AdopcionModel.fromDocumentSnapshot(
-                                                snapshot.data.documents[index]),
-                                      )));
-                            },
-                            child: Image(
-                              width: 40,
-                              height: 40,
-                              image: NetworkImage(
-                                  snapshot.data.documents[index]['foto']),
-                            ),
+                      return GestureDetector(
+                        onTap: () async {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Adopcion(
+                                    favorito: null,
+                                    objeto: AdopcionModel.fromDocumentSnapshot(
+                                        snapshot.data.documents[index]),
+                                  )));
+                        },
+                        child: ListTile(
+                          title: Text(
+                            snapshot.data.documents[index]['titulo'],
+                            style: TextStyle(fontSize: 20),
                           ),
+                          subtitle: Text(
+                            'Edad: ' + snapshot.data.documents[index]['edad'],
+                          ),
+                          leading: Hero(
+                              tag: snapshot.data.documents[index].documentID,
+                              child: Image(
+                                width: 40,
+                                height: 40,
+                                image: NetworkImage(
+                                    snapshot.data.documents[index]['foto']),
+                              )
+                              ),
+                              trailing: Icon(Icons.arrow_forward_ios),
                         ),
                       );
                     });

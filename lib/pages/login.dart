@@ -8,12 +8,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
+
 class LogIn extends StatefulWidget {
   @override
   _LogInState createState() => _LogInState();
 }
 
 class _LogInState extends State<LogIn> {
+  final key = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String error = '';
+
+  bool isLoading = true;
+
+  Map<String, dynamic> loginMap = {'user': null, 'password': null};
+
   void initState() {
     super.initState();
     PermissionHandler()
@@ -35,26 +45,16 @@ class _LogInState extends State<LogIn> {
   Future<bool> _askpermission() async {
     await PermissionHandler()
         .requestPermissions([PermissionGroup.locationWhenInUse]);
+
     await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.locationWhenInUse)
         .then((status) {
-          print(status.toString());
-          if(status.toString() == 'PermissionStatus.denied'){
-            exit(0);
-          }
-        });
-    
+      if (status.toString() == 'PermissionStatus.denied') {
+        exit(0);
+      }
+    });
     return true;
   }
-
-  final key = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  String error = '';
-
-  bool isLoading = true;
-
-  Map<String, dynamic> loginMap = {'user': null, 'password': null};
 
   @override
   Widget build(BuildContext context) {

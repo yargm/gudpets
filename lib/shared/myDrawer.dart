@@ -95,7 +95,7 @@ class MyDrawer extends StatelessWidget {
             onTap: () async {
               signOutGoogle();
               await controlador1.signOut();
-              Navigator.of(context).pushReplacementNamed('/login');
+              Navigator.of(context).pushNamedAndRemoveUntil('/login', ModalRoute.withName('/home'));
             },
           ),
         ],

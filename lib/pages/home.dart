@@ -47,54 +47,85 @@ class _HomeState extends State<Home> {
       },
       child: Scaffold(
         drawer: MyDrawer(controlador1: controlador1),
+
         appBar: AppBar(
           title: Row(
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(2),
-                child: Image(
-                  image: AssetImage('assets/gudpetsfirstNoText.png'),
-                ),
-                width: 35,
-                height: 35,
+              Image(
+                width: 30,
+                height: 30,
+                image: AssetImage('assets/gudpetsfirstNoText.png'),
               ),
-              Text(
-                'GudPets',
-                style: TextStyle(color: secondaryDark),
-              )
+              SizedBox(width: 10,),
+              Text('GudPets')
             ],
           ),
-          actions: <Widget>[
-            controlador1.pestana_act == 0 || controlador1.pestana_act == 1 ? IconButton(
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: CustomSearchDelegate(controlador1.pestana_act == 0
-                      ? 'adopciones'
-                      : controlador1.pestana_act == 1 ? 'perdidos' : ''),
-                );
-              },
-              icon: Icon(Icons.search),
-            ) : Container(),
-            IconButton(
-              onPressed: () {
-                return Navigator.of(context).pushNamed('/avisos');
-                // print('avisos');
-              },
-              icon: Icon(
-                FontAwesomeIcons.bullhorn,
-                size: 20,
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.help),
+                    onPressed: () => showDialog(
+                      context: context,
+                      child: SingleChildScrollView(
+                                              child: FadeInImage(
+                          image: NetworkImage('https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/infgudpets.png?alt=media&token=e37c4267-c4ec-4d3d-8286-5c726248f15c'),
+                          placeholder: AssetImage('assets/dog.png'),
+                        ),
+                      )
+                    ),
+                  ),
+                controlador1.pestana_act == 0 || controlador1.pestana_act == 1
+            ?   IconButton(
+                    onPressed: () {
+                      showSearch(
+                        context: context,
+                        delegate: CustomSearchDelegate(
+                            controlador1.pestana_act == 0
+                                ? 'adopciones'
+                                : controlador1.pestana_act == 1
+                                    ? 'perdidos'
+                                    : ''),
+                      );
+                    },
+                    icon: Icon(Icons.search),
+                  ) : Container(),
+                  IconButton(
+                    onPressed: () {
+                      return Navigator.of(context).pushNamed('/avisos');
+                      // print('avisos');
+                    },
+                    icon: Icon(
+                      FontAwesomeIcons.bullhorn,
+                      size: 20,
+                    ),
+                  )
+                ],
               ),
-            ),
-          ],
-        ),
+        
+
         body: Center(
           child: _widgetOptions.elementAt(seleccionado),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             controlador1.pestana_act == 0
-                ? Navigator.of(context).pushNamed('/registro_adopcion')
+                ? controlador1.usuario.fotoINE != null
+                    ? Navigator.of(context).pushNamed('/registro_adopcion')
+                    : showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              title: Text('No puedes realizar una publicación en esta sección.'),
+                              content: Text(
+                                  'Para realizar una publicación es necesario completar tu información.'),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: () {
+                                    return Navigator.of(context)
+                                        .pushNamed('/perfil');
+                                  },
+                                  child: Text('IR A PERFIL'),
+                                )
+                              ],
+                            ))
                 : controlador1.pestana_act == 1
                     ? Navigator.of(context).pushNamed('/registro_perdido')
                     : controlador1.pestana_act == 2
