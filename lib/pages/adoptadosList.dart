@@ -22,19 +22,22 @@ class _AdoptadosListState extends State<AdoptadosList> {
       body: Card(
         margin: EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 15),
         child: Container(
-          height: double.maxFinite,
+          width: double.infinity,
+          height: double.infinity,
           margin: EdgeInsets.all(20),
           child: SingleChildScrollView(
             child: StreamBuilder(
               stream: adoptados,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(child: Text('Cargando...'));
+                  return Center(child: Text('Cargando...',style: TextStyle(fontSize: 30),));
                 }
 
                 if (snapshot.data.documents.length == 0) {
-                  return Text(
-                    'No haz realizado ninguna adopción.',
+                  return Center(
+                                      child: Text(
+                      'No haz realizado ninguna adopción.',style: TextStyle(fontSize: 20),
+                    ),
                   );
                 }
 

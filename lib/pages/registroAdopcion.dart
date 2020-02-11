@@ -388,8 +388,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                 ),
                 SizedBox(
                   height: 15,
-
-                ), 
+                ),
                 //Guardar
                 Center(
                   child: isLoadig
@@ -419,7 +418,13 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                               }
                               print(form_adopcion['fotos'].toString());
                             }
-                            if (_image != null) {
+                            if (_image != null &&
+                                form_adopcion['tipoAnimal'] != null &&
+                                form_adopcion['sexo'] != null &&
+                                form_adopcion['convivenciaotros'] != null &&
+                                form_adopcion['desparacitacion'] != null &&
+                                form_adopcion['esterilizacion'] != null &&
+                                form_adopcion['vacunacion'] != null) {
                               final String fileName =
                                   controlador1.usuario.correo +
                                       '/adopcion/' +
