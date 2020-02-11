@@ -35,25 +35,23 @@ class _EmergenciaState extends State<Emergencia> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        actions: <Widget>[
-          Container(
-              padding: EdgeInsets.all(10),
-              child: Image(
-                image: AssetImage('assets/gudpetsfirstNoText.png'),
-              )),
-        ],
-        title: Text('GudPets'),
-        // leading: IconButton(
-        //   color: Colors.white,
-        //   onPressed: () => Navigator.of(context).pop(),
-        //   icon: Icon(
-        //     FontAwesomeIcons.chevronCircleLeft,
-        //   ),
-        // ),
-        // elevation: 0,
-        backgroundColor: Colors.white,
-      ),
-      
+          actions: <Widget>[
+            Container(
+                padding: EdgeInsets.all(10),
+                child: Image(
+                  image: AssetImage('assets/gudpetsfirstNoText.png'),
+                )),
+          ],
+          title: Text('GudPets'),
+          // leading: IconButton(
+          //   color: Colors.white,
+          //   onPressed: () => Navigator.of(context).pop(),
+          //   icon: Icon(
+          //     FontAwesomeIcons.chevronCircleLeft,
+          //   ),
+          // ),
+          // elevation: 0,
+          backgroundColor: Colors.white),
       body: SingleChildScrollView(
           child: Column(
         children: <Widget>[
@@ -149,7 +147,9 @@ class _EmergenciaState extends State<Emergencia> {
                       // ),
                     ],
                   ),
-                  SizedBox(height: 40,),
+                  SizedBox(
+                    height: 40,
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -166,36 +166,43 @@ class _EmergenciaState extends State<Emergencia> {
                       ),
                     ],
                   ),
-                 SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                    Icon(Icons.adjust),
-                    SizedBox(width: 10,),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Tipo de emergencia: ',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                              )),
-                          Text(widget.objeto.tipoEmergencia,
-                              style: TextStyle(
-                                  fontSize: 18.0, color: Colors.grey)),
-                        ],
-                      ),
-                    ),
-                  ]),
-                  SizedBox(height: 20,),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(Icons.adjust),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Tipo de emergencia: ',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  )),
+                              Text(widget.objeto.tipoEmergencia,
+                                  style: TextStyle(
+                                      fontSize: 18.0, color: Colors.grey)),
+                            ],
+                          ),
+                        ),
+                      ]),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Icon(Icons.calendar_today),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       Column(
                         children: <Widget>[
-                        
                           Text('Fecha de publicación: ',
                               style: TextStyle(
                                 fontSize: 20.0,
@@ -215,31 +222,34 @@ class _EmergenciaState extends State<Emergencia> {
                   SizedBox(
                     height: 20.0,
                   ),
-                 
                   SizedBox(
-                    height: 15.0,
+                    height: 30.0,
                   ),
                   Divider(
-                    endIndent: 20,
-                    indent: 20,
+                    endIndent: 60,
+                    indent: 60,
                     thickness: 1,
                     color: secondaryDark,
                   ),
                   SizedBox(
-                    height: 15.0,
+                    height: 30.0,
                   ),
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     children: <Widget>[
-                       Icon(Icons.location_on),
-                       SizedBox(width: 5,),
-                       Text('Ubicación: ',
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(Icons.location_on),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text('Ubicación: ',
                           style: TextStyle(
                             fontSize: 20.0,
                           )),
-                     ],
-                   ),
-                      SizedBox(height: 5,),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Container(
                     height: 300.0,
                     width: 400.0,

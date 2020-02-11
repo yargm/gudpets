@@ -242,7 +242,7 @@ class _RescateState extends State<Rescate> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(height: 30,),
                     Divider(
                     endIndent: 60,
                     indent: 60,
@@ -250,7 +250,7 @@ class _RescateState extends State<Rescate> {
                     color: secondaryDark,
                   ),
                   SizedBox(
-                    height: 20.0,
+                    height: 30.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -298,7 +298,7 @@ class _RescateState extends State<Rescate> {
                           'No hay nada para mostrar',
                           style: TextStyle(color: Colors.grey, fontSize: 18),
                         ),
-                   SizedBox(height: 20,),
+                   SizedBox(height: 30,),
                     Divider(
                     endIndent: 60,
                     indent: 60,
@@ -307,7 +307,7 @@ class _RescateState extends State<Rescate> {
                   ),
                
                   SizedBox(
-                    height: 20,
+                    height: 30,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

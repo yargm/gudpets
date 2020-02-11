@@ -23,6 +23,7 @@ class _AdopcionState extends State<Adopcion> {
     controlador1.adopcion = widget.objeto;
     // TODO: implement build
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         actions: <Widget>[
           Container(
@@ -120,195 +121,279 @@ class _AdopcionState extends State<Adopcion> {
                         )
                       ],
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
-                      child: Text(widget.objeto.descripcion,
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.grey,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Row(children: <Widget>[
-                  Expanded(
-                    child: Column(
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Icon(Icons.description),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Text(widget.objeto.descripcion,
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                color: Colors.grey,
+                              )),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(FontAwesomeIcons.venusMars),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text('Sexo: ',
                             style: TextStyle(
                               fontSize: 20.0,
                             )),
-
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(widget.objeto.sexo,
                             style:
-                                TextStyle(fontSize: 18.0, color: Colors.grey)),
+                                TextStyle(fontSize: 18.0, color: Colors.grey))
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(Icons.cake),
                         SizedBox(
-                          height: 20.0,
+                          width: 10,
                         ),
                         Text('Edad: ',
                             style: TextStyle(
                               fontSize: 20.0,
                             )),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(widget.objeto.edad,
                             style:
                                 TextStyle(fontSize: 18.0, color: Colors.grey)),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text('Convivencia con otros: ',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                )),
-                            widget.objeto.convivenciaotros
-                                ? Text('Sí',
-                                    style: TextStyle(
-                                        fontSize: 18.0, color: Colors.grey))
-                                : Text('No'),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text('Desparacitado: ',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                )),
-                            widget.objeto.desparacitacion
-                                ? Text('Sí',
-                                    style: TextStyle(
-                                        fontSize: 18.0, color: Colors.grey))
-                                : Text('No',
-                                    style: TextStyle(
-                                        fontSize: 18.0, color: Colors.grey)),
-                          ],
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          widget.objeto.convivenciaotros
+                              ? Icons.check_circle
+                              : Icons.cancel,
+                          color: widget.objeto.convivenciaotros
+                              ? Colors.green
+                              : Colors.red,
                         ),
                         SizedBox(
-                          height: 20.0,
+                          width: 10,
                         ),
-                        Row(
-                          children: <Widget>[
-                            Text('Vacunado: ',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                )),
-                            widget.objeto.vacunacion
-                                ? Text('Sí',
-                                    style: TextStyle(
-                                        fontSize: 18.0, color: Colors.grey))
-                                : Text('No',
-                                    style: TextStyle(
-                                        fontSize: 18.0, color: Colors.grey)),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text('Esterilizado: ',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                )),
-                            widget.objeto.esterilizacion
-                                ? Text('Si',
-                                    style: TextStyle(
-                                        fontSize: 18.0, color: Colors.grey))
-                                : Text('No',
-                                    style: TextStyle(
-                                        fontSize: 18.0, color: Colors.grey)),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Center(
-                          child: Text('Álbum',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                              )),
-                        ),
-                        SizedBox(height: 5),
-                        widget.objeto.fotos.isNotEmpty
-                            ? Column(
-                                children: <Widget>[
-                                  Text(
-                                    "Desliza hacia la derecha ",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 18),
-                                  ),
-                                  Container(
-                                    height: 350,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      shrinkWrap: true,
-                                      physics: ScrollPhysics(
-                                          parent: BouncingScrollPhysics(
-                                              parent:
-                                                  AlwaysScrollableScrollPhysics())),
-                                      itemBuilder: (context, index) =>
-                                          FadeInImage(
-                                        fit: BoxFit.cover,
-                                        placeholder:
-                                            AssetImage('assets/dog.png'),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.85,
-                                        height: 300,
-                                        image: NetworkImage(
-                                            widget.objeto.fotos[index]),
-                                      ),
-                                      itemCount: widget.objeto.fotos.length,
-                                    ),
-                                  )
-                                ],
-                              )
-                            : Text(
-                                'No hay nada para mostrar',
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 18),
-                              ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text('Fecha de publicación: ',
+                        Text('Convivencia con otros: ',
                             style: TextStyle(
                               fontSize: 20.0,
                             )),
-                        Text(
-                          widget.objeto.fecha.day.toString() +
-                              '/' +
-                              widget.objeto.fecha.month.toString() +
-                              '/' +
-                              widget.objeto.fecha.year.toString(),
-                          style: TextStyle(color: Colors.grey, fontSize: 18),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-
-                        //Aquí, no mames
+                        widget.objeto.convivenciaotros
+                            ? Text('Sí',
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.grey))
+                            : Text('No'),
                       ],
                     ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          widget.objeto.convivenciaotros
+                              ? Icons.check_circle
+                              : Icons.cancel,
+                          color: widget.objeto.convivenciaotros
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Desparacitado: ',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            )),
+                        widget.objeto.desparacitacion
+                            ? Text('Sí',
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.grey))
+                            : Text('No',
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.grey)),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          widget.objeto.convivenciaotros
+                              ? Icons.check_circle
+                              : Icons.cancel,
+                          color: widget.objeto.convivenciaotros
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Vacunado: ',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            )),
+                        widget.objeto.vacunacion
+                            ? Text('Sí',
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.grey))
+                            : Text('No',
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.grey)),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          widget.objeto.convivenciaotros
+                              ? Icons.check_circle
+                              : Icons.cancel,
+                          color: widget.objeto.convivenciaotros
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Esterilizado: ',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            )),
+                        widget.objeto.esterilizacion
+                            ? Text('Si',
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.grey))
+                            : Text('No',
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.grey)),
+                      ],
+                    ),
+                    SizedBox(height: 20,),
+                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(Icons.calendar_today),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text('Fecha de publicación: ',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                )),
+                            Text(
+                              widget.objeto.fecha.day.toString() +
+                                  '/' +
+                                  widget.objeto.fecha.month.toString() +
+                                  '/' +
+                                  widget.objeto.fecha.year.toString(),
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 18),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                     Divider(
+                    endIndent: 60,
+                    indent: 60,
+                    thickness: 1,
+                    color: secondaryDark,
                   ),
-                ]),
+                  SizedBox(height: 30,),
+                    Center(
+                      child: Text('Álbum',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          )),
+                    ),
+                    SizedBox(height: 5),
+                    widget.objeto.fotos.isNotEmpty
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Desliza hacia la derecha ",
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),
+                              ),
+                              Container(
+                                height: 350,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  physics: ScrollPhysics(
+                                      parent: BouncingScrollPhysics(
+                                          parent:
+                                              AlwaysScrollableScrollPhysics())),
+                                  itemBuilder: (context, index) => FadeInImage(
+                                    fit: BoxFit.cover,
+                                    placeholder: AssetImage('assets/dog.png'),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.85,
+                                    height: 300,
+                                    image: NetworkImage(
+                                        widget.objeto.fotos[index]),
+                                  ),
+                                  itemCount: widget.objeto.fotos.length,
+                                ),
+                              )
+                            ],
+                          )
+                        : Text(
+                            'No hay nada para mostrar',
+                            style: TextStyle(color: Colors.grey, fontSize: 18),
+                          ),
+                   
+                  ],
+                ),
               ),
+              SizedBox(height: 30,),
+               Divider(
+                    endIndent: 60,
+                    indent: 60,
+                    thickness: 1,
+                    color: secondaryDark,
+                  ),
+                  SizedBox(height: 30,),
               ButtonBar(
+                alignment: MainAxisAlignment.center,
                 children: <Widget>[
                   controlador1.usuario.documentId == widget.objeto.userId &&
                           widget.objeto.status == 'en adopcion'
-                      ? RaisedButton.icon(
+                      ? FloatingActionButton.extended(
                           icon: Icon(FontAwesomeIcons.userFriends),
                           label: Text('Ver solicitudes'),
                           onPressed: () {
@@ -323,7 +408,7 @@ class _AdopcionState extends State<Adopcion> {
                           },
                         )
                       : widget.objeto.status == 'en adopcion'
-                          ? RaisedButton.icon(
+                          ? FloatingActionButton.extended(
                               icon: Icon(FontAwesomeIcons.home),
                               label: Text('Adoptar'),
                               onPressed: () async {

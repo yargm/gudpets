@@ -48,10 +48,33 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         drawer: MyDrawer(controlador1: controlador1),
 
-        appBar: controlador1.pestana_act == 0 || controlador1.pestana_act == 1
-            ? AppBar(
+        appBar: AppBar(
+          title: Row(
+            children: <Widget>[
+              Image(
+                width: 30,
+                height: 30,
+                image: AssetImage('assets/gudpetsfirstNoText.png'),
+              ),
+              SizedBox(width: 10,),
+              Text('GudPets')
+            ],
+          ),
                 actions: <Widget>[
                   IconButton(
+                    icon: Icon(Icons.help),
+                    onPressed: () => showDialog(
+                      context: context,
+                      child: SingleChildScrollView(
+                                              child: FadeInImage(
+                          image: NetworkImage('https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/infgudpets.png?alt=media&token=e37c4267-c4ec-4d3d-8286-5c726248f15c'),
+                          placeholder: AssetImage('assets/dog.png'),
+                        ),
+                      )
+                    ),
+                  ),
+                controlador1.pestana_act == 0 || controlador1.pestana_act == 1
+            ?   IconButton(
                     onPressed: () {
                       showSearch(
                         context: context,
@@ -64,21 +87,7 @@ class _HomeState extends State<Home> {
                       );
                     },
                     icon: Icon(Icons.search),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      return Navigator.of(context).pushNamed('/avisos');
-                      // print('avisos');
-                    },
-                    icon: Icon(
-                      FontAwesomeIcons.bullhorn,
-                      size: 20,
-                    ),
-                  )
-                ],
-              )
-            : AppBar(
-                actions: <Widget>[
+                  ) : Container(),
                   IconButton(
                     onPressed: () {
                       return Navigator.of(context).pushNamed('/avisos');
@@ -91,6 +100,7 @@ class _HomeState extends State<Home> {
                   )
                 ],
               ),
+        
 
         body: Center(
           child: _widgetOptions.elementAt(seleccionado),
