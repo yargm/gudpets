@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "720642444819-geu8dv0v2ap3rkbpcm720us8ef8r4qjl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gudtech.adoption_app",
+            "certificate_hash": "f4287ebb732376ec828d10fcd025cd818db42284"
+          }
+        },
+        {
+          "client_id": "720642444819-e06d6sdpiccgfa2nu5rcmgonp2vakc0r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gudtech.adoption_app",
+            "certificate_hash": "bf2c14fbed0f0eca9d8c410b5df0d9f2d5700db9"
+          }
+        },
+        {
+          "client_id": "720642444819-tin7l50skoohakh3pqg231vpf2ik70f6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gudtech.adoption_app",
+            "certificate_hash": "430306536cc991d90947f9e331e694ea4d2c605e"
+          }
+        },
+        {
           "client_id": "720642444819-lk54hhmnj989tegu4pv07mov844kvoir.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -38,6 +62,57 @@
             {
               "client_id": "720642444819-l981uivl73k195r2c2o14bk34or7s2pc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "720642444819-0uhie4otvf7mg3s5hd0a0v87qtugnnhn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gudtech.gudpet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720642444819:android:ee200972511fba2f5839e6",
+        "android_client_info": {
+          "package_name": "com.gudtech.gudpets"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "720642444819-n7hu9kg5rkgtslp6v8624d9eibk9hc7j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gudtech.gudpets",
+            "certificate_hash": "d4e0d2ec99f61a62c6433b94ce7d4c19896c0e13"
+          }
+        },
+        {
+          "client_id": "720642444819-l981uivl73k195r2c2o14bk34or7s2pc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXmVZJemOXgw_vo5TB3_K8ZwPLbpklo7s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "720642444819-l981uivl73k195r2c2o14bk34or7s2pc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "720642444819-0uhie4otvf7mg3s5hd0a0v87qtugnnhn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gudtech.gudpet"
+              }
             }
           ]
         }
