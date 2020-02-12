@@ -1,4 +1,4 @@
-package com.gudtech.adoption_app
+package com.gudtech.gudpets
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
