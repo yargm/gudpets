@@ -21,7 +21,7 @@ class _LogInState extends State<LogIn> {
   String error = '';
 
   bool isLoading = true;
-  bool errorbase = true;
+  bool errorbase = false;
 
   Map<String, dynamic> loginMap = {'user': null, 'password': null};
 
@@ -130,139 +130,163 @@ class _LogInState extends State<LogIn> {
                     ),
                     isLoading
                         ? CircularProgressIndicator()
-                        : Card(
-                            margin: EdgeInsets.symmetric(horizontal: 40),
-                            elevation: 9.0,
-                            shape: ContinuousRectangleBorder(
-                                borderRadius: BorderRadius.circular(100.0)),
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Column(
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 30.0,
-                                  ),
-                                  TextFormField(
-                                    onSaved: (String texto) {
-                                      loginMap['user'] = texto;
-                                    },
-                                    validator: (String texto) {
-                                      if (texto.isEmpty) {
-                                        return 'Correo Vacio';
-                                      } else if (errorbase) {
-                                        return 'Correo incorrecto';
-                                      }
-                                    },
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.fromLTRB(
-                                          30.0, 15.0, 20.0, 15.0),
-                                      labelText: 'Usuario',
-                                      prefixIcon: Icon(Icons.account_circle),
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  TextFormField(
-                                    obscureText: true,
-                                    onSaved: (String texto) {
-                                      loginMap['password'] = texto;
-                                    },
-                                    validator: (String texto) {
-                                      if (texto.isEmpty) {
-                                        return 'Contraseña vacia';
-                                      } else if (errorbase) {
-                                        return 'Contraseña incorrecta';
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.fromLTRB(
-                                          30.0, 15.0, 20.0, 15.0),
-                                      labelText: 'Contraseña',
-                                      prefixIcon: Icon(Icons.lock),
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 25.0,
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                        : Column(
+                            children: <Widget>[
+                              Card(
+                                margin: EdgeInsets.symmetric(horizontal: 40),
+                                elevation: 9.0,
+                                shape: ContinuousRectangleBorder(
+                                    borderRadius: BorderRadius.circular(100.0)),
+                                child: Padding(
+                                  padding: EdgeInsets.all(20.0),
+                                  child: Column(
                                     children: <Widget>[
-                                      _singInButton(controlador1),
                                       SizedBox(
-                                        width: 37,
+                                        height: 30.0,
                                       ),
-                                      RaisedButton(
-                                        onPressed: () async {
-                                          if (!key.currentState.validate()) {
-                                            return;
-                                          }
-                                          setState(() {
-                                            isLoading = true;
-                                          });
-
-                                          key.currentState.save();
-                                          var query = await Firestore.instance
-                                              .collection('usuarios')
-                                              .where('correo',
-                                                  isEqualTo: loginMap['user'])
-                                              .where('contrasena',
-                                                  isEqualTo:
-                                                      loginMap['password'])
-                                              .getDocuments();
-
-                                          if (query.documents.isEmpty) {
-                                            setState(() {
-                                              errorbase = false;
-                                              isLoading = false;
-                                            });
-                                            return;
-                                          } else {
-                                            setState(() {
-                                              isLoading = false;
-                                            });
-                                            var user = query.documents.first;
-                                            controlador1.usuario_act =
-                                                UsuarioModel
-                                                    .fromDocumentSnapshot(user);
-                                            await controlador1.signIn();
-                                            Navigator.of(context)
-                                                .pushNamedAndRemoveUntil(
-                                                    '/home',
-                                                    ModalRoute.withName(
-                                                        '/home'));
+                                      TextFormField(
+                                        onSaved: (String texto) {
+                                          loginMap['user'] = texto;
+                                        },
+                                        validator: (String texto) {
+                                          if (texto.isEmpty ||
+                                              texto == '' ||
+                                              errorbase) {
+                                            return 'Correo incorrecto';
                                           }
                                         },
-                                        color: Colors.brown[300],
-                                        textColor: Colors.white,
-                                        elevation: 9.0,
-                                        highlightElevation: 6.0,
-                                        child: Text(
-                                          "Iniciar Sesión",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                        shape: RoundedRectangleBorder(
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.fromLTRB(
+                                              30.0, 15.0, 20.0, 15.0),
+                                          labelText: 'Usuario',
+                                          prefixIcon:
+                                              Icon(Icons.account_circle),
+                                          border: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(30)),
+                                                BorderRadius.circular(25.0),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      TextFormField(
+                                        obscureText: true,
+                                        onSaved: (String texto) {
+                                          loginMap['password'] = texto;
+                                        },
+                                        validator: (String texto) {
+                                          if (texto.isEmpty ||
+                                              texto == '' ||
+                                              errorbase) {
+                                            return 'Contraseña incorrecta';
+                                          }
+                                        },
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.fromLTRB(
+                                              30.0, 15.0, 20.0, 15.0),
+                                          labelText: 'Contraseña',
+                                          prefixIcon: Icon(Icons.lock),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(25.0),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 25.0,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          _singInButton(controlador1),
+                                          SizedBox(
+                                            width: 37,
+                                          ),
+                                          RaisedButton(
+                                            onPressed: () async {
+                                              errorbase = false;
+
+                                              if (!key.currentState
+                                                  .validate()) {
+                                                return;
+                                              }
+
+                                              key.currentState.save();
+                                              setState(() {
+                                                isLoading = true;
+                                              });
+                                              var query = await Firestore
+                                                  .instance
+                                                  .collection('usuarios')
+                                                  .where('correo',
+                                                      isEqualTo:
+                                                          loginMap['user'])
+                                                  .where('contrasena',
+                                                      isEqualTo:
+                                                          loginMap['password'])
+                                                  .getDocuments();
+
+                                              if (query.documents.isEmpty) {
+                                                setState(() {
+                                                  errorbase = true;
+                                                  isLoading = false;
+                                                });
+                                                if (!key.currentState
+                                                    .validate()) {
+                                                  return;
+                                                }
+                                              } else {
+                                                var user =
+                                                    query.documents.first;
+                                                controlador1.usuario_act =
+                                                    UsuarioModel
+                                                        .fromDocumentSnapshot(
+                                                            user);
+                                                await controlador1.signIn();
+                                                Navigator.of(context)
+                                                    .pushNamedAndRemoveUntil(
+                                                        '/home',
+                                                        ModalRoute.withName(
+                                                            '/home'));
+                                              }
+                                            },
+                                            color: Colors.brown[300],
+                                            textColor: Colors.white,
+                                            elevation: 9.0,
+                                            highlightElevation: 6.0,
+                                            child: Text(
+                                              "Iniciar Sesión",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    width: 50,
-                                  )
-                                ],
+                                ),
                               ),
-                            ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              RaisedButton.icon(
+                                onPressed: () => Navigator.of(context)
+                                    .pushReplacementNamed('/registro_usuario'),
+                                label: Text(' Registrate'),
+                                icon: Icon(FontAwesomeIcons.userPlus),
+                                color: Colors.brown[300],
+                                textColor: Colors.white,
+                                elevation: 9.0,
+                                highlightElevation: 6.0,
+                              ),
+                            ],
                           ),
                   ],
                 ),
@@ -270,13 +294,6 @@ class _LogInState extends State<LogIn> {
             ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () =>
-            Navigator.of(context).pushReplacementNamed('/registro_usuario'),
-        label: Text(' Registrate'),
-        icon: Icon(FontAwesomeIcons.userPlus),
-        backgroundColor: secondaryColor,
       ),
     );
   }

@@ -80,7 +80,7 @@ class _RescateState extends State<Rescate> {
                       color: Colors.brown[300]),
                   padding: EdgeInsets.all(10.0),
                   width: widget.objeto.userName.length * 11.5,
-                  height: 40,
+                  height: 37,
                   alignment: Alignment.bottomRight,
                   child: Text(
                     widget.objeto.userName,
@@ -242,8 +242,10 @@ class _RescateState extends State<Rescate> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 30,),
-                    Divider(
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Divider(
                     endIndent: 60,
                     indent: 60,
                     thickness: 1,
@@ -266,11 +268,13 @@ class _RescateState extends State<Rescate> {
                   widget.objeto.fotos.isNotEmpty
                       ? Column(
                           children: <Widget>[
-                           widget.objeto.fotos.length > 1 ? Text(
-                              "Deslice para ver mas fotos",
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 18),
-                            ) : Container(),
+                            widget.objeto.fotos.length > 1
+                                ? Text(
+                                    "Deslice para ver mas fotos",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 18),
+                                  )
+                                : Container(),
                             Container(
                               height: 350,
                               child: ListView.builder(
@@ -298,14 +302,15 @@ class _RescateState extends State<Rescate> {
                           'No hay nada para mostrar',
                           style: TextStyle(color: Colors.grey, fontSize: 18),
                         ),
-                   SizedBox(height: 30,),
-                    Divider(
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Divider(
                     endIndent: 60,
                     indent: 60,
                     thickness: 1,
                     color: secondaryDark,
                   ),
-               
                   SizedBox(
                     height: 30,
                   ),
