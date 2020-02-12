@@ -1,11 +1,11 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:adoption_app/shared/shared.dart';
+import 'package:gudpets/shared/shared.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:location/location.dart';
 import 'mapaejemplo.dart';
-import 'package:adoption_app/services/services.dart';
+import 'package:gudpets/services/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RegistroEmergencia extends StatefulWidget {

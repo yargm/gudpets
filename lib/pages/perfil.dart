@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/shared/shared.dart';
+import 'package:gudpets/services/services.dart';
+import 'package:gudpets/shared/shared.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';

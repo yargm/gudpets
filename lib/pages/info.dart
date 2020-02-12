@@ -1,4 +1,4 @@
-import 'package:adoption_app/services/services.dart';
+import 'package:gudpets/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 

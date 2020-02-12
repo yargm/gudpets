@@ -1,8 +1,8 @@
-import 'package:adoption_app/main.dart';
+import 'package:gudpets/main.dart';
 import 'package:flutter/material.dart';
-import 'package:adoption_app/pages/pages.dart';
-import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/shared/shared.dart';
+import 'package:gudpets/pages/pages.dart';
+import 'package:gudpets/services/services.dart';
+import 'package:gudpets/shared/shared.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 

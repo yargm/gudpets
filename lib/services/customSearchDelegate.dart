@@ -1,4 +1,4 @@
-import 'package:adoption_app/shared/card.dart';
+import 'package:gudpets/shared/card.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'services.dart';

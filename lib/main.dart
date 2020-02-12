@@ -1,11 +1,11 @@
-import 'package:adoption_app/pages/mapaejemplo.dart';
-import 'package:adoption_app/pages/registroAdopcion.dart';
+import 'package:gudpets/pages/mapaejemplo.dart';
+import 'package:gudpets/pages/registroAdopcion.dart';
 import 'package:flutter/material.dart';
-import 'package:adoption_app/pages/pages.dart';
-import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/shared/shared.dart';
+import 'package:gudpets/pages/pages.dart';
+import 'package:gudpets/services/services.dart';
+import 'package:gudpets/shared/shared.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:adoption_app/pages/registroRescate.dart';
+import 'package:gudpets/pages/registroRescate.dart';
 
 void main() => runApp(MyApp());
 

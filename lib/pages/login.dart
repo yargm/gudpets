@@ -1,6 +1,6 @@
-import 'package:adoption_app/services/models.dart';
-import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/shared/colores.dart';
+import 'package:gudpets/services/models.dart';
+import 'package:gudpets/services/services.dart';
+import 'package:gudpets/shared/colores.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';

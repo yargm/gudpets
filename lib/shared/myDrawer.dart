@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/shared/shared.dart';
+import 'package:gudpets/services/services.dart';
+import 'package:gudpets/shared/shared.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({

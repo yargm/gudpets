@@ -3,9 +3,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
 
-import 'package:adoption_app/pages/pages.dart';
-import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/shared/shared.dart';
+import 'package:gudpets/pages/pages.dart';
+import 'package:gudpets/services/services.dart';
+import 'package:gudpets/shared/shared.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 

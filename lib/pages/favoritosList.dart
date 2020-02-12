@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/pages/pages.dart';
-import 'package:adoption_app/shared/shared.dart';
+import 'package:gudpets/services/services.dart';
+import 'package:gudpets/pages/pages.dart';
+import 'package:gudpets/shared/shared.dart';
 
 class FavoritosList extends StatefulWidget {
   @override

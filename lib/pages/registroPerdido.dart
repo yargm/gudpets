@@ -6,8 +6,8 @@ import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:location/location.dart';
 import 'mapaejemplo.dart';
-import 'package:adoption_app/services/services.dart';
-import 'package:adoption_app/shared/shared.dart';
+import 'package:gudpets/services/services.dart';
+import 'package:gudpets/shared/shared.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RegistroPerdido extends StatefulWidget {

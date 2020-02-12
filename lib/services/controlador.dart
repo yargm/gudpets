@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:adoption_app/services/services.dart';
+import 'package:gudpets/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
