@@ -169,16 +169,23 @@ class _AdopcionState extends State<Adopcion> {
                         SizedBox(
                           width: 10,
                         ),
-                        Text('Edad: ',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                            )),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(widget.objeto.edad,
-                            style:
-                                TextStyle(fontSize: 18.0, color: Colors.grey)),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Edad:',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  )),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(widget.objeto.edad,
+                                  style: TextStyle(
+                                      fontSize: 18.0, color: Colors.grey)),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                     SizedBox(
@@ -295,8 +302,10 @@ class _AdopcionState extends State<Adopcion> {
                                     fontSize: 18.0, color: Colors.grey)),
                       ],
                     ),
-                    SizedBox(height: 20,),
-                     Row(
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Icon(Icons.calendar_today),
@@ -326,13 +335,15 @@ class _AdopcionState extends State<Adopcion> {
                     SizedBox(
                       height: 30,
                     ),
-                     Divider(
-                    endIndent: 60,
-                    indent: 60,
-                    thickness: 1,
-                    color: secondaryDark,
-                  ),
-                  SizedBox(height: 30,),
+                    Divider(
+                      endIndent: 60,
+                      indent: 60,
+                      thickness: 1,
+                      color: secondaryDark,
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
                     Center(
                       child: Text('Álbum',
                           style: TextStyle(
@@ -376,18 +387,21 @@ class _AdopcionState extends State<Adopcion> {
                             'No hay nada para mostrar',
                             style: TextStyle(color: Colors.grey, fontSize: 18),
                           ),
-                   
                   ],
                 ),
               ),
-              SizedBox(height: 30,),
-               Divider(
-                    endIndent: 60,
-                    indent: 60,
-                    thickness: 1,
-                    color: secondaryDark,
-                  ),
-                  SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
+              Divider(
+                endIndent: 60,
+                indent: 60,
+                thickness: 1,
+                color: secondaryDark,
+              ),
+              SizedBox(
+                height: 30,
+              ),
               ButtonBar(
                 alignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -479,24 +493,7 @@ class _AdopcionState extends State<Adopcion> {
                                                 ),
                                                 content: SingleChildScrollView(
                                                   child: Text(
-                                                      '''1. No tendrás a la mascota aislada, ya sea en azoteas, balcones, patios o para cuidar establecimientos. La mascota requiere de un ambiente familiar.
-
-                                                    2. No mutilar cola u orejas de la mascota.
-
-                                                    3. Todos en el hogar en el que la mascota vivirá deben estar de acuerdo con su adopción. 
-
-                                                    4. La mascota no es un objeto, no puedes regalarla o venderla a terceras personas.
-
-                                                    5. La convivencia de la mascota con menores de edad siempre debe ser supervisada por un adulto. 
-
-                                                    6. Es obligatorio continuar con el cuadro médico de la mascota, esto incluye desparacitación, vacunación y esterilización. 
-
-                                                    7. No adopte con fines reproductivos o de venta, no lucre con la vida de un animal. 
-
-                                                    8. En caso de que el actual poseedor de la mascota considere necesario, este puede hacer visitas de rutina a su nuevo hogar para supervisar el progreso o adaptación de este.
-
-
-                                                    Por favor, adopta con amor, paciencia y responsabilidad. Tener una mascota es un compromiso a largo plazo que requiere tiempo, dinero y esfuerzo.'''),
+                                                      "1. No tendrás a la mascota aislada, ya sea en azoteas, balcones, patios o para cuidar establecimientos. La mascota requiere de un ambiente familiar.\n\n2. No mutilar cola u orejas de la mascota.\n\n3. Todos en el hogar en el que la mascota vivirá deben estar de acuerdo con su adopción.\n\n4. La mascota no es un objeto, no puedes regalarla o venderla a terceras personas.\n\n5. La convivencia de la mascota con menores de edad siempre debe ser supervisada por un adulto.\n\n6. Es obligatorio continuar con el cuadro médico de la mascota, esto incluye desparacitación, vacunación y esterilización.\n\n7. No adopte con fines reproductivos o de venta, no lucre con la vida de un animal.\n\n8. En caso de que el actual poseedor de la mascota considere necesario, este puede hacer visitas de rutina a su nuevo hogar para supervisar el progreso o adaptación de este.\n\nPor favor, adopta con amor, paciencia y responsabilidad. Tener una mascota es un compromiso a largo plazo que requiere tiempo, dinero y esfuerzo."),
                                                 ),
                                                 actions: <Widget>[
                                                   FlatButton(

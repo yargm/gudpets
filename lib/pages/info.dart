@@ -57,16 +57,33 @@ class _InfoState extends State<Info> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     GestureDetector(
+                      onTap: () => launch('https://www.facebook.com/GudPets'),
+                      child: Image(
+                        height: 45,
+                        width: 45,
+                        image: AssetImage('assets/gpfacebook.png'),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    GestureDetector(
                         onTap: () => launch(
                             'https://www.facebook.com/GudTech-508541236622884/'),
-                        child: Icon(FontAwesomeIcons.facebook)),
+                        child: Icon(
+                          FontAwesomeIcons.facebook,
+                          size: 45,
+                        )),
                     SizedBox(
                       width: 15,
                     ),
                     GestureDetector(
                         onTap: () => launch(
                             'http://gudtech.tech/es/sample-page/home-spanish/'),
-                        child: Icon(FontAwesomeIcons.chrome)),
+                        child: Icon(
+                          FontAwesomeIcons.chrome,
+                          size: 45,
+                        )),
                   ],
                 ),
                 SizedBox(
@@ -223,4 +240,3 @@ class _InfoState extends State<Info> {
     );
   }
 }
-

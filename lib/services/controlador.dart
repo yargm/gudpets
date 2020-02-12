@@ -19,7 +19,7 @@ class Controller with ChangeNotifier {
     PermissionHandler permissionHandler = PermissionHandler();
      var  idk = await permissionHandler.checkPermissionStatus(PermissionGroup.camera);
      print('Permisos stauts!!! ' +  idk.toString());
-     if(idk.toString() == 'PermissionStatus.denied' || idk.toString() == 'PermissionStatus.unknown' || idk.toString() == 'PermissionStatus.neverAskAgain')
+     if( idk.toString() == 'PermissionStatus.neverAskAgain')
      return false;
 
      return true;

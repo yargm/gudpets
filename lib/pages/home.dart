@@ -47,7 +47,6 @@ class _HomeState extends State<Home> {
       },
       child: Scaffold(
         drawer: MyDrawer(controlador1: controlador1),
-
         appBar: AppBar(
           title: Row(
             children: <Widget>[
@@ -56,25 +55,27 @@ class _HomeState extends State<Home> {
                 height: 30,
                 image: AssetImage('assets/gudpetsfirstNoText.png'),
               ),
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               Text('GudPets')
             ],
           ),
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.help),
-                    onPressed: () => showDialog(
-                      context: context,
-                      child: SingleChildScrollView(
-                                              child: FadeInImage(
-                          image: NetworkImage('https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/infgudpets.png?alt=media&token=e37c4267-c4ec-4d3d-8286-5c726248f15c'),
-                          placeholder: AssetImage('assets/dog.png'),
-                        ),
-                      )
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.help),
+              onPressed: () => showDialog(
+                  context: context,
+                  child: SingleChildScrollView(
+                    child: FadeInImage(
+                      image: NetworkImage(
+                          'https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/infgudpets.png?alt=media&token=e37c4267-c4ec-4d3d-8286-5c726248f15c'),
+                      placeholder: AssetImage('assets/dog.png'),
                     ),
-                  ),
-                controlador1.pestana_act == 0 || controlador1.pestana_act == 1
-            ?   IconButton(
+                  )),
+            ),
+            controlador1.pestana_act == 0 || controlador1.pestana_act == 1
+                ? IconButton(
                     onPressed: () {
                       showSearch(
                         context: context,
@@ -87,25 +88,25 @@ class _HomeState extends State<Home> {
                       );
                     },
                     icon: Icon(Icons.search),
-                  ) : Container(),
-                  IconButton(
-                    onPressed: () {
-                      return Navigator.of(context).pushNamed('/avisos');
-                      // print('avisos');
-                    },
-                    icon: Icon(
-                      FontAwesomeIcons.bullhorn,
-                      size: 20,
-                    ),
                   )
-                ],
+                : Container(),
+            IconButton(
+              onPressed: () {
+                return Navigator.of(context).pushNamed('/avisos');
+                // print('avisos');
+              },
+              icon: Icon(
+                FontAwesomeIcons.bullhorn,
+                size: 20,
               ),
-        
-
+            )
+          ],
+        ),
         body: Center(
           child: _widgetOptions.elementAt(seleccionado),
         ),
         floatingActionButton: FloatingActionButton(
+          mini: true,
           onPressed: () {
             controlador1.pestana_act == 0
                 ? controlador1.usuario.fotoINE != null
@@ -113,7 +114,8 @@ class _HomeState extends State<Home> {
                     : showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                              title: Text('No puedes realizar una publicación en esta sección.'),
+                              title: Text(
+                                  'No puedes realizar una publicación en esta sección.'),
                               content: Text(
                                   'Para realizar una publicación es necesario completar tu información.'),
                               actions: <Widget>[

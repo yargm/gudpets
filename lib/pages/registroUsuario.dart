@@ -59,13 +59,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   }
 
   _launchURL() async {
-  const url = 'https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/Pol%C3%ADticas%20de%20privacidad.pdf?alt=media&token=ff41a4f7-c898-4426-95e6-fa5bd7d45099';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
+    const url =
+        'https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/Pol%C3%ADticas%20de%20privacidad.pdf?alt=media&token=ff41a4f7-c898-4426-95e6-fa5bd7d45099';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -328,9 +329,9 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       GestureDetector(
                           onTap: () => _launchURL(),
                           child: Text(
-                        'Aceptar terminos y condiciones',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
+                            'Aceptar terminos y condiciones',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )),
                     ],
                   ),
                   SizedBox(
@@ -339,7 +340,11 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   tos
                       ? Text('')
                       : Text(
-                          '* Es necesario aceptar nuestros terminos y condiciones para concluir el registro *', style: TextStyle(textBaseline: TextBaseline.alphabetic, fontWeight: FontWeight.bold),),
+                          '* Es necesario aceptar nuestros terminos y condiciones para concluir el registro *',
+                          style: TextStyle(
+                              textBaseline: TextBaseline.alphabetic,
+                              fontWeight: FontWeight.bold),
+                        ),
                   ButtonBar(
                     alignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -461,24 +466,29 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   Future getImage(Controller controlador1) async {
     var value = await controlador1.checkGalerryPermisson();
     print(value);
-    
+
     if (value) {
       var image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
+          source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
+      setState(() {
+        imagen = image;
+      });
       return image;
     } else {
       return showDialog(
         context: context,
         child: Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Container(
             margin: EdgeInsets.all(20),
             child: Text(
-                '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!', style: TextStyle(fontWeight: FontWeight.bold),),
+              '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       );
-   
     }
   }
 

@@ -216,7 +216,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                     picked: null,
                     orientation: GroupedButtonsOrientation.VERTICAL,
                     labels: <String>[
-                      'Hembras gestante o cachorros',
+                      'Hembra gestante o cachorros',
                       'Abuso y maltrato',
                       'Emergencia de salud',
                       'Otro'
@@ -455,6 +455,9 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
     if (value) {
       var image = await ImagePicker.pickImage(
           source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
+      setState(() {
+        _image = image;
+      });
       return image;
     } else {
       return showDialog(

@@ -235,6 +235,8 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                 ),
                 //Descripcion
                 TextFormField(
+                  maxLines: 10,
+                  minLines: 2,
                   initialValue: null,
                   onSaved: (String value) {
                     form_adopcion['descripcion'] = value;
@@ -525,27 +527,33 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     return fotosRef;
   }
 
- Future getImage(Controller controlador1) async {
+  Future getImage(Controller controlador1) async {
     var value = await controlador1.checkGalerryPermisson();
     print(value);
-    
+
     if (value) {
       var image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
+          source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
+
+      setState(() {
+        _image = image;
+      });
       return image;
     } else {
       return showDialog(
         context: context,
         child: Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Container(
             margin: EdgeInsets.all(20),
             child: Text(
-                '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!', style: TextStyle(fontWeight: FontWeight.bold),),
+              '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       );
-   
     }
   }
 }

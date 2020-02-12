@@ -159,7 +159,7 @@ class _PerdidoState extends State<Perdido> {
                         width: 10,
                       ),
                       Expanded(
-                                              child: Text(widget.objeto.descripcion,
+                        child: Text(widget.objeto.descripcion,
                             style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.grey,
@@ -244,18 +244,21 @@ class _PerdidoState extends State<Perdido> {
                       SizedBox(
                         width: 10,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Señas particulares: ',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                              )),
-                          Text(
-                            widget.objeto.senasPart,
-                            style: TextStyle(color: Colors.grey, fontSize: 18),
-                          ),
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text('Señas particulares: ',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                )),
+                            Text(
+                              widget.objeto.senasPart,
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 18),
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -344,13 +347,15 @@ class _PerdidoState extends State<Perdido> {
                   SizedBox(
                     height: 30.0,
                   ),
-                     Divider(
+                  Divider(
                     endIndent: 60,
                     indent: 60,
                     thickness: 1,
                     color: secondaryDark,
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
