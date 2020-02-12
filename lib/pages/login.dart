@@ -21,6 +21,7 @@ class _LogInState extends State<LogIn> {
   String error = '';
 
   bool isLoading = true;
+  bool errorbase = true;
 
   Map<String, dynamic> loginMap = {'user': null, 'password': null};
 
@@ -148,6 +149,8 @@ class _LogInState extends State<LogIn> {
                                     validator: (String texto) {
                                       if (texto.isEmpty) {
                                         return 'Correo Vacio';
+                                      } else if (errorbase) {
+                                        return 'Correo incorrecto';
                                       }
                                     },
                                     keyboardType: TextInputType.emailAddress,
@@ -173,6 +176,8 @@ class _LogInState extends State<LogIn> {
                                     validator: (String texto) {
                                       if (texto.isEmpty) {
                                         return 'Contraseña vacia';
+                                      } else if (errorbase) {
+                                        return 'Contraseña incorrecta';
                                       }
                                     },
                                     decoration: InputDecoration(
@@ -216,8 +221,8 @@ class _LogInState extends State<LogIn> {
                                               .getDocuments();
 
                                           if (query.documents.isEmpty) {
-                                            print('Datos incorrectos');
                                             setState(() {
+                                              errorbase = false;
                                               isLoading = false;
                                             });
                                             return;

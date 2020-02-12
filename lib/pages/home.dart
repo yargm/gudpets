@@ -48,18 +48,20 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         drawer: MyDrawer(controlador1: controlador1),
         appBar: AppBar(
-          title: Row(
-            children: <Widget>[
-              Image(
-                width: 30,
-                height: 30,
-                image: AssetImage('assets/gudpetsfirstNoText.png'),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text('GudPets')
-            ],
+          title: FittedBox(
+            child: Row(
+              children: <Widget>[
+                Image(
+                  width: 30,
+                  height: 30,
+                  image: AssetImage('assets/gudpetsfirstNoText.png'),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('GudPets')
+              ],
+            ),
           ),
           actions: <Widget>[
             IconButton(
