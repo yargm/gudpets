@@ -159,7 +159,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                 Text('* Selecciona una imagen de la mascota rescatada: '),
                 GestureDetector(
                   onTap: () {
-                    getImage();
+                    getImage(controlador1);
                   },
                   child: Center(
                     child: SizedBox(
@@ -181,7 +181,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                             backgroundColor: secondaryColor,
                             child: IconButton(
                               icon: Icon(Icons.photo_camera),
-                              onPressed: () => getImage(),
+                              onPressed: () => getImage(controlador1),
                             ),
                           )
                         ],
@@ -224,7 +224,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                 ),
                 Center(
                   child: RaisedButton(
-                      onPressed: loadAssets, child: Text('Añadir imagenes')),
+                      onPressed: loadAssets, child: Text('Añadir imágenes')),
                 ),
                 SizedBox(
                   height: 15,
@@ -240,7 +240,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                     }
                   },
                   decoration: InputDecoration(
-                      labelText: '* Titulo del rescate',
+                      labelText: '* Título del rescate',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25))),
                 ),
@@ -258,7 +258,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                     }
                   },
                   decoration: InputDecoration(
-                      labelText: '* Desripción',
+                      labelText: '* Descripción',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25))),
                 ),
@@ -317,107 +317,105 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                   child: isLoadig2
                                       ? CircularProgressIndicator()
                                       : RaisedButton.icon(
-                                          icon: Icon(Icons.location_on),
-                                          label: Text('Capturar ubicación'),
-                                          onPressed: boton
-                                              ? () async {
-                                                  print(
-                                                      'permiso al entrar al botón:' +
-                                                          permisoStatus
-                                                              .toString());
+                          icon: Icon(Icons.location_on),
+                          label: Text('Capturar ubicación'),
+                          onPressed: boton
+                              ? () async {
+                                  print('permiso al entrar al botón:' +
+                                      permisoStatus.toString());
+                                  setState(() {
+                                    isLoadig2 = true;
+                                  });
+                                  await getLocation();
+                                  print('permiso despues cuadro dialogo:' +
+                                      permisoStatus.toString());
+                                  await PermissionHandler()
+                                      .checkPermissionStatus(
+                                          PermissionGroup.locationWhenInUse)
+                                      .then(_actualizaestado);
+                                  print('permiso final: ' +
+                                      permisoStatus.toString());
+                                  if (permisoStatus.toString() ==
+                                          'PermissionStatus.denied' ||
+                                      permisoStatus.toString() ==
+                                          'PermissionStatus.unknown' ||
+                                      permisoStatus.toString() ==
+                                          'PermissionStatus.disabled' ||
+                                      permisoStatus.toString() ==
+                                          'PermissionStatus.neverAskAgain') {
+                                    setState(() {
+                                      isLoadig2 = false;
+                                    });
+                                    return showDialog(
+                                      context: context,
+                                      child: Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Container(
+                                          margin: EdgeInsets.all(20),
+                                          child: Text(
+                                            '¡La aplicación no puede acceder a la ubicación de tu dispositivo, es algo indispensable para llenar el formulario, ve a la configuración de tu celular y asignale los permisos!',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    print(permisoStatus.toString());
+                                    controlador1.latitudfinal = latitud;
+                                    controlador1.longitudfinal = longitud;
+                                    print('la latitud actual es:' +
+                                        controlador1.latitudfinal.toString());
+                                    print('la ongitud actual es:' +
+                                        controlador1.longitudfinal.toString());
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        child: WillPopScope(
+                                          onWillPop: () async {
+                                            setState(() {
+                                              isLoadig2 = false;
+                                            });
+                                            return true;
+                                          },
+                                          child: AlertDialog(
+                                            title: Text('Importante',
+                                                style: TextStyle(
+                                                    color: Colors.red)),
+                                            content: Text(
+                                                'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
+                                                style: TextStyle(fontSize: 20)),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: Text('OK'),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            MapSample(
+                                                              latitud: latitud,
+                                                              longitud:
+                                                                  longitud,
+                                                              controlador1:
+                                                                  controlador1,
+                                                            )),
+                                                  );
                                                   setState(() {
-                                                    isLoadig2 = true;
+                                                    isLoadig2 = false;
+                                                    boton = false;
                                                   });
-                                                  await getLocation();
-                                                  print(
-                                                      'permiso despues cuadro dialogo:' +
-                                                          permisoStatus
-                                                              .toString());
-                                                  await PermissionHandler()
-                                                      .checkPermissionStatus(
-                                                          PermissionGroup
-                                                              .locationWhenInUse)
-                                                      .then(_actualizaestado);
-                                                  print('permiso final: ' +
-                                                      permisoStatus.toString());
-                                                  if (permisoStatus
-                                                          .toString() ==
-                                                      'PermissionStatus.denied') {
-                                                    setState(() {
-                                                      isLoadig2 = false;
-                                                    });
-                                                    return;
-                                                  } else {
-                                                    print(permisoStatus
-                                                        .toString());
-                                                    controlador1.latitudfinal =
-                                                        latitud;
-                                                    controlador1.longitudfinal =
-                                                        longitud;
-                                                    print(
-                                                        'la latitud actual es:' +
-                                                            controlador1
-                                                                .latitudfinal
-                                                                .toString());
-                                                    print(
-                                                        'la ongitud actual es:' +
-                                                            controlador1
-                                                                .longitudfinal
-                                                                .toString());
-                                                    showDialog(
-                                                        barrierDismissible:
-                                                            false,
-                                                        context: context,
-                                                        child: WillPopScope(
-                                                          onWillPop: () async {
-                                                            setState(() {
-                                                              isLoadig2 = false;
-                                                            });
-                                                            return true;
-                                                          },
-                                                          child: AlertDialog(
-                                                            title: Text(
-                                                                'Importante',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .red)),
-                                                            content: Text(
-                                                                'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        20)),
-                                                            actions: <Widget>[
-                                                              FlatButton(
-                                                                child:
-                                                                    Text('OK'),
-                                                                onPressed: () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                  Navigator
-                                                                      .push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            MapSample(
-                                                                              latitud: latitud,
-                                                                              longitud: longitud,
-                                                                              controlador1: controlador1,
-                                                                            )),
-                                                                  );
-                                                                  setState(() {
-                                                                    isLoadig2 =
-                                                                        false;
-                                                                    boton =
-                                                                        false;
-                                                                  });
-                                                                },
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ));
-                                                  }
-                                                }
-                                              : null),
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ));
+                                  }
+                                }
+                              : null),
                                 )
                               : SizedBox(
                                   width: 5,
@@ -430,96 +428,105 @@ class _RegistroRescateState extends State<RegistroRescate> {
                             child: isLoadig2
                                 ? CircularProgressIndicator()
                                 : RaisedButton.icon(
-                                    icon: Icon(Icons.location_on),
-                                    label: Text('Capturar ubicación'),
-                                    onPressed: boton
-                                        ? () async {
-                                            print(
-                                                'permiso al entrar al botón:' +
-                                                    permisoStatus.toString());
+                          icon: Icon(Icons.location_on),
+                          label: Text('Capturar ubicación'),
+                          onPressed: boton
+                              ? () async {
+                                  print('permiso al entrar al botón:' +
+                                      permisoStatus.toString());
+                                  setState(() {
+                                    isLoadig2 = true;
+                                  });
+                                  await getLocation();
+                                  print('permiso despues cuadro dialogo:' +
+                                      permisoStatus.toString());
+                                  await PermissionHandler()
+                                      .checkPermissionStatus(
+                                          PermissionGroup.locationWhenInUse)
+                                      .then(_actualizaestado);
+                                  print('permiso final: ' +
+                                      permisoStatus.toString());
+                                  if (permisoStatus.toString() ==
+                                          'PermissionStatus.denied' ||
+                                      permisoStatus.toString() ==
+                                          'PermissionStatus.unknown' ||
+                                      permisoStatus.toString() ==
+                                          'PermissionStatus.disabled' ||
+                                      permisoStatus.toString() ==
+                                          'PermissionStatus.neverAskAgain') {
+                                    setState(() {
+                                      isLoadig2 = false;
+                                    });
+                                    return showDialog(
+                                      context: context,
+                                      child: Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Container(
+                                          margin: EdgeInsets.all(20),
+                                          child: Text(
+                                            '¡La aplicación no puede acceder a la ubicación de tu dispositivo, es algo indispensable para llenar el formulario, ve a la configuración de tu celular y asignale los permisos!',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    print(permisoStatus.toString());
+                                    controlador1.latitudfinal = latitud;
+                                    controlador1.longitudfinal = longitud;
+                                    print('la latitud actual es:' +
+                                        controlador1.latitudfinal.toString());
+                                    print('la ongitud actual es:' +
+                                        controlador1.longitudfinal.toString());
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        child: WillPopScope(
+                                          onWillPop: () async {
                                             setState(() {
-                                              isLoadig2 = true;
+                                              isLoadig2 = false;
                                             });
-                                            await getLocation();
-                                            print(
-                                                'permiso despues cuadro dialogo:' +
-                                                    permisoStatus.toString());
-                                            await PermissionHandler()
-                                                .checkPermissionStatus(
-                                                    PermissionGroup
-                                                        .locationWhenInUse)
-                                                .then(_actualizaestado);
-                                            print('permiso final: ' +
-                                                permisoStatus.toString());
-                                            if (permisoStatus.toString() ==
-                                                'PermissionStatus.denied') {
-                                              setState(() {
-                                                isLoadig2 = false;
-                                              });
-                                              return;
-                                            } else {
-                                              print(permisoStatus.toString());
-                                              controlador1.latitudfinal =
-                                                  latitud;
-                                              controlador1.longitudfinal =
-                                                  longitud;
-                                              print('la latitud actual es:' +
-                                                  controlador1.latitudfinal
-                                                      .toString());
-                                              print('la ongitud actual es:' +
-                                                  controlador1.longitudfinal
-                                                      .toString());
-                                              showDialog(
-                                                  barrierDismissible: false,
-                                                  context: context,
-                                                  child: WillPopScope(
-                                                    onWillPop: () async {
-                                                      setState(() {
-                                                        isLoadig2 = false;
-                                                      });
-                                                      return true;
-                                                    },
-                                                    child: AlertDialog(
-                                                      title: Text('Importante',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.red)),
-                                                      content: Text(
-                                                          'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
-                                                          style: TextStyle(
-                                                              fontSize: 20)),
-                                                      actions: <Widget>[
-                                                        FlatButton(
-                                                          child: Text('OK'),
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          MapSample(
-                                                                            latitud:
-                                                                                latitud,
-                                                                            longitud:
-                                                                                longitud,
-                                                                            controlador1:
-                                                                                controlador1,
-                                                                          )),
-                                                            );
-                                                            setState(() {
-                                                              isLoadig2 = false;
-                                                              boton = false;
-                                                            });
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ));
-                                            }
-                                          }
-                                        : null),
+                                            return true;
+                                          },
+                                          child: AlertDialog(
+                                            title: Text('Importante',
+                                                style: TextStyle(
+                                                    color: Colors.red)),
+                                            content: Text(
+                                                'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
+                                                style: TextStyle(fontSize: 20)),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: Text('OK'),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            MapSample(
+                                                              latitud: latitud,
+                                                              longitud:
+                                                                  longitud,
+                                                              controlador1:
+                                                                  controlador1,
+                                                            )),
+                                                  );
+                                                  setState(() {
+                                                    isLoadig2 = false;
+                                                    boton = false;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ));
+                                  }
+                                }
+                              : null),
                           )
                         : Center(
                             child: Text('Agradecemos tu Apoyo'),
@@ -691,11 +698,27 @@ class _RegistroRescateState extends State<RegistroRescate> {
     return fotosRef;
   }
 
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(
+  Future getImage(Controller controlador1) async {
+    var value = await controlador1.checkGalerryPermisson();
+    print(value);
+    
+    if (value) {
+      var image = await ImagePicker.pickImage(
         source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
-    setState(() {
-      _image = image;
-    });
+      return image;
+    } else {
+      return showDialog(
+        context: context,
+        child: Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Container(
+            margin: EdgeInsets.all(20),
+            child: Text(
+                '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!', style: TextStyle(fontWeight: FontWeight.bold),),
+          ),
+        ),
+      );
+   
+    }
   }
 }

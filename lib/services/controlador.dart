@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:adoption_app/services/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Controller with ChangeNotifier {
   int pestana_act = 0;
@@ -13,6 +14,17 @@ class Controller with ChangeNotifier {
   bool loading = false;
   String sexo;
   String tipo;
+
+  Future<bool> checkGalerryPermisson()async{
+    PermissionHandler permissionHandler = PermissionHandler();
+     var  idk = await permissionHandler.checkPermissionStatus(PermissionGroup.camera);
+     print('Permisos stauts!!! ' +  idk.toString());
+     if(idk.toString() == 'PermissionStatus.denied' || idk.toString() == 'PermissionStatus.unknown' || idk.toString() == 'PermissionStatus.neverAskAgain')
+     return false;
+
+     return true;
+
+  }
 
   UsuarioModel usuario_act = UsuarioModel(
     nombre: 'No name',

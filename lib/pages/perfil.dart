@@ -25,7 +25,6 @@ class _PerfilState extends State<Perfil> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
       ),
-   
       body: ListView(
         addSemanticIndexes: true,
         addRepaintBoundaries: true,
@@ -406,8 +405,7 @@ class _PerfilState extends State<Perfil> {
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                               ),
-                              itemBuilder: (context, index) =>
-                                  GestureDetector(
+                              itemBuilder: (context, index) => GestureDetector(
                                 onTap: () => showDialog(
                                     context: context,
                                     child: WillPopScope(
@@ -530,7 +528,7 @@ class _DialogMultiImageState extends State<DialogMultiImage> {
 
     // TODO: implement build
     return SingleChildScrollView(
-          child: Container(
+      child: Container(
         margin: EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -574,51 +572,54 @@ class _DialogMultiImageState extends State<DialogMultiImage> {
                       SizedBox(
                         height: 20,
                       ),
-                     images.isNotEmpty ? FloatingActionButton.extended(
-                      
-                        elevation: 0,
-                        backgroundColor: secondaryLight,
-                        onPressed: () async {
-                         
-                          controlador1.loading = true;
-                          controlador1.notify();
-                          for (var image in images) {
-                            Map<String, String> fotosRef =
-                                await saveImage(image, controlador1);
-                            galeriaFotos.add(fotosRef['url']);
-                            galeriaFotosRefs.add(fotosRef['ref']);
-                          }
-                          await controlador1.usuario.reference.updateData({
-                            'galeriaFotos': FieldValue.arrayUnion(galeriaFotos),
-                            'galeriaFotosRefs':
-                                FieldValue.arrayUnion(galeriaFotosRefs)
-                          });
-                          List<dynamic> urls =
-                              controlador1.usuario.galeriaFotos.toList();
-                          List<dynamic> refs =
-                              controlador1.usuario.galeriaFotosRefs.toList();
-                          for (var foto in galeriaFotos) {
-                            urls.add(foto);
-                          }
-                          for (var fotoRef in galeriaFotosRefs) {
-                            refs.add(fotoRef);
-                          }
-                          controlador1.usuario.galeriaFotos = urls;
-                          controlador1.usuario.galeriaFotosRefs = refs;
+                      images.isNotEmpty
+                          ? FloatingActionButton.extended(
+                              elevation: 0,
+                              backgroundColor: secondaryLight,
+                              onPressed: () async {
+                                controlador1.loading = true;
+                                controlador1.notify();
+                                for (var image in images) {
+                                  Map<String, String> fotosRef =
+                                      await saveImage(image, controlador1);
+                                  galeriaFotos.add(fotosRef['url']);
+                                  galeriaFotosRefs.add(fotosRef['ref']);
+                                }
+                                await controlador1.usuario.reference
+                                    .updateData({
+                                  'galeriaFotos':
+                                      FieldValue.arrayUnion(galeriaFotos),
+                                  'galeriaFotosRefs':
+                                      FieldValue.arrayUnion(galeriaFotosRefs)
+                                });
+                                List<dynamic> urls =
+                                    controlador1.usuario.galeriaFotos.toList();
+                                List<dynamic> refs = controlador1
+                                    .usuario.galeriaFotosRefs
+                                    .toList();
+                                for (var foto in galeriaFotos) {
+                                  urls.add(foto);
+                                }
+                                for (var fotoRef in galeriaFotosRefs) {
+                                  refs.add(fotoRef);
+                                }
+                                controlador1.usuario.galeriaFotos = urls;
+                                controlador1.usuario.galeriaFotosRefs = refs;
 
-                          controlador1.loading = false;
-                          controlador1.notify();
-                          Navigator.of(context).pop();
-                        },
-                        label: Text(
-                          'Subir fotos',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        icon: Icon(
-                          Icons.cloud_upload,
-                          color: Colors.white,
-                        ),
-                      ) : Container()
+                                controlador1.loading = false;
+                                controlador1.notify();
+                                Navigator.of(context).pop();
+                              },
+                              label: Text(
+                                'Subir fotos',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: Icon(
+                                Icons.cloud_upload,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Container()
                     ],
                   )
           ],
@@ -660,7 +661,7 @@ class _DialogContentState extends State<DialogContent> {
 
     // TODO: implement build
     return SingleChildScrollView(
-          child: Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           UserBanner(
@@ -686,7 +687,8 @@ class _DialogContentState extends State<DialogContent> {
                         : widget.foto == 'INE'
                             ? (controlador1.usuario.fotoINE ?? '')
                             : widget.index != null
-                                ? controlador1.usuario.galeriaFotos[widget.index]
+                                ? controlador1
+                                    .usuario.galeriaFotos[widget.index]
                                 : (controlador1.usuario.fotoCompDomi ?? ''))
                     : FileImage(imagen),
                 placeholder: AssetImage('assets/dog.png'),
@@ -705,7 +707,7 @@ class _DialogContentState extends State<DialogContent> {
                             FloatingActionButton.extended(
                               backgroundColor: primaryColor,
                               onPressed: () async {
-                                imagen = await getImage();
+                                imagen = await getImage(controlador1);
                                 setState(() {
                                   imagen = imagen;
                                 });
@@ -727,7 +729,7 @@ class _DialogContentState extends State<DialogContent> {
                             FloatingActionButton.extended(
                               backgroundColor: primaryColor,
                               onPressed: () async {
-                                imagen = await getImageCamera();
+                                imagen = await getImageCamera(controlador1);
                                 setState(() {
                                   imagen = imagen;
                                 });
@@ -770,14 +772,18 @@ class _DialogContentState extends State<DialogContent> {
                                     (await uploadTask.onComplete);
 
                                 if ((widget.foto == 'PP'
-                                        ? controlador1.usuario.fotoStorageRef
-                                        : controlador1.usuario.fotoCompDomiRef) !=
-                                    null && widget.foto != 'INE') {
+                                            ? controlador1
+                                                .usuario.fotoStorageRef
+                                            : controlador1
+                                                .usuario.fotoCompDomiRef) !=
+                                        null &&
+                                    widget.foto != 'INE') {
                                   await FirebaseStorage.instance
                                       .ref()
                                       .child((widget.foto == 'PP'
                                           ? controlador1.usuario.fotoStorageRef
-                                          : controlador1.usuario.fotoCompDomiRef))
+                                          : controlador1
+                                              .usuario.fotoCompDomiRef))
                                       .delete()
                                       .catchError((onError) {
                                     print(onError);
@@ -892,18 +898,54 @@ class _DialogContentState extends State<DialogContent> {
     );
   }
 
-  Future getImageCamera() async {
-    var image = await ImagePicker.pickImage(
+  Future getImageCamera(Controller controlador1) async {
+    var value = await controlador1.checkGalerryPermisson();
+    print(value);
+    
+    if (value) {
+      var image = await ImagePicker.pickImage(
         source: ImageSource.camera, maxHeight: 750, maxWidth: 750);
+      return image;
+    } else {
+      return showDialog(
+        context: context,
+        child: Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Container(
+            margin: EdgeInsets.all(20),
+            child: Text(
+                '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!', style: TextStyle(fontWeight: FontWeight.bold),),
+          ),
+        ),
+      );
+   
+    }
 
-    return image;
+  
   }
 
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(
+  Future getImage(Controller controlador1) async {
+    var value = await controlador1.checkGalerryPermisson();
+    print(value);
+    
+    if (value) {
+      var image = await ImagePicker.pickImage(
         source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
-
-    return image;
+      return image;
+    } else {
+      return showDialog(
+        context: context,
+        child: Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Container(
+            margin: EdgeInsets.all(20),
+            child: Text(
+                '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!', style: TextStyle(fontWeight: FontWeight.bold),),
+          ),
+        ),
+      );
+   
+    }
   }
 }
 

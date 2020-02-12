@@ -214,10 +214,10 @@ class _AdopcionState extends State<Adopcion> {
                     Row(
                       children: <Widget>[
                         Icon(
-                          widget.objeto.convivenciaotros
+                          widget.objeto.desparacitacion
                               ? Icons.check_circle
                               : Icons.cancel,
-                          color: widget.objeto.convivenciaotros
+                          color: widget.objeto.desparacitacion
                               ? Colors.green
                               : Colors.red,
                         ),
@@ -243,10 +243,10 @@ class _AdopcionState extends State<Adopcion> {
                     Row(
                       children: <Widget>[
                         Icon(
-                          widget.objeto.convivenciaotros
+                          widget.objeto.vacunacion
                               ? Icons.check_circle
                               : Icons.cancel,
-                          color: widget.objeto.convivenciaotros
+                          color: widget.objeto.vacunacion
                               ? Colors.green
                               : Colors.red,
                         ),
@@ -272,10 +272,10 @@ class _AdopcionState extends State<Adopcion> {
                     Row(
                       children: <Widget>[
                         Icon(
-                          widget.objeto.convivenciaotros
+                          widget.objeto.esterilizacion
                               ? Icons.check_circle
                               : Icons.cancel,
-                          color: widget.objeto.convivenciaotros
+                          color: widget.objeto.esterilizacion
                               ? Colors.green
                               : Colors.red,
                         ),
@@ -362,7 +362,7 @@ class _AdopcionState extends State<Adopcion> {
                                     fit: BoxFit.cover,
                                     placeholder: AssetImage('assets/dog.png'),
                                     width: MediaQuery.of(context).size.width *
-                                        0.85,
+                                        0.90,
                                     height: 300,
                                     image: NetworkImage(
                                         widget.objeto.fotos[index]),

@@ -112,7 +112,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   ),
                   Text('* Foto: '),
                   GestureDetector(
-                    onTap: () => getImage(),
+                    onTap: () => getImage(controlador1),
                     child: Center(
                       child: SizedBox(
                         width: 150,
@@ -138,7 +138,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                               backgroundColor: secondaryColor,
                               child: IconButton(
                                 icon: Icon(Icons.photo_camera),
-                                onPressed: () => getImage(),
+                                onPressed: () => getImage(controlador1),
                               ),
                             )
                           ],
@@ -458,11 +458,28 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
             });
   }
 
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      imagen = image;
-    });
+  Future getImage(Controller controlador1) async {
+    var value = await controlador1.checkGalerryPermisson();
+    print(value);
+    
+    if (value) {
+      var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
+      return image;
+    } else {
+      return showDialog(
+        context: context,
+        child: Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Container(
+            margin: EdgeInsets.all(20),
+            child: Text(
+                '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!', style: TextStyle(fontWeight: FontWeight.bold),),
+          ),
+        ),
+      );
+   
+    }
   }
 
   Future _validatorEmail(String value) async {

@@ -143,7 +143,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                 Text('* Selecciona una imagen de la mascota en adopción: '),
                 GestureDetector(
                   onTap: () {
-                    getImage();
+                    getImage(controlador1);
                   },
                   child: Center(
                     child: SizedBox(
@@ -165,7 +165,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                             backgroundColor: secondaryColor,
                             child: IconButton(
                               icon: Icon(Icons.photo_camera),
-                              onPressed: () => getImage(),
+                              onPressed: () => getImage(controlador1),
                             ),
                           )
                         ],
@@ -208,7 +208,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                 ),
                 Center(
                   child: RaisedButton(
-                      onPressed: loadAssets, child: Text('Añadir imagenes')),
+                      onPressed: loadAssets, child: Text('Añadir imágenes')),
                 ),
                 SizedBox(
                   height: 15,
@@ -225,7 +225,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: '* Titulo de adopción',
+                    labelText: '* Título de adopción',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0)),
                   ),
@@ -377,7 +377,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                   },
                   validator: (String value) {
                     if (value.isEmpty) {
-                      return 'Edad vacío';
+                      return 'Edad vacía';
                     }
                   },
                   decoration: InputDecoration(
@@ -388,8 +388,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                 ),
                 SizedBox(
                   height: 15,
-
-                ), 
+                ),
                 //Guardar
                 Center(
                   child: isLoadig
@@ -419,7 +418,13 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                               }
                               print(form_adopcion['fotos'].toString());
                             }
-                            if (_image != null) {
+                            if (_image != null &&
+                                form_adopcion['tipoAnimal'] != null &&
+                                form_adopcion['sexo'] != null &&
+                                form_adopcion['convivenciaotros'] != null &&
+                                form_adopcion['desparacitacion'] != null &&
+                                form_adopcion['esterilizacion'] != null &&
+                                form_adopcion['vacunacion'] != null) {
                               final String fileName =
                                   controlador1.usuario.correo +
                                       '/adopcion/' +
@@ -520,11 +525,27 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     return fotosRef;
   }
 
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(
+ Future getImage(Controller controlador1) async {
+    var value = await controlador1.checkGalerryPermisson();
+    print(value);
+    
+    if (value) {
+      var image = await ImagePicker.pickImage(
         source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
-    setState(() {
-      _image = image;
-    });
+      return image;
+    } else {
+      return showDialog(
+        context: context,
+        child: Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Container(
+            margin: EdgeInsets.all(20),
+            child: Text(
+                '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!', style: TextStyle(fontWeight: FontWeight.bold),),
+          ),
+        ),
+      );
+   
+    }
   }
 }
