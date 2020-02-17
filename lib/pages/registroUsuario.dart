@@ -113,7 +113,9 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                   ),
                   Text('* Foto: '),
                   GestureDetector(
-                    onTap: () => getImage(controlador1),
+                    onTap: () => setState(() async {
+                      imagen = await controlador1.getImage(context);
+                    }),
                     child: Center(
                       child: SizedBox(
                         width: 150,
@@ -139,7 +141,9 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                               backgroundColor: secondaryColor,
                               child: IconButton(
                                 icon: Icon(Icons.photo_camera),
-                                onPressed: () => getImage(controlador1),
+                                onPressed: () => setState(() async {
+                                  imagen = await controlador1.getImage(context);
+                                }),
                               ),
                             )
                           ],

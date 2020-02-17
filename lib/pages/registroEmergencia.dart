@@ -122,7 +122,9 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                   height: 10,
                 ),
                 GestureDetector(
-                  onTap: () => getImage(controlador1),
+                  onTap: () => setState(() async {
+                    _image = await controlador1.getImage(context);
+                  }),
                   child: Center(
                     child: SizedBox(
                       width: 150,
@@ -144,7 +146,9 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                             backgroundColor: secondaryColor,
                             child: IconButton(
                               icon: Icon(Icons.photo_camera),
-                              onPressed: () => getImage(controlador1),
+                              onPressed: () => setState(() async {
+                                _image = await controlador1.getImage(context);
+                              }),
                             ),
                           )
                         ],

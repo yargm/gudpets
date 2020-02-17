@@ -707,7 +707,7 @@ class _DialogContentState extends State<DialogContent> {
                             FloatingActionButton.extended(
                               backgroundColor: primaryColor,
                               onPressed: () async {
-                                imagen = await getImage(controlador1);
+                                imagen = await controlador1.getImage(context);
                                 setState(() {
                                   imagen = imagen;
                                 });
@@ -729,7 +729,7 @@ class _DialogContentState extends State<DialogContent> {
                             FloatingActionButton.extended(
                               backgroundColor: primaryColor,
                               onPressed: () async {
-                                imagen = await getImageCamera(controlador1);
+                                imagen = await controlador1.getImageCamera(context);
                                 setState(() {
                                   imagen = imagen;
                                 });
@@ -898,63 +898,9 @@ class _DialogContentState extends State<DialogContent> {
     );
   }
 
-  Future getImageCamera(Controller controlador1) async {
-    var value = await controlador1.checkGalerryPermisson();
-    print(value);
+ 
 
-    if (value) {
-      var image = await ImagePicker.pickImage(
-          source: ImageSource.camera, maxHeight: 750, maxWidth: 750);
-      setState(() {
-        imagen = image;
-      });
-      return image;
-    } else {
-      return showDialog(
-        context: context,
-        child: Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Container(
-            margin: EdgeInsets.all(20),
-            child: Text(
-              '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
-  Future getImage(Controller controlador1) async {
-    var value = await controlador1.checkGalerryPermisson();
-    print(value);
-
-    if (value) {
-      var image = await ImagePicker.pickImage(
-          source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
-      setState(() {
-        imagen = image;
-      });
-      return image;
-    } else {
-      return showDialog(
-        context: context,
-        child: Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Container(
-            margin: EdgeInsets.all(20),
-            child: Text(
-              '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      );
-    }
-  }
+  
 }
 
 class DialogChangePhone extends StatefulWidget {

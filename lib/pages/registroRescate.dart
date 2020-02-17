@@ -159,7 +159,9 @@ class _RegistroRescateState extends State<RegistroRescate> {
                 Text('* Selecciona una imagen de la mascota rescatada: '),
                 GestureDetector(
                   onTap: () {
-                    getImage(controlador1);
+                    setState(() async {
+                      _image = await controlador1.getImage(context);
+                    });
                   },
                   child: Center(
                     child: SizedBox(
@@ -181,7 +183,9 @@ class _RegistroRescateState extends State<RegistroRescate> {
                             backgroundColor: secondaryColor,
                             child: IconButton(
                               icon: Icon(Icons.photo_camera),
-                              onPressed: () => getImage(controlador1),
+                              onPressed: () => setState(() async {
+                                _image = await controlador1.getImage(context);
+                              }),
                             ),
                           )
                         ],

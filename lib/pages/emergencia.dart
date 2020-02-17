@@ -26,6 +26,10 @@ class _EmergenciaState extends State<Emergencia> {
       Marker(
         markerId: MarkerId('emergenciaMarker'),
         draggable: false,
+        onTap: () {
+                        controlador1.openMap(widget.objeto.ubicacion.latitude, widget.objeto.ubicacion.longitude);
+                      },
+        infoWindow: InfoWindow(title: 'Lugar del suceso', ),
         position: LatLng(widget.objeto.ubicacion.latitude,
             widget.objeto.ubicacion.longitude),
       ),
@@ -254,10 +258,12 @@ class _EmergenciaState extends State<Emergencia> {
                     height: 300.0,
                     width: 400.0,
                     child: GoogleMap(
+                      
                       zoomGesturesEnabled: false,
                       scrollGesturesEnabled: false,
+
                       markers: Set.from(marcador),
-                      mapType: MapType.normal,
+                      mapType: MapType.hybrid,
                       initialCameraPosition: CameraPosition(
                         target: LatLng(widget.objeto.ubicacion.latitude,
                             widget.objeto.ubicacion.longitude),
@@ -283,17 +289,20 @@ class _EmergenciaState extends State<Emergencia> {
                             ),
                             GestureDetector(
                               onTap: () => showDialog(
-                                context: context,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Image.asset('assets/denuncia2.jpg', 
-                                  width: 700,
-                                  height: 500,
-                                    
-                                  ),
-                                )
-                              ),
-                                                          child: Container(
+                                  context: context,
+                                  child: GestureDetector(
+                                    onDoubleTap: () =>
+                                        Navigator.of(context).pop(),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Image.asset(
+                                        'assets/denuncia2.jpg',
+                                        width: 700,
+                                        height: 500,
+                                      ),
+                                    ),
+                                  )),
+                              child: Container(
                                   height: 200.0,
                                   width: 400.0,
                                   child: Image.asset('assets/denuncia2.jpg')),

@@ -69,10 +69,13 @@ class _HomeState extends State<Home> {
               onPressed: () => showDialog(
                   context: context,
                   child: SingleChildScrollView(
-                    child: FadeInImage(
-                      image: NetworkImage(
-                          'https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/infgudpets.png?alt=media&token=e37c4267-c4ec-4d3d-8286-5c726248f15c'),
-                      placeholder: AssetImage('assets/dog.png'),
+                    child: GestureDetector(
+                      onDoubleTap: () => Navigator.of(context).pop(),
+                      child: FadeInImage(
+                        image: NetworkImage(
+                            'https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/infgudpets.png?alt=media&token=e37c4267-c4ec-4d3d-8286-5c726248f15c'),
+                        placeholder: AssetImage('assets/dog.png'),
+                      ),
                     ),
                   )),
             ),
