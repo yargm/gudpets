@@ -22,10 +22,14 @@ class _RescateState extends State<Rescate> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     Completer<GoogleMapController> _controller = Completer();
-    List<Marker> marcador = [
+      List<Marker> marcador = [
       Marker(
         markerId: MarkerId('rescateMarker'),
         draggable: false,
+        onTap: () {
+                        controlador1.openMap(widget.objeto.ubicacion.latitude, widget.objeto.ubicacion.longitude);
+                      },
+        infoWindow: InfoWindow(title: 'Lugar del suceso', ),
         position: LatLng(widget.objeto.ubicacion.latitude,
             widget.objeto.ubicacion.longitude),
       ),

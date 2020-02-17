@@ -39,6 +39,15 @@ class _ListCardState extends State<ListCard> {
 
   @override
   Widget build(BuildContext context) {
+    //  for (var usuario in widget.objeto.favoritos) {
+     
+    //     if (widget.controlador1.usuario.documentId == usuario) {
+    //       favorito = true;
+    //     } else {
+    //       favorito = false;
+    //     }
+
+    // }
     var leftAligned = (widget.posicion % 2 == 0) ? true : false;
     Controller controlador1 = Provider.of<Controller>(context);
 

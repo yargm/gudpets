@@ -1,9 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:location/location.dart';
@@ -24,38 +22,6 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
   var location = Location();
   double latitud;
   double longitud;
-  Future<void> loadAssets() async {
-    List<Asset> resultList = List<Asset>();
-    String error = 'No Error Dectected';
-
-    try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 3,
-        enableCamera: true,
-        selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-        materialOptions: MaterialOptions(
-          actionBarColor: "#FF795548",
-          actionBarTitle: "Adopción App",
-          allViewTitle: "Todas las fotos",
-          useDetailsView: true,
-          selectCircleStrokeColor: "#FFFFFF",
-        ),
-      );
-    } on Exception catch (e) {
-      error = e.toString();
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      images = resultList;
-      _error = error;
-    });
-  }
 
   Future<GeoPoint> getLocation() async {
     try {
@@ -103,412 +69,453 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
+    Future<void> loadAssets() async {
+      List<Asset> resultList = List<Asset>();
+      String error = 'No Error Dectected';
+      var permisson = await controlador1.checkGalerryPermisson(false);
+      if (permisson) {
+        try {
+          resultList = await MultiImagePicker.pickImages(
+            maxImages: 3,
+            enableCamera: true,
+            selectedAssets: images,
+            cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+            materialOptions: MaterialOptions(
+              actionBarColor: "#FF795548",
+              actionBarTitle: "Adopción App",
+              allViewTitle: "Todas las fotos",
+              useDetailsView: true,
+              selectCircleStrokeColor: "#FFFFFF",
+            ),
+          );
+        } on Exception catch (e) {
+          error = e.toString();
+        }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Registro Adopción'),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: Form(
-            key: _adopcionkey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 15,
-                ),
-                Center(
-                  child: Text(
-                    'Ingresa los datos requeridos',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+        // If the widget was removed from the tree while the asynchronous platform
+        // message was in flight, we want to discard the reply rather than calling
+        // setState to update our non-existent appearance.
+        if (!mounted) return;
+
+        setState(() {
+          images = resultList;
+        });
+      } else {
+        return controlador1.permissonDeniedDialog(context);
+      }
+    }
+
+    return WillPopScope(
+      onWillPop: () async {
+        return isLoadig ? false : true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Registro Adopción'),
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: Form(
+              key: _adopcionkey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Los campos marcados con * son obligatorios.',
-                  style: TextStyle(color: Colors.red),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                //Foto
-                Text('* Selecciona una imagen de la mascota en adopción: '),
-                GestureDetector(
-                  onTap: () {
-                    setState(() async {
-                      _image = await controlador1.getImage(context);
-                    });
-                  },
-                  child: Center(
-                    child: SizedBox(
-                      width: 150,
-                      height: 150,
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            width: 150.0,
-                            height: 150.0,
-                            child: CircleAvatar(
-                              backgroundImage: _image == null
-                                  ? AssetImage('assets/dog.png')
-                                  : FileImage(_image),
-                              backgroundColor: Colors.transparent,
-                            ),
-                          ),
-                          CircleAvatar(
-                            backgroundColor: secondaryColor,
-                            child: IconButton(
-                              icon: Icon(Icons.photo_camera),
-                              onPressed: () => setState(() async {
-                                _image = await controlador1.getImage(context);
-                              }),
-                            ),
-                          )
-                        ],
+                  Center(
+                    child: Text(
+                      'Ingresa los datos requeridos',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                //Botón fotos
-                images.isNotEmpty
-                    ? Text('Fotos del álbum')
-                    : Text(' ¿Deseas crear un álbum? (opcional)'),
-                SizedBox(
-                  height: 15,
-                ),
-                images.isNotEmpty
-                    ? GridView.builder(
-                        shrinkWrap: true,
-                        physics: ScrollPhysics(
-                            parent: NeverScrollableScrollPhysics()),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                        ),
-                        itemBuilder: (context, index) => AssetThumb(
-                          asset: images[index],
-                          width: 300,
-                          height: 300,
-                        ),
-                        itemCount: images.length,
-                      )
-                    : Center(
-                        child: Text(
-                        'No hay fotos para mostrar',
-                        style: TextStyle(color: Colors.grey),
-                      )),
-                SizedBox(
-                  height: 15,
-                ),
-                Center(
-                  child: RaisedButton(
-                      onPressed: loadAssets, child: Text('Añadir imágenes')),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                //Título
-                TextFormField(
-                  initialValue: null,
-                  onSaved: (String value) {
-                    form_adopcion['titulo'] = value;
-                  },
-                  validator: (String value) {
-                    if (value.isEmpty) {
-                      return 'Título vacío';
-                    }
-                  },
-                  decoration: InputDecoration(
-                    labelText: '* Título de adopción',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0)),
+                  SizedBox(
+                    height: 15,
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                //Descripcion
-                TextFormField(
-                  maxLines: 10,
-                  minLines: 2,
-                  initialValue: null,
-                  onSaved: (String value) {
-                    form_adopcion['descripcion'] = value;
-                  },
-                  validator: (String value) {
-                    if (value.isEmpty) {
-                      return 'Descripción vacía';
-                    }
-                  },
-                  decoration: InputDecoration(
-                      labelText: '* Descripción',
+                  Text(
+                    'Los campos marcados con * son obligatorios.',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  //Foto
+                  Text('* Selecciona una imagen de la mascota en adopción: '),
+                  GestureDetector(
+                    onTap: () async {
+                      _image = await controlador1.getImage(context);
+                      setState(() {});
+                    },
+                    child: Center(
+                      child: SizedBox(
+                        width: 150,
+                        height: 150,
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              width: 150.0,
+                              height: 150.0,
+                              child: CircleAvatar(
+                                backgroundImage: _image == null
+                                    ? AssetImage('assets/dog.png')
+                                    : FileImage(_image),
+                                backgroundColor: Colors.transparent,
+                              ),
+                            ),
+                            CircleAvatar(
+                              backgroundColor: secondaryColor,
+                              child: IconButton(
+                                  icon: Icon(Icons.photo_camera),
+                                  onPressed: () async {
+                                    _image =
+                                        await controlador1.getImage(context);
+                                    setState(() {});
+                                  }),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  //Botón fotos
+                  images.isNotEmpty
+                      ? Text('Fotos del álbum')
+                      : Text(' ¿Deseas crear un álbum? (opcional)'),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  images.isNotEmpty
+                      ? GridView.builder(
+                          shrinkWrap: true,
+                          physics: ScrollPhysics(
+                              parent: NeverScrollableScrollPhysics()),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                          ),
+                          itemBuilder: (context, index) => AssetThumb(
+                            asset: images[index],
+                            width: 300,
+                            height: 300,
+                          ),
+                          itemCount: images.length,
+                        )
+                      : Center(
+                          child: Text(
+                          'No hay fotos para mostrar',
+                          style: TextStyle(color: Colors.grey),
+                        )),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                    child: RaisedButton(
+                        onPressed: loadAssets, child: Text('Añadir imágenes')),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  //Título
+                  TextFormField(
+                    initialValue: null,
+                    onSaved: (String value) {
+                      form_adopcion['titulo'] = value;
+                    },
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Título vacío';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      labelText: '* Título de adopción',
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0))),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                //Tipo de animal
-                Text('* Selecciona el tipo de animal'),
-                FittedBox(
-                  child: RadioButtonGroup(
+                          borderRadius: BorderRadius.circular(25.0)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  //Descripcion
+                  TextFormField(
+                    maxLines: 10,
+                    minLines: 2,
+                    initialValue: null,
+                    onSaved: (String value) {
+                      form_adopcion['descripcion'] = value;
+                    },
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Descripción vacía';
+                      }
+                    },
+                    decoration: InputDecoration(
+                        labelText: '* Descripción',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0))),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  //Tipo de animal
+                  Text('* Selecciona el tipo de animal'),
+                  FittedBox(
+                    child: RadioButtonGroup(
+                        picked: null,
+                        orientation: GroupedButtonsOrientation.HORIZONTAL,
+                        labels: <String>['perro', 'gato', 'ave', 'otro'],
+                        onSelected: (String opcion) {
+                          setState(() {
+                            form_adopcion['tipoAnimal'] = opcion;
+                          });
+                        }),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  //Sexo
+                  Text('* Sexo '),
+                  RadioButtonGroup(
                       picked: null,
-                      orientation: GroupedButtonsOrientation.HORIZONTAL,
-                      labels: <String>['perro', 'gato', 'ave', 'otro'],
+                      orientation: GroupedButtonsOrientation.VERTICAL,
+                      labels: <String>[
+                        'Macho',
+                        'Hembra',
+                      ],
                       onSelected: (String opcion) {
                         setState(() {
-                          form_adopcion['tipoAnimal'] = opcion;
+                          form_adopcion['sexo'] = opcion;
                         });
                       }),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                //Sexo
-                Text('* Sexo '),
-                RadioButtonGroup(
-                    picked: null,
-                    orientation: GroupedButtonsOrientation.VERTICAL,
-                    labels: <String>[
-                      'Macho',
-                      'Hembra',
-                    ],
-                    onSelected: (String opcion) {
-                      setState(() {
-                        form_adopcion['sexo'] = opcion;
-                      });
-                    }),
-                SizedBox(
-                  height: 15,
-                ),
-                //Convivencia con otros?
-                Text('* ¿La mascota convive con otros animales?'),
-                RadioButtonGroup(
-                    picked: null,
-                    orientation: GroupedButtonsOrientation.HORIZONTAL,
-                    labels: <String>[
-                      'Si',
-                      'No',
-                    ],
-                    onSelected: (String opcion) {
-                      setState(() {
-                        if (opcion == 'Si') {
-                          form_adopcion['convivenciaotros'] = true;
-                        } else {
-                          form_adopcion['convivenciaotros'] = false;
-                        }
-                      });
-                    }),
-                SizedBox(
-                  height: 15,
-                ),
-                //Desparaacitado?
-                Text('* ¿La mascota se encuentra desparacitada?'),
-                RadioButtonGroup(
-                    picked: null,
-                    orientation: GroupedButtonsOrientation.HORIZONTAL,
-                    labels: <String>[
-                      'Si',
-                      'No',
-                    ],
-                    onSelected: (String opcion) {
-                      setState(() {
-                        if (opcion == 'Si') {
-                          form_adopcion['desparacitacion'] = true;
-                        } else {
-                          form_adopcion['desparacitacion'] = false;
-                        }
-                      });
-                    }),
-                SizedBox(
-                  height: 15,
-                ),
-                //Vacunacion?
-                Text('* ¿La mascota se encuentra vacunada?'),
-                RadioButtonGroup(
-                    picked: null,
-                    orientation: GroupedButtonsOrientation.HORIZONTAL,
-                    labels: <String>[
-                      'Si',
-                      'No',
-                    ],
-                    onSelected: (String opcion) {
-                      setState(() {
-                        if (opcion == 'Si') {
-                          form_adopcion['vacunacion'] = true;
-                        } else {
-                          form_adopcion['vacunacion'] = false;
-                        }
-                      });
-                    }),
-                SizedBox(
-                  height: 15,
-                ),
-                //Esterilizado?
-                Text('* ¿La mascota se encuentra esterilizada?'),
-                RadioButtonGroup(
-                    picked: null,
-                    orientation: GroupedButtonsOrientation.HORIZONTAL,
-                    labels: <String>[
-                      'Si',
-                      'No',
-                    ],
-                    onSelected: (String opcion) {
-                      setState(() {
-                        if (opcion == 'Si') {
-                          form_adopcion['esterilizacion'] = true;
-                        } else {
-                          form_adopcion['esterilizacion'] = false;
-                        }
-                      });
-                    }),
-                SizedBox(
-                  height: 15,
-                ),
-                //Edad
-                TextFormField(
-                  initialValue: null,
-                  onSaved: (String value) {
-                    form_adopcion['edad'] = value;
-                  },
-                  validator: (String value) {
-                    if (value.isEmpty) {
-                      return 'Edad vacía';
-                    }
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Edad (Ej. 1 año)',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0)),
+                  SizedBox(
+                    height: 15,
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                //Guardar
-                Center(
-                  child: isLoadig
-                      ? CircularProgressIndicator()
-                      : RaisedButton.icon(
-                          icon: Icon(Icons.check),
-                          label: Text('Guardar'),
-                          onPressed: () async {
-                            setState(() {
-                              form_adopcion['userName'] =
-                                  controlador1.usuario.nombre;
-                              form_adopcion['fecha'] = DateTime.now();
-                              isLoadig = true;
-                            });
-
-                            if (!_adopcionkey.currentState.validate()) {
+                  //Convivencia con otros?
+                  Text('* ¿La mascota convive con otros animales?'),
+                  RadioButtonGroup(
+                      picked: null,
+                      orientation: GroupedButtonsOrientation.HORIZONTAL,
+                      labels: <String>[
+                        'Si',
+                        'No',
+                      ],
+                      onSelected: (String opcion) {
+                        setState(() {
+                          if (opcion == 'Si') {
+                            form_adopcion['convivenciaotros'] = true;
+                          } else {
+                            form_adopcion['convivenciaotros'] = false;
+                          }
+                        });
+                      }),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  //Desparaacitado?
+                  Text('* ¿La mascota se encuentra desparacitada?'),
+                  RadioButtonGroup(
+                      picked: null,
+                      orientation: GroupedButtonsOrientation.HORIZONTAL,
+                      labels: <String>[
+                        'Si',
+                        'No',
+                      ],
+                      onSelected: (String opcion) {
+                        setState(() {
+                          if (opcion == 'Si') {
+                            form_adopcion['desparacitacion'] = true;
+                          } else {
+                            form_adopcion['desparacitacion'] = false;
+                          }
+                        });
+                      }),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  //Vacunacion?
+                  Text('* ¿La mascota se encuentra vacunada?'),
+                  RadioButtonGroup(
+                      picked: null,
+                      orientation: GroupedButtonsOrientation.HORIZONTAL,
+                      labels: <String>[
+                        'Si',
+                        'No',
+                      ],
+                      onSelected: (String opcion) {
+                        setState(() {
+                          if (opcion == 'Si') {
+                            form_adopcion['vacunacion'] = true;
+                          } else {
+                            form_adopcion['vacunacion'] = false;
+                          }
+                        });
+                      }),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  //Esterilizado?
+                  Text('* ¿La mascota se encuentra esterilizada?'),
+                  RadioButtonGroup(
+                      picked: null,
+                      orientation: GroupedButtonsOrientation.HORIZONTAL,
+                      labels: <String>[
+                        'Si',
+                        'No',
+                      ],
+                      onSelected: (String opcion) {
+                        setState(() {
+                          if (opcion == 'Si') {
+                            form_adopcion['esterilizacion'] = true;
+                          } else {
+                            form_adopcion['esterilizacion'] = false;
+                          }
+                        });
+                      }),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  //Edad
+                  TextFormField(
+                    initialValue: null,
+                    onSaved: (String value) {
+                      form_adopcion['edad'] = value;
+                    },
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Edad vacía';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Edad (Ej. 1 año)',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  //Guardar
+                  Center(
+                    child: isLoadig
+                        ? CircularProgressIndicator()
+                        : RaisedButton.icon(
+                            icon: Icon(Icons.check),
+                            label: Text('Guardar'),
+                            onPressed: () async {
                               setState(() {
-                                isLoadig = false;
+                                form_adopcion['userName'] =
+                                    controlador1.usuario.nombre;
+                                form_adopcion['fecha'] = DateTime.now();
+                                isLoadig = true;
                               });
-                              return;
-                            }
-                            if (images != null) {
-                              for (var im in images) {
-                                var fotos = await saveImage(im, controlador1);
-                                form_adopcion['fotos'].add(fotos['url']);
-                                form_adopcion['albumrefs'].add(fotos['ref']);
+
+                              if (!_adopcionkey.currentState.validate()) {
+                                setState(() {
+                                  isLoadig = false;
+                                });
+                                return;
                               }
-                              print(form_adopcion['fotos'].toString());
-                            }
-                            if (_image != null &&
-                                form_adopcion['tipoAnimal'] != null &&
-                                form_adopcion['sexo'] != null &&
-                                form_adopcion['convivenciaotros'] != null &&
-                                form_adopcion['desparacitacion'] != null &&
-                                form_adopcion['esterilizacion'] != null &&
-                                form_adopcion['vacunacion'] != null) {
-                              final String fileName =
-                                  controlador1.usuario.correo +
-                                      '/adopcion/' +
-                                      DateTime.now().toString();
+                              if (images != null) {
+                                for (var im in images) {
+                                  var fotos = await saveImage(im, controlador1);
+                                  form_adopcion['fotos'].add(fotos['url']);
+                                  form_adopcion['albumrefs'].add(fotos['ref']);
+                                }
+                                print(form_adopcion['fotos'].toString());
+                              }
+                              if (_image != null &&
+                                  form_adopcion['tipoAnimal'] != null &&
+                                  form_adopcion['sexo'] != null &&
+                                  form_adopcion['convivenciaotros'] != null &&
+                                  form_adopcion['desparacitacion'] != null &&
+                                  form_adopcion['esterilizacion'] != null &&
+                                  form_adopcion['vacunacion'] != null) {
+                                final String fileName =
+                                    controlador1.usuario.correo +
+                                        '/adopcion/' +
+                                        DateTime.now().toString();
 
-                              StorageReference storageRef = FirebaseStorage
-                                  .instance
-                                  .ref()
-                                  .child(fileName);
+                                StorageReference storageRef = FirebaseStorage
+                                    .instance
+                                    .ref()
+                                    .child(fileName);
 
-                              final StorageUploadTask uploadTask =
-                                  storageRef.putFile(
-                                _image,
-                              );
+                                final StorageUploadTask uploadTask =
+                                    storageRef.putFile(
+                                  _image,
+                                );
 
-                              final StorageTaskSnapshot downloadUrl =
-                                  (await uploadTask.onComplete);
-                              final String fotoref = downloadUrl.ref.path;
+                                final StorageTaskSnapshot downloadUrl =
+                                    (await uploadTask.onComplete);
+                                final String fotoref = downloadUrl.ref.path;
 
-                              final String url =
-                                  (await downloadUrl.ref.getDownloadURL());
-                              print('URL Is $url');
-                              setState(() {
-                                form_adopcion['foto'] = url;
-                                form_adopcion['reffoto'] = fotoref;
-                                form_adopcion['userId'] =
-                                    controlador1.usuario.documentId;
-                                form_adopcion['status'] = 'en adopcion';
-                              });
-                            } else {
-                              setState(() {
-                                isLoadig = false;
-                              });
-                              return showDialog(
-                                  context: context,
-                                  child: AlertDialog(
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[
-                                          Text(
-                                              'Todos los campos son obligatorios. Por favor, completa la información que se solicita.'),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('Regresar'),
-                                        onPressed: () {
-                                          setState(() {
-                                            isLoadig = false;
-                                          });
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                    title: Text('Olvidaste añadir algo'),
-                                  ));
-                            }
-
-                            _adopcionkey.currentState.save();
-
-                            var agregar = await Firestore.instance
-                                .collection('adopciones')
-                                .add(form_adopcion)
-                                .then((value) {
-                              if (value != null) {
-                                return true;
+                                final String url =
+                                    (await downloadUrl.ref.getDownloadURL());
+                                print('URL Is $url');
+                                setState(() {
+                                  form_adopcion['foto'] = url;
+                                  form_adopcion['reffoto'] = fotoref;
+                                  form_adopcion['userId'] =
+                                      controlador1.usuario.documentId;
+                                  form_adopcion['status'] = 'en adopcion';
+                                });
                               } else {
-                                return false;
+                                setState(() {
+                                  isLoadig = false;
+                                });
+                                return showDialog(
+                                    context: context,
+                                    child: AlertDialog(
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text(
+                                                'Todos los campos son obligatorios. Por favor, completa la información que se solicita.'),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Regresar'),
+                                          onPressed: () {
+                                            setState(() {
+                                              isLoadig = false;
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                      title: Text('Olvidaste añadir algo'),
+                                    ));
                               }
-                            });
-                            if (agregar) {
-                              images.clear();
-                              Navigator.pop(context);
-                            }
-                          }),
-                )
-              ],
+
+                              _adopcionkey.currentState.save();
+
+                              var agregar = await Firestore.instance
+                                  .collection('adopciones')
+                                  .add(form_adopcion)
+                                  .then((value) {
+                                if (value != null) {
+                                  return true;
+                                } else {
+                                  return false;
+                                }
+                              });
+                              if (agregar) {
+                                images.clear();
+                                Navigator.of(context).pushNamed('/home');
+                              }
+                            }),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -529,35 +536,5 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     fotosRef['url'] = await (await uploadTask.onComplete).ref.getDownloadURL();
     fotosRef['ref'] = (await uploadTask.onComplete).ref.path;
     return fotosRef;
-  }
-
-  Future getImage(Controller controlador1) async {
-    var value = await controlador1.checkGalerryPermisson();
-    print(value);
-
-    if (value) {
-      var image = await ImagePicker.pickImage(
-          source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
-
-      setState(() {
-        _image = image;
-      });
-      return image;
-    } else {
-      return showDialog(
-        context: context,
-        child: Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Container(
-            margin: EdgeInsets.all(20),
-            child: Text(
-              '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      );
-    }
   }
 }

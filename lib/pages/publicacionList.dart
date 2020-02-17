@@ -28,7 +28,7 @@ class _PublicacionListState extends State<PublicacionList> {
               children: <Widget>[
                 ListTile(
                   leading: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.of(context).pushNamed('/home'),
                     icon: Icon(Icons.arrow_back_ios),
                   ),
                   title: Text(

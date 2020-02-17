@@ -39,7 +39,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    
     Controller controlador1 = Provider.of<Controller>(context);
+    seleccionado = controlador1.pestana_act;
     // TODO: implement build
     return WillPopScope(
       onWillPop: () async {

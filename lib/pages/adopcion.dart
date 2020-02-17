@@ -121,6 +121,7 @@ class _AdopcionState extends State<Adopcion> {
                         )
                       ],
                     ),
+                    SizedBox(height: 20,),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[

@@ -6,6 +6,8 @@ import 'package:gudpets/shared/shared.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io' show Platform;
 
 class Perfil extends StatefulWidget {
   @override
@@ -497,33 +499,38 @@ class _DialogMultiImageState extends State<DialogMultiImage> {
     Future<void> loadAssets() async {
       List<Asset> resultList = List<Asset>();
       String error = 'No Error Dectected';
+      var permisson = await controlador1.checkGalerryPermisson(false);
+      if (permisson) {
+        try {
+          resultList = await MultiImagePicker.pickImages(
+            maxImages: 6 - (controlador1.usuario.galeriaFotos.length ?? 0),
+            enableCamera: true,
+            selectedAssets: images,
+            cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+            materialOptions: MaterialOptions(
+              actionBarColor: "#FF795548",
+              actionBarTitle: "Adopción App",
+              allViewTitle: "Todas las fotos",
+              useDetailsView: true,
+              selectCircleStrokeColor: "#FFFFFF",
+            ),
+          );
+        } on Exception catch (e) {
+          error = e.toString();
+          return controlador1.permissonDeniedDialog(context);
+        }
 
-      try {
-        resultList = await MultiImagePicker.pickImages(
-          maxImages: 6 - (controlador1.usuario.galeriaFotos.length ?? 0),
-          enableCamera: true,
-          selectedAssets: images,
-          cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-          materialOptions: MaterialOptions(
-            actionBarColor: "#FF795548",
-            actionBarTitle: "Adopción App",
-            allViewTitle: "Todas las fotos",
-            useDetailsView: true,
-            selectCircleStrokeColor: "#FFFFFF",
-          ),
-        );
-      } on Exception catch (e) {
-        error = e.toString();
+        // If the widget was removed from the tree while the asynchronous platform
+        // message was in flight, we want to discard the reply rather than calling
+        // setState to update our non-existent appearance.
+        if (!mounted) return;
+
+        setState(() {
+          images = resultList;
+        });
+      } else {
+        return controlador1.permissonDeniedDialog(context);
       }
-
-      // If the widget was removed from the tree while the asynchronous platform
-      // message was in flight, we want to discard the reply rather than calling
-      // setState to update our non-existent appearance.
-      if (!mounted) return;
-
-      setState(() {
-        images = resultList;
-      });
     }
 
     // TODO: implement build
@@ -729,7 +736,8 @@ class _DialogContentState extends State<DialogContent> {
                             FloatingActionButton.extended(
                               backgroundColor: primaryColor,
                               onPressed: () async {
-                                imagen = await controlador1.getImageCamera(context);
+                                imagen =
+                                    await controlador1.getImageCamera(context);
                                 setState(() {
                                   imagen = imagen;
                                 });
@@ -897,10 +905,6 @@ class _DialogContentState extends State<DialogContent> {
       ),
     );
   }
-
- 
-
-  
 }
 
 class DialogChangePhone extends StatefulWidget {

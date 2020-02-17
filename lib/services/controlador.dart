@@ -18,150 +18,63 @@ class Controller with ChangeNotifier {
   String sexo;
   String tipo;
 
-  Future getImageCamera(BuildContext context) async {
-   if (Platform.isIOS) {
-      PermissionStatus permission = await PermissionHandler()
-          .checkPermissionStatus(PermissionGroup.photos);
-      if (permission != PermissionStatus.granted) {
-        Map<PermissionGroup, PermissionStatus> permissions =
-            await PermissionHandler()
-                .requestPermissions([PermissionGroup.photos]);
-        if (permissions[PermissionStatus] != PermissionStatus.granted) {
-          return showDialog(
-            context: context,
-            child: Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              child: Container(
-                margin: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    FloatingActionButton.extended(
-                      onPressed: () async =>
-                          await PermissionHandler().openAppSettings(),
-                      label: Text('Configuración'),
-                      icon: Icon(Icons.settings),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-      }
-      var image = await ImagePicker.pickImage(
-          source: ImageSource.camera, maxHeight: 750, maxWidth: 750);
-
-      return image;
-    } else {
-      var value = await checkGalerryPermisson();
-      print(value);
-
-      if (value) {
-        var image = await ImagePicker.pickImage(
-            source: ImageSource.camera, maxHeight: 750, maxWidth: 750);
-
-        return image;
-      } else {
-        return showDialog(
-          context: context,
-          child: Dialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: Container(
-              margin: EdgeInsets.all(20),
-              child: Text(
+  permissonDeniedDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      child: Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          margin: EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
                 '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-            ),
+              SizedBox(
+                height: 10,
+              ),
+              FloatingActionButton.extended(
+                onPressed: () async =>
+                    await PermissionHandler().openAppSettings(),
+                label: Text('Configuración'),
+                icon: Icon(Icons.settings),
+              )
+            ],
           ),
-        );
-      }
+        ),
+      ),
+    );
+  }
+
+  Future getImageCamera(BuildContext context) async {
+    var permisson = await checkGalerryPermisson(true);
+    if (permisson) {
+      var image = await ImagePicker.pickImage(
+          source: ImageSource.camera, maxHeight: 750, maxWidth: 750).catchError((onError) => permissonDeniedDialog(context));
+
+      return image;
+    } else {
+      return permissonDeniedDialog(context);
     }
   }
 
   Future getImage(BuildContext context) async {
-    if (Platform.isIOS) {
-      PermissionStatus permission = await PermissionHandler()
-          .checkPermissionStatus(PermissionGroup.photos);
-      if (permission != PermissionStatus.granted) {
-        Map<PermissionGroup, PermissionStatus> permissions =
-            await PermissionHandler()
-                .requestPermissions([PermissionGroup.photos]);
-        if (permissions[PermissionStatus] != PermissionStatus.granted) {
-          return showDialog(
-            context: context,
-            child: Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              child: Container(
-                margin: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    FloatingActionButton.extended(
-                      onPressed: () async =>
-                          await PermissionHandler().openAppSettings(),
-                      label: Text('Configuración'),
-                      icon: Icon(Icons.settings),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-      }
+    var permisson = await checkGalerryPermisson(false);
+    if (permisson) {
       var image = await ImagePicker.pickImage(
-          source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
+          source: ImageSource.gallery, maxHeight: 750, maxWidth: 750).catchError((onError) => permissonDeniedDialog(context));
 
       return image;
     } else {
-      var value = await checkGalerryPermisson();
-      print(value);
-
-      if (value) {
-        var image = await ImagePicker.pickImage(
-            source: ImageSource.gallery, maxHeight: 750, maxWidth: 750);
-
-        return image;
-      } else {
-        return showDialog(
-          context: context,
-          child: Dialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: Container(
-              margin: EdgeInsets.all(20),
-              child: Text(
-                '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        );
-      }
+      return permissonDeniedDialog(context);
     }
   }
 
-Future<void> openMap(double latitude, double longitude) async {
-    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+  Future<void> openMap(double latitude, double longitude) async {
+    String googleUrl =
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
     } else {
@@ -169,13 +82,33 @@ Future<void> openMap(double latitude, double longitude) async {
     }
   }
 
-  Future<bool> checkGalerryPermisson() async {
-    PermissionHandler permissionHandler = PermissionHandler();
-    var idk =
-        await permissionHandler.checkPermissionStatus(PermissionGroup.camera);
-    print('Permisos stauts!!! ' + idk.toString());
-    if (idk.toString() == 'PermissionStatus.neverAskAgain') return false;
-
+  Future<bool> checkGalerryPermisson(bool camera) async {
+    if (Platform.isIOS) {
+      PermissionStatus permission = await PermissionHandler()
+          .checkPermissionStatus(
+              camera ? PermissionGroup.camera : PermissionGroup.photos);
+      if (permission != PermissionStatus.granted) {
+        Map<PermissionGroup, PermissionStatus> permissions =
+            await PermissionHandler().requestPermissions(
+                [camera ? PermissionGroup.camera : PermissionGroup.photos]);
+        if (permissions[PermissionStatus] != PermissionStatus.granted) {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      PermissionHandler permissionHandler = PermissionHandler();
+      var idk = await permissionHandler.checkPermissionStatus(
+          camera ? PermissionGroup.camera : PermissionGroup.storage);
+      print('Permisos stauts!!! ' + idk.toString());
+      if (idk == PermissionStatus.neverAskAgain) {
+        return false;
+      } else {
+        return true;
+      }
+    
+    }
     return true;
   }
 

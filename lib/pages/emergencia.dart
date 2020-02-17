@@ -263,7 +263,7 @@ class _EmergenciaState extends State<Emergencia> {
                       scrollGesturesEnabled: false,
 
                       markers: Set.from(marcador),
-                      mapType: MapType.hybrid,
+                      mapType: MapType.normal,
                       initialCameraPosition: CameraPosition(
                         target: LatLng(widget.objeto.ubicacion.latitude,
                             widget.objeto.ubicacion.longitude),
