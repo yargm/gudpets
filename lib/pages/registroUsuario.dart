@@ -213,6 +213,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     height: 15,
                   ),
                   TextFormField(
+                    enabled: controlador1.email.isEmpty ? true : false,
                     initialValue:
                         controlador1.email.isEmpty ? null : controlador1.email,
                     onSaved: (String value) {
