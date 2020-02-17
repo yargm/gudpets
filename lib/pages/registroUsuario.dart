@@ -117,9 +117,11 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     ),
                     Text('* Foto: '),
                     GestureDetector(
-                      onTap: () => setState(() async {
+                      onTap: () async {
                         imagen = await controlador1.getImage(context);
-                      }),
+                        setState(() {
+                        
+                      }); },
                       child: Center(
                         child: SizedBox(
                           width: 150,
@@ -223,6 +225,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       height: 15,
                     ),
                     TextFormField(
+                      enabled:  controlador1.email.isEmpty ? true : false,
                       initialValue: controlador1.email.isEmpty
                           ? null
                           : controlador1.email,

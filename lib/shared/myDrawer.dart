@@ -93,9 +93,11 @@ class MyDrawer extends StatelessWidget {
               color: Colors.red,
             ),
             onTap: () async {
+              controlador1.pestana_act = 0;
               signOutGoogle();
               await controlador1.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil('/login', ModalRoute.withName('/home'));
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/login', ModalRoute.withName('/home'));
             },
           ),
         ],
