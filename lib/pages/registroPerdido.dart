@@ -312,15 +312,24 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                     height: 15,
                   ),
                   //Fecha de extravio
+
                   TextFormField(
+                    validator: (String value) {
+                      if (textEditingControllerFecha.text == '' ||
+                          textEditingControllerFecha.text == null ||
+                          textEditingControllerFecha.text.isEmpty || formPerdido['fechaExtravio'] == null) {
+                        return 'El campo fecha de extravio es obligatorio';
+                      }
+                      return null;
+                    },
                     controller: textEditingControllerFecha,
                     onTap: () => _selectDate(context),
                     readOnly: true,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                        labelText: '* Fecha de extravío',
+                        labelText: '* Fecha de extravio',
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0))),
+                            borderRadius: BorderRadius.circular(10))),
                   ),
                   SizedBox(
                     height: 15,
@@ -415,7 +424,8 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                       setState(() {
                                         isLoadig2 = false;
                                       });
-                                      return controlador1.permissonDeniedDialog(context);
+                                      return controlador1
+                                          .permissonDeniedDialog(context);
                                     } else {
                                       print(permisoStatus.toString());
                                       controlador1.latitudfinal = latitud;

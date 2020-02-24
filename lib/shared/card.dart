@@ -18,6 +18,8 @@ class _ListCardState extends State<ListCard> {
 
   final double containerPadding2 = 80;
 
+  
+
   final double containerBorderRadius = 15;
   bool favorito = false;
 
@@ -37,6 +39,9 @@ class _ListCardState extends State<ListCard> {
 
   @override
   Widget build(BuildContext context) {
+    var prefHeigth = MediaQuery.of(context).size.width > 900 ? 500.0 : 200.0;
+    var textSize =  MediaQuery.of(context).size.width > 900 ? 40.0 : 24.0;
+    var subTextSize =  MediaQuery.of(context).size.width > 900 ? 30.0 : 16.0;
     //  for (var usuario in widget.objeto.favoritos) {
      
     //     if (widget.controlador1.usuario.documentId == usuario) {
@@ -59,7 +64,7 @@ class _ListCardState extends State<ListCard> {
               padding: EdgeInsets.only(left: 0, right: 0),
               child: Container(
                 width: double.maxFinite,
-                height: 200,
+                height: prefHeigth,
                 // decoration: BoxDecoration(borderRadius: BorderRadius.circular(0)),R
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,8 +126,8 @@ class _ListCardState extends State<ListCard> {
                           child: FadeInImage(
                             placeholder: AssetImage('assets/dog.png'),
                             width: double.maxFinite,
-                            height: 200,
-                            fit: BoxFit.cover,
+                            height: prefHeigth,
+                            fit: BoxFit.fitWidth,
                             image: NetworkImage(widget.objeto.foto),
                           ),
                         ),
@@ -144,7 +149,7 @@ class _ListCardState extends State<ListCard> {
                     child: Text(
                       widget.objeto.titulo,
                       style: TextStyle(
-                        fontSize: 24.0,
+                        fontSize: textSize,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -297,7 +302,7 @@ class _ListCardState extends State<ListCard> {
                 child: Text(widget.objeto.descripcion,
                     maxLines: 2,
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: subTextSize,
                       color: Colors.grey,
                     )),
               ),

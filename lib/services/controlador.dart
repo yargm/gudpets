@@ -17,6 +17,7 @@ class Controller with ChangeNotifier {
   bool loading = false;
   String sexo;
   String tipo;
+  
 
   permissonDeniedDialog(BuildContext context) {
     return showDialog(

@@ -2,11 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>To know the users location when they want to register a post</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>To know the users location when they want to register a post</string>
-	<key>LSApplicationCategoryType</key>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>No se utiliza por el momento</string>
+	<key>CFBundleDisplayName</key>
 	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -36,19 +34,32 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Seleccionar fecha de nacimiento al momento del registro</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Cambiar tu foto de perfil, subir imagenes a tu galeria y llenar los formularios de la aplicación</string>
+	<key>NSContactsUsageDescription</key>
+	<string>No se utiliza por el momento</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Conocer la ubicación de los hechos, para llenar los formularios de emergencias, rescates y perdidos</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Conocer la ubicación de los hechos, para llenar los formularios de emergencias, rescates y perdidos</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>To record videos with audio</string>
+	<string>Grabar audio y video</string>
+	<key>NSMotionUsageDescription</key>
+	<string>No se utiliza por el momento</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Cambiar tu foto de perfil, subir imagenes a tu galeria y llenar los formularios de la aplicación</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>No se utiliza por el momento</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
-		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
@@ -58,8 +69,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -72,5 +81,7 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>No se utiliza por el momento</string>
 </dict>
 </plist>

@@ -6,7 +6,7 @@ import 'dart:async';
 
 class Emergencia extends StatefulWidget {
   final EmergenciaModel objeto;
- final bool favorito;
+  final bool favorito;
 
   Emergencia({this.objeto, this.favorito});
 
@@ -25,9 +25,12 @@ class _EmergenciaState extends State<Emergencia> {
         markerId: MarkerId('emergenciaMarker'),
         draggable: false,
         onTap: () {
-                        controlador1.openMap(widget.objeto.ubicacion.latitude, widget.objeto.ubicacion.longitude);
-                      },
-        infoWindow: InfoWindow(title: 'Lugar del suceso', ),
+          controlador1.openMap(widget.objeto.ubicacion.latitude,
+              widget.objeto.ubicacion.longitude);
+        },
+        infoWindow: InfoWindow(
+          title: 'Lugar del suceso',
+        ),
         position: LatLng(widget.objeto.ubicacion.latitude,
             widget.objeto.ubicacion.longitude),
       ),
@@ -59,34 +62,48 @@ class _EmergenciaState extends State<Emergencia> {
           SizedBox(
             width: double.maxFinite,
             height: 350,
-            child: Stack(
-              alignment: Alignment.bottomRight,
-              children: <Widget>[
-                Hero(
-                    tag: widget.objeto.documentId,
+            child: GestureDetector(
+              onTap: () => showDialog(
+                context: context,
+                child: SingleChildScrollView(
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
                     child: FadeInImage(
-                      fit: BoxFit.cover,
-                      placeholder: AssetImage('assets/dog.png'),
-                      width: double.maxFinite,
-                      height: 350,
                       image: NetworkImage(widget.objeto.foto),
-                    )),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                      ),
-                      color: Colors.brown[300]),
-                  padding: EdgeInsets.all(10.0),
-                  width: widget.objeto.userName.length * 11.1,
-                  height: 40,
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    widget.objeto.userName,
-                    style: TextStyle(fontSize: 16.0, color: Colors.white),
+                      placeholder: AssetImage('assets/dog.png'),
+                    ),
                   ),
                 ),
-              ],
+              ),
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: <Widget>[
+                  Hero(
+                      tag: widget.objeto.documentId,
+                      child: FadeInImage(
+                        fit: BoxFit.cover,
+                        placeholder: AssetImage('assets/dog.png'),
+                        width: double.maxFinite,
+                        height: 350,
+                        image: NetworkImage(widget.objeto.foto),
+                      )),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                        ),
+                        color: Colors.brown[300]),
+                    padding: EdgeInsets.all(10.0),
+                    width: widget.objeto.userName.length * 11.1,
+                    height: 40,
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      widget.objeto.userName,
+                      style: TextStyle(fontSize: 16.0, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Padding(
@@ -255,10 +272,8 @@ class _EmergenciaState extends State<Emergencia> {
                     height: 300.0,
                     width: 400.0,
                     child: GoogleMap(
-                      
                       zoomGesturesEnabled: false,
                       scrollGesturesEnabled: false,
-
                       markers: Set.from(marcador),
                       mapType: MapType.normal,
                       initialCameraPosition: CameraPosition(
