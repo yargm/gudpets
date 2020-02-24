@@ -3,11 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'dart:io' show Platform;
 
 class Perfil extends StatefulWidget {
   @override
@@ -21,7 +18,6 @@ class _PerfilState extends State<Perfil> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
 
-    // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -409,25 +405,29 @@ class _PerfilState extends State<Perfil> {
                               ),
                               itemBuilder: (context, index) => GestureDetector(
                                 onTap: () => showDialog(
-                                    context: context,
-                                    child: WillPopScope(
-                                      onWillPop: () async {
-                                        return controlador1.loading
-                                            ? false
-                                            : true;
-                                      },
-                                      child: Dialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: DialogContent(
-                                          index: index,
-                                        ),
+                                  context: context,
+                                  child: WillPopScope(
+                                    onWillPop: () async {
+                                      return controlador1.loading
+                                          ? false
+                                          : true;
+                                    },
+                                    child: Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: DialogContent(
+                                        index: index,
+                                        foto:  controlador1.usuario.galeriaFotos[index],
                                       ),
-                                    )),
-                                child: Image(
+                                    ),
+                                  ),
+                                ),
+                                child: FadeInImage(
+                                  placeholder: AssetImage('assets/dog.png'),
                                   image: NetworkImage(
-                                    controlador1.usuario.galeriaFotos[index],
+                                    controlador1.usuario.galeriaFotos[index] ??
+                                        '',
                                   ),
                                   height: 150,
                                   width: 150,
@@ -498,7 +498,7 @@ class _DialogMultiImageState extends State<DialogMultiImage> {
 
     Future<void> loadAssets() async {
       List<Asset> resultList = List<Asset>();
-      String error = 'No Error Dectected';
+
       var permisson = await controlador1.checkGalerryPermisson(false);
       if (permisson) {
         try {
@@ -516,7 +516,7 @@ class _DialogMultiImageState extends State<DialogMultiImage> {
             ),
           );
         } on Exception catch (e) {
-          error = e.toString();
+          print(e);
           return controlador1.permissonDeniedDialog(context);
         }
 
@@ -533,7 +533,6 @@ class _DialogMultiImageState extends State<DialogMultiImage> {
       }
     }
 
-    // TODO: implement build
     return SingleChildScrollView(
       child: Container(
         margin: EdgeInsets.all(20),
@@ -666,7 +665,6 @@ class _DialogContentState extends State<DialogContent> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
 
-    // TODO: implement build
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -694,8 +692,7 @@ class _DialogContentState extends State<DialogContent> {
                         : widget.foto == 'INE'
                             ? (controlador1.usuario.fotoINE ?? '')
                             : widget.index != null
-                                ? controlador1
-                                    .usuario.galeriaFotos[widget.index]
+                                ? widget.foto
                                 : (controlador1.usuario.fotoCompDomi ?? ''))
                     : FileImage(imagen),
                 placeholder: AssetImage('assets/dog.png'),
@@ -882,9 +879,9 @@ class _DialogContentState extends State<DialogContent> {
                     controlador1.usuario.galeriaFotos = urls;
                     controlador1.usuario.galeriaFotosRefs = refs;
                     controlador1.loading = false;
-                    setState(() {});
                     controlador1.notify();
-                    Navigator.of(context).pop();
+
+                    Navigator.of(context).pop(true);
                   },
                   label: Text(
                     'Eliminar foto',
@@ -920,7 +917,6 @@ class _DialogChangePhoneState extends State<DialogChangePhone> {
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
-    // TODO: implement build
     return Container(
       margin: EdgeInsets.all(20),
       child: Column(

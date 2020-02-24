@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
-import 'package:gudpets/shared/shared.dart';
 
 class ListCard extends StatefulWidget {
   final dynamic objeto;
@@ -24,7 +23,6 @@ class _ListCardState extends State<ListCard> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     for (var usuario in widget.objeto.favoritos) {
       setState(() {
@@ -51,7 +49,6 @@ class _ListCardState extends State<ListCard> {
     var leftAligned = (widget.posicion % 2 == 0) ? true : false;
     Controller controlador1 = Provider.of<Controller>(context);
 
-    // TODO: implement build
     return Container(
         padding: EdgeInsets.only(
             left: leftAligned ? 0 : containerPadding2,
@@ -71,7 +68,7 @@ class _ListCardState extends State<ListCard> {
                       tag: widget.objeto.documentId,
                       child: GestureDetector(
                         onTap: () {
-                          controlador1.pestana_act == 0
+                          controlador1.pestanaAct == 0
                               ? Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -80,7 +77,7 @@ class _ListCardState extends State<ListCard> {
                                             favorito: favorito,
                                           )),
                                 )
-                              : controlador1.pestana_act == 1
+                              : controlador1.pestanaAct == 1
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -88,7 +85,7 @@ class _ListCardState extends State<ListCard> {
                                               objeto: widget.objeto,
                                               favorito: favorito)),
                                     )
-                                  : controlador1.pestana_act == 2
+                                  : controlador1.pestanaAct == 2
                                       ? Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -173,7 +170,7 @@ class _ListCardState extends State<ListCard> {
                               'favoritos': FieldValue.arrayRemove(
                                   [controlador1.usuario.documentId])
                             });
-                      switch (controlador1.pestana_act) {
+                      switch (controlador1.pestanaAct) {
                         case 0:
                           !favorito
                               ? controlador1.usuario.reference.updateData(

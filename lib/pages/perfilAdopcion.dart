@@ -10,7 +10,6 @@ class PerfilAdopcion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,

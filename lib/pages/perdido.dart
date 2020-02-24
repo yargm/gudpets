@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Perdido extends StatefulWidget {
   final PerdidoModel objeto;
-  bool favorito;
+  final bool favorito;
 
   Perdido({this.objeto, this.favorito});
 
@@ -34,7 +34,6 @@ class _PerdidoState extends State<Perdido> {
       ),
     ];
 
-    // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -404,7 +403,7 @@ class _PerdidoState extends State<Perdido> {
     );
   }
 
-  _favtrue(bool favorito, Controller controlador1, PerdidoModel objeto) {
+  favtrue(bool favorito, Controller controlador1, PerdidoModel objeto) {
     objeto.reference.updateData({
       'favoritos': FieldValue.arrayUnion([controlador1.usuario.documentId]),
     });
@@ -421,7 +420,7 @@ class _PerdidoState extends State<Perdido> {
     );
   }
 
-  _favfalse(bool favorito, Controller controlador1, PerdidoModel objeto) {
+  favfalse(bool favorito, Controller controlador1, PerdidoModel objeto) {
     objeto.reference.updateData({
       'favoritos': FieldValue.arrayRemove([controlador1.usuario.documentId])
     });

@@ -8,7 +8,6 @@ class AvisosList extends StatelessWidget {
   Widget build(BuildContext context) {
    
     var avisos = Firestore.instance.collection('avisos').snapshots();
-    // TODO: implement build
     return Scaffold(
       backgroundColor: primaryColor,
       appBar: AppBar(

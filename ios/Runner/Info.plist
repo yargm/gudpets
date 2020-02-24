@@ -40,11 +40,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Take photos for the profile picture or to fill forms</string>
+	<string>Cambiar tu foto de perfil, subir imagenes a tu galeria y llenar los formularios de la aplicación</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>To record videos with audio</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Change profile picture and select images to fill forms inside the app</string>
+	<string>Cambiar tu foto de perfil, subir imagenes a tu galeria y llenar los formularios de la aplicación</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

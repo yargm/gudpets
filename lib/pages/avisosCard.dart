@@ -1,8 +1,5 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
-import 'package:gudpets/shared/shared.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AvisosCard extends StatelessWidget {

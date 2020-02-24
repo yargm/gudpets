@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
 import '../shared/colores.dart';
@@ -9,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Rescate extends StatefulWidget {
   final RescateModel objeto;
-  bool favorito;
+  final bool favorito;
 
   Rescate({this.objeto, this.favorito});
 
@@ -34,7 +33,6 @@ class _RescateState extends State<Rescate> {
             widget.objeto.ubicacion.longitude),
       ),
     ];
-    // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -362,7 +360,7 @@ class _RescateState extends State<Rescate> {
   }
 }
 
-_favtrue(bool favorito, Controller controlador1, RescateModel objeto) {
+favtrue(bool favorito, Controller controlador1, RescateModel objeto) {
   objeto.reference.updateData({
     'favoritos': FieldValue.arrayUnion([controlador1.usuario.documentId]),
   });
@@ -379,7 +377,7 @@ _favtrue(bool favorito, Controller controlador1, RescateModel objeto) {
   );
 }
 
-_favfalse(bool favorito, Controller controlador1, RescateModel objeto) {
+favfalse(bool favorito, Controller controlador1, RescateModel objeto) {
   objeto.reference.updateData({
     'favoritos': FieldValue.arrayRemove([controlador1.usuario.documentId])
   });

@@ -1,6 +1,9 @@
+import 'package:flutter/services.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+
 
 class Info extends StatefulWidget {
   @override
@@ -8,9 +11,9 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
+ 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Text('Información'),
@@ -130,8 +133,14 @@ class _InfoState extends State<Info> {
                 SizedBox(
                   height: 10,
                 ),
-                Text('gudtechinfo@gmail.com',
-                    style: TextStyle(fontSize: 18.0, color: Colors.brown)),
+                GestureDetector(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: 'gudtechinfo@gmail.com'));
+                  },
+                  child: Text('gudtechinfo@gmail.com',
+
+                      style: TextStyle(fontSize: 18.0, color: Colors.brown)),
+                ),
                 SizedBox(
                   height: 15,
                 ),

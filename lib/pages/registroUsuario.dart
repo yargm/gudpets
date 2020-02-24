@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
 
-import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -18,14 +16,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   final TextEditingController textEditingControllerFecha =
       TextEditingController();
   DateTime date = DateTime.now();
-  File imagen = null;
+  File imagen;
   bool isLoadig = false;
   final _usuarioform = GlobalKey<FormState>();
   bool tos = false;
   String tipotemp = '';
   bool correov = true;
 
-  Map<String, dynamic> form_usuario = {
+  Map<String, dynamic> formUsuario = {
     'nombre': null,
     'fnacimiento': null,
     'correo': null,
@@ -48,7 +46,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
     );
 
     setState(() {
-      form_usuario['fnacimiento'] = picked;
+      formUsuario['fnacimiento'] = picked;
       textEditingControllerFecha.text = 'Fecha nacimiento ' +
           picked.day.toString() +
           '/' +
@@ -72,7 +70,6 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
 
-    // TODO: implement build
     return WillPopScope(
       onWillPop: () async {
         signOutGoogle();
@@ -119,9 +116,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     GestureDetector(
                       onTap: () async {
                         imagen = await controlador1.getImage(context);
-                        setState(() {
-                        
-                      }); },
+                        setState(() {});
+                      },
                       child: Center(
                         child: SizedBox(
                           width: 150,
@@ -167,7 +163,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       initialValue:
                           controlador1.name.isEmpty ? null : controlador1.name,
                       onSaved: (String value) {
-                        form_usuario['nombre'] = value;
+                        formUsuario['nombre'] = value;
                       },
                       validator: (String value) {
                         if (value.isEmpty) {
@@ -176,6 +172,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                         if (value.length < 5) {
                           return 'Se requiere al menos un apellido';
                         }
+                        return null;
                       },
                       decoration: InputDecoration(
                           labelText: '* Nombre completo',
@@ -198,7 +195,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                         ],
                         onSelected: (String opcion) {
                           setState(() {
-                            form_usuario['sexo'] = opcion;
+                            formUsuario['sexo'] = opcion;
                           });
                         }),
                     SizedBox(
@@ -211,6 +208,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                             textEditingControllerFecha.text.isEmpty) {
                           return 'El campo fecha de nacimiento es obligatorio';
                         }
+                        return null;
                       },
                       controller: textEditingControllerFecha,
                       onTap: () => _selectDate(context),
@@ -225,12 +223,12 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       height: 15,
                     ),
                     TextFormField(
-                      enabled:  controlador1.email.isEmpty ? true : false,
+                      enabled: controlador1.email.isEmpty ? true : false,
                       initialValue: controlador1.email.isEmpty
                           ? null
                           : controlador1.email,
                       onSaved: (String value) {
-                        form_usuario['correo'] = value.trim();
+                        formUsuario['correo'] = value.trim();
                       },
                       validator: (String value) {
                         bool emailValid = RegExp(
@@ -243,6 +241,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                         } else if (correov == false) {
                           return 'Correo existente';
                         }
+                        return null;
                       },
                       maxLines: 1,
                       minLines: 1,
@@ -257,7 +256,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     TextFormField(
                       initialValue: null,
                       onSaved: (String value) {
-                        form_usuario['contrasena'] = value;
+                        formUsuario['contrasena'] = value;
                       },
                       validator: (String value) {
                         if (value.isEmpty) {
@@ -265,6 +264,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                         } else if (value.length < 3) {
                           return 'Contraseña demasiado corta';
                         }
+                        return null;
                       },
                       decoration: InputDecoration(
                           labelText: '* Contraseña',
@@ -283,7 +283,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       keyboardType: TextInputType.phone,
                       initialValue: null,
                       onSaved: (String value) {
-                        form_usuario['telefono'] = int.parse(value);
+                        formUsuario['telefono'] = int.parse(value);
                       },
                       validator: (String value) {
                         if (value.isEmpty) {
@@ -291,6 +291,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                         } else if (value.length != 10) {
                           return 'Ingrese 10 dígitos';
                         }
+                        return null;
                       },
                       decoration: InputDecoration(
                           labelText: '* Teléfono',
@@ -341,11 +342,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                           }),
                         ),
                         GestureDetector(
-                            onTap: () => _launchURL(),
-                            child: Text(
-                              'Aceptar terminos y condiciones',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            )),
+                          onTap: () => _launchURL(),
+                          child: Text(
+                            'Aceptar terminos y condiciones',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline),
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(
@@ -406,7 +410,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
 
               _usuarioform.currentState.save();
 
-              await _validatorEmail(form_usuario['correo']);
+              await _validatorEmail(formUsuario['correo']);
 
               setState(() {
                 isLoadig = true;
@@ -437,7 +441,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
               });
 
               if (imagen != null) {
-                final String fileName = form_usuario['correo'] +
+                final String fileName = formUsuario['correo'] +
                     '/perfil/PP' +
                     DateTime.now().toString();
 
@@ -454,15 +458,15 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                 final String url = (await downloadUrl.ref.getDownloadURL());
                 print('URL Is $url');
 
-                form_usuario['foto'] = url;
-                form_usuario['fotoStorageRef'] = downloadUrl.ref.path;
+                formUsuario['foto'] = url;
+                formUsuario['fotoStorageRef'] = downloadUrl.ref.path;
               } else {
-                form_usuario['foto'] = controlador1.imageUrl;
+                formUsuario['foto'] = controlador1.imageUrl;
               }
 
-              var agregar = await Firestore.instance
+              await Firestore.instance
                   .collection('usuarios')
-                  .add(form_usuario)
+                  .add(formUsuario)
                   .then((value) async {
                 if (value != null) {
                   var dsUsuario = await value.get();

@@ -1,6 +1,4 @@
-import 'package:gudpets/main.dart';
 import 'package:flutter/material.dart';
-import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -8,7 +6,7 @@ import 'dart:async';
 
 class Emergencia extends StatefulWidget {
   final EmergenciaModel objeto;
-  bool favorito;
+ final bool favorito;
 
   Emergencia({this.objeto, this.favorito});
 
@@ -35,7 +33,6 @@ class _EmergenciaState extends State<Emergencia> {
       ),
     ];
 
-    // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -320,7 +317,7 @@ class _EmergenciaState extends State<Emergencia> {
     );
   }
 
-  _favtrue(bool favorito, Controller controlador1, EmergenciaModel objeto) {
+  favtrue(bool favorito, Controller controlador1, EmergenciaModel objeto) {
     objeto.reference.updateData({
       'favoritos': FieldValue.arrayUnion([controlador1.usuario.documentId]),
     });
@@ -337,7 +334,7 @@ class _EmergenciaState extends State<Emergencia> {
     );
   }
 
-  _favfalse(bool favorito, Controller controlador1, EmergenciaModel objeto) {
+  favfalse(bool favorito, Controller controlador1, EmergenciaModel objeto) {
     objeto.reference.updateData({
       'favoritos': FieldValue.arrayRemove([controlador1.usuario.documentId])
     });

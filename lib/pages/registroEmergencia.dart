@@ -1,6 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:gudpets/shared/shared.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:location/location.dart';
@@ -49,6 +48,8 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
     } catch (e) {
       print(e.toString());
     }
+
+    return _currentLocation;
   }
 
   var _image;
@@ -60,7 +61,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
   String or = '';
   String tipoA = '';
 
-  Map<String, dynamic> form_emergencia = {
+  Map<String, dynamic> formEmergencia = {
     'foto': null,
     'titulo': null,
     'descripcion': null,
@@ -78,7 +79,6 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
 
-    // TODO: implement build
     return WillPopScope(
       onWillPop: () async {
         return isLoadig ? false : true;
@@ -168,12 +168,13 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                   TextFormField(
                     initialValue: null,
                     onSaved: (String value) {
-                      form_emergencia['titulo'] = value;
+                      formEmergencia['titulo'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Título vacío';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: '* Titulo de la emergencia',
@@ -188,12 +189,13 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                     maxLines: 10,
                     minLines: 2,
                     onSaved: (String value) {
-                      form_emergencia['descripcion'] = value;
+                      formEmergencia['descripcion'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Descripción vacía';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: '* Descripción',
@@ -212,7 +214,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                         labels: <String>['perro', 'gato', 'ave', 'otro'],
                         onSelected: (String opcion) {
                           setState(() {
-                            form_emergencia['tipoAnimal'] = opcion;
+                            formEmergencia['tipoAnimal'] = opcion;
                           });
                         }),
                   ),
@@ -232,7 +234,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                       ],
                       onSelected: (String opcion) {
                         setState(() {
-                          form_emergencia['tipoEmergencia'] = opcion;
+                          formEmergencia['tipoEmergencia'] = opcion;
                         });
                       }),
                   SizedBox(
@@ -272,22 +274,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                       setState(() {
                                         isLoadig2 = false;
                                       });
-                                      return showDialog(
-                                        context: context,
-                                        child: Dialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          child: Container(
-                                            margin: EdgeInsets.all(20),
-                                            child: Text(
-                                              '¡La aplicación no puede acceder a la ubicación de tu dispositivo, es algo indispensable para llenar el formulario, ve a la configuración de tu celular y asignale los permisos!',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
-                                      );
+                                      return controlador1.permissonDeniedDialog(context);
                                     } else {
                                       print(permisoStatus.toString());
                                       controlador1.latitudfinal = latitud;
@@ -355,9 +342,9 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                             label: Text('Guardar'),
                             onPressed: () async {
                               setState(() {
-                                form_emergencia['userName'] =
+                                formEmergencia['userName'] =
                                     controlador1.usuario.nombre;
-                                form_emergencia['fecha'] = DateTime.now();
+                                formEmergencia['fecha'] = DateTime.now();
                                 isLoadig = true;
                               });
 
@@ -371,8 +358,8 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                               if (_image != null &&
                                   controlador1.latitudfinal != null &&
                                   controlador1.longitudfinal != null &&
-                                  form_emergencia['tipoAnimal'] != null &&
-                                  form_emergencia['tipoEmergencia'] != null) {
+                                  formEmergencia['tipoAnimal'] != null &&
+                                  formEmergencia['tipoEmergencia'] != null) {
                                 final String fileName =
                                     controlador1.usuario.correo +
                                         '/emergencia/' +
@@ -396,11 +383,11 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                     (await downloadUrl.ref.getDownloadURL());
                                 print('URL Is $url');
                                 setState(() {
-                                  form_emergencia['foto'] = url;
-                                  form_emergencia['reffoto'] = fotoref;
-                                  form_emergencia['userId'] =
+                                  formEmergencia['foto'] = url;
+                                  formEmergencia['reffoto'] = fotoref;
+                                  formEmergencia['userId'] =
                                       controlador1.usuario.documentId;
-                                  form_emergencia['ubicacion'] = GeoPoint(
+                                  formEmergencia['ubicacion'] = GeoPoint(
                                       controlador1.latitudfinal,
                                       controlador1.longitudfinal);
                                 });
@@ -436,7 +423,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
 
                               var agregar = await Firestore.instance
                                   .collection('emergencias')
-                                  .add(form_emergencia)
+                                  .add(formEmergencia)
                                   .then((value) {
                                 if (value != null) {
                                   return true;

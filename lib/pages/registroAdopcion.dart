@@ -1,11 +1,9 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:location/location.dart';
-import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -17,7 +15,7 @@ class RegistroAdopcion extends StatefulWidget {
 
 class _RegistroAdopcionState extends State<RegistroAdopcion> {
   List<Asset> images = List<Asset>();
-  String _error = 'No Error Dectected';
+ 
   GeoPoint _currentLocation;
   var location = Location();
   double latitud;
@@ -32,12 +30,14 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
         latitud = _currentLocation.latitude;
         longitud = _currentLocation.longitude;
       });
+      
     } catch (e) {
       print(e.toString());
     }
+    return _currentLocation;
   }
 
-  File _image = null;
+  File _image;
   final _adopcionkey = GlobalKey<FormState>();
   String tipotemp = '';
   bool isLoadig = false;
@@ -46,7 +46,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
   String or = '';
   String tipoA = '';
 
-  Map<String, dynamic> form_adopcion = {
+  Map<String, dynamic> formAdopcion = {
     'convivenciaotros': null,
     'descripcion': null,
     'desparacitacion': null,
@@ -90,6 +90,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
           );
         } on Exception catch (e) {
           error = e.toString();
+          print(error);
         }
 
         // If the widget was removed from the tree while the asynchronous platform
@@ -227,12 +228,13 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                   TextFormField(
                     initialValue: null,
                     onSaved: (String value) {
-                      form_adopcion['titulo'] = value;
+                      formAdopcion['titulo'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Título vacío';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                       labelText: '* Título de adopción',
@@ -249,12 +251,13 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                     minLines: 2,
                     initialValue: null,
                     onSaved: (String value) {
-                      form_adopcion['descripcion'] = value;
+                      formAdopcion['descripcion'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Descripción vacía';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: '* Descripción',
@@ -273,7 +276,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                         labels: <String>['perro', 'gato', 'ave', 'otro'],
                         onSelected: (String opcion) {
                           setState(() {
-                            form_adopcion['tipoAnimal'] = opcion;
+                            formAdopcion['tipoAnimal'] = opcion;
                           });
                         }),
                   ),
@@ -291,7 +294,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                       ],
                       onSelected: (String opcion) {
                         setState(() {
-                          form_adopcion['sexo'] = opcion;
+                          formAdopcion['sexo'] = opcion;
                         });
                       }),
                   SizedBox(
@@ -309,9 +312,9 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                       onSelected: (String opcion) {
                         setState(() {
                           if (opcion == 'Si') {
-                            form_adopcion['convivenciaotros'] = true;
+                            formAdopcion['convivenciaotros'] = true;
                           } else {
-                            form_adopcion['convivenciaotros'] = false;
+                            formAdopcion['convivenciaotros'] = false;
                           }
                         });
                       }),
@@ -330,9 +333,9 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                       onSelected: (String opcion) {
                         setState(() {
                           if (opcion == 'Si') {
-                            form_adopcion['desparacitacion'] = true;
+                            formAdopcion['desparacitacion'] = true;
                           } else {
-                            form_adopcion['desparacitacion'] = false;
+                            formAdopcion['desparacitacion'] = false;
                           }
                         });
                       }),
@@ -351,9 +354,9 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                       onSelected: (String opcion) {
                         setState(() {
                           if (opcion == 'Si') {
-                            form_adopcion['vacunacion'] = true;
+                            formAdopcion['vacunacion'] = true;
                           } else {
-                            form_adopcion['vacunacion'] = false;
+                            formAdopcion['vacunacion'] = false;
                           }
                         });
                       }),
@@ -372,9 +375,9 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                       onSelected: (String opcion) {
                         setState(() {
                           if (opcion == 'Si') {
-                            form_adopcion['esterilizacion'] = true;
+                            formAdopcion['esterilizacion'] = true;
                           } else {
-                            form_adopcion['esterilizacion'] = false;
+                            formAdopcion['esterilizacion'] = false;
                           }
                         });
                       }),
@@ -385,12 +388,13 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                   TextFormField(
                     initialValue: null,
                     onSaved: (String value) {
-                      form_adopcion['edad'] = value;
+                      formAdopcion['edad'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Edad vacía';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                       labelText: 'Edad (Ej. 1 año)',
@@ -410,9 +414,9 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                             label: Text('Guardar'),
                             onPressed: () async {
                               setState(() {
-                                form_adopcion['userName'] =
+                                formAdopcion['userName'] =
                                     controlador1.usuario.nombre;
-                                form_adopcion['fecha'] = DateTime.now();
+                                formAdopcion['fecha'] = DateTime.now();
                                 isLoadig = true;
                               });
 
@@ -425,18 +429,18 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                               if (images != null) {
                                 for (var im in images) {
                                   var fotos = await saveImage(im, controlador1);
-                                  form_adopcion['fotos'].add(fotos['url']);
-                                  form_adopcion['albumrefs'].add(fotos['ref']);
+                                  formAdopcion['fotos'].add(fotos['url']);
+                                  formAdopcion['albumrefs'].add(fotos['ref']);
                                 }
-                                print(form_adopcion['fotos'].toString());
+                                print(formAdopcion['fotos'].toString());
                               }
                               if (_image != null &&
-                                  form_adopcion['tipoAnimal'] != null &&
-                                  form_adopcion['sexo'] != null &&
-                                  form_adopcion['convivenciaotros'] != null &&
-                                  form_adopcion['desparacitacion'] != null &&
-                                  form_adopcion['esterilizacion'] != null &&
-                                  form_adopcion['vacunacion'] != null) {
+                                  formAdopcion['tipoAnimal'] != null &&
+                                  formAdopcion['sexo'] != null &&
+                                  formAdopcion['convivenciaotros'] != null &&
+                                  formAdopcion['desparacitacion'] != null &&
+                                  formAdopcion['esterilizacion'] != null &&
+                                  formAdopcion['vacunacion'] != null) {
                                 final String fileName =
                                     controlador1.usuario.correo +
                                         '/adopcion/' +
@@ -460,11 +464,11 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                     (await downloadUrl.ref.getDownloadURL());
                                 print('URL Is $url');
                                 setState(() {
-                                  form_adopcion['foto'] = url;
-                                  form_adopcion['reffoto'] = fotoref;
-                                  form_adopcion['userId'] =
+                                  formAdopcion['foto'] = url;
+                                  formAdopcion['reffoto'] = fotoref;
+                                  formAdopcion['userId'] =
                                       controlador1.usuario.documentId;
-                                  form_adopcion['status'] = 'en adopcion';
+                                  formAdopcion['status'] = 'en adopcion';
                                 });
                               } else {
                                 setState(() {
@@ -500,7 +504,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
 
                               var agregar = await Firestore.instance
                                   .collection('adopciones')
-                                  .add(form_adopcion)
+                                  .add(formAdopcion)
                                   .then((value) {
                                 if (value != null) {
                                   return true;

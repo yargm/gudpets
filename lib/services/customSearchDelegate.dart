@@ -6,10 +6,10 @@ import 'services.dart';
 class CustomSearchDelegate extends SearchDelegate {
   String coleccion;
   CustomSearchDelegate(this.coleccion);
-  @override
+ 
   var query1 = '';
   List<Widget> buildActions(BuildContext context) {
-    Controller controlador1 = Provider.of<Controller>(context);
+    
     return [
       IconButton(
         icon: Icon(Icons.tune),
@@ -24,7 +24,7 @@ class CustomSearchDelegate extends SearchDelegate {
     return IconButton(
       icon: Icon(Icons.arrow_back),
       onPressed: () {
-        controlador1.pestana_act = 0;
+        controlador1.pestanaAct = 0;
         Navigator.of(context).pushReplacementNamed('/home');
       },
     );
@@ -114,7 +114,6 @@ class _DialogBodyState extends State<DialogBody> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     
-    // TODO: implement build
     return Dialog(
       child: Column(
         mainAxisSize: MainAxisSize.min,

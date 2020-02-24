@@ -6,6 +6,8 @@ export 'emergencia.dart';
 export 'emergenciaList.dart';
 export 'registroEmergencia.dart';
 
+export 'registroUsuario.dart';
+
 export 'rescate.dart';
 export 'rescateList.dart';
 

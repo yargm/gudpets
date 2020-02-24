@@ -4,10 +4,9 @@ import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 class Home extends StatefulWidget {
-  Controller controlador1;
+  final Controller controlador1;
   Home({this.controlador1});
   @override
   _HomeState createState() => _HomeState();
@@ -26,14 +25,13 @@ class _HomeState extends State<Home> {
   _onItemTapped(int index, Controller controlador1) {
     setState(() {
       seleccionado = index;
-      controlador1.pestana_act = index;
-      print('Estoy en : ' + controlador1.pestana_act.toString());
+      controlador1.pestanaAct = index;
+      print('Estoy en : ' + controlador1.pestanaAct.toString());
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -41,8 +39,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     
     Controller controlador1 = Provider.of<Controller>(context);
-    seleccionado = controlador1.pestana_act;
-    // TODO: implement build
+    seleccionado = controlador1.pestanaAct;
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -81,15 +78,15 @@ class _HomeState extends State<Home> {
                     ),
                   )),
             ),
-            controlador1.pestana_act == 0 || controlador1.pestana_act == 1
+            controlador1.pestanaAct == 0 || controlador1.pestanaAct == 1
                 ? IconButton(
                     onPressed: () {
                       showSearch(
                         context: context,
                         delegate: CustomSearchDelegate(
-                            controlador1.pestana_act == 0
+                            controlador1.pestanaAct == 0
                                 ? 'adopciones'
-                                : controlador1.pestana_act == 1
+                                : controlador1.pestanaAct == 1
                                     ? 'perdidos'
                                     : ''),
                       );
@@ -115,7 +112,7 @@ class _HomeState extends State<Home> {
         floatingActionButton: FloatingActionButton(
           mini: true,
           onPressed: () {
-            controlador1.pestana_act == 0
+            controlador1.pestanaAct == 0
                 ? controlador1.usuario.fotoINE != null
                     ? Navigator.of(context).pushNamed('/registro_adopcion')
                     : showDialog(
@@ -135,9 +132,9 @@ class _HomeState extends State<Home> {
                                 )
                               ],
                             ))
-                : controlador1.pestana_act == 1
+                : controlador1.pestanaAct == 1
                     ? Navigator.of(context).pushNamed('/registro_perdido')
-                    : controlador1.pestana_act == 2
+                    : controlador1.pestanaAct == 2
                         ? Navigator.of(context).pushNamed('/registro_rescate')
                         : Navigator.of(context)
                             .pushNamed('/registro_emergencia');

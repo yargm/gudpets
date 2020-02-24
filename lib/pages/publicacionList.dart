@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/pages/pages.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:gudpets/shared/shared.dart';
 
 class PublicacionList extends StatefulWidget {
   @override
