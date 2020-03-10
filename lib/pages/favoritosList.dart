@@ -51,7 +51,7 @@ class _FavoritosListState extends State<FavoritosList> {
                   ),
                   leading: IconButton(
                     onPressed: () {
-                      controlador1.pestana_act = 0;
+                      controlador1.pestanaAct = 0;
                       Navigator.of(context).pushReplacementNamed('/home');
                     },
                     icon: Icon(

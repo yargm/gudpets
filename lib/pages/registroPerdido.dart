@@ -1,7 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:location/location.dart';
@@ -54,9 +53,10 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
     } catch (e) {
       print(e.toString());
     }
+    return _currentLocation;
   }
 
-  File _image = null;
+  File _image;
   final _perdidokey = GlobalKey<FormState>();
   String tipotemp = '';
   bool isLoadig = false;
@@ -64,7 +64,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
   bool boton = true;
   bool recompensa = false;
 
-  Map<String, dynamic> form_perdido = {
+  Map<String, dynamic> formPerdido = {
     'foto': null,
     'reffoto': null,
     'titulo': null,
@@ -90,7 +90,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
     );
 
     setState(() {
-      form_perdido['fechaExtravio'] = picked;
+      formPerdido['fechaExtravio'] = picked;
       textEditingControllerFecha.text = 'Fecha extravío' +
           picked.day.toString() +
           '/' +
@@ -104,7 +104,6 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
 
-    // TODO: implement build
     return WillPopScope(
       onWillPop: () async {
         return isLoadig ? false : true;
@@ -197,12 +196,13 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                   TextFormField(
                     initialValue: null,
                     onSaved: (String value) {
-                      form_perdido['titulo'] = value;
+                      formPerdido['titulo'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Título vacío';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                       labelText: '* Titulo de la publicación',
@@ -219,12 +219,13 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                     minLines: 2,
                     initialValue: null,
                     onSaved: (String value) {
-                      form_perdido['descripcion'] = value;
+                      formPerdido['descripcion'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Descripción vacía';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: '* Desripción',
@@ -243,7 +244,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                         labels: <String>['perro', 'gato', 'ave', 'otro'],
                         onSelected: (String opcion) {
                           setState(() {
-                            form_perdido['tipoAnimal'] = opcion;
+                            formPerdido['tipoAnimal'] = opcion;
                           });
                         }),
                   ),
@@ -261,7 +262,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                       ],
                       onSelected: (String opcion) {
                         setState(() {
-                          form_perdido['sexo'] = opcion;
+                          formPerdido['sexo'] = opcion;
                         });
                       }),
                   SizedBox(
@@ -271,12 +272,13 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                   TextFormField(
                     initialValue: null,
                     onSaved: (String value) {
-                      form_perdido['raza'] = value;
+                      formPerdido['raza'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Raza vacía';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: '* Raza',
@@ -293,12 +295,13 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                     minLines: 2,
                     initialValue: null,
                     onSaved: (String value) {
-                      form_perdido['senasPart'] = value;
+                      formPerdido['senasPart'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Señas particulares vacías';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: '* Señas particulares',
@@ -309,15 +312,24 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                     height: 15,
                   ),
                   //Fecha de extravio
+
                   TextFormField(
+                    validator: (String value) {
+                      if (textEditingControllerFecha.text == '' ||
+                          textEditingControllerFecha.text == null ||
+                          textEditingControllerFecha.text.isEmpty || formPerdido['fechaExtravio'] == null) {
+                        return 'El campo fecha de extravio es obligatorio';
+                      }
+                      return null;
+                    },
                     controller: textEditingControllerFecha,
                     onTap: () => _selectDate(context),
                     readOnly: true,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                        labelText: '* Fecha de extravío',
+                        labelText: '* Fecha de extravio',
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0))),
+                            borderRadius: BorderRadius.circular(10))),
                   ),
                   SizedBox(
                     height: 15,
@@ -346,12 +358,13 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                           keyboardType: TextInputType.number,
                           initialValue: null,
                           onSaved: (String value) {
-                            form_perdido['recompensa'] = value;
+                            formPerdido['recompensa'] = value;
                           },
                           validator: (String value) {
                             if (value.isEmpty) {
                               return 'Cantidad vacía';
                             }
+                            return null;
                           },
                           decoration: InputDecoration(
                               labelText: '* Cantidad',
@@ -367,7 +380,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                     enabled: false,
                     initialValue: controlador1.usuario.telefono.toString(),
                     onSaved: (String value) {
-                      form_perdido['telefono'] = int.parse(value);
+                      formPerdido['telefono'] = int.parse(value);
                     },
                     decoration: InputDecoration(
                         labelText: '* Teléfono',
@@ -411,22 +424,8 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                       setState(() {
                                         isLoadig2 = false;
                                       });
-                                      return showDialog(
-                                        context: context,
-                                        child: Dialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          child: Container(
-                                            margin: EdgeInsets.all(20),
-                                            child: Text(
-                                              '¡La aplicación no puede acceder a la ubicación de tu dispositivo, es algo indispensable para llenar el formulario, ve a la configuración de tu celular y asignale los permisos!',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
-                                      );
+                                      return controlador1
+                                          .permissonDeniedDialog(context);
                                     } else {
                                       print(permisoStatus.toString());
                                       controlador1.latitudfinal = latitud;
@@ -494,9 +493,9 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                             label: Text('Guardar'),
                             onPressed: () async {
                               setState(() {
-                                form_perdido['userName'] =
+                                formPerdido['userName'] =
                                     controlador1.usuario.nombre;
-                                form_perdido['fecha'] = DateTime.now();
+                                formPerdido['fecha'] = DateTime.now();
                                 isLoadig = true;
                               });
 
@@ -510,8 +509,8 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                               if (_image != null &&
                                   controlador1.latitudfinal != null &&
                                   controlador1.longitudfinal != null &&
-                                  form_perdido['tipoAnimal'] != null &&
-                                  form_perdido['sexo'] != null) {
+                                  formPerdido['tipoAnimal'] != null &&
+                                  formPerdido['sexo'] != null) {
                                 final String fileName =
                                     controlador1.usuario.correo +
                                         '/perdido/' +
@@ -535,11 +534,11 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                     (await downloadUrl.ref.getDownloadURL());
                                 print('URL Is $url');
                                 setState(() {
-                                  form_perdido['foto'] = url;
-                                  form_perdido['userId'] =
+                                  formPerdido['foto'] = url;
+                                  formPerdido['userId'] =
                                       controlador1.usuario.documentId;
-                                  form_perdido['reffoto'] = fotoref;
-                                  form_perdido['ubicacion'] = GeoPoint(
+                                  formPerdido['reffoto'] = fotoref;
+                                  formPerdido['ubicacion'] = GeoPoint(
                                       controlador1.latitudfinal,
                                       controlador1.longitudfinal);
                                 });
@@ -574,7 +573,7 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
 
                               var agregar = await Firestore.instance
                                   .collection('perdidos')
-                                  .add(form_perdido)
+                                  .add(formPerdido)
                                   .then((value) {
                                 if (value != null) {
                                   return true;

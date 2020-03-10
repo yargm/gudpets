@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
-import 'dart:async';
 
 class Adopcion extends StatefulWidget {
   final AdopcionModel objeto;
-  bool favorito;
+  final bool favorito;
 
   Adopcion({this.objeto, this.favorito});
 
@@ -15,13 +14,12 @@ class Adopcion extends StatefulWidget {
 }
 
 class _AdopcionState extends State<Adopcion> {
-  Map<String, dynamic> form_solicitud = {};
+  Map<String, dynamic> formsolicitud = {};
 
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     controlador1.adopcion = widget.objeto;
-    // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -51,34 +49,48 @@ class _AdopcionState extends State<Adopcion> {
               SizedBox(
                 width: double.maxFinite,
                 height: 350,
-                child: Stack(
-                  alignment: Alignment.bottomRight,
-                  children: <Widget>[
-                    Hero(
-                        tag: widget.objeto.documentId,
+                child: GestureDetector(
+                  onTap: () => showDialog(
+                    context: context,
+                    child: SingleChildScrollView(
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
                         child: FadeInImage(
-                          fit: BoxFit.cover,
-                          placeholder: AssetImage('assets/dog.png'),
-                          width: double.maxFinite,
-                          height: 350,
                           image: NetworkImage(widget.objeto.foto),
-                        )),
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                          ),
-                          color: Colors.brown[300]),
-                      padding: EdgeInsets.all(10.0),
-                      width: widget.objeto.userName.length * 11.1,
-                      height: 40,
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        widget.objeto.userName,
-                        style: TextStyle(fontSize: 16.0, color: Colors.white),
+                          placeholder: AssetImage('assets/dog.png'),
+                        ),
                       ),
                     ),
-                  ],
+                  ),
+                  child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: <Widget>[
+                      Hero(
+                          tag: widget.objeto.documentId,
+                          child: FadeInImage(
+                            fit: BoxFit.cover,
+                            placeholder: AssetImage('assets/dog.png'),
+                            width: double.maxFinite,
+                            height: 350,
+                            image: NetworkImage(widget.objeto.foto),
+                          )),
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                            ),
+                            color: Colors.brown[300]),
+                        padding: EdgeInsets.all(10.0),
+                        width: widget.objeto.userName.length * 11.1,
+                        height: 40,
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          widget.objeto.userName,
+                          style: TextStyle(fontSize: 16.0, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Padding(
@@ -121,7 +133,9 @@ class _AdopcionState extends State<Adopcion> {
                         )
                       ],
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -437,22 +451,22 @@ class _AdopcionState extends State<Adopcion> {
                                 query.then((onValue) {
                                   if (onValue.documents.isNotEmpty) {
                                     return showDialog(
-                                        context: context,
-                                        builder: (_) => AlertDialog(
-                                              title:
-                                                  Text('Solicitud realizada '),
-                                              content: Text(
-                                                  'Ya te encuentras postulado'),
-                                              actions: <Widget>[
-                                                FlatButton(
-                                                  onPressed: () {
-                                                    return Navigator.of(context)
-                                                        .pop();
-                                                  },
-                                                  child: Text('CERRAR'),
-                                                )
-                                              ],
-                                            ));
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                        title: Text('Solicitud realizada '),
+                                        content:
+                                            Text('Ya te encuentras postulado'),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            onPressed: () {
+                                              return Navigator.of(context)
+                                                  .pop();
+                                            },
+                                            child: Text('CERRAR'),
+                                          )
+                                        ],
+                                      ),
+                                    );
                                   } else {
                                     print('boton para adoptar');
                                     if (controlador1.usuario.fotoCompDomiRef ==
@@ -508,69 +522,68 @@ class _AdopcionState extends State<Adopcion> {
                                                   FlatButton(
                                                     onPressed: () {
                                                       print('solicitud valida');
-                                                      form_solicitud['correo'] =
+                                                      formsolicitud['correo'] =
                                                           controlador1
                                                               .usuario.correo;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'descripcion'] =
                                                           controlador1.usuario
                                                               .descripcion;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'fnacimiento'] =
                                                           controlador1.usuario
                                                               .fnacimiento;
-                                                      form_solicitud['foto'] =
+                                                      formsolicitud['foto'] =
                                                           controlador1
                                                               .usuario.foto;
-                                                      form_solicitud['nombre'] =
+                                                      formsolicitud['nombre'] =
                                                           controlador1
                                                               .usuario.nombre;
-                                                      form_solicitud['sexo'] =
+                                                      formsolicitud['sexo'] =
                                                           controlador1
                                                               .usuario.sexo;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'telefono'] =
                                                           controlador1
                                                               .usuario.telefono;
-                                                      form_solicitud['userId'] =
+                                                      formsolicitud['userId'] =
                                                           controlador1.usuario
                                                               .documentId;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'referencia'] =
                                                           controlador1.usuario
                                                               .reference;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'fotoStorageRef'] =
                                                           controlador1.usuario
                                                               .fotoStorageRef;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'fotoCompDomi'] =
                                                           controlador1.usuario
                                                               .fotoCompDomi;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'fotoCompDomiRef'] =
                                                           controlador1.usuario
                                                               .fotoCompDomiRef;
-                                                      form_solicitud[
-                                                              'fotoINE'] =
+                                                      formsolicitud['fotoINE'] =
                                                           controlador1
                                                               .usuario.fotoINE;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'fotoINERef'] =
                                                           controlador1.usuario
                                                               .fotoINERef;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'galeriaFotos'] =
                                                           controlador1.usuario
                                                               .galeriaFotos;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'galeriaFotosRefs'] =
                                                           controlador1.usuario
                                                               .galeriaFotosRefs;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'userIdPub'] =
                                                           widget.objeto.userId;
-                                                      form_solicitud[
+                                                      formsolicitud[
                                                               'tituloPub'] =
                                                           widget.objeto.titulo;
 
@@ -578,7 +591,7 @@ class _AdopcionState extends State<Adopcion> {
                                                           .objeto.reference
                                                           .collection(
                                                               'solicitudes')
-                                                          .add(form_solicitud)
+                                                          .add(formsolicitud)
                                                           .then((value) {
                                                         if (value != null) {
                                                           return true;
@@ -618,6 +631,7 @@ class _AdopcionState extends State<Adopcion> {
                                                 ],
                                               ));
                                     }
+                                    return null;
                                   }
                                 });
                               })
@@ -650,7 +664,7 @@ class _AdopcionState extends State<Adopcion> {
     );
   }
 
-  _favtrue(bool favorito, Controller controlador1, AdopcionModel objeto) {
+  favtrue(bool favorito, Controller controlador1, AdopcionModel objeto) {
     objeto.reference.updateData({
       'favoritos': FieldValue.arrayUnion([controlador1.usuario.documentId]),
     });
@@ -667,7 +681,7 @@ class _AdopcionState extends State<Adopcion> {
     );
   }
 
-  _favfalse(bool favorito, Controller controlador1, AdopcionModel objeto) {
+  favfalse(bool favorito, Controller controlador1, AdopcionModel objeto) {
     objeto.reference.updateData({
       'favoritos': FieldValue.arrayRemove([controlador1.usuario.documentId])
     });

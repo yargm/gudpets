@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Perdido extends StatefulWidget {
   final PerdidoModel objeto;
-  bool favorito;
+  final bool favorito;
 
   Perdido({this.objeto, this.favorito});
 
@@ -21,20 +21,22 @@ class _PerdidoState extends State<Perdido> {
     Controller controlador1 = Provider.of<Controller>(context);
     Completer<GoogleMapController> _controller = Completer();
 
-      List<Marker> marcador = [
+    List<Marker> marcador = [
       Marker(
         markerId: MarkerId('perdidoMarker'),
         draggable: false,
         onTap: () {
-                        controlador1.openMap(widget.objeto.ubicacion.latitude, widget.objeto.ubicacion.longitude);
-                      },
-        infoWindow: InfoWindow(title: 'Lugar del suceso', ),
+          controlador1.openMap(widget.objeto.ubicacion.latitude,
+              widget.objeto.ubicacion.longitude);
+        },
+        infoWindow: InfoWindow(
+          title: 'Lugar del suceso',
+        ),
         position: LatLng(widget.objeto.ubicacion.latitude,
             widget.objeto.ubicacion.longitude),
       ),
     ];
 
-    // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -63,34 +65,48 @@ class _PerdidoState extends State<Perdido> {
           SizedBox(
             width: double.maxFinite,
             height: 350,
-            child: Stack(
-              alignment: Alignment.bottomRight,
-              children: <Widget>[
-                Hero(
-                    tag: widget.objeto.documentId,
+            child: GestureDetector(
+              onTap: () => showDialog(
+                context: context,
+                child: SingleChildScrollView(
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
                     child: FadeInImage(
-                      fit: BoxFit.cover,
-                      placeholder: AssetImage('assets/dog.png'),
-                      width: double.maxFinite,
-                      height: 350,
                       image: NetworkImage(widget.objeto.foto),
-                    )),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                      ),
-                      color: Colors.brown[300]),
-                  padding: EdgeInsets.all(10.0),
-                  width: widget.objeto.userName.length * 11.1,
-                  height: 40,
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    widget.objeto.userName,
-                    style: TextStyle(fontSize: 16.0, color: Colors.white),
+                      placeholder: AssetImage('assets/dog.png'),
+                    ),
                   ),
                 ),
-              ],
+              ),
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: <Widget>[
+                  Hero(
+                      tag: widget.objeto.documentId,
+                      child: FadeInImage(
+                        fit: BoxFit.cover,
+                        placeholder: AssetImage('assets/dog.png'),
+                        width: double.maxFinite,
+                        height: 350,
+                        image: NetworkImage(widget.objeto.foto),
+                      )),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                        ),
+                        color: Colors.brown[300]),
+                    padding: EdgeInsets.all(10.0),
+                    width: widget.objeto.userName.length * 11.1,
+                    height: 40,
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      widget.objeto.userName,
+                      style: TextStyle(fontSize: 16.0, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Padding(
@@ -213,9 +229,11 @@ class _PerdidoState extends State<Perdido> {
                           style: TextStyle(
                             fontSize: 20.0,
                           )),
-                      Text(
-                        widget.objeto.raza,
-                        style: TextStyle(color: Colors.grey, fontSize: 18),
+                      Expanded(
+                        child: Text(
+                          widget.objeto.raza,
+                          style: TextStyle(color: Colors.grey, fontSize: 18),
+                        ),
                       ),
                     ],
                   ),
@@ -404,7 +422,7 @@ class _PerdidoState extends State<Perdido> {
     );
   }
 
-  _favtrue(bool favorito, Controller controlador1, PerdidoModel objeto) {
+  favtrue(bool favorito, Controller controlador1, PerdidoModel objeto) {
     objeto.reference.updateData({
       'favoritos': FieldValue.arrayUnion([controlador1.usuario.documentId]),
     });
@@ -421,7 +439,7 @@ class _PerdidoState extends State<Perdido> {
     );
   }
 
-  _favfalse(bool favorito, Controller controlador1, PerdidoModel objeto) {
+  favfalse(bool favorito, Controller controlador1, PerdidoModel objeto) {
     objeto.reference.updateData({
       'favoritos': FieldValue.arrayRemove([controlador1.usuario.documentId])
     });

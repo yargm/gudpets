@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' show Platform;
 
 class Controller with ChangeNotifier {
-  int pestana_act = 0;
+  int pestanaAct = 0;
   String uid = '';
   String name = '';
   String email = '';
@@ -17,6 +17,7 @@ class Controller with ChangeNotifier {
   bool loading = false;
   String sexo;
   String tipo;
+  
 
   permissonDeniedDialog(BuildContext context) {
     return showDialog(
@@ -29,7 +30,7 @@ class Controller with ChangeNotifier {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                '¡La aplicación no puede acceder a tus fotos y a tu camara por que no le has asignado los permisos, ve a la configuración de tu celular y asignale los permisos!',
+                '¡La aplicación necesita que le asignes los permisos necesarios para utilizar esta función, ve a la configuración de tu celular y asignale los permisos!',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -112,12 +113,12 @@ class Controller with ChangeNotifier {
     return true;
   }
 
-  UsuarioModel usuario_act = UsuarioModel(
+  UsuarioModel usuarioActual = UsuarioModel(
     nombre: 'No name',
     foto: '',
   );
 
-  UsuarioModel get usuario => usuario_act;
+  UsuarioModel get usuario => usuarioActual;
 
   notify() {
     notifyListeners();
@@ -150,7 +151,7 @@ class Controller with ChangeNotifier {
 
   signIn() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('correo', usuario_act.correo);
+    prefs.setString('correo', usuarioActual.correo);
     await storeToken();
   }
 
@@ -164,7 +165,7 @@ class Controller with ChangeNotifier {
           .where('correo', isEqualTo: prefs.getString('correo'))
           .getDocuments()
           .then((onValue) {
-        usuario_act =
+        usuarioActual =
             UsuarioModel.fromDocumentSnapshot(onValue.documents.first);
       });
       await storeToken();
@@ -173,7 +174,7 @@ class Controller with ChangeNotifier {
   }
 
   agregausuario(UsuarioModel usuario) {
-    usuario_act = usuario;
+    usuarioActual = usuario;
   }
 
   double latitudfinal;

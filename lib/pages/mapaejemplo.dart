@@ -6,7 +6,7 @@ import 'package:gudpets/services/services.dart';
 class MapSample extends StatefulWidget {
   final double latitud;
   final double longitud;
-  Controller controlador1;
+  final Controller controlador1;
 
   MapSample({this.latitud, this.longitud, this.controlador1});
   @override

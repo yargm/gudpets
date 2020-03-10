@@ -11,6 +11,8 @@ String imageUrl;
 String uid;
 
 Future<String> signInWithGoogle(Controller controlador1) async {
+  controlador1.loading = true;
+  controlador1.notify();
   print('entré a signinwithgoogle');
   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
   print('paso1');
@@ -40,13 +42,12 @@ Future<String> signInWithGoogle(Controller controlador1) async {
   print('no la estoy dando con' + controlador1.name.toString());
   controlador1.email = user.email;
   controlador1.imageUrl = user.photoUrl;
-  if (controlador1.name.contains(" ")) {
-    controlador1.name = controlador1.name.substring(0, name.indexOf(" "));
-  }
   final FirebaseUser currentUser = await _auth.currentUser();
   assert(user.uid == currentUser.uid);
+  controlador1.loading = false;
 
   return 'signInWithGoogle succeeded: $user';
+  
 }
 
 void signOutGoogle() async {

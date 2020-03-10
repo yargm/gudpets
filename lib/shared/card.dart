@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
-import 'package:gudpets/shared/shared.dart';
 
 class ListCard extends StatefulWidget {
   final dynamic objeto;
@@ -19,12 +18,13 @@ class _ListCardState extends State<ListCard> {
 
   final double containerPadding2 = 80;
 
+  
+
   final double containerBorderRadius = 15;
   bool favorito = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     for (var usuario in widget.objeto.favoritos) {
       setState(() {
@@ -39,6 +39,9 @@ class _ListCardState extends State<ListCard> {
 
   @override
   Widget build(BuildContext context) {
+    var prefHeigth = MediaQuery.of(context).size.width > 900 ? 500.0 : 200.0;
+    var textSize =  MediaQuery.of(context).size.width > 900 ? 40.0 : 24.0;
+    var subTextSize =  MediaQuery.of(context).size.width > 900 ? 30.0 : 16.0;
     //  for (var usuario in widget.objeto.favoritos) {
      
     //     if (widget.controlador1.usuario.documentId == usuario) {
@@ -51,7 +54,6 @@ class _ListCardState extends State<ListCard> {
     var leftAligned = (widget.posicion % 2 == 0) ? true : false;
     Controller controlador1 = Provider.of<Controller>(context);
 
-    // TODO: implement build
     return Container(
         padding: EdgeInsets.only(
             left: leftAligned ? 0 : containerPadding2,
@@ -62,7 +64,7 @@ class _ListCardState extends State<ListCard> {
               padding: EdgeInsets.only(left: 0, right: 0),
               child: Container(
                 width: double.maxFinite,
-                height: 200,
+                height: prefHeigth,
                 // decoration: BoxDecoration(borderRadius: BorderRadius.circular(0)),R
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +73,7 @@ class _ListCardState extends State<ListCard> {
                       tag: widget.objeto.documentId,
                       child: GestureDetector(
                         onTap: () {
-                          controlador1.pestana_act == 0
+                          controlador1.pestanaAct == 0
                               ? Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -80,7 +82,7 @@ class _ListCardState extends State<ListCard> {
                                             favorito: favorito,
                                           )),
                                 )
-                              : controlador1.pestana_act == 1
+                              : controlador1.pestanaAct == 1
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -88,7 +90,7 @@ class _ListCardState extends State<ListCard> {
                                               objeto: widget.objeto,
                                               favorito: favorito)),
                                     )
-                                  : controlador1.pestana_act == 2
+                                  : controlador1.pestanaAct == 2
                                       ? Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -124,8 +126,8 @@ class _ListCardState extends State<ListCard> {
                           child: FadeInImage(
                             placeholder: AssetImage('assets/dog.png'),
                             width: double.maxFinite,
-                            height: 200,
-                            fit: BoxFit.cover,
+                            height: prefHeigth,
+                            fit: BoxFit.fitWidth,
                             image: NetworkImage(widget.objeto.foto),
                           ),
                         ),
@@ -147,7 +149,7 @@ class _ListCardState extends State<ListCard> {
                     child: Text(
                       widget.objeto.titulo,
                       style: TextStyle(
-                        fontSize: 24.0,
+                        fontSize: textSize,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -173,7 +175,7 @@ class _ListCardState extends State<ListCard> {
                               'favoritos': FieldValue.arrayRemove(
                                   [controlador1.usuario.documentId])
                             });
-                      switch (controlador1.pestana_act) {
+                      switch (controlador1.pestanaAct) {
                         case 0:
                           !favorito
                               ? controlador1.usuario.reference.updateData(
@@ -300,7 +302,7 @@ class _ListCardState extends State<ListCard> {
                 child: Text(widget.objeto.descripcion,
                     maxLines: 2,
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: subTextSize,
                       color: Colors.grey,
                     )),
               ),

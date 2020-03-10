@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gudpets/services/services.dart';
-import 'package:gudpets/shared/shared.dart';
 import 'package:gudpets/pages/pages.dart';
 
 class AdoptadosList extends StatefulWidget {
@@ -14,7 +13,6 @@ class _AdoptadosListState extends State<AdoptadosList> {
     Controller controlador1 = Provider.of<Controller>(context);
     var adoptados =
         controlador1.usuario.reference.collection('adoptados').snapshots();
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Text('Mis adopciones'),

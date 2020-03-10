@@ -1,13 +1,10 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:location/location.dart';
 import 'mapaejemplo.dart';
-import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -43,7 +40,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
   double longitud;
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
-  @override
+  
   Future<GeoPoint> getLocation() async {
     try {
       var userLocation = await location.getLocation();
@@ -55,12 +52,14 @@ class _RegistroRescateState extends State<RegistroRescate> {
       });
     } catch (e) {
       print(e.toString());
+      print(_error);
     }
+    return _currentLocation;
   }
 
   bool capturaubicacion = false;
 
-  File _image = null;
+  File _image;
   final _rescatekey = GlobalKey<FormState>();
   String tipotemp = '';
   bool isLoadig = false;
@@ -68,7 +67,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
   bool boton = true;
   String or = '';
   String tipoA = '';
-  Map<String, dynamic> form_rescate = {
+  Map<String, dynamic> formRescate = {
     'titulo': null,
     'ubicacion': <GeoPoint>[],
     'telefono': null,
@@ -107,6 +106,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
           );
         } on Exception catch (e) {
           error = e.toString();
+          print(error);
         }
 
         // If the widget was removed from the tree while the asynchronous platform
@@ -122,7 +122,6 @@ class _RegistroRescateState extends State<RegistroRescate> {
       }
     }
 
-    // TODO: implement build
     return WillPopScope(
       onWillPop: () async {
         return isLoadig ? false : true;
@@ -243,12 +242,13 @@ class _RegistroRescateState extends State<RegistroRescate> {
                   TextFormField(
                     initialValue: null,
                     onSaved: (String value) {
-                      form_rescate['titulo'] = value;
+                      formRescate['titulo'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Título vacío';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: '* Título del rescate',
@@ -263,12 +263,13 @@ class _RegistroRescateState extends State<RegistroRescate> {
                     minLines: 2,
                     initialValue: null,
                     onSaved: (String value) {
-                      form_rescate['descripcion'] = value;
+                      formRescate['descripcion'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return 'Descripción vacía';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: '* Descripción',
@@ -286,7 +287,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                         labels: <String>['perro', 'gato', 'ave', 'otro'],
                         onSelected: (String opcion) {
                           setState(() {
-                            form_rescate['tipoAnimal'] = opcion;
+                            formRescate['tipoAnimal'] = opcion;
                           });
                         }),
                   ),
@@ -605,7 +606,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                     keyboardType: TextInputType.number,
                     initialValue: controlador1.usuario.telefono.toString(),
                     onSaved: (String value) {
-                      form_rescate['telefono'] = int.parse(value);
+                      formRescate['telefono'] = int.parse(value);
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
@@ -613,6 +614,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                       } else if (value.length > 10) {
                         return 'Ingrese 10 dígitos';
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: '* Teléfono',
@@ -638,9 +640,9 @@ class _RegistroRescateState extends State<RegistroRescate> {
                               }
 
                               setState(() {
-                                form_rescate['userName'] =
+                                formRescate['userName'] =
                                     controlador1.usuario.nombre;
-                                form_rescate['fecha'] = DateTime.now();
+                                formRescate['fecha'] = DateTime.now();
                                 isLoadig = true;
                               });
 
@@ -648,13 +650,13 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                 for (var im in images) {
                                   var fotos = await saveImage(im, controlador1);
 
-                                  form_rescate['fotos'].add(fotos['url']);
-                                  form_rescate['albumrefs'].add(fotos['ref']);
+                                  formRescate['fotos'].add(fotos['url']);
+                                  formRescate['albumrefs'].add(fotos['ref']);
                                 }
-                                print(form_rescate['fotos'].toString());
+                                print(formRescate['fotos'].toString());
                               }
                               if (_image != null &&
-                                  form_rescate['tipoAnimal'] != null) {
+                                  formRescate['tipoAnimal'] != null) {
                                 final String fileName =
                                     controlador1.usuario.correo +
                                         '/rescate/' +
@@ -678,17 +680,17 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                 final String fotoref = downloadUrl.ref.path;
                                 print('URL Is $url');
                                 setState(() {
-                                  form_rescate['foto'] = url;
-                                  form_rescate['reffoto'] = fotoref;
-                                  form_rescate['userId'] =
+                                  formRescate['foto'] = url;
+                                  formRescate['reffoto'] = fotoref;
+                                  formRescate['userId'] =
                                       controlador1.usuario.documentId;
                                   if (controlador1.latitudfinal != null &&
                                       controlador1.longitudfinal != null) {
-                                    form_rescate['ubicacion'] = GeoPoint(
+                                    formRescate['ubicacion'] = GeoPoint(
                                         controlador1.latitudfinal,
                                         controlador1.longitudfinal);
                                   } else {
-                                    form_rescate['ubicacion'] = GeoPoint(0, 0);
+                                    formRescate['ubicacion'] = GeoPoint(0, 0);
                                   }
                                 });
                               } else {
@@ -725,7 +727,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
 
                               var agregar = await Firestore.instance
                                   .collection('rescates')
-                                  .add(form_rescate)
+                                  .add(formRescate)
                                   .then((value) {
                                 if (value != null) {
                                   return true;

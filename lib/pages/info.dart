@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,9 +9,17 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
+   _launchURL() async {
+    const url =
+        'http://gudtech.tech/es/gudpets-tos/';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Text('Información'),
@@ -130,8 +139,15 @@ class _InfoState extends State<Info> {
                 SizedBox(
                   height: 10,
                 ),
-                Text('gudtechinfo@gmail.com',
-                    style: TextStyle(fontSize: 18.0, color: Colors.brown)),
+                GestureDetector(
+                  onTap: () => Clipboard.setData(ClipboardData(text: 'gudtechinfo@gmail.com')),
+                  child: Tooltip(
+
+                    message: 'Copy',
+                    child: Text('gudtechinfo@gmail.com',
+                        style: TextStyle(fontSize: 18.0, color: Colors.brown)),
+                  ),
+                ),
                 SizedBox(
                   height: 15,
                 ),
@@ -227,7 +243,16 @@ class _InfoState extends State<Info> {
                           child: Text('www.flaticon.com',
                               style: TextStyle(
                                   fontSize: 18.0, color: Colors.brown)),
-                        )
+                        ),
+                        GestureDetector(
+                          onTap: () => _launchURL(),
+                          child: Text(
+                            'Aceptar terminos y condiciones',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline),
+                          ),
+                        ),
                       ],
                     ),
                   ],

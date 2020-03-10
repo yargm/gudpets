@@ -93,7 +93,7 @@ class MyDrawer extends StatelessWidget {
               color: Colors.red,
             ),
             onTap: () async {
-              controlador1.pestana_act = 0;
+              controlador1.pestanaAct = 0;
               signOutGoogle();
               await controlador1.signOut();
               Navigator.of(context).pushNamedAndRemoveUntil(

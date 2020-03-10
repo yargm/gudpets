@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:gudpets/services/services.dart';
 
 class UsuarioModel {

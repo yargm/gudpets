@@ -12,7 +12,6 @@ class _FirebaseMessagingState extends State<FirebaseMessage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     
@@ -28,7 +27,6 @@ class _FirebaseMessagingState extends State<FirebaseMessage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container();
   }
 }

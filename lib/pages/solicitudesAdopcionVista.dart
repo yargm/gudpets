@@ -1,8 +1,6 @@
 import 'package:gudpets/pages/perfilAdopcion.dart';
 import 'package:flutter/material.dart';
 import 'package:gudpets/services/services.dart';
-import 'package:gudpets/pages/pages.dart';
-import 'package:gudpets/shared/shared.dart';
 
 class SolicitudAdopcionVista extends StatefulWidget {
   final SolicitudModel objeto;
@@ -17,7 +15,6 @@ class SolicitudAdopcionVista extends StatefulWidget {
 class _SolicitudAdopcionVistaState extends State<SolicitudAdopcionVista> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ListTile(
       onTap: () {
         return Navigator.push(

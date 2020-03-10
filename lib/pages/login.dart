@@ -3,9 +3,7 @@ import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/colores.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 
@@ -17,7 +15,7 @@ class LogIn extends StatefulWidget {
 
 class _LogInState extends State<LogIn> {
   final key = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   String error = '';
 
@@ -48,9 +46,7 @@ class _LogInState extends State<LogIn> {
     }
   }
 
-  Future<bool> _askPermissionIOS() async {
-
-  }
+ 
 
   Future<bool> _askpermission() async {
     await PermissionHandler()
@@ -137,9 +133,10 @@ class _LogInState extends State<LogIn> {
                     SizedBox(
                       height: 30.0,
                     ),
-                    isLoading
+                    isLoading || controlador1.loading
                         ? CircularProgressIndicator()
                         : Column(
+                          
                             children: <Widget>[
                               Card(
                                 margin: EdgeInsets.symmetric(horizontal: 40),
@@ -163,6 +160,8 @@ class _LogInState extends State<LogIn> {
                                               errorbase) {
                                             return 'Correo incorrecto';
                                           }
+                                          return null;
+                                          
                                         },
                                         keyboardType:
                                             TextInputType.emailAddress,
@@ -191,7 +190,9 @@ class _LogInState extends State<LogIn> {
                                               texto == '' ||
                                               errorbase) {
                                             return 'Contraseña incorrecta';
+
                                           }
+                                         return null;
                                         },
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.fromLTRB(
@@ -251,7 +252,7 @@ class _LogInState extends State<LogIn> {
                                               } else {
                                                 var user =
                                                     query.documents.first;
-                                                controlador1.usuario_act =
+                                                controlador1.usuarioActual =
                                                     UsuarioModel
                                                         .fromDocumentSnapshot(
                                                             user);
@@ -322,7 +323,7 @@ class _LogInState extends State<LogIn> {
             if (onValue.documents.isEmpty) {
               Navigator.of(context).pushReplacementNamed('/registro_usuario');
             } else {
-              controlador1.usuario_act =
+              controlador1.usuarioActual =
                   UsuarioModel.fromDocumentSnapshot(onValue.documents.first);
               controlador1.signIn();
               Navigator.of(context).pushReplacementNamed('/home');
