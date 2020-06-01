@@ -113,7 +113,9 @@ class MyApp extends StatelessWidget {
           '/perfil': (BuildContext context) => Perfil(),
           '/favoritos': (BuildContext context) => FavoritosList(),
           '/info': (BuildContext context) => Info(),
-          '/adoptadosList': (BuildContext context) => AdoptadosList()
+          '/adoptadosList': (BuildContext context) => AdoptadosList(),
+          '/registroMascota': (BuildContext context) => RegistroMascota()
+
         },
       ),
     );
