@@ -262,7 +262,6 @@ class AdopcionModel {
   String adoptanteCorreo;
   String adoptanteId;
 
-
   AdopcionModel(
       {this.titulo,
       this.descripcion,
@@ -280,13 +279,14 @@ class AdopcionModel {
       this.userId,
       this.albumrefs,
       this.reffoto,
-      this.fotos, 
+      this.fotos,
       this.status,
       this.adoptanteNombre,
       this.adoptanteINE,
       this.adoptanteFoto,
       this.adoptanteTelefono,
-      this.adoptanteId, this.adoptanteCorreo});
+      this.adoptanteId,
+      this.adoptanteCorreo});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -313,41 +313,39 @@ class AdopcionModel {
     adoptanteINE = data['adoptanteINE'];
     adoptanteTelefono = data['adoptanteTelefono'];
     adoptanteId = data['adoptanteId'];
-    adoptanteFoto =data['adoptanteFoto'];
-    adoptanteCorreo =data['adoptanteCorreo'];
+    adoptanteFoto = data['adoptanteFoto'];
+    adoptanteCorreo = data['adoptanteCorreo'];
   }
 
-  Map<String,dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
-      'titulo' : titulo,
-      'userName' : userName,
-      'favoritos':favoritos,
-      'descripcion':descripcion,
-      'tipoAnimal':tipoAnimal,
-      'foto':foto,
-      'sexo':sexo,
-      'edad':edad,
+      'titulo': titulo,
+      'userName': userName,
+      'favoritos': favoritos,
+      'descripcion': descripcion,
+      'tipoAnimal': tipoAnimal,
+      'foto': foto,
+      'sexo': sexo,
+      'edad': edad,
       'fecha': fecha,
       'fotos': fotos,
-      'albumrefs':albumrefs,
-      'reffoto':reffoto,
-      'esterilizacion':esterilizacion,
+      'albumrefs': albumrefs,
+      'reffoto': reffoto,
+      'esterilizacion': esterilizacion,
       'vacunacion': vacunacion,
-      'desparacitacion':desparacitacion,
-      'convivenciaotros':convivenciaotros,
-      'userId':userId,
-      'documentId':documentId,
-      'reference':reference,
-      'status':status,
+      'desparacitacion': desparacitacion,
+      'convivenciaotros': convivenciaotros,
+      'userId': userId,
+      'documentId': documentId,
+      'reference': reference,
+      'status': status,
       'adoptanteNombre': adoptanteNombre,
       'adoptanteINE': adoptanteINE,
       'adoptanteTelefono': adoptanteTelefono,
       'adoptanteId': adoptanteId,
-      'adoptanteFoto':adoptanteFoto,
-      'adoptanteCorreo':adoptanteCorreo,
-
+      'adoptanteFoto': adoptanteFoto,
+      'adoptanteCorreo': adoptanteCorreo,
     };
-
   }
 }
 

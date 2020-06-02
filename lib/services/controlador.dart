@@ -5,6 +5,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:location/location.dart';
+import 'package:geocoder/geocoder.dart';
 import 'dart:io' show Platform;
 
 class Controller with ChangeNotifier {
@@ -17,7 +19,10 @@ class Controller with ChangeNotifier {
   bool loading = false;
   String sexo;
   String tipo;
-  
+  GeoPoint _currentLocation;
+  var location = Location();
+  double latitud;
+  double longitud;
 
   permissonDeniedDialog(BuildContext context) {
     return showDialog(
@@ -53,7 +58,8 @@ class Controller with ChangeNotifier {
     var permisson = await checkGalerryPermisson(true);
     if (permisson) {
       var image = await ImagePicker.pickImage(
-          source: ImageSource.camera, maxHeight: 750, maxWidth: 750).catchError((onError) => permissonDeniedDialog(context));
+              source: ImageSource.camera, maxHeight: 750, maxWidth: 750)
+          .catchError((onError) => permissonDeniedDialog(context));
 
       return image;
     } else {
@@ -65,12 +71,63 @@ class Controller with ChangeNotifier {
     var permisson = await checkGalerryPermisson(false);
     if (permisson) {
       var image = await ImagePicker.pickImage(
-          source: ImageSource.gallery, maxHeight: 750, maxWidth: 750).catchError((onError) => permissonDeniedDialog(context));
+              source: ImageSource.gallery, maxHeight: 750, maxWidth: 750)
+          .catchError((onError) => permissonDeniedDialog(context));
 
       return image;
     } else {
       return permissonDeniedDialog(context);
     }
+  }
+
+  Future getAddress(BuildContext context) async {
+    final coordinates = new Coordinates(latitudfinal, longitudfinal);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var ubicacion = addresses.first;
+    print(
+        ' ${ubicacion.countryName}, ${ubicacion.adminArea}, ${ubicacion.locality}');
+  }
+
+  Future<GeoPoint> getLocation(BuildContext context) async {
+    try {
+      var userLocation = await location.getLocation();
+      _currentLocation =
+          GeoPoint(userLocation.latitude, userLocation.longitude);
+      latitud = _currentLocation.latitude;
+      longitud = _currentLocation.longitude;
+    } catch (e) {
+      print(e.toString());
+    }
+    return _currentLocation;
+  }
+
+  Future<bool> checkLocationPermisson() async {
+    if (Platform.isIOS) {
+      PermissionStatus permission = await PermissionHandler()
+          .checkPermissionStatus(PermissionGroup.locationWhenInUse);
+      if (permission != PermissionStatus.granted) {
+        Map<PermissionGroup, PermissionStatus> permissions =
+            await PermissionHandler()
+                .requestPermissions([PermissionGroup.locationWhenInUse]);
+        if (permissions[PermissionStatus] != PermissionStatus.granted) {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      PermissionHandler permissionHandler = PermissionHandler();
+      var idk = await permissionHandler
+          .checkPermissionStatus(PermissionGroup.locationWhenInUse);
+      print('Permisos stauts!!! ' + idk.toString());
+      if (idk == PermissionStatus.neverAskAgain) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
   }
 
   Future<void> openMap(double latitude, double longitude) async {
@@ -108,7 +165,6 @@ class Controller with ChangeNotifier {
       } else {
         return true;
       }
-    
     }
     return true;
   }

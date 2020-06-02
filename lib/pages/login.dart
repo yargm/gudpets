@@ -27,7 +27,6 @@ class _LogInState extends State<LogIn> {
   void initState() {
     super.initState();
     if (Platform.isIOS) {
-     
     } else {
       PermissionHandler()
           .checkPermissionStatus(PermissionGroup.locationWhenInUse)
@@ -58,6 +57,7 @@ class _LogInState extends State<LogIn> {
       if (status.toString() == 'PermissionStatus.denied') {
         exit(0);
       }
+
     });
     return true;
   }
