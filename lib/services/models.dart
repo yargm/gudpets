@@ -20,6 +20,8 @@ class UsuarioModel {
   String fotoCompDomiRef;
   List<dynamic> galeriaFotos;
   List<dynamic> galeriaFotosRefs;
+  String edo;
+  String municipio;
 
   UsuarioModel(
       {this.contrasena,
@@ -32,7 +34,9 @@ class UsuarioModel {
       this.telefono,
       this.tipo,
       this.documentId,
-      this.fotoINE});
+      this.fotoINE,
+      this.edo,
+      this.municipio});
 
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
@@ -71,6 +75,8 @@ class UsuarioModel {
     fotoINERef = data['fotoINERef'];
     galeriaFotos = data['galeriaFotos'] ?? [];
     galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
+    edo = data['edo'] ?? '';
+    municipio = data['municipio'] ?? '';
   }
 }
 

@@ -370,7 +370,8 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                           controlador1.latitud;
                                       controlador1.longitudfinal =
                                           controlador1.longitud;
-                                      await controlador1.getAddress(context);
+                                      await controlador1.getAddress(
+                                          context, false);
                                       showDialog(
                                           barrierDismissible: false,
                                           context: context,

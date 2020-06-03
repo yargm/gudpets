@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io' show Platform;
 
 class Controller with ChangeNotifier {
@@ -23,6 +24,8 @@ class Controller with ChangeNotifier {
   var location = Location();
   double latitud;
   double longitud;
+  String edo;
+  String municipio;
 
   permissonDeniedDialog(BuildContext context) {
     return showDialog(
@@ -80,13 +83,45 @@ class Controller with ChangeNotifier {
     }
   }
 
-  Future getAddress(BuildContext context) async {
-    final coordinates = new Coordinates(latitudfinal, longitudfinal);
+  Future getAddress(BuildContext context, bool useraddress) async {
+    final coordinates = useraddress
+        ? new Coordinates(latitud, longitud)
+        : new Coordinates(latitudfinal, longitudfinal);
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    var ubicacion = addresses.first;
-    print(
-        ' ${ubicacion.countryName}, ${ubicacion.adminArea}, ${ubicacion.locality}');
+    var direccion = addresses.first;
+    edo = '${direccion.adminArea}';
+    municipio = '${direccion.locality}';
+  }
+
+  Future setAddress() async {
+    Fluttertoast.showToast(
+        msg: 'recibo ' +
+            edo +
+            ' , ' +
+            municipio +
+            ' y tengo ' +
+            usuario.edo +
+            ' , ' +
+            usuario.municipio);
+    //no actualizar nada
+    if (usuario.edo == edo && usuario.municipio == municipio) {
+      Fluttertoast.showToast(msg: 'no hice nada');
+    }
+    //actualizar solo estado
+    else if (usuario.edo != edo && usuario.municipio == municipio) {
+      await usuario.reference.updateData({'edo': edo});
+      Fluttertoast.showToast(msg: 'actualicé estado');
+    }
+    //actualizar solo municipio
+    else if (usuario.edo == edo && usuario.municipio != municipio) {
+      await usuario.reference.updateData({'municipio': municipio});
+      Fluttertoast.showToast(msg: 'actualicé municipio');
+    } else {
+      await usuario.reference.updateData({'edo': edo});
+      await usuario.reference.updateData({'municipio': municipio});
+      Fluttertoast.showToast(msg: 'actualicé ambos');
+    }
   }
 
   Future<GeoPoint> getLocation(BuildContext context) async {
@@ -96,6 +131,7 @@ class Controller with ChangeNotifier {
           GeoPoint(userLocation.latitude, userLocation.longitude);
       latitud = _currentLocation.latitude;
       longitud = _currentLocation.longitude;
+      Fluttertoast.showToast(msg: 'tengo la ubicación');
     } catch (e) {
       print(e.toString());
     }
@@ -209,9 +245,10 @@ class Controller with ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('correo', usuarioActual.correo);
     await storeToken();
+    await setAddress();
   }
 
-  Future<bool> signInCheck() async {
+  Future<bool> signInCheck(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('correo') == null) {
       return false;
@@ -223,6 +260,8 @@ class Controller with ChangeNotifier {
           .then((onValue) {
         usuarioActual =
             UsuarioModel.fromDocumentSnapshot(onValue.documents.first);
+
+        setAddress();
       });
       await storeToken();
       return true;
