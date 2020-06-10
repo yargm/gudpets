@@ -22,6 +22,9 @@ class UsuarioModel {
   List<dynamic> galeriaFotosRefs;
   String edo;
   String municipio;
+  List<dynamic> amigos;
+  List<dynamic> solicitudesAE;
+  List<dynamic> bloqueados;
 
   UsuarioModel(
       {this.contrasena,
@@ -55,6 +58,16 @@ class UsuarioModel {
     return age;
   }
 
+  Map<String, dynamic> toReport(List<String> razones) {
+    return {
+      'nombre': nombre,
+      'foto': foto,
+      'razones': razones,
+      'correo': correo,
+      'uid': uid,
+    };
+  }
+
   UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
     contrasena = data['tcontrasena'];
     correo = data['correo'];
@@ -77,6 +90,9 @@ class UsuarioModel {
     galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
     edo = data['edo'] ?? '';
     municipio = data['municipio'] ?? '';
+    amigos = data['amigos'] ?? [];
+    solicitudesAE = data['solicitudesAE'] ?? [];
+    bloqueados = data['bloqueados'] ?? [];
   }
 }
 
