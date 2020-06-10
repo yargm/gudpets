@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io';
-
 
 class LogIn extends StatefulWidget {
   @override
@@ -27,7 +27,6 @@ class _LogInState extends State<LogIn> {
   void initState() {
     super.initState();
     if (Platform.isIOS) {
-     
     } else {
       PermissionHandler()
           .checkPermissionStatus(PermissionGroup.locationWhenInUse)
@@ -40,13 +39,18 @@ class _LogInState extends State<LogIn> {
           _askpermission();
         } else {
           print('ya me aceptaste antes');
+          Future.delayed(Duration.zero, () async {
+            Controller controller =
+                Provider.of<Controller>(context, listen: false);
+
+            await controller.getLocation(context);
+            await controller.getAddress(context, true);
+          });
           return;
         }
       });
     }
   }
-
- 
 
   Future<bool> _askpermission() async {
     await PermissionHandler()
@@ -57,6 +61,14 @@ class _LogInState extends State<LogIn> {
         .then((status) {
       if (status.toString() == 'PermissionStatus.denied') {
         exit(0);
+      } else if (status.toString() == "PermissionStatus.granted") {
+        Future.delayed(Duration.zero, () async {
+          Controller controller =
+              Provider.of<Controller>(context, listen: false);
+
+          await controller.getLocation(context);
+          await controller.getAddress(context, true);
+        });
       }
     });
     return true;
@@ -66,7 +78,7 @@ class _LogInState extends State<LogIn> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
 
-    controlador1.signInCheck().then((onValue) {
+    controlador1.signInCheck(context).then((onValue) {
       setState(() {
         isLoading = true;
       });
@@ -136,7 +148,6 @@ class _LogInState extends State<LogIn> {
                     isLoading || controlador1.loading
                         ? CircularProgressIndicator()
                         : Column(
-                          
                             children: <Widget>[
                               Card(
                                 margin: EdgeInsets.symmetric(horizontal: 40),
@@ -161,7 +172,6 @@ class _LogInState extends State<LogIn> {
                                             return 'Correo incorrecto';
                                           }
                                           return null;
-                                          
                                         },
                                         keyboardType:
                                             TextInputType.emailAddress,
@@ -190,9 +200,8 @@ class _LogInState extends State<LogIn> {
                                               texto == '' ||
                                               errorbase) {
                                             return 'Contraseña incorrecta';
-
                                           }
-                                         return null;
+                                          return null;
                                         },
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.fromLTRB(
@@ -256,6 +265,7 @@ class _LogInState extends State<LogIn> {
                                                     UsuarioModel
                                                         .fromDocumentSnapshot(
                                                             user);
+
                                                 await controlador1.signIn();
                                                 Navigator.of(context)
                                                     .pushNamedAndRemoveUntil(
