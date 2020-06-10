@@ -445,7 +445,8 @@ class AvisoModel {
 class MascotaModel {
 
   String personalidad;
-  String edad;
+  int anios;
+  int meses;
   String foto;
   String storageRef;
   String nombre;
@@ -453,13 +454,17 @@ class MascotaModel {
   String tipoAnimal;
   bool buscaAmigos;
   String sexo;
+   DateTime fnacimiento;
   DocumentReference reference;
+  //String documentId;
+  
  
   
 
   MascotaModel(
       {
-      this.edad,
+        this.anios,
+      this.meses,
       this.foto,
       this.nombre,
       this.personalidad,
@@ -467,22 +472,72 @@ class MascotaModel {
       this.tamano,
       this.tipoAnimal,
       this.sexo,
-      this.buscaAmigos
+      this.fnacimiento,
+      this.buscaAmigos,
+      //this.documentId
       });
 
+int calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age;
+  }
+  int calculateMonths(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    if(age == 0){
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+     if (month2 > month1) {
+      age--;
+    }else{
+      age = currentDate.month - birthDate.month;
+      
+      print('meses ${age}');
+      
+      return age;
+    }
+      
+    }
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age;
+  }
 
 
  MascotaModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    
+    fnacimiento = data['fnacimiento'].toDate();
     personalidad= data['personalidad']?? '';
-   
+    anios = calculateAge(data['fnacimiento'].toDate());
+    meses = calculateMonths(data['fnacimiento'].toDate());
     foto = data['foto'];
     nombre = data['nombre'];
     sexo = data['sexo'];
     tipoAnimal = data['tipoAnimal'];
     reference = data.reference;    
     storageRef = data['storageRef'];
-    edad = data['edad'];
+    
+   // documentId = data.documentID.toString() ?? '';
     tamano= data['tamano'];
     buscaAmigos = data['buscaAmigos'];
 

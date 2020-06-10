@@ -125,6 +125,7 @@ class Controller with ChangeNotifier {
   }
 
   AdopcionModel adopcion;
+  MascotaModel mascota;
 
   storeToken() async {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging();

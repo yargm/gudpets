@@ -12,9 +12,11 @@ class RegistroMascota extends StatefulWidget {
 
 class _RegistroMascotaState extends State<RegistroMascota> {
   TextEditingController textEditingController = TextEditingController();
+  TextEditingController textEditingControllerFecha = TextEditingController();
   Map<String, dynamic> mascota = {
     'foto': '',
     'nombre': '',
+    'fnacimiento': '',
     'edad': '',
     'personalidad': '',
     'tamano': '',
@@ -23,6 +25,26 @@ class _RegistroMascotaState extends State<RegistroMascota> {
     'storageRef': '',
     'sexo': ''
   };
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().subtract(Duration(days: 30)),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now().subtract(Duration(days: 30)),
+    );
+
+    setState(() {
+      mascota['fnacimiento'] = picked;
+      textEditingControllerFecha.text = 'Fecha nacimiento ' +
+          picked.day.toString() +
+          '/' +
+          picked.month.toString() +
+          '/' +
+          picked.year.toString();
+    });
+  }
+
   final key0 = GlobalKey<FormState>();
   final key1 = GlobalKey<FormState>();
   final key2 = GlobalKey<FormState>();
@@ -43,17 +65,17 @@ class _RegistroMascotaState extends State<RegistroMascota> {
               children: <Widget>[
                 Text('Sube una foto de tu mascota'),
                 error == ''
-                  ? Container()
-                  : Padding(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Text(
-                        error,
-                        style: TextStyle(color: Colors.red),
+                    ? Container()
+                    : Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Text(
+                          error,
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ),
-                  ),
-              SizedBox(
-                height: 10,
-              ),
+                SizedBox(
+                  height: 10,
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -113,22 +135,28 @@ class _RegistroMascotaState extends State<RegistroMascota> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text('Edad '),
+                Text(''),
                 SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  onSaved: (value) {
-                    mascota['edad'] = value;
-                  },
-                  validator: (value) {
-                    if (value == null || value.trim() == '') {
-                      return 'El campo edad no puede quedar vacio';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(labelText: 'Ej. 8 meses'),
-                ),
+               TextFormField(
+                      validator: (String value) {
+                        if (textEditingControllerFecha.text == '' ||
+                            textEditingControllerFecha.text == null ||
+                            textEditingControllerFecha.text.isEmpty) {
+                          return 'El campo fecha de nacimiento es obligatorio';
+                        }
+                        return null;
+                      },
+                      controller: textEditingControllerFecha,
+                      onTap: () => _selectDate(context),
+                      readOnly: true,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          labelText: '* Fecha de nacimiento',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
                 SizedBox(
                   height: 15,
                 ),
@@ -148,17 +176,18 @@ class _RegistroMascotaState extends State<RegistroMascota> {
                   },
                   decoration: InputDecoration(labelText: 'Ej: Mediano'),
                 ),
-                SizedBox(height: 15,),
+                SizedBox(
+                  height: 15,
+                ),
                 Text('* Sexo'),
                 SizedBox(
                   height: 10,
                 ),
                 FittedBox(
                   child: RadioButtonGroup(
-
                       picked: null,
                       orientation: GroupedButtonsOrientation.VERTICAL,
-                      labels: <String>[ 'Hembra', 'Macho'],
+                      labels: <String>['Hembra', 'Macho'],
                       onSelected: (String opcion) {
                         setState(() {
                           mascota['sexo'] = opcion;
@@ -174,7 +203,6 @@ class _RegistroMascotaState extends State<RegistroMascota> {
                 ),
                 FittedBox(
                   child: RadioButtonGroup(
-
                       picked: null,
                       orientation: GroupedButtonsOrientation.HORIZONTAL,
                       labels: <String>['perro', 'gato', 'ave', 'otro'],
@@ -190,32 +218,33 @@ class _RegistroMascotaState extends State<RegistroMascota> {
       Step(
           title: Text('Datos Sociales'),
           content: Form(
-            key: key2,
+              key: key2,
               child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Text('Describe su personalidad'),
-              TextFormField(
-                maxLength: 100,
-                maxLines: 4,
-                minLines: 1,
-                onSaved: (value) {
-                  mascota['personalidad'] = value;
-                },
-                // validator: (value) {
-                //   // if (value == null || value.trim() == '') {
-                //   //  // return 'El campo personalidad no puede quedar vacio';
-                //   // }
-                //   // return null;
-                // },
-                decoration: InputDecoration(labelText: 'Describe a tu Mascota'),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-            ],
-          ))),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text('Describe su personalidad'),
+                  TextFormField(
+                    maxLength: 100,
+                    maxLines: 4,
+                    minLines: 1,
+                    onSaved: (value) {
+                      mascota['personalidad'] = value;
+                    },
+                    // validator: (value) {
+                    //   // if (value == null || value.trim() == '') {
+                    //   //  // return 'El campo personalidad no puede quedar vacio';
+                    //   // }
+                    //   // return null;
+                    // },
+                    decoration:
+                        InputDecoration(labelText: 'Describe a tu Mascota'),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                ],
+              ))),
     ];
     goTo(int step) {
       setState(() => currentStep = step);
@@ -227,7 +256,6 @@ class _RegistroMascotaState extends State<RegistroMascota> {
           setState(() {
             error = '';
           });
-         
 
           if (imagen == null) {
             setState(() {
@@ -235,24 +263,17 @@ class _RegistroMascotaState extends State<RegistroMascota> {
             });
             return;
           }
-           if (!key0.currentState.validate()) {
+          if (!key0.currentState.validate()) {
             return;
           }
 
           key0.currentState.save();
 
-          
-          
-
           break;
         case 1:
-          
-
           if (!key1.currentState.validate()) {
             return;
           }
-
-          
 
           key1.currentState.save();
           break;
@@ -260,10 +281,8 @@ class _RegistroMascotaState extends State<RegistroMascota> {
           if (!key2.currentState.validate()) {
             return;
           }
-           key2.currentState.save();
+          key2.currentState.save();
           break;
-       
-        
       }
 
       currentStep + 1 != steps.length
@@ -288,15 +307,13 @@ class _RegistroMascotaState extends State<RegistroMascota> {
           final String url = (await downloadUrl.ref.getDownloadURL());
           print('URL Is $url');
           print('Ref: $storageRef');
-            mascota['foto']= url;
-            mascota['storageRef']=downloadUrl.ref.path;
+          mascota['foto'] = url;
+          mascota['storageRef'] = downloadUrl.ref.path;
         }
 
         await controlador1.usuario.reference
             .collection('mascotas')
             .add(mascota);
-
-      
 
         setState(() {
           loading = false;
@@ -360,15 +377,18 @@ class _RegistroMascotaState extends State<RegistroMascota> {
                     ? Expanded(
                         child: AlertDialog(
                           title: Text('¡Mascota añadida con exito!'),
-                          content:
-                              Icon(Icons.check_circle, color: secondaryDark,size: 40,),
+                          content: Icon(
+                            Icons.check_circle,
+                            color: secondaryDark,
+                            size: 40,
+                          ),
                           actions: <Widget>[
                             RaisedButton(
-                              child: Text('OK'),
-                              onPressed: () =>  Navigator.of(context).pop(true)
-                              // Navigator.of(context)
-                              //     .pushReplacementNamed('/home'),
-                            )
+                                child: Text('OK'),
+                                onPressed: () => Navigator.of(context).pop(true)
+                                // Navigator.of(context)
+                                //     .pushReplacementNamed('/home'),
+                                )
                           ],
                         ),
                       )
