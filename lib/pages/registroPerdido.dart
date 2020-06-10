@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:location/location.dart';
 import 'mapaejemplo.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class RegistroPerdido extends StatefulWidget {
   @override
@@ -15,46 +13,8 @@ class RegistroPerdido extends StatefulWidget {
 }
 
 class _RegistroPerdidoState extends State<RegistroPerdido> {
-  void initState() {
-    super.initState();
-    PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.locationWhenInUse)
-        .then(_actualizaestado);
-  }
-
-  PermissionStatus permisoStatus;
-
-  void _actualizaestado(PermissionStatus status) {
-    if (status != permisoStatus) {
-      setState(() {
-        permisoStatus = status;
-      });
-      print('permiso inicial:' + permisoStatus.toString());
-    }
-  }
-
-  GeoPoint _currentLocation;
-  var location = Location();
-  double latitud;
-  double longitud;
-
   final TextEditingController textEditingControllerFecha =
       TextEditingController();
-
-  Future<GeoPoint> getLocation() async {
-    try {
-      var userLocation = await location.getLocation();
-      setState(() {
-        _currentLocation =
-            GeoPoint(userLocation.latitude, userLocation.longitude);
-        latitud = _currentLocation.latitude;
-        longitud = _currentLocation.longitude;
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-    return _currentLocation;
-  }
 
   File _image;
   final _perdidokey = GlobalKey<FormState>();
@@ -317,7 +277,8 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                     validator: (String value) {
                       if (textEditingControllerFecha.text == '' ||
                           textEditingControllerFecha.text == null ||
-                          textEditingControllerFecha.text.isEmpty || formPerdido['fechaExtravio'] == null) {
+                          textEditingControllerFecha.text.isEmpty ||
+                          formPerdido['fechaExtravio'] == null) {
                         return 'El campo fecha de extravio es obligatorio';
                       }
                       return null;
@@ -399,42 +360,18 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                             label: Text('Capturar ubicación'),
                             onPressed: boton
                                 ? () async {
-                                    print('permiso al entrar al botón:' +
-                                        permisoStatus.toString());
-                                    setState(() {
-                                      isLoadig2 = true;
-                                    });
-                                    await getLocation();
-                                    print('permiso despues cuadro dialogo:' +
-                                        permisoStatus.toString());
-                                    await PermissionHandler()
-                                        .checkPermissionStatus(
-                                            PermissionGroup.locationWhenInUse)
-                                        .then(_actualizaestado);
-                                    print('permiso final: ' +
-                                        permisoStatus.toString());
-                                    if (permisoStatus.toString() ==
-                                            'PermissionStatus.denied' ||
-                                        permisoStatus.toString() ==
-                                            'PermissionStatus.unknown' ||
-                                        permisoStatus.toString() ==
-                                            'PermissionStatus.disabled' ||
-                                        permisoStatus.toString() ==
-                                            'PermissionStatus.neverAskAgain') {
+                                    if (await controlador1
+                                        .checkLocationPermisson()) {
                                       setState(() {
-                                        isLoadig2 = false;
+                                        isLoadig2 = true;
                                       });
-                                      return controlador1
-                                          .permissonDeniedDialog(context);
-                                    } else {
-                                      print(permisoStatus.toString());
-                                      controlador1.latitudfinal = latitud;
-                                      controlador1.longitudfinal = longitud;
-                                      print('la latitud actual es:' +
-                                          controlador1.latitudfinal.toString());
-                                      print('la ongitud actual es:' +
-                                          controlador1.longitudfinal
-                                              .toString());
+                                      await controlador1.getLocation(context);
+                                      controlador1.latitudfinal =
+                                          controlador1.latitud;
+                                      controlador1.longitudfinal =
+                                          controlador1.longitud;
+                                      await controlador1.getAddress(
+                                          context, false);
                                       showDialog(
                                           barrierDismissible: false,
                                           context: context,
@@ -464,9 +401,11 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                                           builder: (context) =>
                                                               MapSample(
                                                                 latitud:
-                                                                    latitud,
+                                                                    controlador1
+                                                                        .latitud,
                                                                 longitud:
-                                                                    longitud,
+                                                                    controlador1
+                                                                        .longitud,
                                                                 controlador1:
                                                                     controlador1,
                                                               )),
@@ -480,6 +419,12 @@ class _RegistroPerdidoState extends State<RegistroPerdido> {
                                               ],
                                             ),
                                           ));
+                                    } else {
+                                      setState(() {
+                                        isLoadig2 = false;
+                                      });
+                                      return controlador1
+                                          .permissonDeniedDialog(context);
                                     }
                                   }
                                 : null),

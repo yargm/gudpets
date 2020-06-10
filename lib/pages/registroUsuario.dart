@@ -35,6 +35,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
     'tipo': null,
     'user_id': null,
     'fotoStorageRef': null,
+    'edo': null,
+    'municipio': null,
   };
 
   Future<Null> _selectDate(BuildContext context) async {
@@ -284,6 +286,8 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                       initialValue: null,
                       onSaved: (String value) {
                         formUsuario['telefono'] = int.parse(value);
+                        formUsuario['edo'] = controlador1.edo;
+                        formUsuario['municipio'] = controlador1.municipio;
                       },
                       validator: (String value) {
                         if (value.isEmpty) {
