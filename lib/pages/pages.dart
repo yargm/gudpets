@@ -33,3 +33,4 @@ export 'solicitudesAdopcionVista.dart';
 export 'info.dart';
 export 'adoptadosList.dart';
 
+export 'amigos.dart';
