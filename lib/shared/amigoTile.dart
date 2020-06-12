@@ -14,11 +14,8 @@ class AmigoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        return 
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PerfilAmigos(usuario: usuario)));
+        return Navigator.push(context,
+            MaterialPageRoute(builder: (context) => Perfil(usuario: usuario)));
       },
       leading: CircleAvatar(
         radius: 22,

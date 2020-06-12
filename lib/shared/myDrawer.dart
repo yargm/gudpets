@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
-
+import 'package:gudpets/pages/pages.dart';
 class MyDrawer extends StatelessWidget {
   const MyDrawer({
     Key key,
@@ -50,7 +50,10 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(Icons.person),
             title: Text('Perfil'),
             onTap: () {
-              Navigator.of(context).pushNamed('/perfil');
+             return Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Perfil(usuario: controlador1.usuario)));
             },
           ),
           ListTile(
@@ -76,7 +79,8 @@ class MyDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pushNamed('/adoptadosList');
             },
-          ),ListTile(
+          ),
+          ListTile(
             title: Text('Amigos'),
             leading: Icon(
               Icons.people,

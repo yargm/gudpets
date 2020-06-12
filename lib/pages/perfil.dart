@@ -19,7 +19,7 @@ class _PerfilState extends State<Perfil> {
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
-    print(widget.usuario.documentId);
+    // print(widget.usuario.documentId + ' ' + controlador1.usuario.documentId);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -115,7 +115,7 @@ class _PerfilState extends State<Perfil> {
                           widget.usuario.nombre,
                           style: TextStyle(fontSize: 18),
                         ),
-                        Text(controlador1.usuario.correo)
+                        Text(widget.usuario.correo)
                       ],
                     ),
                   ),
@@ -129,8 +129,12 @@ class _PerfilState extends State<Perfil> {
             thickness: 1,
           ),
           widget.usuario.documentId == controlador1.usuario.documentId
-              ? ButtonBar(
-                  alignment: MainAxisAlignment.center,
+              ? Wrap(
+                  direction: Axis.horizontal,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  alignment: WrapAlignment.center,
+                  // children: [
+                  //             alignment: MainAxisAlignment.center,
                   children: <Widget>[
                     FlatButton.icon(
                       icon: Icon(
@@ -242,10 +246,67 @@ class _PerfilState extends State<Perfil> {
                               ),
                             ));
                       },
-                    )
+                    ),                   
                   ],
                 )
-              : ButtonBarOptions(),
+              : ButtonBarOptions(
+                  usuario: widget.usuario,
+                ),
+          Divider(
+            endIndent: 20,
+            indent: 20,
+            thickness: 1,
+          ),
+          Text(
+            'Amigos',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 25,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          StreamBuilder(
+            stream: Firestore.instance
+                .collection('usuarios')
+                .where('amigos', arrayContains: widget.usuario.documentId)
+                .orderBy('nombre')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                return Container(
+                    height: 50, child: const CircularProgressIndicator());
+
+              List<DocumentSnapshot> documents = snapshot.data.documents;
+
+              return documents.isEmpty
+                  ? Text('Usuario nuevo')
+                  : Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: ListView.builder(
+                              physics: ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: documents.length,
+                              itemBuilder: (context, index) {
+                                UsuarioModel usuario =
+                                    UsuarioModel.fromDocumentSnapshot(
+                                        documents[index]);
+
+                                return AvatarAmigo(usuario: usuario);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+            },
+          ),
           Divider(
             endIndent: 20,
             indent: 20,
@@ -267,78 +328,78 @@ class _PerfilState extends State<Perfil> {
                   height: 10,
                 ),
                 ListTile(
-                  leading: Icon(Icons.description),
-                  subtitle: Text(controlador1.usuario.descripcion),
-                  title: Text('Descripción'),
-                  trailing: widget.usuario.documentId ==
-                          controlador1.usuario.documentId
-                      ? IconButton(
-                          onPressed: () => showDialog(
-                            context: context,
-                            child: Dialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Container(
-                                margin: EdgeInsets.all(20),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    TextField(
-                                      maxLength: 50,
-                                      decoration: InputDecoration(
-                                          labelText: 'Descripción'),
-                                      controller: textEditingController,
-                                    ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    FloatingActionButton.extended(
-                                      backgroundColor: primaryColor,
-                                      onPressed: () async {
-                                        controlador1.loading = true;
-                                        controlador1.notify();
-                                        await controlador1.usuario.reference
-                                            .updateData({
-                                          'descripcion':
-                                              textEditingController.text
-                                        });
-                                        controlador1.usuario.descripcion =
-                                            textEditingController.text;
-                                        controlador1.loading = false;
-                                        controlador1.notify();
-                                        Navigator.of(context).pop();
-                                      },
-                                      label: Text(
-                                        'Actualizar',
-                                        style: TextStyle(color: secondaryLight),
+                    leading: Icon(Icons.description),
+                    subtitle: Text(widget.usuario.descripcion),
+                    title: Text('Descripción'),
+                    trailing: widget.usuario.documentId ==
+                            controlador1.usuario.documentId
+                        ? IconButton(
+                            onPressed: () => showDialog(
+                              context: context,
+                              child: Dialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Container(
+                                  margin: EdgeInsets.all(20),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      TextField(
+                                        maxLength: 50,
+                                        decoration: InputDecoration(
+                                            labelText: 'Descripción'),
+                                        controller: textEditingController,
                                       ),
-                                      icon: Icon(
-                                        Icons.system_update_alt,
-                                        color: secondaryLight,
+                                      SizedBox(
+                                        height: 15,
                                       ),
-                                    )
-                                  ],
+                                      FloatingActionButton.extended(
+                                        backgroundColor: primaryColor,
+                                        onPressed: () async {
+                                          controlador1.loading = true;
+                                          controlador1.notify();
+                                          await controlador1.usuario.reference
+                                              .updateData({
+                                            'descripcion':
+                                                textEditingController.text
+                                          });
+                                          controlador1.usuario.descripcion =
+                                              textEditingController.text;
+                                          controlador1.loading = false;
+                                          controlador1.notify();
+                                          Navigator.of(context).pop();
+                                        },
+                                        label: Text(
+                                          'Actualizar',
+                                          style:
+                                              TextStyle(color: secondaryLight),
+                                        ),
+                                        icon: Icon(
+                                          Icons.system_update_alt,
+                                          color: secondaryLight,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          icon: Icon(Icons.edit),
-                        )
-                      : Container(),
-                ),
+                            icon: Icon(Icons.edit),
+                          )
+                        : null),
                 ListTile(
                   leading: Icon(FontAwesomeIcons.calendar),
-                  subtitle: Text(controlador1.usuario.edad.toString()),
+                  subtitle: Text(widget.usuario.edad.toString()),
                   title: Text('Edad'),
                 ),
                 ListTile(
                   leading: Icon(FontAwesomeIcons.genderless),
-                  subtitle: Text(controlador1.usuario.sexo ?? '???'),
+                  subtitle: Text(widget.usuario.sexo ?? '???'),
                   title: Text('Sexo'),
                 ),
                 ListTile(
                   leading: Icon(FontAwesomeIcons.phoneAlt),
-                  subtitle: Text(controlador1.usuario.telefono.toString()),
+                  subtitle: Text(widget.usuario.telefono.toString()),
                   title: Text('Telefono'),
                   trailing: widget.usuario.documentId ==
                           controlador1.usuario.documentId
@@ -358,7 +419,7 @@ class _PerfilState extends State<Perfil> {
                           ),
                           icon: Icon(Icons.edit),
                         )
-                      : Container(),
+                      : null,
                 ),
               ],
             ),
@@ -1118,6 +1179,42 @@ class _DialogChangePhoneState extends State<DialogChangePhone> {
               : CircularProgressIndicator()
         ],
       ),
+    );
+  }
+}
+
+class AvatarAmigo extends StatelessWidget {
+  const AvatarAmigo({
+    Key key,
+    @required this.usuario,
+  }) : super(key: key);
+
+  final UsuarioModel usuario;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        SizedBox(
+          width: 10,
+        ),
+        GestureDetector(
+          onTap: () {
+            return Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Perfil(usuario: usuario)));
+          },
+          child: Container(
+            height: 40,
+            width: 40,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: Image(image: NetworkImage(usuario.foto)),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

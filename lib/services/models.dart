@@ -91,8 +91,11 @@ class UsuarioModel {
     edo = data['edo'] ?? '';
     municipio = data['municipio'] ?? '';
     amigos = data['amigos'] ?? [];
+    amigos=List<String>.from(amigos);
     solicitudesAE = data['solicitudesAE'] ?? [];
+    solicitudesAE = List<String>.from(solicitudesAE);
     bloqueados = data['bloqueados'] ?? [];
+    bloqueados = List<String>.from(bloqueados);
   }
 }
 

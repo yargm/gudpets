@@ -17,10 +17,14 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
 
   @override
   Widget build(BuildContext context) {
-     Controller controlador1 = Provider.of<Controller>(context);
-    //  if (verifyFriendship(controlador1)) {
-    //    controlador1.usuario.solicitudesAE.remove(widget.usuario.documentId);
-    //  }
+    Controller controlador1 = Provider.of<Controller>(context);
+    print(controlador1.usuario.amigos);
+    print(controlador1.usuario.documentId + ' ' + widget.usuario.documentId);
+
+    if (verifyFriendship(controlador1)) {
+      controlador1.usuario.solicitudesAE.remove(widget.usuario.documentId);
+    }
+
     return Wrap(
       direction: Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -211,10 +215,14 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                     'amigos': FieldValue.arrayRemove(
                                         [controlador1.usuario.documentId])
                                   });
+
                                   controlador1.usuario.amigos
                                       .remove(widget.usuario.documentId);
+
                                   controlador1.loading = false;
                                   controlador1.notify();
+                                  print('yeeeeeh');
+                                  setState(() {});
                                   Navigator.of(context).pop();
                                 },
                               )
@@ -234,6 +242,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                   });
                                   controlador1.usuario.solicitudesAE
                                       .add(widget.usuario.documentId);
+                                  print('hi');
                                   controlador1.loading = false;
                                   controlador1.notify();
                                   setState(() {});
@@ -244,7 +253,6 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                   size: 20,
                                 ),
                               ),
-
       ],
     );
   }
