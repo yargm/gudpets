@@ -35,6 +35,6 @@ export 'adoptadosList.dart';
 
 
 export 'registroMascota.dart';
-export 'mascotaDetails.dart';
+
 export 'amigos.dart';
 
