@@ -22,7 +22,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     controlador1.mascota = widget.mascota;
-
+ 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -529,37 +529,37 @@ class _DialogContentState extends State<DialogContentM> {
               ? FloatingActionButton.extended(
                   backgroundColor: primaryColor,
                   onPressed: () async {
-                    print(controlador1.usuario.galeriaFotosRefs.length);
-                    controlador1.loading = true;
-                    controlador1.notify();
-                    await FirebaseStorage.instance
-                        .ref()
-                        .child(
-                            controlador1.usuario.galeriaFotosRefs[widget.index])
-                        .delete()
-                        .catchError((onError) {
-                      print(onError);
-                    });
+                    // print(controlador1.usuario.galeriaFotosRefs.length);
+                    // controlador1.loading = true;
+                    // controlador1.notify();
+                    // await FirebaseStorage.instance
+                    //     .ref()
+                    //     .child(
+                    //         controlador1.usuario.galeriaFotosRefs[widget.index])
+                    //     .delete()
+                    //     .catchError((onError) {
+                    //   print(onError);
+                    // });
 
-                    await controlador1.usuario.reference.updateData({
-                      'galeriaFotos': FieldValue.arrayRemove(
-                          [controlador1.usuario.galeriaFotos[widget.index]]),
-                      'galeriaFotosRefs': FieldValue.arrayRemove(
-                          [controlador1.usuario.galeriaFotosRefs[widget.index]])
-                    });
-                    List<dynamic> urls =
-                        controlador1.usuario.galeriaFotos.toList();
-                    List<dynamic> refs =
-                        controlador1.usuario.galeriaFotosRefs.toList();
-                    urls.removeAt(widget.index);
-                    refs.removeAt(widget.index);
+                    // await controlador1.usuario.reference.updateData({
+                    //   'galeriaFotos': FieldValue.arrayRemove(
+                    //       [controlador1.usuario.galeriaFotos[widget.index]]),
+                    //   'galeriaFotosRefs': FieldValue.arrayRemove(
+                    //       [controlador1.usuario.galeriaFotosRefs[widget.index]])
+                    // });
+                    // List<dynamic> urls =
+                    //     controlador1.usuario.galeriaFotos.toList();
+                    // List<dynamic> refs =
+                    //     controlador1.usuario.galeriaFotosRefs.toList();
+                    // urls.removeAt(widget.index);
+                    // refs.removeAt(widget.index);
 
-                    controlador1.usuario.galeriaFotos = urls;
-                    controlador1.usuario.galeriaFotosRefs = refs;
-                    controlador1.loading = false;
-                    controlador1.notify();
+                    // controlador1.usuario.galeriaFotos = urls;
+                    // controlador1.usuario.galeriaFotosRefs = refs;
+                    // controlador1.loading = false;
+                    // controlador1.notify();
 
-                    Navigator.of(context).pop(true);
+                    // Navigator.of(context).pop(true);
                   },
                   label: Text(
                     'Eliminar foto',

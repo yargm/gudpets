@@ -113,25 +113,8 @@ class _HomeState extends State<Home> {
           mini: true,
           onPressed: () {
             controlador1.pestanaAct == 0
-                ? controlador1.usuario.fotoINE != null
-                    ? Navigator.of(context).pushNamed('/registro_adopcion')
-                    : showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                              title: Text(
-                                  'No puedes realizar una publicación en esta sección.'),
-                              content: Text(
-                                  'Para realizar una publicación es necesario completar tu información.'),
-                              actions: <Widget>[
-                                FlatButton(
-                                  onPressed: () {
-                                    return Navigator.of(context)
-                                        .pushNamed('/perfil');
-                                  },
-                                  child: Text('IR A PERFIL'),
-                                )
-                              ],
-                            ))
+                ? Navigator.of(context).pushNamed('/registro_adopcion')
+                   
                 : controlador1.pestanaAct == 1
                     ? Navigator.of(context).pushNamed('/registro_perdido')
                     : controlador1.pestanaAct == 2

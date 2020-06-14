@@ -14,12 +14,12 @@ class UsuarioModel {
   DocumentReference reference;
   String tipo;
   String documentId;
-  String fotoINE;
-  String fotoINERef;
-  String fotoCompDomi;
-  String fotoCompDomiRef;
-  List<dynamic> galeriaFotos;
-  List<dynamic> galeriaFotosRefs;
+  // String fotoINE;
+  // String fotoINERef;
+  // String fotoCompDomi;
+  // String fotoCompDomiRef;
+  // List<dynamic> galeriaFotos;
+  // List<dynamic> galeriaFotosRefs;
   String edo;
   String municipio;
 
@@ -34,7 +34,7 @@ class UsuarioModel {
       this.telefono,
       this.tipo,
       this.documentId,
-      this.fotoINE,
+     // this.fotoINE,
       this.edo,
       this.municipio});
 
@@ -69,12 +69,12 @@ class UsuarioModel {
     documentId = data.documentID.toString();
     fnacimiento = data['fnacimiento'].toDate();
     fotoStorageRef = data['fotoStorageRef'];
-    fotoCompDomi = data['fotoCompDomi'];
-    fotoCompDomiRef = data['fotoCompDomiRef'];
-    fotoINE = data['fotoINE'];
-    fotoINERef = data['fotoINERef'];
-    galeriaFotos = data['galeriaFotos'] ?? [];
-    galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
+    // fotoCompDomi = data['fotoCompDomi'];
+    // fotoCompDomiRef = data['fotoCompDomiRef'];
+    // fotoINE = data['fotoINE'];
+    // fotoINERef = data['fotoINERef'];
+    // galeriaFotos = data['galeriaFotos'] ?? [];
+    // galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
     edo = data['edo'] ?? '';
     municipio = data['municipio'] ?? '';
   }
@@ -263,7 +263,7 @@ class AdopcionModel {
   String adoptanteNombre;
 
   int adoptanteTelefono;
-  String adoptanteINE;
+  //String adoptanteINE;
   String adoptanteFoto;
   String adoptanteCorreo;
   String adoptanteId;
@@ -288,7 +288,7 @@ class AdopcionModel {
       this.fotos,
       this.status,
       this.adoptanteNombre,
-      this.adoptanteINE,
+     // this.adoptanteINE,
       this.adoptanteFoto,
       this.adoptanteTelefono,
       this.adoptanteId,
@@ -316,7 +316,7 @@ class AdopcionModel {
     reference = data.reference;
     status = data['status'];
     adoptanteNombre = data['adoptanteNombre'];
-    adoptanteINE = data['adoptanteINE'];
+    //adoptanteINE = data['adoptanteINE'];
     adoptanteTelefono = data['adoptanteTelefono'];
     adoptanteId = data['adoptanteId'];
     adoptanteFoto = data['adoptanteFoto'];
@@ -346,7 +346,7 @@ class AdopcionModel {
       'reference': reference,
       'status': status,
       'adoptanteNombre': adoptanteNombre,
-      'adoptanteINE': adoptanteINE,
+      //'adoptanteINE': adoptanteINE,
       'adoptanteTelefono': adoptanteTelefono,
       'adoptanteId': adoptanteId,
       'adoptanteFoto': adoptanteFoto,
@@ -368,14 +368,14 @@ class SolicitudModel {
   DocumentReference reference;
   String tipo;
   String userId;
-  String fotoINE;
-  String fotoINERef;
-  String fotoCompDomi;
-  String fotoCompDomiRef;
-  List<dynamic> fotosHogar;
-  List<dynamic> fotosHogarRefs;
-  List<dynamic> galeriaFotos;
-  List<dynamic> galeriaFotosRefs;
+  // String fotoINE;
+  // String fotoINERef;
+  // String fotoCompDomi;
+  // String fotoCompDomiRef;
+  // List<dynamic> fotosHogar;
+  // List<dynamic> fotosHogarRefs;
+  // List<dynamic> galeriaFotos;
+  // List<dynamic> galeriaFotosRefs;
   String userIdPub;
   String tituloPub;
 
@@ -423,12 +423,12 @@ class SolicitudModel {
     fnacimiento = data['fnacimiento'].toDate();
     fotoStorageRef = data['fotoStorageRef'];
 
-    fotoCompDomi = data['fotoCompDomi'];
-    fotoCompDomiRef = data['fotoCompDomiRef'];
-    fotoINE = data['fotoINE'];
-    fotoINERef = data['fotoINERef'];
-    galeriaFotos = data['galeriaFotos'] ?? [];
-    galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
+    // fotoCompDomi = data['fotoCompDomi'];
+    // fotoCompDomiRef = data['fotoCompDomiRef'];
+    // fotoINE = data['fotoINE'];
+    // fotoINERef = data['fotoINERef'];
+    // galeriaFotos = data['galeriaFotos'] ?? [];
+    // galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
     userIdPub = data['userIdPub'];
     tituloPub = data['tituloPub'];
   }
