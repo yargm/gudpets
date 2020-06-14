@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/pages/registroMascota.dart';
@@ -10,9 +12,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class Perfil extends StatefulWidget {
-  final MascotaModel mascota;
 
-  const Perfil({Key key, this.mascota}) : super(key: key);
+  final UsuarioModel usuario;
+
+  const Perfil({Key key, this.usuario}) : super(key: key);
 
   @override
   _PerfilState createState() => _PerfilState();
@@ -21,11 +24,16 @@ class Perfil extends StatefulWidget {
 class _PerfilState extends State<Perfil> {
   TextEditingController textEditingController = TextEditingController();
 
+
   _PerfilState();
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
-    UsuarioModel usuarioact = controlador1.usuario;
+
+   // UsuarioModel usuarioact = controlador1.usuario;
+
+    // print(widget.usuario.documentId + ' ' + controlador1.usuario.documentId);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -46,7 +54,7 @@ class _PerfilState extends State<Perfil> {
                   child: Stack(
                     children: <Widget>[
                       Hero(
-                        tag: controlador1.usuario.documentId,
+                        tag: widget.usuario.documentId,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(180),
                           child: FadeInImage(
@@ -54,33 +62,39 @@ class _PerfilState extends State<Perfil> {
                             placeholder: AssetImage('assets/dog.png'),
                             width: 120,
                             height: 120,
-                            image: NetworkImage(controlador1.usuario.foto),
+                            image: NetworkImage(widget.usuario.foto),
                           ),
                         ),
                       ),
-                      CircleAvatar(
-                        backgroundColor: secondaryColor,
-                        child: IconButton(
-                          icon: Icon(Icons.photo_camera),
-                          onPressed: () => showDialog(
-                            child: WillPopScope(
-                              onWillPop: () async {
-                                return controlador1.loading ? false : true;
-                              },
-                              child: SimpleDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                children: <Widget>[
-                                  DialogContent(
-                                    foto: 'PP',
+                      widget.usuario.documentId ==
+                              controlador1.usuario.documentId
+                          ? CircleAvatar(
+                              backgroundColor: secondaryColor,
+                              child: IconButton(
+                                icon: Icon(Icons.photo_camera),
+                                onPressed: () => showDialog(
+                                  child: WillPopScope(
+                                    onWillPop: () async {
+                                      return controlador1.loading
+                                          ? false
+                                          : true;
+                                    },
+                                    child: SimpleDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      children: <Widget>[
+                                        DialogContent(
+                                          foto: 'PP',
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
+                                  context: context,
+                                ),
                               ),
-                            ),
-                            context: context,
-                          ),
-                        ),
-                      )
+                            )
+                          : Container()
                     ],
                   ),
                 ),
@@ -112,16 +126,200 @@ class _PerfilState extends State<Perfil> {
                           ],
                         ),
                         Text(
-                          controlador1.usuario.nombre,
+                          widget.usuario.nombre,
                           style: TextStyle(fontSize: 18),
                         ),
-                        Text(controlador1.usuario.correo)
+                        Text(widget.usuario.correo)
                       ],
                     ),
                   ),
                 ),
               ],
             ),
+          ),
+          Divider(
+            endIndent: 20,
+            indent: 20,
+            thickness: 1,
+          ),
+          widget.usuario.documentId == controlador1.usuario.documentId
+              ? Wrap(
+                  direction: Axis.horizontal,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  alignment: WrapAlignment.center,
+                  // children: [
+                  //             alignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    FlatButton.icon(
+                      icon: Icon(
+                        Icons.cancel,
+                        size: 20,
+                        color: secondaryDark,
+                      ),
+                      label: Text(
+                        'Usuarios \nBloqueados',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                        ),
+                      ),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            child: Dialog(
+                              backgroundColor: Colors.white,
+                              child: Container(
+                                margin: EdgeInsets.all(5),
+                                child: StreamBuilder(
+                                  stream: Firestore.instance
+                                      .collection('usuarios')
+                                      .where('bloqueados',
+                                          arrayContains:
+                                              controlador1.usuario.documentId)
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData)
+                                      return const LinearProgressIndicator();
+
+                                    List<DocumentSnapshot> documents =
+                                        snapshot.data.documents;
+
+                                    return documents.isEmpty
+                                        ? Text('No tienes usuarios bloqueados')
+                                        : ListView.builder(
+                                            itemCount: documents.length,
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) {
+                                              UsuarioModel user = UsuarioModel
+                                                  .fromDocumentSnapshot(
+                                                      documents[index]);
+
+                                              return ListTile(
+                                                leading: CircleAvatar(
+                                                  backgroundImage:
+                                                      NetworkImage(user.foto),
+                                                ),
+                                                title: Text(user.nombre,
+                                                    style: TextStyle(
+                                                        color: Colors.black)),
+                                                trailing: controlador1.loading
+                                                    ? CircularProgressIndicator()
+                                                    : Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          RaisedButton(
+                                                            color: Colors.white,
+                                                            onPressed:
+                                                                () async {
+                                                              controlador1
+                                                                      .loading =
+                                                                  true;
+
+                                                              controlador1
+                                                                  .notify();
+
+                                                              await user
+                                                                  .reference
+                                                                  .updateData({
+                                                                'bloqueados':
+                                                                    FieldValue
+                                                                        .arrayRemove([
+                                                                  controlador1
+                                                                      .usuario
+                                                                      .documentId
+                                                                ])
+                                                              });
+
+                                                              controlador1
+                                                                      .loading =
+                                                                  false;
+
+                                                              controlador1
+                                                                  .notify();
+
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: Text(
+                                                              'Desbloquear',
+                                                              style: TextStyle(
+                                                                  fontSize: 10,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                              );
+                                            },
+                                          );
+                                  },
+                                ),
+                              ),
+                            ));
+                      },
+                    ),                   
+                  ],
+                )
+              : ButtonBarOptions(
+                  usuario: widget.usuario,
+                ),
+          Divider(
+            endIndent: 20,
+            indent: 20,
+            thickness: 1,
+          ),
+          Text(
+            'Amigos',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 25,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          StreamBuilder(
+            stream: Firestore.instance
+                .collection('usuarios')
+                .where('amigos', arrayContains: widget.usuario.documentId)
+                .orderBy('nombre')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                return Container(
+                    height: 50, child: const CircularProgressIndicator());
+
+              List<DocumentSnapshot> documents = snapshot.data.documents;
+
+              return documents.isEmpty
+                  ? Text('Usuario nuevo')
+                  : Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: ListView.builder(
+                              physics: ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: documents.length,
+                              itemBuilder: (context, index) {
+                                UsuarioModel usuario =
+                                    UsuarioModel.fromDocumentSnapshot(
+                                        documents[index]);
+
+                                return AvatarAmigo(usuario: usuario);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+            },
           ),
           Divider(
             endIndent: 20,
@@ -144,91 +342,98 @@ class _PerfilState extends State<Perfil> {
                   height: 10,
                 ),
                 ListTile(
-                  leading: Icon(Icons.description),
-                  subtitle: Text(controlador1.usuario.descripcion),
-                  title: Text('Descripción'),
-                  trailing: IconButton(
-                    onPressed: () => showDialog(
-                      context: context,
-                      child: Dialog(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Container(
-                          margin: EdgeInsets.all(20),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              TextField(
-                                maxLength: 50,
-                                decoration:
-                                    InputDecoration(labelText: 'Descripción'),
-                                controller: textEditingController,
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              FloatingActionButton.extended(
-                                backgroundColor: primaryColor,
-                                onPressed: () async {
-                                  controlador1.loading = true;
-                                  controlador1.notify();
-                                  await controlador1.usuario.reference
-                                      .updateData({
-                                    'descripcion': textEditingController.text
-                                  });
-                                  controlador1.usuario.descripcion =
-                                      textEditingController.text;
-                                  controlador1.loading = false;
-                                  controlador1.notify();
-                                  Navigator.of(context).pop();
-                                },
-                                label: Text(
-                                  'Actualizar',
-                                  style: TextStyle(color: secondaryLight),
+                    leading: Icon(Icons.description),
+                    subtitle: Text(widget.usuario.descripcion),
+                    title: Text('Descripción'),
+                    trailing: widget.usuario.documentId ==
+                            controlador1.usuario.documentId
+                        ? IconButton(
+                            onPressed: () => showDialog(
+                              context: context,
+                              child: Dialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Container(
+                                  margin: EdgeInsets.all(20),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      TextField(
+                                        maxLength: 50,
+                                        decoration: InputDecoration(
+                                            labelText: 'Descripción'),
+                                        controller: textEditingController,
+                                      ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      FloatingActionButton.extended(
+                                        backgroundColor: primaryColor,
+                                        onPressed: () async {
+                                          controlador1.loading = true;
+                                          controlador1.notify();
+                                          await controlador1.usuario.reference
+                                              .updateData({
+                                            'descripcion':
+                                                textEditingController.text
+                                          });
+                                          controlador1.usuario.descripcion =
+                                              textEditingController.text;
+                                          controlador1.loading = false;
+                                          controlador1.notify();
+                                          Navigator.of(context).pop();
+                                        },
+                                        label: Text(
+                                          'Actualizar',
+                                          style:
+                                              TextStyle(color: secondaryLight),
+                                        ),
+                                        icon: Icon(
+                                          Icons.system_update_alt,
+                                          color: secondaryLight,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                icon: Icon(
-                                  Icons.system_update_alt,
-                                  color: secondaryLight,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    icon: Icon(Icons.edit),
-                  ),
-                ),
+                              ),
+                            ),
+                            icon: Icon(Icons.edit),
+                          )
+                        : null),
                 ListTile(
                   leading: Icon(FontAwesomeIcons.calendar),
-                  subtitle: Text(controlador1.usuario.edad.toString()),
+                  subtitle: Text(widget.usuario.edad.toString()),
                   title: Text('Edad'),
                 ),
                 ListTile(
                   leading: Icon(FontAwesomeIcons.genderless),
-                  subtitle: Text(controlador1.usuario.sexo ?? '???'),
+                  subtitle: Text(widget.usuario.sexo ?? '???'),
                   title: Text('Sexo'),
                 ),
                 ListTile(
                   leading: Icon(FontAwesomeIcons.phoneAlt),
-                  subtitle: Text(controlador1.usuario.telefono.toString()),
+                  subtitle: Text(widget.usuario.telefono.toString()),
                   title: Text('Telefono'),
-                  trailing: IconButton(
-                    onPressed: () => showDialog(
-                      context: context,
-                      child: WillPopScope(
-                        onWillPop: () async {
-                          return controlador1.loading ? false : true;
-                        },
-                        child: Dialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: DialogChangePhone(),
-                        ),
-                      ),
-                    ),
-                    icon: Icon(Icons.edit),
-                  ),
+                  trailing: widget.usuario.documentId ==
+                          controlador1.usuario.documentId
+                      ? IconButton(
+                          onPressed: () => showDialog(
+                            context: context,
+                            child: WillPopScope(
+                              onWillPop: () async {
+                                return controlador1.loading ? false : true;
+                              },
+                              child: Dialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: DialogChangePhone(),
+                              ),
+                            ),
+                          ),
+                          icon: Icon(Icons.edit),
+                        )
+                      : null,
                 ),
                 RaisedButton(
                   padding: EdgeInsets.all(6),
@@ -253,6 +458,7 @@ class _PerfilState extends State<Perfil> {
             indent: 20,
             thickness: 1,
           ),
+
           Container(
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(10),
@@ -568,6 +774,7 @@ class _PerfilState extends State<Perfil> {
           //     ],
           //   ),
           // )
+
         ],
       ),
     );
@@ -1083,13 +1290,16 @@ class _DialogChangePhoneState extends State<DialogChangePhone> {
   }
 }
 
+
+
+
 class AvatarMascota extends StatelessWidget {
-  const AvatarMascota({
+ 
+   AvatarMascota({
     Key key,
     @required this.mascota,
   }) : super(key: key);
-
-  final MascotaModel mascota;
+ final MascotaModel mascota;
 
   @override
   Widget build(BuildContext context) {
@@ -1104,7 +1314,9 @@ class AvatarMascota extends StatelessWidget {
             return Navigator.push(
                 context,
                 MaterialPageRoute(
+
                     builder: (context) => MascotaDetails(mascota: mascota)));
+
           },
           child: Container(
             height: 40,
@@ -1112,6 +1324,43 @@ class AvatarMascota extends StatelessWidget {
             child: CircleAvatar(
               radius: 20,
               backgroundImage: NetworkImage(mascota.foto),
+
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+class AvatarAmigo extends StatelessWidget {
+  const AvatarAmigo({
+    Key key,
+    @required this.usuario,
+  }) : super(key: key);
+
+  final UsuarioModel usuario;
+
+  @override
+  Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
+    return Row(
+      children: <Widget>[
+        SizedBox(
+          width: 10,
+        ),
+        GestureDetector(
+          onTap: () {
+            return Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Perfil(usuario: usuario)));
+          },
+          child: Container(
+            height: 40,
+            width: 40,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: Image(image: NetworkImage(usuario.foto)),
             ),
           ),
         ),
