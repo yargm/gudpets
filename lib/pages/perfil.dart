@@ -490,7 +490,7 @@ class _PerfilState extends State<Perfil> {
                  
                     return documents.isEmpty
                         ? controlador1.usuario.documentId ==
-                                usuarioact.documentId
+                                widget.usuario.documentId
                             ? Text('No tienes mascotas registradas')
                             : Text('este usuario no tiene mascotas registradas')
                         : Row(
