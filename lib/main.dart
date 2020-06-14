@@ -110,11 +110,15 @@ class MyApp extends StatelessWidget {
           '/mapaejemplo': (BuildContext context) => MapSample(),
           '/avisos': (BuildContext context) => AvisosList(),
           '/publicaciones': (BuildContext context) => PublicacionList(),
-          '/perfil': (BuildContext context) => Perfil(),
+          // '/perfil': (BuildContext context) => Perfil(usuario: controller.usuario,),
           '/favoritos': (BuildContext context) => FavoritosList(),
           '/info': (BuildContext context) => Info(),
           '/adoptadosList': (BuildContext context) => AdoptadosList(),
-          '/registroMascota': (BuildContext context) => RegistroMascota()
+
+          '/registroMascota': (BuildContext context) => RegistroMascota(),
+
+
+          '/amigos':(BuildContext context)=>Amigos(),
 
         },
       ),

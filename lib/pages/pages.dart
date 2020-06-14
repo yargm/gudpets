@@ -33,5 +33,8 @@ export 'solicitudesAdopcionVista.dart';
 export 'info.dart';
 export 'adoptadosList.dart';
 
+
 export 'registroMascota.dart';
+export 'mascotaDetails.dart';
+export 'amigos.dart';
 
