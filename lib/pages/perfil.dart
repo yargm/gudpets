@@ -435,7 +435,7 @@ class _PerfilState extends State<Perfil> {
                         )
                       : null,
                 ),
-                RaisedButton(
+               controlador1.usuario.documentId == widget.usuario.documentId ?  RaisedButton(
                   padding: EdgeInsets.all(6),
                   onPressed: () {
                     Navigator.of(context).pushNamed('/registroMascota');
@@ -449,7 +449,7 @@ class _PerfilState extends State<Perfil> {
                       Icon(FontAwesomeIcons.grinHearts)
                     ],
                   ),
-                ),
+                ): Container(),
               ],
             ),
           ),
@@ -473,7 +473,7 @@ class _PerfilState extends State<Perfil> {
                   height: 5,
                 ),
                 StreamBuilder(
-                  stream: controlador1.usuario.reference
+                  stream: widget.usuario.reference
                       .collection('mascotas')
                       .snapshots(),
                   builder: (context, snapshot) {
@@ -486,7 +486,7 @@ class _PerfilState extends State<Perfil> {
                           height: 50, child: const CircularProgressIndicator());
 
                     List<DocumentSnapshot> documents = snapshot.data.documents;
-                    FirebaseAuth auth = FirebaseAuth.instance;
+                    
                  
                     return documents.isEmpty
                         ? controlador1.usuario.documentId ==
@@ -509,7 +509,7 @@ class _PerfilState extends State<Perfil> {
                                           MascotaModel.fromDocumentSnapshot(
                                               documents[index]);
 
-                                      return AvatarMascota(mascota: mascota);
+                                      return AvatarMascota(mascota: mascota,usuario: widget.usuario);
                                     },
                                   ),
                                 ),
@@ -1298,9 +1298,10 @@ class AvatarMascota extends StatelessWidget {
    AvatarMascota({
     Key key,
     @required this.mascota,
+    @required this.usuario,
   }) : super(key: key);
  final MascotaModel mascota;
-
+final UsuarioModel usuario;
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
@@ -1315,7 +1316,7 @@ class AvatarMascota extends StatelessWidget {
                 context,
                 MaterialPageRoute(
 
-                    builder: (context) => MascotaDetails(mascota: mascota)));
+                    builder: (context) => MascotaDetails(mascota: mascota,usuario: usuario)));
 
           },
           child: Container(

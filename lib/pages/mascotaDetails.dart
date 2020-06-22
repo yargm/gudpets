@@ -6,9 +6,10 @@ import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/colores.dart';
 
 class MascotaDetails extends StatefulWidget {
+  final UsuarioModel usuario;
   final MascotaModel mascota;
 
-  const MascotaDetails({Key key, this.mascota}) : super(key: key);
+  const MascotaDetails({Key key, this.mascota,this.usuario}) : super(key: key);
 
   @override
   _MascotaDetailsState createState() => _MascotaDetailsState();
@@ -27,7 +28,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         actions: <Widget>[
-          IconButton(
+         controlador1.usuario.documentId == widget.usuario.documentId ?  IconButton(
               icon: Icon(
                 FontAwesomeIcons.trash,
                 color: secondaryLight,
@@ -100,7 +101,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                                   ),
                                 ],
                               ));
-              })
+              }): Container()
         ],
       ),
       body: Column(
@@ -109,7 +110,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           GestureDetector(
-            onTap: () => showDialog(
+            onTap: () => controlador1.usuario.documentId == widget.usuario.documentId ? showDialog(
               child: WillPopScope(
                 onWillPop: () async {
                   return controlador1.loading ? false : true;
@@ -125,7 +126,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                 ),
               ),
               context: context,
-            ),
+            ): null,
             child: Container(
               width: 120,
               height: 120,
@@ -149,7 +150,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                       backgroundImage: NetworkImage(controlador1.mascota.foto),
                     ),
                   ),
-                  Container(
+                  controlador1.usuario.documentId == widget.usuario.documentId ? Container(
                     width: 28,
                     height: 28,
                     alignment: Alignment.center,
@@ -166,7 +167,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                     ),
 
                     padding: EdgeInsets.only(bottom: 3),
-                  ),
+                  ): Container(),
                 ],
               ),
             ),
@@ -258,7 +259,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                 padding: const EdgeInsets.only(left: 15),
                 child: Text('Personalidad: '),
               ),
-              IconButton(
+             controlador1.usuario.documentId == widget.usuario.documentId ? IconButton(
                 padding: EdgeInsets.all(0),
                 onPressed: () => showDialog(
                   context: context,
@@ -314,7 +315,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                   size: 15,
                   color: secondaryLight,
                 ),
-              )
+              ): Container()
             ],
           ),
           Row(
