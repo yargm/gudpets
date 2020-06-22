@@ -17,13 +17,16 @@ class Perfil extends StatefulWidget {
 
   const Perfil({Key key, this.usuario}) : super(key: key);
 
-
   @override
   _PerfilState createState() => _PerfilState();
 }
 
 class _PerfilState extends State<Perfil> {
   TextEditingController textEditingController = TextEditingController();
+
+  final MascotaModel mascota;
+  final UsuarioModel usuario;
+
 
 
   _PerfilState();
@@ -261,7 +264,7 @@ class _PerfilState extends State<Perfil> {
                               ),
                             ));
                       },
-                    ),                   
+                    ),
                   ],
                 )
               : ButtonBarOptions(
@@ -459,8 +462,6 @@ class _PerfilState extends State<Perfil> {
             indent: 20,
             thickness: 1,
           ),
-
-
           Container(
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(10),
@@ -475,6 +476,7 @@ class _PerfilState extends State<Perfil> {
                   height: 5,
                 ),
                 StreamBuilder(
+
                   stream: widget.usuario.reference
                       .collection('mascotas')
                       .snapshots(),
@@ -483,11 +485,13 @@ class _PerfilState extends State<Perfil> {
                     if (snapshot.hasError)
                       return Container(
                           height: 50, child: Text('No hay mascotas'));
+
                     if (!snapshot.hasData)
                       return Container(
                           height: 50, child: const CircularProgressIndicator());
 
                     List<DocumentSnapshot> documents = snapshot.data.documents;
+
                     
                  
                     return documents.isEmpty
@@ -495,6 +499,7 @@ class _PerfilState extends State<Perfil> {
                                 widget.usuario.documentId
                             ? Text('No tienes mascotas registradas')
                             : Text('este usuario no tiene mascotas registradas')
+
                         : Row(
                             children: <Widget>[
                               Expanded(
@@ -511,7 +516,9 @@ class _PerfilState extends State<Perfil> {
                                           MascotaModel.fromDocumentSnapshot(
                                               documents[index]);
 
+
                                       return AvatarMascota(mascota: mascota,usuario: widget.usuario);
+
                                     },
                                   ),
                                 ),
@@ -1305,6 +1312,7 @@ class AvatarMascota extends StatelessWidget {
 final UsuarioModel usuario;
   @override
   Widget build(BuildContext context) {
+
     Controller controlador1 = Provider.of<Controller>(context);
     return Row(
       children: <Widget>[
@@ -1327,6 +1335,7 @@ final UsuarioModel usuario;
             child: CircleAvatar(
               radius: 20,
               backgroundImage: NetworkImage(mascota.foto),
+
 
             ),
           ),
@@ -1354,7 +1363,6 @@ class AvatarAmigo extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-
             return Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -1366,7 +1374,6 @@ class AvatarAmigo extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
               child: Image(image: NetworkImage(usuario.foto)),
-
             ),
           ),
         ),
