@@ -22,6 +22,9 @@ class UsuarioModel {
   List<dynamic> galeriaFotosRefs;
   String edo;
   String municipio;
+  List<dynamic> amigos;
+  List<dynamic> solicitudesAE;
+  List<dynamic> bloqueados;
 
   UsuarioModel(
       {this.contrasena,
@@ -55,6 +58,16 @@ class UsuarioModel {
     return age;
   }
 
+  Map<String, dynamic> toReport(List<String> razones) {
+    return {
+      'nombre': nombre,
+      'foto': foto,
+      'razones': razones,
+      'correo': correo,
+      'uid': uid,
+    };
+  }
+
   UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
     contrasena = data['tcontrasena'];
     correo = data['correo'];
@@ -77,6 +90,12 @@ class UsuarioModel {
     galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
     edo = data['edo'] ?? '';
     municipio = data['municipio'] ?? '';
+    amigos = data['amigos'] ?? [];
+    amigos=List<String>.from(amigos);
+    solicitudesAE = data['solicitudesAE'] ?? [];
+    solicitudesAE = List<String>.from(solicitudesAE);
+    bloqueados = data['bloqueados'] ?? [];
+    bloqueados = List<String>.from(bloqueados);
   }
 }
 
@@ -443,7 +462,6 @@ class AvisoModel {
     link = data['link'];
   }
 }
-
 class MensajeModel {
   String mensaje;
   String imagen;
@@ -472,3 +490,70 @@ class ChatModel {
     ids = data['ids'] ?? '';
   }
 }
+
+
+class MascotaModel {
+
+  String personalidad;
+  String edad;
+  String foto;
+  String storageRef;
+  String nombre;
+  String tamano;
+  String tipoAnimal;
+  bool buscaAmigos;
+  String sexo;
+  DocumentReference reference;
+ 
+  
+
+  MascotaModel(
+      {
+      this.edad,
+      this.foto,
+      this.nombre,
+      this.personalidad,
+      this.storageRef,
+      this.tamano,
+      this.tipoAnimal,
+      this.sexo,
+      this.buscaAmigos
+      });
+
+
+
+ MascotaModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    
+    personalidad= data['personalidad']?? '';
+   
+    foto = data['foto'];
+    nombre = data['nombre'];
+    sexo = data['sexo'];
+    tipoAnimal = data['tipoAnimal'];
+    reference = data.reference;    
+    storageRef = data['storageRef'];
+    edad = data['edad'];
+    tamano= data['tamano'];
+    buscaAmigos = data['buscaAmigos'];
+
+
+    
+  }
+    // int calculateAge(DateTime birthDate) {
+  //   DateTime currentDate = DateTime.now();
+  //   int age = currentDate.year - birthDate.year;
+  //   int month1 = currentDate.month;
+  //   int month2 = birthDate.month;
+  //   if (month2 > month1) {
+  //     age--;
+  //   } else if (month1 == month2) {
+  //     int day1 = currentDate.day;
+  //     int day2 = birthDate.day;
+  //     if (day2 > day1) {
+  //       age--;
+  //     }
+  //   }
+  //   return age;
+  // }
+}
+

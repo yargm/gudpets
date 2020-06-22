@@ -2,20 +2,23 @@ import 'package:gudpets/shared/card.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'services.dart';
+import 'package:gudpets/shared/shared.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
   String coleccion;
   CustomSearchDelegate(this.coleccion);
- 
+
   var query1 = '';
   List<Widget> buildActions(BuildContext context) {
-    
-    return [
-      IconButton(
-        icon: Icon(Icons.tune),
-        onPressed: () => showDialog(context: context, child: DialogBody()).whenComplete(() => buildResults(context)),
-      ),
-    ];
+    return coleccion == 'adopciones' || coleccion == 'perdidos'
+        ? [
+            IconButton(
+              icon: Icon(Icons.tune),
+              onPressed: () => showDialog(context: context, child: DialogBody())
+                  .whenComplete(() => buildResults(context)),
+            )
+          ]
+        : [];
   }
 
   @override
@@ -53,45 +56,104 @@ class CustomSearchDelegate extends SearchDelegate {
 //       .searchBloc
 //     .searchTerm
 //     .add(query);
-    var stream = coleccion == 'adopciones' ? Firestore.instance
-          .collection(coleccion).where('tipoAnimal', isEqualTo: controlador1.tipo == null ? null : controlador1.tipo.toLowerCase() )
-          .where('sexo', isEqualTo: controlador1.sexo )
-          .where('titulo',  isGreaterThanOrEqualTo:query).where('status', isEqualTo: 'en adopcion')
-          .snapshots() : Firestore.instance
-          .collection(coleccion).where('tipoAnimal', isEqualTo: controlador1.tipo == null ? null : controlador1.tipo.toLowerCase() )
-          .where('sexo', isEqualTo: controlador1.sexo )
-          .where('titulo',  isGreaterThanOrEqualTo:query)
-          .snapshots();
-    
+    var stream = coleccion == 'adopciones'
+        ? Firestore.instance
+            .collection(coleccion)
+            .where('tipoAnimal',
+                isEqualTo: controlador1.tipo == null
+                    ? null
+                    : controlador1.tipo.toLowerCase())
+            .where('sexo', isEqualTo: controlador1.sexo)
+            .where('titulo', isGreaterThanOrEqualTo: query)
+            .where('status', isEqualTo: 'en adopcion')
+            .snapshots()
+        : coleccion == 'perdidos'
+            ? Firestore.instance
+                .collection(coleccion)
+                .where('tipoAnimal',
+                    isEqualTo: controlador1.tipo == null
+                        ? null
+                        : controlador1.tipo.toLowerCase())
+                .where('sexo', isEqualTo: controlador1.sexo)
+                .where('titulo', isGreaterThanOrEqualTo: query)
+                .snapshots()
+            : Firestore.instance
+                .collection('usuarios')
+                .where('nombre', isEqualTo: query.trim())
+                .snapshots();
+
     print(query);
-    return StreamBuilder(
-      stream: stream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.data.documents.length == 0) {
-          return Column(
-            children: <Widget>[
-              Text(
-                "No hay mascotas con esa caracteristicas.",
-              ),
-            ],
-          );
-        } else {
-          var results = snapshot.data.documents;
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: results.length,
-            itemBuilder: (context, index) {
-              return ListCard(
-                  controlador1: controlador1,
-                  objeto: coleccion == 'adopciones' ? AdopcionModel.fromDocumentSnapshot(results[index]) :PerdidoModel.fromDocumentSnapshot(results[index]),
-                  posicion: index);
+    return coleccion == 'adopciones' || coleccion == 'perdidos'
+        ? StreamBuilder(
+            stream: stream,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.data.documents.length == 0) {
+                return Column(
+                  children: <Widget>[
+                    Text(
+                      "No hay mascotas con esa caracteristicas.",
+                    ),
+                  ],
+                );
+              } else {
+                var results = snapshot.data.documents;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: results.length,
+                  itemBuilder: (context, index) {
+                    return ListCard(
+                        controlador1: controlador1,
+                        objeto: coleccion == 'adopciones'
+                            ? AdopcionModel.fromDocumentSnapshot(results[index])
+                            : coleccion == 'perdidos'
+                                ? PerdidoModel.fromDocumentSnapshot(
+                                    results[index])
+                                : Container(),
+                        posicion: index);
+                  },
+                );
+              }
+            },
+          )
+        : StreamBuilder(
+            stream: stream,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.data.documents.length == 0) {
+                return Column(
+                  children: <Widget>[
+                    Text(
+                      "No se encontraron resultados",
+                    ),
+                  ],
+                );
+              } else {
+                List<DocumentSnapshot> documents = snapshot.data.documents;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: documents.length,
+                  itemBuilder: (context, index) {
+                    List<dynamic> bloqueados =
+                        documents[index]['bloqueados'] ?? [];
+                    String usuario = documents[index]['nombre'] ?? '';
+                    if (bloqueados.contains(controlador1.usuario.nombre)) {
+                      return Container();
+                    }
+                    if (controlador1.usuario.bloqueados.contains(usuario)) {
+                      return Container();
+                    }
+                    return AmigoTile(
+                      usuario:
+                          UsuarioModel.fromDocumentSnapshot(documents[index]),
+                    );
+                  },
+                );
+              }
             },
           );
-        }
-      },
-    );
   }
 
   @override
@@ -108,12 +170,10 @@ class DialogBody extends StatefulWidget {
 }
 
 class _DialogBodyState extends State<DialogBody> {
- 
-
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
-    
+
     return Dialog(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -131,13 +191,14 @@ class _DialogBodyState extends State<DialogBody> {
                 Row(
                   children: <Widget>[
                     Text('Sexo:'),
-                    SizedBox(width: 20,),
+                    SizedBox(
+                      width: 20,
+                    ),
                     DropdownButton(
                       value: controlador1.sexo,
                       onChanged: ((value) {
                         setState(() {
                           controlador1.sexo = value;
-                          
                         });
                       }),
                       items: [
@@ -156,14 +217,14 @@ class _DialogBodyState extends State<DialogBody> {
                 Row(
                   children: <Widget>[
                     Text('Tipo:'),
-                    SizedBox(width: 20,),
+                    SizedBox(
+                      width: 20,
+                    ),
                     DropdownButton(
-                      value: controlador1.tipo ,
+                      value: controlador1.tipo,
                       onChanged: ((value) {
                         setState(() {
-                        
                           controlador1.tipo = value;
-
                         });
                       }),
                       items: [
@@ -189,11 +250,9 @@ class _DialogBodyState extends State<DialogBody> {
                 ),
                 RaisedButton(
                   onPressed: () {
-                  
                     controlador1.notify();
                     Navigator.of(context).pop();
                   },
-
                   child: Text('Filtrar lista'),
                 )
               ],

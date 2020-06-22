@@ -153,10 +153,10 @@ class _HomeState extends State<Home> {
               icon: Icon(FontAwesomeIcons.searchLocation),
               title: Text('Perdidos'),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.handHoldingHeart),
-              title: Text('Rescates'),
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(FontAwesomeIcons.handHoldingHeart),
+            //   title: Text('Rescates'),
+            // ),
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.ambulance),
               title: Text('Emergencias'),
