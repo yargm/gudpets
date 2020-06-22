@@ -5,6 +5,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:location/location.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io' show Platform;
 
 class Controller with ChangeNotifier {
@@ -17,7 +20,12 @@ class Controller with ChangeNotifier {
   bool loading = false;
   String sexo;
   String tipo;
-  
+  GeoPoint _currentLocation;
+  var location = Location();
+  double latitud;
+  double longitud;
+  String edo;
+  String municipio;
 
   permissonDeniedDialog(BuildContext context) {
     return showDialog(
@@ -53,7 +61,8 @@ class Controller with ChangeNotifier {
     var permisson = await checkGalerryPermisson(true);
     if (permisson) {
       var image = await ImagePicker.pickImage(
-          source: ImageSource.camera, maxHeight: 750, maxWidth: 750).catchError((onError) => permissonDeniedDialog(context));
+              source: ImageSource.camera, maxHeight: 750, maxWidth: 750)
+          .catchError((onError) => permissonDeniedDialog(context));
 
       return image;
     } else {
@@ -65,12 +74,96 @@ class Controller with ChangeNotifier {
     var permisson = await checkGalerryPermisson(false);
     if (permisson) {
       var image = await ImagePicker.pickImage(
-          source: ImageSource.gallery, maxHeight: 750, maxWidth: 750).catchError((onError) => permissonDeniedDialog(context));
+              source: ImageSource.gallery, maxHeight: 750, maxWidth: 750)
+          .catchError((onError) => permissonDeniedDialog(context));
 
       return image;
     } else {
       return permissonDeniedDialog(context);
     }
+  }
+
+  Future getAddress(BuildContext context, bool useraddress) async {
+    final coordinates = useraddress
+        ? new Coordinates(latitud, longitud)
+        : new Coordinates(latitudfinal, longitudfinal);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var direccion = addresses.first;
+    edo = '${direccion.adminArea}';
+    municipio = '${direccion.locality}';
+  }
+
+  Future setAddress() async {
+    Fluttertoast.showToast(
+        msg: 'recibo ' +
+            edo +
+            ' , ' +
+            municipio +
+            ' y tengo ' +
+            usuario.edo +
+            ' , ' +
+            usuario.municipio);
+    //no actualizar nada
+    if (usuario.edo == edo && usuario.municipio == municipio) {
+      Fluttertoast.showToast(msg: 'no hice nada');
+    }
+    //actualizar solo estado
+    else if (usuario.edo != edo && usuario.municipio == municipio) {
+      await usuario.reference.updateData({'edo': edo});
+      Fluttertoast.showToast(msg: 'actualicé estado');
+    }
+    //actualizar solo municipio
+    else if (usuario.edo == edo && usuario.municipio != municipio) {
+      await usuario.reference.updateData({'municipio': municipio});
+      Fluttertoast.showToast(msg: 'actualicé municipio');
+    } else {
+      await usuario.reference.updateData({'edo': edo});
+      await usuario.reference.updateData({'municipio': municipio});
+      Fluttertoast.showToast(msg: 'actualicé ambos');
+    }
+  }
+
+  Future<GeoPoint> getLocation(BuildContext context) async {
+    try {
+      var userLocation = await location.getLocation();
+      _currentLocation =
+          GeoPoint(userLocation.latitude, userLocation.longitude);
+      latitud = _currentLocation.latitude;
+      longitud = _currentLocation.longitude;
+      Fluttertoast.showToast(msg: 'tengo la ubicación');
+    } catch (e) {
+      print(e.toString());
+    }
+    return _currentLocation;
+  }
+
+  Future<bool> checkLocationPermisson() async {
+    if (Platform.isIOS) {
+      PermissionStatus permission = await PermissionHandler()
+          .checkPermissionStatus(PermissionGroup.locationWhenInUse);
+      if (permission != PermissionStatus.granted) {
+        Map<PermissionGroup, PermissionStatus> permissions =
+            await PermissionHandler()
+                .requestPermissions([PermissionGroup.locationWhenInUse]);
+        if (permissions[PermissionStatus] != PermissionStatus.granted) {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      PermissionHandler permissionHandler = PermissionHandler();
+      var idk = await permissionHandler
+          .checkPermissionStatus(PermissionGroup.locationWhenInUse);
+      print('Permisos stauts!!! ' + idk.toString());
+      if (idk == PermissionStatus.neverAskAgain) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
   }
 
   Future<void> openMap(double latitude, double longitude) async {
@@ -108,7 +201,6 @@ class Controller with ChangeNotifier {
       } else {
         return true;
       }
-    
     }
     return true;
   }
@@ -153,9 +245,10 @@ class Controller with ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('correo', usuarioActual.correo);
     await storeToken();
+    await setAddress();
   }
 
-  Future<bool> signInCheck() async {
+  Future<bool> signInCheck(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('correo') == null) {
       return false;
@@ -167,6 +260,8 @@ class Controller with ChangeNotifier {
           .then((onValue) {
         usuarioActual =
             UsuarioModel.fromDocumentSnapshot(onValue.documents.first);
+
+        setAddress();
       });
       await storeToken();
       return true;

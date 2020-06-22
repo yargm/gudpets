@@ -15,7 +15,7 @@ class RegistroAdopcion extends StatefulWidget {
 
 class _RegistroAdopcionState extends State<RegistroAdopcion> {
   List<Asset> images = List<Asset>();
- 
+
   GeoPoint _currentLocation;
   var location = Location();
   double latitud;
@@ -30,7 +30,6 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
         latitud = _currentLocation.latitude;
         longitud = _currentLocation.longitude;
       });
-      
     } catch (e) {
       print(e.toString());
     }

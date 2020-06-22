@@ -35,3 +35,4 @@ export 'adoptadosList.dart';
 
 export 'registroMascota.dart';
 
+export 'amigos.dart';
