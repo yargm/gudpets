@@ -18,7 +18,6 @@ export 'registroPerdido.dart';
 export 'adopcion.dart';
 export 'adopcionList.dart';
 
-
 export 'avisosCard.dart';
 export 'avisosList.dart';
 
@@ -32,4 +31,4 @@ export 'solicitudesAdopcionVista.dart';
 
 export 'info.dart';
 export 'adoptadosList.dart';
-
+export 'chatList.dart';

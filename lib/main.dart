@@ -102,10 +102,9 @@ class MyApp extends StatelessWidget {
           '/registro_emergencia': (BuildContext context) =>
               RegistroEmergencia(),
           '/registro_rescate': (BuildContext context) => RegistroRescate(),
-
-          '/registro_adopcion':(BuildContext context) => RegistroAdopcion(),
-          '/solicitudes_adopcion':(BuildContext context) => SolicitudAdopcion(),
-
+          '/registro_adopcion': (BuildContext context) => RegistroAdopcion(),
+          '/solicitudes_adopcion': (BuildContext context) =>
+              SolicitudAdopcion(),
           '/registro_perdido': (BuildContext context) => RegistroPerdido(),
           '/mapaejemplo': (BuildContext context) => MapSample(),
           '/avisos': (BuildContext context) => AvisosList(),
@@ -113,7 +112,8 @@ class MyApp extends StatelessWidget {
           '/perfil': (BuildContext context) => Perfil(),
           '/favoritos': (BuildContext context) => FavoritosList(),
           '/info': (BuildContext context) => Info(),
-          '/adoptadosList': (BuildContext context) => AdoptadosList()
+          '/adoptadosList': (BuildContext context) => AdoptadosList(),
+          '/chatList': (BuildContext context) => ChatList(),
         },
       ),
     );

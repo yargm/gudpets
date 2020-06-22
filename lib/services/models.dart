@@ -443,3 +443,32 @@ class AvisoModel {
     link = data['link'];
   }
 }
+
+class MensajeModel {
+  String mensaje;
+  String imagen;
+  String gif;
+  String envia;
+  Timestamp fecha;
+  String tipo;
+
+  MensajeModel.fromDS(DocumentSnapshot ds) {
+    fecha = ds['fecha'] ?? Timestamp(0, 0);
+    envia = ds['envia'] ?? '';
+    mensaje = ds['mensaje'] ?? '';
+    tipo = ds['tipo'] ?? '';
+    imagen = ds['imagen'] ?? '';
+    gif = ds['gif'] ?? '';
+  }
+}
+
+class ChatModel {
+  dynamic usuarios;
+  dynamic ids;
+
+  ChatModel({this.usuarios, this.ids});
+  ChatModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    usuarios = data['usuarios'] ?? '';
+    ids = data['ids'] ?? '';
+  }
+}
