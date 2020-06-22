@@ -12,11 +12,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class Perfil extends StatefulWidget {
-
   final UsuarioModel usuario;
-
-  const Perfil({Key key, this.usuario}) : super(key: key);
-
+  final MascotaModel mascota;
+  const Perfil({Key key, this.usuario,this.mascota}) : super(key: key);
+  
   @override
   _PerfilState createState() => _PerfilState();
 }
@@ -459,6 +458,80 @@ class _PerfilState extends State<Perfil> {
             thickness: 1,
           ),
 
+
+
+
+
+
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.all(10),
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Text('Mascotas',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                 
+                                )),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            StreamBuilder(
+                              stream: controlador1.usuario.reference.collection('mascotas').snapshots(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData)
+                                  return Container(
+                                      height: 50,
+                                      child: const CircularProgressIndicator());
+
+                                List<DocumentSnapshot> documents =
+                                    snapshot.data.documents;
+
+                                return documents.isEmpty
+                                    ? Text(usuario.documentId ==
+                                            controlador1.usuario.documentId
+                                        ? 'No hay mascotas añadidas'
+                                        : 'Este Usuario no ha añadido mascotas')
+                                    : Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: SizedBox(
+                                              height: 40,
+                                              width: 40,
+                                              child: ListView.builder(
+                                                physics:
+                                                    ClampingScrollPhysics(),
+                                                shrinkWrap: true,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: documents.length,
+                                                itemBuilder: (context, index) {
+                                                  MascotaModel mascota =
+                                                      MascotaModel
+                                                          .fromDocumentSnapshot(
+                                                              documents[index]);
+
+                                                  return AvatarMascota(
+                                                      mascota: mascota);
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                              },
+                            ),
+                            SizedBox(height: 5),
+                          ],
+                        ),
+                      ),
+
+
+
+
+
+
           Container(
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(10),
@@ -472,54 +545,326 @@ class _PerfilState extends State<Perfil> {
                 SizedBox(
                   height: 5,
                 ),
-                StreamBuilder(
-                  stream: widget.usuario.reference
-                      .collection('mascotas')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                   
-                    if (snapshot.hasError)
-                      return Container(
-                          height: 50, child: Text('No hay mascotas'));
-                    if (!snapshot.hasData)
-                      return Container(
-                          height: 50, child: const CircularProgressIndicator());
-
-                    List<DocumentSnapshot> documents = snapshot.data.documents;
-                    
-                 
-                    return documents.isEmpty
-                        ? controlador1.usuario.documentId ==
-                                widget.usuario.documentId
-                            ? Text('No tienes mascotas registradas')
-                            : Text('este usuario no tiene mascotas registradas')
-                        : Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: SizedBox(
-                                  height: 40,
-                                  width: 40,
-                                  child: ListView.builder(
-                                    physics: ClampingScrollPhysics(),
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: documents.length,
-                                    itemBuilder: (context, index) {
-                                      MascotaModel mascota =
-                                          MascotaModel.fromDocumentSnapshot(
-                                              documents[index]);
-
-                                      return AvatarMascota(mascota: mascota,usuario: widget.usuario);
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                  },
+                SizedBox(
+                  height: 10,
                 ),
-                SizedBox(height: 5),
-              ],
+                Container(
+                  margin: EdgeInsets.all(10),
+                  child: Row(
+
+          widget.usuario.documentId == controlador1.usuario.documentId
+              ? Container(
+                  child: Column(
+
+                    children: <Widget>[
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Información necesaria para trámites de adopción',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 25),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(10),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 130,
+                              width: 210,
+                              child: Stack(
+                                children: <Widget>[
+                                  FadeInImage(
+                                    height: 110,
+                                    width: 210,
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        controlador1.usuario.fotoINE ?? ''),
+                                    placeholder: AssetImage('assets/dog.png'),
+                                  ),
+                                  CircleAvatar(
+                                    backgroundColor: secondaryColor,
+                                    child: IconButton(
+                                      icon: Icon(Icons.photo_camera),
+                                      onPressed: () => showDialog(
+                                        child: WillPopScope(
+                                          onWillPop: () async {
+                                            return controlador1.loading
+                                                ? false
+                                                : true;
+                                          },
+                                          child: SimpleDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            children: <Widget>[
+                                              DialogContent(
+                                                foto: 'INE',
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        context: context,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Expanded(
+                                child: Text(
+                              controlador1.usuario.fotoINE == null
+                                  ? '* No cuentas con foto de tu INE y es necesaria para realizar un trámite de adopción'
+                                  : 'Foto INE',
+                              style: TextStyle(
+                                  fontWeight:
+                                      controlador1.usuario.fotoINE == null
+                                          ? FontWeight.bold
+                                          : null),
+                            ))
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(10),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 130,
+                              width: 210,
+                              child: Stack(
+                                children: <Widget>[
+                                  FadeInImage(
+                                    height: 110,
+                                    width: 210,
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        controlador1.usuario.fotoCompDomi ??
+                                            ''),
+                                    placeholder: AssetImage('assets/dog.png'),
+                                  ),
+                                  CircleAvatar(
+                                    backgroundColor: secondaryColor,
+                                    child: IconButton(
+                                      icon: Icon(Icons.photo_camera),
+                                      onPressed: () => showDialog(
+                                        child: WillPopScope(
+                                          onWillPop: () async {
+                                            return controlador1.loading
+                                                ? false
+                                                : true;
+                                          },
+                                          child: SimpleDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            children: <Widget>[
+                                              DialogContent(
+                                                foto: 'CompDomi',
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        context: context,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Expanded(
+                                child: Text(
+                              controlador1.usuario.fotoCompDomi == null
+                                  ? '* No cuentas con foto de tu comprobante de domicilio y es necesaria para realizar un trámite de adopción'
+                                  : 'Foto Comprobante de domicilio',
+                              style: TextStyle(
+                                  fontWeight:
+                                      controlador1.usuario.fotoCompDomi == null
+                                          ? FontWeight.bold
+                                          : null),
+                            ))
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        endIndent: 20,
+                        indent: 20,
+                        thickness: 1,
+                      ),
+
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Estas imágenes son necesarias para realizar un trámite de adopción, en ellas se debe mostrar el lugar en donde vivirán las mascotas que desees adoptar. Esta información se usa para comprobar que la mascota tendrá un hogar adecuado',
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      controlador1.usuario.galeriaFotos.isNotEmpty &&
+                              controlador1.usuario.galeriaFotos != null
+                          ? GridView.builder(
+                              shrinkWrap: true,
+                              physics: ScrollPhysics(
+                                  parent: NeverScrollableScrollPhysics()),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                              ),
+                              itemBuilder: (context, index) => GestureDetector(
+                                onTap: () => showDialog(
+                                  context: context,
+                                  child: WillPopScope(
+                                    onWillPop: () async {
+                                      return controlador1.loading
+                                          ? false
+                                          : true;
+                                    },
+                                    child: Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: DialogContent(
+                                        index: index,
+                                        foto: controlador1
+                                            .usuario.galeriaFotos[index],
+
+                                      ),
+                                    ),
+                                    itemCount: controlador1
+                                        .usuario.galeriaFotos.length,
+                                  )
+                                : Text('No hay fotos para mostrar'),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            controlador1.usuario.galeriaFotos.length < 6
+                                ? FloatingActionButton.extended(
+                                    elevation: 0,
+                                    backgroundColor: primaryColor,
+                                    onPressed: () => showDialog(
+                                        context: context,
+                                        child: WillPopScope(
+                                          onWillPop: () async {
+                                            return controlador1.loading
+                                                ? false
+                                                : true;
+                                          },
+                                          child: Dialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            child: DialogMultiImage(),
+                                          ),
+                                        )),
+                                    label: Text(
+                                      'Añadir fotos',
+                                      style: TextStyle(color: secondaryLight),
+                                    ),
+                                    icon: Icon(
+                                      Icons.add_a_photo,
+                                      color: secondaryLight,
+                                    ),
+                                  )
+                                : Container()
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              : Container(),
+        ],
+      ),
+    );
+  }
+}
+
+class DialogMultiImage extends StatefulWidget {
+  @override
+  _DialogMultiImageState createState() => _DialogMultiImageState();
+}
+
+class _DialogMultiImageState extends State<DialogMultiImage> {
+  List<Asset> images = List<Asset>();
+  List<String> galeriaFotos = <String>[];
+  List<String> galeriaFotosRefs = <String>[];
+
+  @override
+  Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
+
+    Future<void> loadAssets() async {
+      List<Asset> resultList = List<Asset>();
+
+      var permisson = await controlador1.checkGalerryPermisson(false);
+      if (permisson) {
+        try {
+          resultList = await MultiImagePicker.pickImages(
+            maxImages: 6 - (controlador1.usuario.galeriaFotos.length ?? 0),
+            enableCamera: true,
+            selectedAssets: images,
+            cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+            materialOptions: MaterialOptions(
+              actionBarColor: "#FF795548",
+              actionBarTitle: "Adopción App",
+              allViewTitle: "Todas las fotos",
+              useDetailsView: true,
+              selectCircleStrokeColor: "#FFFFFF",
+            ),
+          );
+        } on Exception catch (e) {
+          print(e);
+          return controlador1.permissonDeniedDialog(context);
+        }
+
+        // If the widget was removed from the tree while the asynchronous platform
+        // message was in flight, we want to discard the reply rather than calling
+        // setState to update our non-existent appearance.
+        if (!mounted) return;
+
+        setState(() {
+          images = resultList;
+        });
+      } else {
+        return controlador1.permissonDeniedDialog(context);
+      }
+    }
+
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            images.isNotEmpty
+                ? GridView.builder(
+                    shrinkWrap: true,
+                    physics:
+                        ScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                    ),
+                    itemBuilder: (context, index) => AssetThumb(
+                      asset: images[index],
+                      width: 300,
+                      height: 300,
+                    ),
+                    itemCount: images.length,
+                  )
+                : Text('No hay fotos para mostrar'),
+            SizedBox(
+              height: 30,
             ),
           ),
           Divider(
@@ -1289,10 +1634,8 @@ class _DialogChangePhoneState extends State<DialogChangePhone> {
     );
   }
 }
-
-
-
-
+                    
+                    
 class AvatarMascota extends StatelessWidget {
  
    AvatarMascota({
@@ -1316,31 +1659,7 @@ final UsuarioModel usuario;
                 context,
                 MaterialPageRoute(
 
-                    builder: (context) => MascotaDetails(mascota: mascota,usuario: usuario)));
-
-          },
-          child: Container(
-            height: 40,
-            width: 40,
-            child: CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage(mascota.foto),
-
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-class AvatarAmigo extends StatelessWidget {
-  const AvatarAmigo({
-    Key key,
-    @required this.usuario,
-  }) : super(key: key);
-
-  final UsuarioModel usuario;
-
+  final MascotaModel mascota;
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
@@ -1351,6 +1670,42 @@ class AvatarAmigo extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
+           
+            // return Navigator.pushAndRemoveUntil(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => ProfileDetails(usuario: usuario)),
+            //     ModalRoute.withName('/home'));
+          },
+          child: Container(
+            height: 60,
+            width: 40,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(mascota.foto),
+              }
+
+
+
+
+class AvatarAmigo extends StatelessWidget {
+  const AvatarAmigo({
+    Key key,
+    @required this.usuario,
+  }) : super(key: key);
+
+  final UsuarioModel usuario;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        SizedBox(
+          width: 10,
+        ),
+        GestureDetector(
+          onTap: () {
+
             return Navigator.push(
                 context,
                 MaterialPageRoute(
