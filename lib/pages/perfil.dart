@@ -1,5 +1,10 @@
 import 'dart:typed_data';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
+
 import 'package:flutter/material.dart';
+import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/pages/registroMascota.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
@@ -7,24 +12,32 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class Perfil extends StatefulWidget {
+
   final UsuarioModel usuario;
-  final MascotaModel mascota;
-  const Perfil({Key key, this.usuario, this.mascota}) : super(key: key);
+
+  const Perfil({Key key, this.usuario}) : super(key: key);
 
   @override
-  _PerfilState createState() => _PerfilState(mascota, usuario);
+  _PerfilState createState() => _PerfilState();
 }
 
 class _PerfilState extends State<Perfil> {
   TextEditingController textEditingController = TextEditingController();
+
   final MascotaModel mascota;
   final UsuarioModel usuario;
 
-  _PerfilState(this.mascota, this.usuario);
+
+
+  _PerfilState();
   @override
   Widget build(BuildContext context) {
-    Controller controlador1 = Provider.of<Controller>(context);
+    Controller controlador1= Provider.of<Controller>(context);
+
+   // UsuarioModel usuarioact = controlador1.usuario;
+
     // print(widget.usuario.documentId + ' ' + controlador1.usuario.documentId);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -426,7 +439,7 @@ class _PerfilState extends State<Perfil> {
                         )
                       : null,
                 ),
-                RaisedButton(
+               controlador1.usuario.documentId == widget.usuario.documentId ?  RaisedButton(
                   padding: EdgeInsets.all(6),
                   onPressed: () {
                     Navigator.of(context).pushNamed('/registroMascota');
@@ -436,11 +449,11 @@ class _PerfilState extends State<Perfil> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text('Añade tu Máscota '),
+                      Text('Añade tu Mascota '),
                       Icon(FontAwesomeIcons.grinHearts)
                     ],
                   ),
-                ),
+                ): Container(),
               ],
             ),
           ),
@@ -463,21 +476,30 @@ class _PerfilState extends State<Perfil> {
                   height: 5,
                 ),
                 StreamBuilder(
-                  stream: controlador1.usuario.reference
+
+                  stream: widget.usuario.reference
                       .collection('mascotas')
                       .snapshots(),
                   builder: (context, snapshot) {
+                   
+                    if (snapshot.hasError)
+                      return Container(
+                          height: 50, child: Text('No hay mascotas'));
+
                     if (!snapshot.hasData)
                       return Container(
                           height: 50, child: const CircularProgressIndicator());
 
                     List<DocumentSnapshot> documents = snapshot.data.documents;
 
+                    
+                 
                     return documents.isEmpty
-                        ? Text(usuario.documentId ==
-                                controlador1.usuario.documentId
-                            ? 'No hay mascotas añadidas'
-                            : 'Este Usuario no ha añadido mascotas')
+                        ? controlador1.usuario.documentId ==
+                                widget.usuario.documentId
+                            ? Text('No tienes mascotas registradas')
+                            : Text('este usuario no tiene mascotas registradas')
+
                         : Row(
                             children: <Widget>[
                               Expanded(
@@ -494,7 +516,9 @@ class _PerfilState extends State<Perfil> {
                                           MascotaModel.fromDocumentSnapshot(
                                               documents[index]);
 
-                                      return AvatarMascota(mascota: mascota);
+
+                                      return AvatarMascota(mascota: mascota,usuario: widget.usuario);
+
                                     },
                                   ),
                                 ),
@@ -505,181 +529,436 @@ class _PerfilState extends State<Perfil> {
                 ),
                 SizedBox(height: 5),
               ],
+
+
             ),
           ),
+          Divider(
+            endIndent: 20,
+            indent: 20,
+            thickness: 1,
+          ),
+          // Container(
+          //   child: Column(
+          //     children: <Widget>[
+          //       SizedBox(
+          //         height: 10,
+          //       ),
+          //       Text(
+          //         'Información necesaria para trámites de adopción',
+          //         textAlign: TextAlign.center,
+          //         style: TextStyle(fontSize: 25),
+          //       ),
+          //       SizedBox(
+          //         height: 10,
+          //       ),
+          //       Container(
+          //         margin: EdgeInsets.all(10),
+          //         child: Row(
+          //           children: <Widget>[
+          //             SizedBox(
+          //               height: 130,
+          //               width: 210,
+          //               child: Stack(
+          //                 children: <Widget>[
+          //                   FadeInImage(
+          //                     height: 110,
+          //                     width: 210,
+          //                     fit: BoxFit.cover,
+          //                     image: NetworkImage(
+          //                         controlador1.usuario.fotoINE ?? ''),
+          //                     placeholder: AssetImage('assets/dog.png'),
+          //                   ),
+          //                   CircleAvatar(
+          //                     backgroundColor: secondaryColor,
+          //                     child: IconButton(
+          //                       icon: Icon(Icons.photo_camera),
+          //                       onPressed: () => showDialog(
+          //                         child: WillPopScope(
+          //                           onWillPop: () async {
+          //                             return controlador1.loading
+          //                                 ? false
+          //                                 : true;
+          //                           },
+          //                           child: SimpleDialog(
+          //                             shape: RoundedRectangleBorder(
+          //                                 borderRadius:
+          //                                     BorderRadius.circular(20)),
+          //                             children: <Widget>[
+          //                               DialogContent(
+          //                                 foto: 'INE',
+          //                               ),
+          //                             ],
+          //                           ),
+          //                         ),
+          //                         context: context,
+          //                       ),
+          //                     ),
+          //                   )
+          //                 ],
+          //               ),
+          //             ),
+          //             SizedBox(
+          //               width: 20,
+          //             ),
+          //             Expanded(
+          //                 child: Text(
+          //               controlador1.usuario.fotoINE == null
+          //                   ? '* No cuentas con foto de tu INE y es necesaria para realizar un trámite de adopción'
+          //                   : 'Foto INE',
+          //               style: TextStyle(
+          //                   fontWeight: controlador1.usuario.fotoINE == null
+          //                       ? FontWeight.bold
+          //                       : null),
+          //             ))
+          //           ],
+          //         ),
+          //       ),
+          //       Container(
+          //         margin: EdgeInsets.all(10),
+          //         child: Row(
+          //           children: <Widget>[
+          //             SizedBox(
+          //               height: 130,
+          //               width: 210,
+          //               child: Stack(
+          //                 children: <Widget>[
+          //                   FadeInImage(
+          //                     height: 110,
+          //                     width: 210,
+          //                     fit: BoxFit.cover,
+          //                     image: NetworkImage(
+          //                         controlador1.usuario.fotoCompDomi ?? ''),
+          //                     placeholder: AssetImage('assets/dog.png'),
+          //                   ),
+          //                   CircleAvatar(
+          //                     backgroundColor: secondaryColor,
+          //                     child: IconButton(
+          //                       icon: Icon(Icons.photo_camera),
+          //                       onPressed: () => showDialog(
+          //                         child: WillPopScope(
+          //                           onWillPop: () async {
+          //                             return controlador1.loading
+          //                                 ? false
+          //                                 : true;
+          //                           },
+          //                           child: SimpleDialog(
+          //                             shape: RoundedRectangleBorder(
+          //                                 borderRadius:
+          //                                     BorderRadius.circular(20)),
+          //                             children: <Widget>[
+          //                               DialogContent(
+          //                                 foto: 'CompDomi',
+          //                               ),
+          //                             ],
+          //                           ),
+          //                         ),
+          //                         context: context,
+          //                       ),
+          //                     ),
+          //                   )
+          //                 ],
+          //               ),
+          //             ),
+          //             SizedBox(
+          //               width: 20,
+          //             ),
+          //             Expanded(
+          //                 child: Text(
+          //               controlador1.usuario.fotoCompDomi == null
+          //                   ? '* No cuentas con foto de tu comprobante de domicilio y es necesaria para realizar un trámite de adopción'
+          //                   : 'Foto Comprobante de domicilio',
+          //               style: TextStyle(
+          //                   fontWeight:
+          //                       controlador1.usuario.fotoCompDomi == null
+          //                           ? FontWeight.bold
+          //                           : null),
+          //             ))
+          //           ],
+          //         ),
+          //       ),
+          //       Divider(
+          //         endIndent: 20,
+          //         indent: 20,
+          //         thickness: 1,
+          //       ),
+          //       Container(
+          //         margin: EdgeInsets.all(20),
+          //         child: Column(
+          //           children: <Widget>[
+          //             Text(
+          //               'Galeria Fotos de tu hogar',
+          //               textAlign: TextAlign.center,
+          //               style: TextStyle(fontSize: 25),
+          //             ),
+          //             SizedBox(
+          //               height: 10,
+          //             ),
+          //             Text(
+          //               'Estas imágenes son necesarias para realizar un trámite de adopción, en ellas se debe mostrar el lugar en donde vivirán las mascotas que desees adoptar. Esta información se usa para comprobar que la mascota tendrá un hogar adecuado',
+          //               textAlign: TextAlign.center,
+          //             ),
+          //             SizedBox(
+          //               height: 20,
+          //             ),
+          //             controlador1.usuario.galeriaFotos.isNotEmpty &&
+          //                     controlador1.usuario.galeriaFotos != null
+          //                 ? GridView.builder(
+          //                     shrinkWrap: true,
+          //                     physics: ScrollPhysics(
+          //                         parent: NeverScrollableScrollPhysics()),
+          //                     gridDelegate:
+          //                         SliverGridDelegateWithFixedCrossAxisCount(
+          //                       crossAxisCount: 3,
+          //                     ),
+          //                     itemBuilder: (context, index) => GestureDetector(
+          //                       onTap: () => showDialog(
+          //                         context: context,
+          //                         child: WillPopScope(
+          //                           onWillPop: () async {
+          //                             return controlador1.loading
+          //                                 ? false
+          //                                 : true;
+          //                           },
+          //                           child: Dialog(
+          //                             shape: RoundedRectangleBorder(
+          //                                 borderRadius:
+          //                                     BorderRadius.circular(20)),
+          //                             child: DialogContent(
+          //                               index: index,
+          //                               foto: controlador1
+          //                                   .usuario.galeriaFotos[index],
+          //                             ),
+          //                           ),
+          //                         ),
+          //                       ),
+          //                       child: FadeInImage(
+          //                         placeholder: AssetImage('assets/dog.png'),
+          //                         image: NetworkImage(
+          //                           controlador1.usuario.galeriaFotos[index] ??
+          //                               '',
+          //                         ),
+          //                         height: 150,
+          //                         width: 150,
+          //                         fit: BoxFit.cover,
+          //                       ),
+          //                     ),
+          //                     itemCount:
+          //                         controlador1.usuario.galeriaFotos.length,
+          //                   )
+          //                 : Text('No hay fotos para mostrar'),
+          //             SizedBox(
+          //               height: 30,
+          //             ),
+          //             controlador1.usuario.galeriaFotos.length < 6
+          //                 ? FloatingActionButton.extended(
+          //                     elevation: 0,
+          //                     backgroundColor: primaryColor,
+          //                     onPressed: () => showDialog(
+          //                         context: context,
+          //                         child: WillPopScope(
+          //                           onWillPop: () async {
+          //                             return controlador1.loading
+          //                                 ? false
+          //                                 : true;
+          //                           },
+          //                           child: Dialog(
+          //                             shape: RoundedRectangleBorder(
+          //                                 borderRadius:
+          //                                     BorderRadius.circular(20)),
+          //                             child: DialogMultiImage(),
+          //                           ),
+          //                         )),
+          //                     label: Text(
+          //                       'Añadir fotos',
+          //                       style: TextStyle(color: secondaryLight),
+          //                     ),
+          //                     icon: Icon(
+          //                       Icons.add_a_photo,
+          //                       color: secondaryLight,
+          //                     ),
+          //                   )
+          //                 : Container()
+          //           ],
+          //         ),
+          //       )
+          //     ],
+          //   ),
+          // )
+
         ],
       ),
     );
   }
 }
 
-class DialogMultiImage extends StatefulWidget {
-  @override
-  _DialogMultiImageState createState() => _DialogMultiImageState();
-}
+// class DialogMultiImage extends StatefulWidget {
+//   @override
+//   _DialogMultiImageState createState() => _DialogMultiImageState();
+// }
 
-class _DialogMultiImageState extends State<DialogMultiImage> {
-  List<Asset> images = List<Asset>();
-  List<String> galeriaFotos = <String>[];
-  List<String> galeriaFotosRefs = <String>[];
+// class _DialogMultiImageState extends State<DialogMultiImage> {
+//   List<Asset> images = List<Asset>();
+//   List<String> galeriaFotos = <String>[];
+//   List<String> galeriaFotosRefs = <String>[];
 
-  @override
-  Widget build(BuildContext context) {
-    Controller controlador1 = Provider.of<Controller>(context);
+//   @override
+//   Widget build(BuildContext context) {
+//     Controller controlador1 = Provider.of<Controller>(context);
 
-    Future<void> loadAssets() async {
-      List<Asset> resultList = List<Asset>();
+//     Future<void> loadAssets() async {
+//       List<Asset> resultList = List<Asset>();
 
-      var permisson = await controlador1.checkGalerryPermisson(false);
-      if (permisson) {
-        try {
-          resultList = await MultiImagePicker.pickImages(
-            maxImages: 6 - (controlador1.usuario.galeriaFotos.length ?? 0),
-            enableCamera: true,
-            selectedAssets: images,
-            cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-            materialOptions: MaterialOptions(
-              actionBarColor: "#FF795548",
-              actionBarTitle: "Adopción App",
-              allViewTitle: "Todas las fotos",
-              useDetailsView: true,
-              selectCircleStrokeColor: "#FFFFFF",
-            ),
-          );
-        } on Exception catch (e) {
-          print(e);
-          return controlador1.permissonDeniedDialog(context);
-        }
+//       var permisson = await controlador1.checkGalerryPermisson(false);
+//       if (permisson) {
+//         try {
+//           resultList = await MultiImagePicker.pickImages(
+//             maxImages: 6 - (controlador1.usuario.galeriaFotos.length ?? 0),
+//             enableCamera: true,
+//             selectedAssets: images,
+//             cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+//             materialOptions: MaterialOptions(
+//               actionBarColor: "#FF795548",
+//               actionBarTitle: "Adopción App",
+//               allViewTitle: "Todas las fotos",
+//               useDetailsView: true,
+//               selectCircleStrokeColor: "#FFFFFF",
+//             ),
+//           );
+//         } on Exception catch (e) {
+//           print(e);
+//           return controlador1.permissonDeniedDialog(context);
+//         }
 
-        // If the widget was removed from the tree while the asynchronous platform
-        // message was in flight, we want to discard the reply rather than calling
-        // setState to update our non-existent appearance.
-        if (!mounted) return;
+//         // If the widget was removed from the tree while the asynchronous platform
+//         // message was in flight, we want to discard the reply rather than calling
+//         // setState to update our non-existent appearance.
+//         if (!mounted) return;
 
-        setState(() {
-          images = resultList;
-        });
-      } else {
-        return controlador1.permissonDeniedDialog(context);
-      }
-    }
+//         setState(() {
+//           images = resultList;
+//         });
+//       } else {
+//         return controlador1.permissonDeniedDialog(context);
+//       }
+//     }
 
-    return SingleChildScrollView(
-      child: Container(
-        margin: EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            images.isNotEmpty
-                ? GridView.builder(
-                    shrinkWrap: true,
-                    physics:
-                        ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                    ),
-                    itemBuilder: (context, index) => AssetThumb(
-                      asset: images[index],
-                      width: 300,
-                      height: 300,
-                    ),
-                    itemCount: images.length,
-                  )
-                : Text('No hay fotos para mostrar'),
-            SizedBox(
-              height: 30,
-            ),
-            controlador1.loading
-                ? CircularProgressIndicator()
-                : Column(
-                    children: <Widget>[
-                      FloatingActionButton.extended(
-                        elevation: 0,
-                        backgroundColor: primaryColor,
-                        onPressed: () => loadAssets(),
-                        label: Text(
-                          'Añadir fotos',
-                          style: TextStyle(color: secondaryLight),
-                        ),
-                        icon: Icon(
-                          Icons.add_a_photo,
-                          color: secondaryLight,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      images.isNotEmpty
-                          ? FloatingActionButton.extended(
-                              elevation: 0,
-                              backgroundColor: secondaryLight,
-                              onPressed: () async {
-                                controlador1.loading = true;
-                                controlador1.notify();
-                                for (var image in images) {
-                                  Map<String, String> fotosRef =
-                                      await saveImage(image, controlador1);
-                                  galeriaFotos.add(fotosRef['url']);
-                                  galeriaFotosRefs.add(fotosRef['ref']);
-                                }
-                                await controlador1.usuario.reference
-                                    .updateData({
-                                  'galeriaFotos':
-                                      FieldValue.arrayUnion(galeriaFotos),
-                                  'galeriaFotosRefs':
-                                      FieldValue.arrayUnion(galeriaFotosRefs)
-                                });
-                                List<dynamic> urls =
-                                    controlador1.usuario.galeriaFotos.toList();
-                                List<dynamic> refs = controlador1
-                                    .usuario.galeriaFotosRefs
-                                    .toList();
-                                for (var foto in galeriaFotos) {
-                                  urls.add(foto);
-                                }
-                                for (var fotoRef in galeriaFotosRefs) {
-                                  refs.add(fotoRef);
-                                }
-                                controlador1.usuario.galeriaFotos = urls;
-                                controlador1.usuario.galeriaFotosRefs = refs;
+//     return SingleChildScrollView(
+//       child: Container(
+//         margin: EdgeInsets.all(20),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: <Widget>[
+//             images.isNotEmpty
+//                 ? GridView.builder(
+//                     shrinkWrap: true,
+//                     physics:
+//                         ScrollPhysics(parent: NeverScrollableScrollPhysics()),
+//                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                       crossAxisCount: 3,
+//                     ),
+//                     itemBuilder: (context, index) => AssetThumb(
+//                       asset: images[index],
+//                       width: 300,
+//                       height: 300,
+//                     ),
+//                     itemCount: images.length,
+//                   )
+//                 : Text('No hay fotos para mostrar'),
+//             SizedBox(
+//               height: 30,
+//             ),
+//             controlador1.loading
+//                 ? CircularProgressIndicator()
+//                 : Column(
+//                     children: <Widget>[
+//                       FloatingActionButton.extended(
+//                         elevation: 0,
+//                         backgroundColor: primaryColor,
+//                         onPressed: () => loadAssets(),
+//                         label: Text(
+//                           'Añadir fotos',
+//                           style: TextStyle(color: secondaryLight),
+//                         ),
+//                         icon: Icon(
+//                           Icons.add_a_photo,
+//                           color: secondaryLight,
+//                         ),
+//                       ),
+//                       SizedBox(
+//                         height: 20,
+//                       ),
+//                       images.isNotEmpty
+//                           ? FloatingActionButton.extended(
+//                               elevation: 0,
+//                               backgroundColor: secondaryLight,
+//                               onPressed: () async {
+//                                 controlador1.loading = true;
+//                                 controlador1.notify();
+//                                 for (var image in images) {
+//                                   Map<String, String> fotosRef =
+//                                       await saveImage(image, controlador1);
+//                                   galeriaFotos.add(fotosRef['url']);
+//                                   galeriaFotosRefs.add(fotosRef['ref']);
+//                                 }
+//                                 await controlador1.usuario.reference
+//                                     .updateData({
+//                                   'galeriaFotos':
+//                                       FieldValue.arrayUnion(galeriaFotos),
+//                                   'galeriaFotosRefs':
+//                                       FieldValue.arrayUnion(galeriaFotosRefs)
+//                                 });
+//                                 List<dynamic> urls =
+//                                     controlador1.usuario.galeriaFotos.toList();
+//                                 List<dynamic> refs = controlador1
+//                                     .usuario.galeriaFotosRefs
+//                                     .toList();
+//                                 for (var foto in galeriaFotos) {
+//                                   urls.add(foto);
+//                                 }
+//                                 for (var fotoRef in galeriaFotosRefs) {
+//                                   refs.add(fotoRef);
+//                                 }
+//                                 controlador1.usuario.galeriaFotos = urls;
+//                                 controlador1.usuario.galeriaFotosRefs = refs;
 
-                                controlador1.loading = false;
-                                controlador1.notify();
-                                Navigator.of(context).pop();
-                              },
-                              label: Text(
-                                'Subir fotos',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              icon: Icon(
-                                Icons.cloud_upload,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Container()
-                    ],
-                  )
-          ],
-        ),
-      ),
-    );
-  }
+//                                 controlador1.loading = false;
+//                                 controlador1.notify();
+//                                 Navigator.of(context).pop();
+//                               },
+//                               label: Text(
+//                                 'Subir fotos',
+//                                 style: TextStyle(color: Colors.white),
+//                               ),
+//                               icon: Icon(
+//                                 Icons.cloud_upload,
+//                                 color: Colors.white,
+//                               ),
+//                             )
+//                           : Container()
+//                     ],
+//                   )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
 
-  Future saveImage(Asset asset, Controller controlador1) async {
-    Map<String, String> fotosRef = {'url': null, 'ref': null};
-    ByteData byteData = await asset.getThumbByteData(500, 500, quality: 100);
-    List<int> imageData = byteData.buffer.asUint8List();
-    final String fileName = controlador1.usuario.correo +
-        '/perfil/galeria/foto' +
-        DateTime.now().toString();
-    StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = ref.putData(imageData);
+//   Future saveImage(Asset asset, Controller controlador1) async {
+//     Map<String, String> fotosRef = {'url': null, 'ref': null};
+//     ByteData byteData = await asset.getThumbByteData(500, 500, quality: 100);
+//     List<int> imageData = byteData.buffer.asUint8List();
+//     final String fileName = controlador1.usuario.correo +
+//         '/perfil/galeria/foto' +
+//         DateTime.now().toString();
+//     StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
+//     StorageUploadTask uploadTask = ref.putData(imageData);
 
-    fotosRef['url'] = await (await uploadTask.onComplete).ref.getDownloadURL();
-    fotosRef['ref'] = (await uploadTask.onComplete).ref.path;
-    return fotosRef;
-  }
-}
+//     fotosRef['url'] = await (await uploadTask.onComplete).ref.getDownloadURL();
+//     fotosRef['ref'] = (await uploadTask.onComplete).ref.path;
+//     return fotosRef;
+//   }
+// }
 
 class DialogContent extends StatefulWidget {
   final String foto;
@@ -718,13 +997,15 @@ class _DialogContentState extends State<DialogContent> {
                     ? BoxFit.cover
                     : null,
                 image: imagen == null
-                    ? NetworkImage(widget.foto == 'PP'
-                        ? controlador1.usuario.foto
-                        : widget.foto == 'INE'
-                            ? (controlador1.usuario.fotoINE ?? '')
-                            : widget.index != null
-                                ? widget.foto
-                                : (controlador1.usuario.fotoCompDomi ?? ''))
+                    ? NetworkImage(
+                    //  widget.foto == 'PP' ? 
+                      controlador1.usuario.foto
+                        // : widget.foto == 'INE'
+                        //     ? (controlador1.usuario.fotoINE ?? '')
+                        //     : widget.index != null
+                        //         ? widget.foto
+                        //         : (controlador1.usuario.fotoCompDomi ?? '')
+                                )
                     : FileImage(imagen),
                 placeholder: AssetImage('assets/dog.png'),
               ),
@@ -807,19 +1088,26 @@ class _DialogContentState extends State<DialogContent> {
                                 final StorageTaskSnapshot downloadUrl =
                                     (await uploadTask.onComplete);
 
-                                if ((widget.foto == 'PP'
-                                            ? controlador1
-                                                .usuario.fotoStorageRef
-                                            : controlador1
-                                                .usuario.fotoCompDomiRef) !=
+                                if (
+                                  (
+                                  widget.foto == 'PP'
+                                            // ? controlador1
+                                            //     .usuario.fotoStorageRef
+                                            // : controlador1
+                                            //     .usuario.fotoCompDomiRef
+                                                ) !=
                                         null &&
                                     widget.foto != 'INE') {
                                   await FirebaseStorage.instance
                                       .ref()
-                                      .child((widget.foto == 'PP'
-                                          ? controlador1.usuario.fotoStorageRef
-                                          : controlador1
-                                              .usuario.fotoCompDomiRef))
+                                      .child(
+                                        //(widget.foto == 'PP'
+                                         // ? 
+                                          controlador1.usuario.fotoStorageRef
+                                         // : controlador1
+                                              // .usuario.fotoCompDomiRef
+                                              // )
+                                              )
                                       .delete()
                                       .catchError((onError) {
                                     print(onError);
@@ -838,33 +1126,35 @@ class _DialogContentState extends State<DialogContent> {
                                   controlador1.usuario.foto = url;
                                   controlador1.usuario.fotoStorageRef =
                                       downloadUrl.ref.path;
-                                } else if (widget.foto == 'INE') {
-                                  await controlador1.usuario.reference
-                                      .updateData({
-                                    'fotoINE': url,
-                                    'fotoINERef': downloadUrl.ref.path
-                                  });
+                                } 
+                                // else if (widget.foto == 'INE') {
+                                //   await controlador1.usuario.reference
+                                //       .updateData({
+                                //     'fotoINE': url,
+                                //     'fotoINERef': downloadUrl.ref.path
+                                //   });
 
-                                  controlador1.usuario.fotoINE = url;
-                                  controlador1.usuario.fotoINERef =
-                                      downloadUrl.ref.path;
-                                } else {
-                                  await controlador1.usuario.reference
-                                      .updateData({
-                                    'fotoCompDomi': url,
-                                    'fotoCompDomiRef': downloadUrl.ref.path
-                                  });
+                                //   controlador1.usuario.fotoINE = url;
+                                //   controlador1.usuario.fotoINERef =
+                                //       downloadUrl.ref.path;
+                                // } else {
+                                //   await controlador1.usuario.reference
+                                //       .updateData({
+                                //     'fotoCompDomi': url,
+                                //     'fotoCompDomiRef': downloadUrl.ref.path
+                                //   });
 
-                                  controlador1.usuario.fotoCompDomi = url;
-                                  controlador1.usuario.fotoCompDomiRef =
-                                      downloadUrl.ref.path;
-                                }
+                                //   controlador1.usuario.fotoCompDomi = url;
+                                //   controlador1.usuario.fotoCompDomiRef =
+                                //       downloadUrl.ref.path;
+                                // }
 
                                 controlador1.loading = false;
                                 controlador1.notify();
 
                                 Navigator.of(context).pop();
-                              },
+                              }
+                              ,
                               label: Text(
                                 'Guardar',
                                 style: TextStyle(color: secondaryLight),
@@ -882,37 +1172,37 @@ class _DialogContentState extends State<DialogContent> {
               ? FloatingActionButton.extended(
                   backgroundColor: primaryColor,
                   onPressed: () async {
-                    print(controlador1.usuario.galeriaFotosRefs.length);
-                    controlador1.loading = true;
-                    controlador1.notify();
-                    await FirebaseStorage.instance
-                        .ref()
-                        .child(
-                            controlador1.usuario.galeriaFotosRefs[widget.index])
-                        .delete()
-                        .catchError((onError) {
-                      print(onError);
-                    });
+                    // print(controlador1.usuario.galeriaFotosRefs.length);
+                    // controlador1.loading = true;
+                    // controlador1.notify();
+                    // await FirebaseStorage.instance
+                    //     .ref()
+                    //     .child(
+                    //         controlador1.usuario.galeriaFotosRefs[widget.index])
+                    //     .delete()
+                    //     .catchError((onError) {
+                    //   print(onError);
+                    // });
 
-                    await controlador1.usuario.reference.updateData({
-                      'galeriaFotos': FieldValue.arrayRemove(
-                          [controlador1.usuario.galeriaFotos[widget.index]]),
-                      'galeriaFotosRefs': FieldValue.arrayRemove(
-                          [controlador1.usuario.galeriaFotosRefs[widget.index]])
-                    });
-                    List<dynamic> urls =
-                        controlador1.usuario.galeriaFotos.toList();
-                    List<dynamic> refs =
-                        controlador1.usuario.galeriaFotosRefs.toList();
-                    urls.removeAt(widget.index);
-                    refs.removeAt(widget.index);
+                    // await controlador1.usuario.reference.updateData({
+                    //   'galeriaFotos': FieldValue.arrayRemove(
+                    //       [controlador1.usuario.galeriaFotos[widget.index]]),
+                    //   'galeriaFotosRefs': FieldValue.arrayRemove(
+                    //       [controlador1.usuario.galeriaFotosRefs[widget.index]])
+                    // });
+                    // List<dynamic> urls =
+                    //     controlador1.usuario.galeriaFotos.toList();
+                    // List<dynamic> refs =
+                    //     controlador1.usuario.galeriaFotosRefs.toList();
+                    // urls.removeAt(widget.index);
+                    // refs.removeAt(widget.index);
 
-                    controlador1.usuario.galeriaFotos = urls;
-                    controlador1.usuario.galeriaFotosRefs = refs;
-                    controlador1.loading = false;
-                    controlador1.notify();
+                    // controlador1.usuario.galeriaFotos = urls;
+                    // controlador1.usuario.galeriaFotosRefs = refs;
+                    // controlador1.loading = false;
+                    // controlador1.notify();
 
-                    Navigator.of(context).pop(true);
+                    // Navigator.of(context).pop(true);
                   },
                   label: Text(
                     'Eliminar foto',
@@ -934,6 +1224,10 @@ class _DialogContentState extends State<DialogContent> {
     );
   }
 }
+
+
+
+
 
 class DialogChangePhone extends StatefulWidget {
   @override
@@ -1008,37 +1302,48 @@ class _DialogChangePhoneState extends State<DialogChangePhone> {
 }
 
 class AvatarMascota extends StatelessWidget {
-  const AvatarMascota({
+ 
+   AvatarMascota({
     Key key,
     @required this.mascota,
+    @required this.usuario,
   }) : super(key: key);
-
-  final MascotaModel mascota;
+ final MascotaModel mascota;
+final UsuarioModel usuario;
   @override
   Widget build(BuildContext context) {
-    return Row(children: <Widget>[
-      SizedBox(
-        width: 10,
-      ),
-      GestureDetector(
+
+    Controller controlador1 = Provider.of<Controller>(context);
+    return Row(
+      children: <Widget>[
+        SizedBox(
+          width: 10,
+        ),
+        GestureDetector(
           onTap: () {
-            // return Navigator.pushAndRemoveUntil(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => ProfileDetails(usuario: usuario)),
-            //     ModalRoute.withName('/home'));
+            return Navigator.push(
+                context,
+                MaterialPageRoute(
+
+
+                    builder: (context) => MascotaDetails(mascota: mascota,usuario: usuario)));
+
           },
           child: Container(
-              height: 60,
-              width: 40,
-              child: CircleAvatar(
-                radius: 20,
-                backgroundImage: NetworkImage(mascota.foto),
-              )))
-    ]);
+            height: 40,
+            width: 40,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(mascota.foto),
+
+
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
-
 class AvatarAmigo extends StatelessWidget {
   const AvatarAmigo({
     Key key,
@@ -1047,8 +1352,10 @@ class AvatarAmigo extends StatelessWidget {
 
   final UsuarioModel usuario;
 
+
   @override
   Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
     return Row(
       children: <Widget>[
         SizedBox(

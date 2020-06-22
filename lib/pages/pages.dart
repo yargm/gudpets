@@ -36,5 +36,6 @@ export 'chatList.dart';
 
 
 export 'registroMascota.dart';
+export 'mascotaDetails.dart';
 
 export 'amigos.dart';

@@ -14,12 +14,12 @@ class UsuarioModel {
   DocumentReference reference;
   String tipo;
   String documentId;
-  String fotoINE;
-  String fotoINERef;
-  String fotoCompDomi;
-  String fotoCompDomiRef;
-  List<dynamic> galeriaFotos;
-  List<dynamic> galeriaFotosRefs;
+  // String fotoINE;
+  // String fotoINERef;
+  // String fotoCompDomi;
+  // String fotoCompDomiRef;
+  // List<dynamic> galeriaFotos;
+  // List<dynamic> galeriaFotosRefs;
   String edo;
   String municipio;
   List<dynamic> amigos;
@@ -37,7 +37,7 @@ class UsuarioModel {
       this.telefono,
       this.tipo,
       this.documentId,
-      this.fotoINE,
+     // this.fotoINE,
       this.edo,
       this.municipio});
 
@@ -82,12 +82,12 @@ class UsuarioModel {
     documentId = data.documentID.toString();
     fnacimiento = data['fnacimiento'].toDate();
     fotoStorageRef = data['fotoStorageRef'];
-    fotoCompDomi = data['fotoCompDomi'];
-    fotoCompDomiRef = data['fotoCompDomiRef'];
-    fotoINE = data['fotoINE'];
-    fotoINERef = data['fotoINERef'];
-    galeriaFotos = data['galeriaFotos'] ?? [];
-    galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
+    // fotoCompDomi = data['fotoCompDomi'];
+    // fotoCompDomiRef = data['fotoCompDomiRef'];
+    // fotoINE = data['fotoINE'];
+    // fotoINERef = data['fotoINERef'];
+    // galeriaFotos = data['galeriaFotos'] ?? [];
+    // galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
     edo = data['edo'] ?? '';
     municipio = data['municipio'] ?? '';
     amigos = data['amigos'] ?? [];
@@ -282,7 +282,7 @@ class AdopcionModel {
   String adoptanteNombre;
 
   int adoptanteTelefono;
-  String adoptanteINE;
+  //String adoptanteINE;
   String adoptanteFoto;
   String adoptanteCorreo;
   String adoptanteId;
@@ -307,7 +307,7 @@ class AdopcionModel {
       this.fotos,
       this.status,
       this.adoptanteNombre,
-      this.adoptanteINE,
+     // this.adoptanteINE,
       this.adoptanteFoto,
       this.adoptanteTelefono,
       this.adoptanteId,
@@ -335,7 +335,7 @@ class AdopcionModel {
     reference = data.reference;
     status = data['status'];
     adoptanteNombre = data['adoptanteNombre'];
-    adoptanteINE = data['adoptanteINE'];
+    //adoptanteINE = data['adoptanteINE'];
     adoptanteTelefono = data['adoptanteTelefono'];
     adoptanteId = data['adoptanteId'];
     adoptanteFoto = data['adoptanteFoto'];
@@ -365,7 +365,7 @@ class AdopcionModel {
       'reference': reference,
       'status': status,
       'adoptanteNombre': adoptanteNombre,
-      'adoptanteINE': adoptanteINE,
+      //'adoptanteINE': adoptanteINE,
       'adoptanteTelefono': adoptanteTelefono,
       'adoptanteId': adoptanteId,
       'adoptanteFoto': adoptanteFoto,
@@ -387,14 +387,14 @@ class SolicitudModel {
   DocumentReference reference;
   String tipo;
   String userId;
-  String fotoINE;
-  String fotoINERef;
-  String fotoCompDomi;
-  String fotoCompDomiRef;
-  List<dynamic> fotosHogar;
-  List<dynamic> fotosHogarRefs;
-  List<dynamic> galeriaFotos;
-  List<dynamic> galeriaFotosRefs;
+  // String fotoINE;
+  // String fotoINERef;
+  // String fotoCompDomi;
+  // String fotoCompDomiRef;
+  // List<dynamic> fotosHogar;
+  // List<dynamic> fotosHogarRefs;
+  // List<dynamic> galeriaFotos;
+  // List<dynamic> galeriaFotosRefs;
   String userIdPub;
   String tituloPub;
 
@@ -442,12 +442,12 @@ class SolicitudModel {
     fnacimiento = data['fnacimiento'].toDate();
     fotoStorageRef = data['fotoStorageRef'];
 
-    fotoCompDomi = data['fotoCompDomi'];
-    fotoCompDomiRef = data['fotoCompDomiRef'];
-    fotoINE = data['fotoINE'];
-    fotoINERef = data['fotoINERef'];
-    galeriaFotos = data['galeriaFotos'] ?? [];
-    galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
+    // fotoCompDomi = data['fotoCompDomi'];
+    // fotoCompDomiRef = data['fotoCompDomiRef'];
+    // fotoINE = data['fotoINE'];
+    // fotoINERef = data['fotoINERef'];
+    // galeriaFotos = data['galeriaFotos'] ?? [];
+    // galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
     userIdPub = data['userIdPub'];
     tituloPub = data['tituloPub'];
   }
@@ -495,7 +495,8 @@ class ChatModel {
 class MascotaModel {
 
   String personalidad;
-  String edad;
+  int anios;
+  int meses;
   String foto;
   String storageRef;
   String nombre;
@@ -503,13 +504,17 @@ class MascotaModel {
   String tipoAnimal;
   bool buscaAmigos;
   String sexo;
+   DateTime fnacimiento;
   DocumentReference reference;
+  //String documentId;
+  
  
   
 
   MascotaModel(
       {
-      this.edad,
+        this.anios,
+      this.meses,
       this.foto,
       this.nombre,
       this.personalidad,
@@ -517,22 +522,72 @@ class MascotaModel {
       this.tamano,
       this.tipoAnimal,
       this.sexo,
-      this.buscaAmigos
+      this.fnacimiento,
+      this.buscaAmigos,
+      //this.documentId
       });
 
+int calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age;
+  }
+  int calculateMonths(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    if(age == 0){
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+     if (month2 > month1) {
+      age--;
+    }else{
+      age = currentDate.month - birthDate.month;
+      
+      print('meses ${age}');
+      
+      return age;
+    }
+      
+    }
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age;
+  }
 
 
  MascotaModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    
+    fnacimiento = data['fnacimiento'].toDate();
     personalidad= data['personalidad']?? '';
-   
+    anios = calculateAge(data['fnacimiento'].toDate());
+    meses = calculateMonths(data['fnacimiento'].toDate());
     foto = data['foto'];
     nombre = data['nombre'];
     sexo = data['sexo'];
     tipoAnimal = data['tipoAnimal'];
     reference = data.reference;    
     storageRef = data['storageRef'];
-    edad = data['edad'];
+    
+   // documentId = data.documentID.toString() ?? '';
     tamano= data['tamano'];
     buscaAmigos = data['buscaAmigos'];
 

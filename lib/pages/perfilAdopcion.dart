@@ -143,150 +143,150 @@ class PerfilAdopcion extends StatelessWidget {
             Container(
               child: Column(
                 children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Información necesaria para trámites de adopción',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  GestureDetector(
-                    onTap: () => showDialog(
-                      context: context,
-                      child: DialogBody(
-                        controlador1: controlador1,
-                        objeto: objeto,
-                        foto: objeto.fotoINE ?? '',
-                      ),
-                    ),
-                    child: Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 130,
-                            width: 210,
-                            child: Stack(
-                              children: <Widget>[
-                                FadeInImage(
-                                  height: 110,
-                                  width: 210,
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(objeto.fotoINE ?? ''),
-                                  placeholder:
-                                      AssetImage('assets/perriti_pic.png'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                              child: Text(
-                            'Foto INE',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ))
-                        ],
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => showDialog(
-                      context: context,
-                      child: DialogBody(
-                        controlador1: controlador1,
-                        objeto: objeto,
-                        foto: objeto.fotoCompDomi ?? '',
-                      ),
-                    ),
-                    child: Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 130,
-                            width: 210,
-                            child: Stack(
-                              children: <Widget>[
-                                FadeInImage(
-                                  height: 110,
-                                  width: 210,
-                                  fit: BoxFit.cover,
-                                  image:
-                                      NetworkImage(objeto.fotoCompDomi ?? ''),
-                                  placeholder:
-                                      AssetImage('assets/perriti_pic.png'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                              child: Text(
-                            'Foto Comprobante de domicilio',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ))
-                        ],
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    endIndent: 20,
-                    indent: 20,
-                    thickness: 1,
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(20),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          'Galeria Fotos de tu hogar',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 25),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: ScrollPhysics(
-                              parent: NeverScrollableScrollPhysics()),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                          ),
-                          itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => showDialog(
-                                context: context,
-                                child: DialogBody(
-                                  controlador1: controlador1,
-                                  objeto: objeto,
-                                  foto: objeto.galeriaFotos[index],
-                                )),
-                            child: Image(
-                              image: NetworkImage(
-                                objeto.galeriaFotos[index],
-                              ),
-                              height: 150,
-                              width: 150,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          itemCount: objeto.galeriaFotos.length,
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                      ],
-                    ),
-                  ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  // Text(
+                  //   'Información necesaria para trámites de adopción',
+                  //   textAlign: TextAlign.center,
+                  //   style: TextStyle(fontSize: 25),
+                  // ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  // GestureDetector(
+                  //   onTap: () => showDialog(
+                  //     context: context,
+                  //     child: DialogBody(
+                  //       controlador1: controlador1,
+                  //       objeto: objeto,
+                  //       foto: objeto.fotoINE ?? '',
+                  //     ),
+                  //   ),
+                  //   child: Container(
+                  //     margin: EdgeInsets.all(10),
+                  //     child: Row(
+                  //       children: <Widget>[
+                  //         SizedBox(
+                  //           height: 130,
+                  //           width: 210,
+                  //           child: Stack(
+                  //             children: <Widget>[
+                  //               FadeInImage(
+                  //                 height: 110,
+                  //                 width: 210,
+                  //                 fit: BoxFit.cover,
+                  //                 image: NetworkImage(objeto.fotoINE ?? ''),
+                  //                 placeholder:
+                  //                     AssetImage('assets/perriti_pic.png'),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //         SizedBox(
+                  //           width: 20,
+                  //         ),
+                  //         Expanded(
+                  //             child: Text(
+                  //           'Foto INE',
+                  //           style: TextStyle(fontWeight: FontWeight.bold),
+                  //         ))
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // GestureDetector(
+                  //   onTap: () => showDialog(
+                  //     context: context,
+                  //     child: DialogBody(
+                  //       controlador1: controlador1,
+                  //       objeto: objeto,
+                  //       foto: objeto.fotoCompDomi ?? '',
+                  //     ),
+                  //   ),
+                  //   child: Container(
+                  //     margin: EdgeInsets.all(10),
+                  //     child: Row(
+                  //       children: <Widget>[
+                  //         SizedBox(
+                  //           height: 130,
+                  //           width: 210,
+                  //           child: Stack(
+                  //             children: <Widget>[
+                  //               FadeInImage(
+                  //                 height: 110,
+                  //                 width: 210,
+                  //                 fit: BoxFit.cover,
+                  //                 image:
+                  //                     NetworkImage(objeto.fotoCompDomi ?? ''),
+                  //                 placeholder:
+                  //                     AssetImage('assets/perriti_pic.png'),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //         SizedBox(
+                  //           width: 20,
+                  //         ),
+                  //         Expanded(
+                  //             child: Text(
+                  //           'Foto Comprobante de domicilio',
+                  //           style: TextStyle(fontWeight: FontWeight.bold),
+                  //         ))
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // Divider(
+                  //   endIndent: 20,
+                  //   indent: 20,
+                  //   thickness: 1,
+                  // ),
+                  // Container(
+                  //   margin: EdgeInsets.all(20),
+                  //   child: Column(
+                  //     children: <Widget>[
+                  //       Text(
+                  //         'Galeria Fotos de tu hogar',
+                  //         textAlign: TextAlign.center,
+                  //         style: TextStyle(fontSize: 25),
+                  //       ),
+                  //       SizedBox(
+                  //         height: 20,
+                  //       ),
+                  //       GridView.builder(
+                  //         shrinkWrap: true,
+                  //         physics: ScrollPhysics(
+                  //             parent: NeverScrollableScrollPhysics()),
+                  //         gridDelegate:
+                  //             SliverGridDelegateWithFixedCrossAxisCount(
+                  //           crossAxisCount: 3,
+                  //         ),
+                  //         itemBuilder: (context, index) => GestureDetector(
+                  //           onTap: () => showDialog(
+                  //               context: context,
+                  //               child: DialogBody(
+                  //                 controlador1: controlador1,
+                  //                 objeto: objeto,
+                  //                 foto: objeto.galeriaFotos[index],
+                  //               )),
+                  //           child: Image(
+                  //             image: NetworkImage(
+                  //               objeto.galeriaFotos[index],
+                  //             ),
+                  //             height: 150,
+                  //             width: 150,
+                  //             fit: BoxFit.cover,
+                  //           ),
+                  //         ),
+                  //         itemCount: objeto.galeriaFotos.length,
+                  //       ),
+                  //       SizedBox(
+                  //         height: 30,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Divider(
                     endIndent: 20,
                     indent: 20,
@@ -322,7 +322,7 @@ class PerfilAdopcion extends StatelessWidget {
                                         .updateData({
                                       'status': 'adoptado',
                                       'adoptanteNombre': objeto.nombre,
-                                      'adoptanteINE': objeto.fotoINE,
+                                    //  'adoptanteINE': objeto.fotoINE,
                                       'adoptanteCorreo': objeto.correo,
                                       'adoptanteFoto': objeto.foto,
                                       'adoptanteTelefono': objeto.telefono,
@@ -337,8 +337,8 @@ class PerfilAdopcion extends StatelessWidget {
                                         controlador1.usuario.correo;
                                     controlador1.adopcion.adoptanteFoto =
                                         controlador1.usuario.foto;
-                                    controlador1.adopcion.adoptanteINE =
-                                        controlador1.usuario.fotoINE;
+                                    // controlador1.adopcion.adoptanteINE =
+                                    //     controlador1.usuario.fotoINE;
                                     controlador1.adopcion.adoptanteId =
                                         controlador1.usuario.documentId;
                                     controlador1.adopcion.status = 'adoptado';

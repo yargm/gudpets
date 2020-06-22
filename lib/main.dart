@@ -117,8 +117,14 @@ class MyApp extends StatelessWidget {
 
 
           '/registroMascota': (BuildContext context) => RegistroMascota(),
+          '/mascotaDetails': (BuildContext context)=> MascotaDetails(),
+
+
+          
+
 
           '/amigos':(BuildContext context)=>Amigos(),
+
         },
       ),
     );

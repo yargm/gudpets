@@ -467,35 +467,10 @@ class _AdopcionState extends State<Adopcion> {
                                         ],
                                       ),
                                     );
-                                  } else {
+                                  }
+                                   else {
                                     print('boton para adoptar');
-                                    if (controlador1.usuario.fotoCompDomiRef ==
-                                            null ||
-                                        controlador1.usuario.fotoINERef ==
-                                            null ||
-                                        controlador1.usuario.galeriaFotosRefs ==
-                                            null ||
-                                        controlador1
-                                            .usuario.galeriaFotosRefs.isEmpty) {
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AlertDialog(
-                                                title: Text(
-                                                    'No puedes postularte'),
-                                                content: Text(
-                                                    'Para postularte es necesario completar tu información.'),
-                                                actions: <Widget>[
-                                                  FlatButton(
-                                                    onPressed: () {
-                                                      return Navigator.of(
-                                                              context)
-                                                          .pushNamed('/perfil');
-                                                    },
-                                                    child: Text('IR A PERFIL'),
-                                                  )
-                                                ],
-                                              ));
-                                    } else {
+                                    
                                       showDialog(
                                           context: context,
                                           builder: (_) => AlertDialog(
@@ -557,29 +532,29 @@ class _AdopcionState extends State<Adopcion> {
                                                               'fotoStorageRef'] =
                                                           controlador1.usuario
                                                               .fotoStorageRef;
-                                                      formsolicitud[
-                                                              'fotoCompDomi'] =
-                                                          controlador1.usuario
-                                                              .fotoCompDomi;
-                                                      formsolicitud[
-                                                              'fotoCompDomiRef'] =
-                                                          controlador1.usuario
-                                                              .fotoCompDomiRef;
-                                                      formsolicitud['fotoINE'] =
-                                                          controlador1
-                                                              .usuario.fotoINE;
-                                                      formsolicitud[
-                                                              'fotoINERef'] =
-                                                          controlador1.usuario
-                                                              .fotoINERef;
-                                                      formsolicitud[
-                                                              'galeriaFotos'] =
-                                                          controlador1.usuario
-                                                              .galeriaFotos;
-                                                      formsolicitud[
-                                                              'galeriaFotosRefs'] =
-                                                          controlador1.usuario
-                                                              .galeriaFotosRefs;
+                                                      // formsolicitud[
+                                                      //         'fotoCompDomi'] =
+                                                      //     controlador1.usuario
+                                                      //         .fotoCompDomi;
+                                                      // formsolicitud[
+                                                      //         'fotoCompDomiRef'] =
+                                                      //     controlador1.usuario
+                                                      //         .fotoCompDomiRef;
+                                                      // formsolicitud['fotoINE'] =
+                                                      //     controlador1
+                                                      //         .usuario.fotoINE;
+                                                      // formsolicitud[
+                                                      //         'fotoINERef'] =
+                                                      //     controlador1.usuario
+                                                      //         .fotoINERef;
+                                                      // formsolicitud[
+                                                      //         'galeriaFotos'] =
+                                                      //     controlador1.usuario
+                                                      //         .galeriaFotos;
+                                                      // formsolicitud[
+                                                      //         'galeriaFotosRefs'] =
+                                                      //     controlador1.usuario
+                                                      //         .galeriaFotosRefs;
                                                       formsolicitud[
                                                               'userIdPub'] =
                                                           widget.objeto.userId;
@@ -630,7 +605,7 @@ class _AdopcionState extends State<Adopcion> {
                                                   ),
                                                 ],
                                               ));
-                                    }
+                                    
                                     return null;
                                   }
                                 });
@@ -653,7 +628,8 @@ class _AdopcionState extends State<Adopcion> {
                           nombre: widget.objeto.adoptanteNombre ?? '',
                           correo: widget.objeto.adoptanteCorreo ?? '',
                           telefono: widget.objeto.adoptanteTelefono ?? 0,
-                          fotoINE: widget.objeto.adoptanteINE ?? ''),
+                         // fotoINE: widget.objeto.adoptanteINE ?? ''
+                          ),
                       extended: true,
                     )
                   : Container()
