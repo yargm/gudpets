@@ -24,8 +24,6 @@ class Perfil extends StatefulWidget {
 class _PerfilState extends State<Perfil> {
   TextEditingController textEditingController = TextEditingController();
 
-  final MascotaModel mascota;
-  final UsuarioModel usuario;
 
 
 
