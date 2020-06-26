@@ -25,6 +25,9 @@ class UsuarioModel {
   List<dynamic> amigos;
   List<dynamic> solicitudesAE;
   List<dynamic> bloqueados;
+  Timestamp userLastMsg;
+  bool userCheck;
+  bool userChat;
 
   UsuarioModel(
       {this.contrasena,
@@ -37,7 +40,7 @@ class UsuarioModel {
       this.telefono,
       this.tipo,
       this.documentId,
-     // this.fotoINE,
+      // this.fotoINE,
       this.edo,
       this.municipio});
 
@@ -68,7 +71,7 @@ class UsuarioModel {
     };
   }
 
-  UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
+  UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data, String user) {
     contrasena = data['tcontrasena'];
     correo = data['correo'];
     descripcion = data['descripcion'] ?? '';
@@ -91,11 +94,14 @@ class UsuarioModel {
     edo = data['edo'] ?? '';
     municipio = data['municipio'] ?? '';
     amigos = data['amigos'] ?? [];
-    amigos=List<String>.from(amigos);
+    amigos = List<String>.from(amigos);
     solicitudesAE = data['solicitudesAE'] ?? [];
     solicitudesAE = List<String>.from(solicitudesAE);
     bloqueados = data['bloqueados'] ?? [];
     bloqueados = List<String>.from(bloqueados);
+    userCheck = data[user + 'Check'] ?? true;
+    userLastMsg = data[user + 'LastMsg'] ?? null;
+    userChat = data[user + 'Chat'] ?? false;
   }
 }
 
@@ -307,7 +313,7 @@ class AdopcionModel {
       this.fotos,
       this.status,
       this.adoptanteNombre,
-     // this.adoptanteINE,
+      // this.adoptanteINE,
       this.adoptanteFoto,
       this.adoptanteTelefono,
       this.adoptanteId,
@@ -462,21 +468,24 @@ class AvisoModel {
     link = data['link'];
   }
 }
+
 class MensajeModel {
   String mensaje;
+  String recibe;
   String imagen;
   String gif;
-  String envia;
+  String usuario;
   Timestamp fecha;
   String tipo;
 
   MensajeModel.fromDS(DocumentSnapshot ds) {
     fecha = ds['fecha'] ?? Timestamp(0, 0);
-    envia = ds['envia'] ?? '';
+    usuario = ds['usuario'] ?? '';
     mensaje = ds['mensaje'] ?? '';
     tipo = ds['tipo'] ?? '';
     imagen = ds['imagen'] ?? '';
     gif = ds['gif'] ?? '';
+    recibe = ds['recibe'] ?? '';
   }
 }
 
@@ -491,9 +500,7 @@ class ChatModel {
   }
 }
 
-
 class MascotaModel {
-
   String personalidad;
   int anios;
   int meses;
@@ -504,30 +511,26 @@ class MascotaModel {
   String tipoAnimal;
   bool buscaAmigos;
   String sexo;
-   DateTime fnacimiento;
+  DateTime fnacimiento;
   DocumentReference reference;
   //String documentId;
-  
- 
-  
 
-  MascotaModel(
-      {
-        this.anios,
-      this.meses,
-      this.foto,
-      this.nombre,
-      this.personalidad,
-      this.storageRef,
-      this.tamano,
-      this.tipoAnimal,
-      this.sexo,
-      this.fnacimiento,
-      this.buscaAmigos,
-      //this.documentId
-      });
+  MascotaModel({
+    this.anios,
+    this.meses,
+    this.foto,
+    this.nombre,
+    this.personalidad,
+    this.storageRef,
+    this.tamano,
+    this.tipoAnimal,
+    this.sexo,
+    this.fnacimiento,
+    this.buscaAmigos,
+    //this.documentId
+  });
 
-int calculateAge(DateTime birthDate) {
+  int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
     int age = currentDate.year - birthDate.year;
     int month1 = currentDate.month;
@@ -543,22 +546,22 @@ int calculateAge(DateTime birthDate) {
     }
     return age;
   }
+
   int calculateMonths(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
     int age = currentDate.year - birthDate.year;
-    if(age == 0){
-    int month1 = currentDate.month;
-    int month2 = birthDate.month;
-     if (month2 > month1) {
-      age--;
-    }else{
-      age = currentDate.month - birthDate.month;
-      
-      print('meses ${age}');
-      
-      return age;
-    }
-      
+    if (age == 0) {
+      int month1 = currentDate.month;
+      int month2 = birthDate.month;
+      if (month2 > month1) {
+        age--;
+      } else {
+        age = currentDate.month - birthDate.month;
+
+        print('meses ${age}');
+
+        return age;
+      }
     }
     int month1 = currentDate.month;
     int month2 = birthDate.month;
@@ -574,27 +577,23 @@ int calculateAge(DateTime birthDate) {
     return age;
   }
 
-
- MascotaModel.fromDocumentSnapshot(DocumentSnapshot data) {
+  MascotaModel.fromDocumentSnapshot(DocumentSnapshot data) {
     fnacimiento = data['fnacimiento'].toDate();
-    personalidad= data['personalidad']?? '';
+    personalidad = data['personalidad'] ?? '';
     anios = calculateAge(data['fnacimiento'].toDate());
     meses = calculateMonths(data['fnacimiento'].toDate());
     foto = data['foto'];
     nombre = data['nombre'];
     sexo = data['sexo'];
     tipoAnimal = data['tipoAnimal'];
-    reference = data.reference;    
+    reference = data.reference;
     storageRef = data['storageRef'];
-    
-   // documentId = data.documentID.toString() ?? '';
-    tamano= data['tamano'];
+
+    // documentId = data.documentID.toString() ?? '';
+    tamano = data['tamano'];
     buscaAmigos = data['buscaAmigos'];
-
-
-    
   }
-    // int calculateAge(DateTime birthDate) {
+  // int calculateAge(DateTime birthDate) {
   //   DateTime currentDate = DateTime.now();
   //   int age = currentDate.year - birthDate.year;
   //   int month1 = currentDate.month;
@@ -611,4 +610,3 @@ int calculateAge(DateTime birthDate) {
   //   return age;
   // }
 }
-

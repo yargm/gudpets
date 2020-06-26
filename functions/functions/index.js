@@ -3,6 +3,56 @@ const admin = require('firebase-admin');
 
 admin.initializeApp(functions.config().firebase);
 
+exports.nuevoMensaje = functions.firestore.document('chats/{chat}/mensajes/{mensaje}'
+).onCreate((snapshot, context) => {
+    var mensajeData = snapshot.data();
+    var listaTokens = [];
+    var contenido;
+
+    admin.firestore().collection('usuarios').doc(mensajeData.recibe).get().then((snapshot) => {
+        var user = snapshot;
+        if (user.data().tokens != undefined) {
+            console.log('tokens definido');
+            if (user.data().tokens != null) {
+                console.log('tokens no nulo');
+                for (var token of user.data().tokens) {
+                    console.log('adding token');
+                    listaTokens.push(token);
+                }
+            }
+        }
+
+        switch (mensajeData.tipo) {
+            case 0: contenido = mensajeData.mensaje;
+                break;
+            case 1: contenido = 'Imagen';
+                break;
+            case 2: contenido = 'Gif';
+        }
+
+
+
+        var payload = {
+            "notification": {
+                "title": 'Nuevo mensaje: ',
+                "body": '> '+contenido,
+                "sound": "default",
+            },
+            "data": {
+                "sendername": mensajeData.recibe,
+                "message": mensajeData.mensaje,
+            }
+        }
+
+        return admin.messaging().sendToDevice(listaTokens, payload).then((response) => {
+            console.log('Se enviaron todas las notificaciones');
+
+        }).catch((err) => {
+            console.log(err);
+        });
+    })
+})
+
 exports.nuevaEmergencia = functions.firestore.document('/emergencias/{emergencia}'
 ).onCreate((snapshot, context) => {
     var emergenciaData = snapshot.data();
@@ -135,7 +185,7 @@ exports.adopcionAceptada = functions.firestore.document('adopciones/{adopcion}'
     var listaTokens = [];
     var adopcionID = snapshot.after.id;
 
-    if(snapshot.before.data().status == 'en adopcion'){
+    if (snapshot.before.data().status == 'en adopcion') {
         admin.firestore().collection('usuarios').doc(adopcionData.adoptanteId).get().then((snapshot) => {
             var usuario = snapshot;
             if (usuario.data().tokens != undefined) {
@@ -148,7 +198,7 @@ exports.adopcionAceptada = functions.firestore.document('adopciones/{adopcion}'
                     }
                 }
             }
-        
+
             admin.firestore().collection('usuarios').get().then((snapshot) => {
                 var listaUsuarios = snapshot.docs;
                 for (var usuario of listaUsuarios) {
@@ -161,18 +211,18 @@ exports.adopcionAceptada = functions.firestore.document('adopciones/{adopcion}'
                                     ).then(() => {
                                         console.log('deleted from ' + usuario.data().correo)
                                     });
-        
+
                                 }
                             }
                         }
                     }
-        
+
                 }
                 console.log('deleted all the registers')
             })
-    
-    
-    
+
+
+
             var payload = {
                 "notification": {
                     "title": "¡Felicitaciones!",
@@ -184,19 +234,19 @@ exports.adopcionAceptada = functions.firestore.document('adopciones/{adopcion}'
                     "message": adopcionData.adoptanteNombre,
                 }
             }
-    
+
             return admin.messaging().sendToDevice(listaTokens, payload).then((response) => {
                 console.log('Se enviaron todas las notificaciones');
-    
+
             }).catch((err) => {
                 console.log(err);
             });
         })
     }
-    else{
+    else {
         return;
     }
-    
+
 })
 
 
@@ -304,9 +354,9 @@ exports.adopcionEliminada = functions.firestore.document('/adopciones/{adopcion}
 
 
     admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').get().then((snapshot) => {
-        for(var solicitud of snapshot.docs){
+        for (var solicitud of snapshot.docs) {
             var data = solicitud.id;
-            admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').doc(data).delete().then(() =>{
+            admin.firestore().collection('adopciones').doc(adopcionID).collection('solicitudes').doc(data).delete().then(() => {
                 console.log('documento in subcollection eliminado');
             })
         }

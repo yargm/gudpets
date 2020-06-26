@@ -46,6 +46,8 @@ dependencies:
   flutter_launcher_icons: "^0.7.3"
   permission_handler: ^4.2.0+hotfix.3
   permission: ^0.1.5
+  giphy_picker: ^1.0.4
+  cached_network_image: ^2.2.0+1
   
   
 

@@ -475,7 +475,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                 if (value != null) {
                   var dsUsuario = await value.get();
                   controlador1.agregausuario(
-                      UsuarioModel.fromDocumentSnapshot(dsUsuario));
+                      UsuarioModel.fromDocumentSnapshot(dsUsuario, 'meh'));
                   controlador1.signIn();
                   Navigator.of(context).pushReplacementNamed('/home');
 
