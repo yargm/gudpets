@@ -62,7 +62,8 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     'fotos': <String>[],
     'reffoto': null,
     'albumrefs': <String>[],
-    'userName': null
+    'userName': null,
+    'ubicacion': null,
   };
 
   @override
@@ -404,6 +405,84 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                   SizedBox(
                     height: 15,
                   ),
+                  //Ubicacion
+                  Center(
+                    child: isLoadig2
+                        ? CircularProgressIndicator()
+                        : RaisedButton.icon(
+                            icon: Icon(Icons.location_on),
+                            label: Text('Capturar ubicación'),
+                            onPressed: boton
+                                ? () async {
+                                    if (await controlador1
+                                        .checkLocationPermisson()) {
+                                      setState(() {
+                                        isLoadig2 = true;
+                                      });
+                                      await controlador1.getLocation(context);
+                                      controlador1.latitudfinal =
+                                          controlador1.latitud;
+                                      controlador1.longitudfinal =
+                                          controlador1.longitud;
+                                     await controlador1.getAddress(
+                                          context, false);
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          child: WillPopScope(
+                                            onWillPop: () async {
+                                              setState(() {
+                                                isLoadig2 = false;
+                                              });
+                                              return true;
+                                            },
+                                            child: AlertDialog(
+                                              title: Text('Importante',
+                                                  style: TextStyle(
+                                                      color: Colors.red)),
+                                              content: Text(
+                                                  'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
+                                                  style:
+                                                      TextStyle(fontSize: 20)),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text('OK'),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              MapSample(
+                                                                latitud:
+                                                                    controlador1
+                                                                        .latitud,
+                                                                longitud:
+                                                                    controlador1
+                                                                        .longitud,
+                                                                controlador1:
+                                                                    controlador1,
+                                                              )),
+                                                    );
+                                                    setState(() {
+                                                      isLoadig2 = false;
+                                                      boton = false;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ));
+                                    } else {
+                                      setState(() {
+                                        isLoadig2 = false;
+                                      });
+                                      return controlador1
+                                          .permissonDeniedDialog(context);
+                                    }
+                                  }
+                                : null),
+                  ),
                   //Guardar
                   Center(
                     child: isLoadig
@@ -468,6 +547,9 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                   formAdopcion['userId'] =
                                       controlador1.usuario.documentId;
                                   formAdopcion['status'] = 'en adopcion';
+                                  formAdopcion['ubicacion'] = GeoPoint(
+                                      controlador1.latitudfinal,
+                                      controlador1.longitudfinal);
                                 });
                               } else {
                                 setState(() {
@@ -512,6 +594,8 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                 }
                               });
                               if (agregar) {
+                                controlador1.latitudfinal = null;
+                                controlador1.longitudfinal = null;
                                 images.clear();
                                 Navigator.of(context).pushNamed('/home');
                               }

@@ -292,6 +292,8 @@ class AdopcionModel {
   String adoptanteFoto;
   String adoptanteCorreo;
   String adoptanteId;
+  
+  GeoPoint ubicacion;
 
   AdopcionModel(
       {this.titulo,
@@ -317,7 +319,8 @@ class AdopcionModel {
       this.adoptanteFoto,
       this.adoptanteTelefono,
       this.adoptanteId,
-      this.adoptanteCorreo});
+      this.adoptanteCorreo,
+      this.ubicacion,});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -346,6 +349,8 @@ class AdopcionModel {
     adoptanteId = data['adoptanteId'];
     adoptanteFoto = data['adoptanteFoto'];
     adoptanteCorreo = data['adoptanteCorreo'];
+
+    ubicacion = data['ubicacion']?? GeoPoint(0, 0);
   }
 
   Map<String, dynamic> toMap() {
