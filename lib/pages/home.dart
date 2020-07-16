@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:gudpets/pages/rescateList.dart';
 import 'package:flutter/material.dart';
 import 'package:gudpets/pages/pages.dart';
@@ -13,12 +16,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final navigatorKey = GlobalKey<NavigatorState>();
   int seleccionado = 0;
+  bool dialVisible = true;
+  File _image;
 
   List<Widget> _widgetOptions = <Widget>[
     AdopcionList(),
     PerdidoList(),
-    RescateList(),
+    FotosPrincipal(),
     EmergenciaList(),
   ];
 
@@ -35,9 +41,81 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
+  void setDialVisible(bool value) {
+    setState(() {
+      dialVisible = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
+    SpeedDial buildSpeedDial() {
+      return SpeedDial(
+        // animatedIcon: AnimatedIcons.add_event,
+
+        animatedIconTheme: IconThemeData(size: 22.0),
+        child: Icon(Icons.camera_enhance, color: Colors.white),
+        onOpen: () => print('OPENING DIAL'),
+        onClose: () => print('DIAL CLOSED'),
+        visible: dialVisible,
+        curve: Curves.bounceIn,
+        children: [
+          SpeedDialChild(
+            child: Icon(FontAwesomeIcons.cameraRetro, color: Colors.white),
+            backgroundColor: secondaryColor,
+            onTap: () async {
+              _image = await controlador1.getImageCamera(context);
+              if (_image != null) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SubirFotos(image: _image)));
+              } else {
+                return;
+              }
+
+              setState(() {});
+            },
+            label: 'Foto Camára',
+            labelStyle: TextStyle(fontWeight: FontWeight.w500),
+            labelBackgroundColor: primaryColor,
+          ),
+          SpeedDialChild(
+              child: Icon(FontAwesomeIcons.image, color: Colors.white),
+              backgroundColor: secondaryColor,
+              onTap: () async {
+                _image = await controlador1.getImage(context);
+                if (_image != null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SubirFotos(image: _image)));
+                } else {
+                  return;
+                }
+                setState(() {});
+              },
+              label: 'Foto Galeria',
+              labelStyle: TextStyle(fontWeight: FontWeight.w500),
+              labelBackgroundColor: primaryColor,
+              elevation: 0,
+              foregroundColor: Colors.white60),
+          // SpeedDialChild(
+          //   child: Icon(Icons.keyboard_voice, color: Colors.white),
+          //   backgroundColor: Colors.blue,
+          //   onTap: () => print('THIRD CHILD'),
+          //   labelWidget: Container(
+          //     color: Colors.blue,
+          //     margin: EdgeInsets.only(right: 10),
+          //     padding: EdgeInsets.all(6),
+          //     child: Text('Custom Label Widget'),
+          //   ),
+          // ),
+        ],
+      );
+    }
+
     seleccionado = controlador1.pestanaAct;
     return WillPopScope(
       onWillPop: () async {
@@ -109,21 +187,28 @@ class _HomeState extends State<Home> {
         body: Center(
           child: _widgetOptions.elementAt(seleccionado),
         ),
-        floatingActionButton: FloatingActionButton(
-          mini: true,
-          onPressed: () {
-            controlador1.pestanaAct == 0
-                ? Navigator.of(context).pushNamed('/registro_adopcion')
-                   
-                : controlador1.pestanaAct == 1
-                    ? Navigator.of(context).pushNamed('/registro_perdido')
-                    : controlador1.pestanaAct == 2
-                        ? Navigator.of(context).pushNamed('/registro_rescate')
-                        : Navigator.of(context)
-                            .pushNamed('/registro_emergencia');
-          },
-          child: Icon(Icons.add, color: primaryLight),
-        ),
+        floatingActionButton: controlador1.pestanaAct == 2
+            ? buildSpeedDial()
+            : FloatingActionButton(
+                mini: true,
+                onPressed: () {
+                  controlador1.pestanaAct == 0
+                      ? Navigator.of(context).pushNamed('/registro_adopcion')
+                      : controlador1.pestanaAct == 1
+                          ? Navigator.of(context).pushNamed('/registro_perdido')
+                          : controlador1.pestanaAct == 2
+                              ? print('holi')
+
+                              // Navigator.of(context).pushNamed('/fotosPrincipal')
+                              : Navigator.of(context)
+                                  .pushNamed('/registro_emergencia');
+                },
+                child: Icon(
+                    controlador1.pestanaAct == 2
+                        ? Icons.camera_enhance
+                        : Icons.add,
+                    color: primaryLight),
+              ),
         bottomNavigationBar: BottomNavigationBar(
           showUnselectedLabels: true,
           unselectedItemColor: primaryDark,
@@ -136,10 +221,10 @@ class _HomeState extends State<Home> {
               icon: Icon(FontAwesomeIcons.searchLocation),
               title: Text('Perdidos'),
             ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(FontAwesomeIcons.handHoldingHeart),
-            //   title: Text('Rescates'),
-            // ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.cameraRetro),
+              title: Text('Fotos'),
+            ),
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.ambulance),
               title: Text('Emergencias'),

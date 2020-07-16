@@ -24,7 +24,7 @@ class Amigos extends StatelessWidget {
                   ? Icon(
                       Icons.person_add,
                       size: 30,
-                       color: Colors.white,
+                      color: Colors.white,
                     )
                   : Stack(
                       children: <Widget>[
@@ -86,6 +86,7 @@ class Amigos extends StatelessWidget {
                           height: 50, child: const CircularProgressIndicator()),
                     );
                   List<DocumentSnapshot> documents = snapshot.data.documents;
+                  print(documents);
                   print(documents.length);
                   return documents.isEmpty
                       ? Text(
@@ -234,7 +235,10 @@ class _SolicitudesAmistadState extends State<SolicitudesAmistad> {
                   color: Colors.white,
                   size: 17,
                 ),
-                label: Text('Buscar Amigos',style: TextStyle(color: Colors.white),),
+                label: Text(
+                  'Buscar Amigos',
+                  style: TextStyle(color: Colors.white),
+                ),
               )
             ],
           ),
