@@ -32,12 +32,13 @@ export 'solicitudesAdopcionVista.dart';
 export 'info.dart';
 export 'adoptadosList.dart';
 
-export 'chatList.dart';
-
-
 export 'registroMascota.dart';
 export 'mascotaDetails.dart';
 
 export 'amigos.dart';
+
 export 'fotos.dart';
 export 'subirFotos.dart';
+
+export 'chat.dart';
+export 'mensaje.dart';

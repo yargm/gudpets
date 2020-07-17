@@ -264,7 +264,7 @@ class _LogInState extends State<LogIn> {
                                                 controlador1.usuarioActual =
                                                     UsuarioModel
                                                         .fromDocumentSnapshot(
-                                                            user);
+                                                            user, 'meh');
 
                                                 await controlador1.signIn();
                                                 Navigator.of(context)
@@ -334,7 +334,7 @@ class _LogInState extends State<LogIn> {
               Navigator.of(context).pushReplacementNamed('/registro_usuario');
             } else {
               controlador1.usuarioActual =
-                  UsuarioModel.fromDocumentSnapshot(onValue.documents.first);
+                  UsuarioModel.fromDocumentSnapshot(onValue.documents.first, 'meh');
               controlador1.signIn();
               Navigator.of(context).pushReplacementNamed('/home');
             }

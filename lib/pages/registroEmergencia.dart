@@ -220,11 +220,8 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                           controlador1.latitud;
                                       controlador1.longitudfinal =
                                           controlador1.longitud;
-                                      print('la latitud actual es:' +
-                                          controlador1.latitudfinal.toString());
-                                      print('la ongitud actual es:' +
-                                          controlador1.longitudfinal
-                                              .toString());
+                                     await controlador1.getAddress(
+                                          context, false);
                                       showDialog(
                                           barrierDismissible: false,
                                           context: context,

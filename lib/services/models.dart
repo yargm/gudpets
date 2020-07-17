@@ -25,6 +25,9 @@ class UsuarioModel {
   List<dynamic> amigos;
   List<dynamic> solicitudesAE;
   List<dynamic> bloqueados;
+  Timestamp userLastMsg;
+  bool userCheck;
+  bool userChat;
 
   UsuarioModel(
       {this.contrasena,
@@ -68,7 +71,7 @@ class UsuarioModel {
     };
   }
 
-  UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
+  UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data, String user) {
     contrasena = data['tcontrasena'];
     correo = data['correo'];
     descripcion = data['descripcion'] ?? '';
@@ -96,6 +99,9 @@ class UsuarioModel {
     solicitudesAE = List<String>.from(solicitudesAE);
     bloqueados = data['bloqueados'] ?? [];
     bloqueados = List<String>.from(bloqueados);
+    userCheck = data[user + 'Check'] ?? true;
+    userLastMsg = data[user + 'LastMsg'] ?? null;
+    userChat = data[user + 'Chat'] ?? false;
   }
 }
 
@@ -286,6 +292,8 @@ class AdopcionModel {
   String adoptanteFoto;
   String adoptanteCorreo;
   String adoptanteId;
+  
+  GeoPoint ubicacion;
 
   AdopcionModel(
       {this.titulo,
@@ -311,7 +319,8 @@ class AdopcionModel {
       this.adoptanteFoto,
       this.adoptanteTelefono,
       this.adoptanteId,
-      this.adoptanteCorreo});
+      this.adoptanteCorreo,
+      this.ubicacion,});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -340,6 +349,8 @@ class AdopcionModel {
     adoptanteId = data['adoptanteId'];
     adoptanteFoto = data['adoptanteFoto'];
     adoptanteCorreo = data['adoptanteCorreo'];
+
+    ubicacion = data['ubicacion']?? GeoPoint(0, 0);
   }
 
   Map<String, dynamic> toMap() {
@@ -465,19 +476,21 @@ class AvisoModel {
 
 class MensajeModel {
   String mensaje;
+  String recibe;
   String imagen;
   String gif;
-  String envia;
+  String usuario;
   Timestamp fecha;
   String tipo;
 
   MensajeModel.fromDS(DocumentSnapshot ds) {
     fecha = ds['fecha'] ?? Timestamp(0, 0);
-    envia = ds['envia'] ?? '';
+    usuario = ds['usuario'] ?? '';
     mensaje = ds['mensaje'] ?? '';
     tipo = ds['tipo'] ?? '';
     imagen = ds['imagen'] ?? '';
     gif = ds['gif'] ?? '';
+    recibe = ds['recibe'] ?? '';
   }
 }
 
@@ -523,7 +536,6 @@ class MascotaModel {
     this.buscaAmigos,
     //this.documentId
   });
-
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
     int age = currentDate.year - birthDate.year;

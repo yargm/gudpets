@@ -147,7 +147,7 @@ class CustomSearchDelegate extends SearchDelegate {
                     }
                     return AmigoTile(
                       usuario:
-                          UsuarioModel.fromDocumentSnapshot(documents[index]),
+                          UsuarioModel.fromDocumentSnapshot(documents[index], 'meh'),
                     );
                   },
                 );
