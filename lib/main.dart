@@ -1,3 +1,4 @@
+import 'package:gudpets/pages/fotos.dart';
 import 'package:gudpets/pages/mapaejemplo.dart';
 import 'package:gudpets/pages/registroAdopcion.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +120,7 @@ class MyApp extends StatelessWidget {
           '/mascotaDetails': (BuildContext context)=> MascotaDetails(),
 
 
-          
+          '/fotosPrincipal': (BuildContext context) =>FotosPrincipal(),
 
 
           '/amigos':(BuildContext context)=>Amigos(),

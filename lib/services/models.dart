@@ -517,11 +517,13 @@ class MascotaModel {
   bool buscaAmigos;
   String sexo;
   DateTime fnacimiento;
+  String documentId;
   DocumentReference reference;
   //String documentId;
 
   MascotaModel({
     this.anios,
+    this.documentId,
     this.meses,
     this.foto,
     this.nombre,
@@ -534,7 +536,6 @@ class MascotaModel {
     this.buscaAmigos,
     //this.documentId
   });
-
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
     int age = currentDate.year - birthDate.year;
@@ -593,7 +594,7 @@ class MascotaModel {
     tipoAnimal = data['tipoAnimal'];
     reference = data.reference;
     storageRef = data['storageRef'];
-
+    documentId = data.documentID.toString();
     // documentId = data.documentID.toString() ?? '';
     tamano = data['tamano'];
     buscaAmigos = data['buscaAmigos'];
@@ -614,4 +615,46 @@ class MascotaModel {
   //   }
   //   return age;
   // }
+}
+
+class PostsModel {
+  String storageRef;
+
+  String foto;
+  String descripcion;
+  bool privacidad;
+  DateTime fecha;
+  List<dynamic> mascotas = [];
+  String userId;
+  String usuario;
+  String documentId;
+  List<dynamic> favoritos = [];
+  DocumentReference reference;
+
+  PostsModel(
+      {this.foto,
+      this.descripcion,
+      this.fecha,
+      this.favoritos,
+      this.mascotas,
+      this.privacidad,
+      this.storageRef,
+      this.usuario,
+      this.documentId,
+      this.userId});
+
+  PostsModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    foto = data['foto'];
+    descripcion = data['descripcion'];
+
+    fecha = data['fecha'].toDate();
+    usuario = data['usuario'];
+    privacidad = data['privacidad'] ?? [''];
+    userId = data['userId'];
+    storageRef = data['storageRef'];
+    mascotas = data['mascotas'] ?? [''];
+    favoritos = data['favoritos'] ?? [''];
+    documentId = data.documentID.toString();
+    reference = data.reference;
+  }
 }

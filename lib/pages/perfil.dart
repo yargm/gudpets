@@ -18,6 +18,9 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
+
+  TextEditingController textEditingController = TextEditingController();
+
   _PerfilState();
   UsuarioModel usuario;
   @override
@@ -474,23 +477,22 @@ class _PerfilState extends State<Perfil> {
                         )
                       : null,
                 ),
-                controlador1.usuario.documentId == widget.usuario.documentId
-                    ? RaisedButton(
-                        padding: EdgeInsets.all(6),
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('/registroMascota');
-                        },
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text('Añade tu Mascota '),
-                            Icon(FontAwesomeIcons.grinHearts)
-                          ],
-                        ),
-                      )
-                    : Container(),
+               controlador1.usuario.documentId == widget.usuario.documentId ?  RaisedButton(
+                  padding: EdgeInsets.all(6),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/registroMascota');
+                  },elevation: 0,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Añadir mascota '),
+                      Icon(Icons.pets)
+                    ],
+                  ),
+                ): Container(),
+
               ],
             ),
           ),
@@ -510,7 +512,7 @@ class _PerfilState extends State<Perfil> {
                       fontSize: 20,
                     )),
                 SizedBox(
-                  height: 5,
+                  height: 10,
                 ),
                 StreamBuilder(
                   stream: widget.usuario.reference
@@ -536,8 +538,8 @@ class _PerfilState extends State<Perfil> {
                             children: <Widget>[
                               Expanded(
                                 child: SizedBox(
-                                  height: 40,
-                                  width: 40,
+                                  height: 100,
+                                  width: 100,
                                   child: ListView.builder(
                                     physics: ClampingScrollPhysics(),
                                     shrinkWrap: true,
@@ -559,7 +561,7 @@ class _PerfilState extends State<Perfil> {
                           );
                   },
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 30),
               ],
             ),
           ),
@@ -1347,13 +1349,37 @@ class AvatarMascota extends StatelessWidget {
                     builder: (context) =>
                         MascotaDetails(mascota: mascota, usuario: usuario)));
           },
-          child: Container(
-            height: 40,
-            width: 40,
-            child: CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage(mascota.foto),
-            ),
+          child: Column(
+            children: <Widget>[
+              Container(
+                
+                height: 60,
+                width: 60,
+                child:
+                
+            //     ClipRRect(
+            //   borderRadius: BorderRadius.circular(10),
+            //   child: FadeInImage(
+            //     width: 50,
+            //     height: 50,
+            //     fit: BoxFit.cover,
+            //     image: NetworkImage(mascota.foto),
+                   
+            //     placeholder: AssetImage('assets/dog.png'),
+            //   ),
+            // ),
+                
+                 CircleAvatar(
+                  radius: 40,
+                  backgroundImage: NetworkImage(mascota.foto),
+
+
+                ),
+              ),
+              SizedBox(height: 10,),
+              Text(mascota.nombre),
+            ],
+
           ),
         ),
       ],

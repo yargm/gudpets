@@ -124,6 +124,7 @@ class _AmigosState extends State<Amigos> {
                           height: 50, child: const CircularProgressIndicator()),
                     );
                   List<DocumentSnapshot> documents = snapshot.data.documents;
+                  print(documents);
                   print(documents.length);
                   return documents.isEmpty
                       ? Text(
