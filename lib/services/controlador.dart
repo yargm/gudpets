@@ -11,7 +11,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io' show Platform;
 
 class Controller with ChangeNotifier {
+
+  List<String> mascotas = [];
+
   UsuarioModel selectedUser;
+
   int pestanaAct = 0;
   String uid = '';
   String name = '';
@@ -123,6 +127,16 @@ class Controller with ChangeNotifier {
       await usuario.reference.updateData({'municipio': municipio});
       Fluttertoast.showToast(msg: 'actualicé ambos');
     }
+  }
+
+  Future<bool> checkPermission() async {
+    final permissionStorageGroup =
+        Platform.isIOS ? PermissionGroup.photos : PermissionGroup.storage;
+    Map<PermissionGroup, PermissionStatus> res =
+        await PermissionHandler().requestPermissions([
+      permissionStorageGroup,
+    ]);
+    return res[permissionStorageGroup] == PermissionStatus.granted;
   }
 
   Future<GeoPoint> getLocation(BuildContext context) async {
