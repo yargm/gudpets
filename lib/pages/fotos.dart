@@ -34,6 +34,7 @@ class FotosPrincipal extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: documents.length,
                   itemBuilder: (context, index) {
+                  
                     PostsModel post =
                         PostsModel.fromDocumentSnapshot(documents[index]);
                     return Card(
