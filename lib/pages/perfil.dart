@@ -1,8 +1,5 @@
 import 'dart:typed_data';
-
 import 'package:firebase_auth/firebase_auth.dart';
-
-
 import 'package:flutter/material.dart';
 import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/pages/registroMascota.dart';
@@ -12,7 +9,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class Perfil extends StatefulWidget {
-
   final UsuarioModel usuario;
 
   const Perfil({Key key, this.usuario}) : super(key: key);
@@ -22,24 +18,68 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
+
   TextEditingController textEditingController = TextEditingController();
 
-
-
-
   _PerfilState();
+  UsuarioModel usuario;
   @override
   Widget build(BuildContext context) {
-    Controller controlador1= Provider.of<Controller>(context);
-
-   // UsuarioModel usuarioact = controlador1.usuario;
-
-    // print(widget.usuario.documentId + ' ' + controlador1.usuario.documentId);
-
+    Controller controlador1 = Provider.of<Controller>(context);
+    //guardamos el usuario actual en una instancia independiente de modeloUsuario
+    if (widget.usuario != null) {
+      // si el widget.usuario no está vacío significa que estás viendo el perfil de uno de tus amixes y eso es lo que tienes guardado en esa variable.
+      usuario = widget.usuario;
+    } else {
+      //sino, te guardas a ti mismo en la variable
+      usuario = controlador1.usuario;
+    }
+    TextEditingController textEditingController = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        actions: <Widget>[
+          widget.usuario.amigos.contains(controlador1.usuario.documentId)
+              ? RaisedButton(
+                  color: Colors.white,
+                  elevation: 0,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Icon(Icons.chat, size: 15, color: secondaryDark),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Chat',
+                        style: TextStyle(fontSize: 15, color: secondaryDark),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => Chat(
+                          //Paso el modelo de usuario de mi amix
+                          usuario: usuario,
+                          //Paso en un arreglo el id de mi amix y el mio
+                          usuarios: [
+                            usuario.documentId,
+                            controlador1.usuario.documentId,
+                          ],
+                          //Paso el nombre de mi amix
+                          nombre: usuario.nombre,
+                          //Paso la foto de mi amix
+                          foto: usuario.foto,
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Container()
+        ],
       ),
       body: ListView(
         addSemanticIndexes: true,
@@ -194,7 +234,7 @@ class _PerfilState extends State<Perfil> {
                                             itemBuilder: (context, index) {
                                               UsuarioModel user = UsuarioModel
                                                   .fromDocumentSnapshot(
-                                                      documents[index]);
+                                                      documents[index], 'meh');
 
                                               return ListTile(
                                                 leading: CircleAvatar(
@@ -312,7 +352,7 @@ class _PerfilState extends State<Perfil> {
                               itemBuilder: (context, index) {
                                 UsuarioModel usuario =
                                     UsuarioModel.fromDocumentSnapshot(
-                                        documents[index]);
+                                        documents[index], 'meh');
 
                                 return AvatarAmigo(usuario: usuario);
                               },
@@ -441,17 +481,18 @@ class _PerfilState extends State<Perfil> {
                   padding: EdgeInsets.all(6),
                   onPressed: () {
                     Navigator.of(context).pushNamed('/registroMascota');
-                  },
+                  },elevation: 0,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text('Añade tu Mascota '),
-                      Icon(FontAwesomeIcons.grinHearts)
+                      Text('Añadir mascota '),
+                      Icon(Icons.pets)
                     ],
                   ),
                 ): Container(),
+
               ],
             ),
           ),
@@ -471,15 +512,13 @@ class _PerfilState extends State<Perfil> {
                       fontSize: 20,
                     )),
                 SizedBox(
-                  height: 5,
+                  height: 10,
                 ),
                 StreamBuilder(
-
                   stream: widget.usuario.reference
                       .collection('mascotas')
                       .snapshots(),
                   builder: (context, snapshot) {
-                   
                     if (snapshot.hasError)
                       return Container(
                           height: 50, child: Text('No hay mascotas'));
@@ -490,20 +529,17 @@ class _PerfilState extends State<Perfil> {
 
                     List<DocumentSnapshot> documents = snapshot.data.documents;
 
-                    
-                 
                     return documents.isEmpty
                         ? controlador1.usuario.documentId ==
                                 widget.usuario.documentId
                             ? Text('No tienes mascotas registradas')
                             : Text('este usuario no tiene mascotas registradas')
-
                         : Row(
                             children: <Widget>[
                               Expanded(
                                 child: SizedBox(
-                                  height: 40,
-                                  width: 40,
+                                  height: 100,
+                                  width: 100,
                                   child: ListView.builder(
                                     physics: ClampingScrollPhysics(),
                                     shrinkWrap: true,
@@ -514,9 +550,9 @@ class _PerfilState extends State<Perfil> {
                                           MascotaModel.fromDocumentSnapshot(
                                               documents[index]);
 
-
-                                      return AvatarMascota(mascota: mascota,usuario: widget.usuario);
-
+                                      return AvatarMascota(
+                                          mascota: mascota,
+                                          usuario: widget.usuario);
                                     },
                                   ),
                                 ),
@@ -525,10 +561,8 @@ class _PerfilState extends State<Perfil> {
                           );
                   },
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 30),
               ],
-
-
             ),
           ),
           Divider(
@@ -783,7 +817,6 @@ class _PerfilState extends State<Perfil> {
           //     ],
           //   ),
           // )
-
         ],
       ),
     );
@@ -996,14 +1029,14 @@ class _DialogContentState extends State<DialogContent> {
                     : null,
                 image: imagen == null
                     ? NetworkImage(
-                    //  widget.foto == 'PP' ? 
-                      controlador1.usuario.foto
+                        //  widget.foto == 'PP' ?
+                        controlador1.usuario.foto
                         // : widget.foto == 'INE'
                         //     ? (controlador1.usuario.fotoINE ?? '')
                         //     : widget.index != null
                         //         ? widget.foto
                         //         : (controlador1.usuario.fotoCompDomi ?? '')
-                                )
+                        )
                     : FileImage(imagen),
                 placeholder: AssetImage('assets/dog.png'),
               ),
@@ -1086,26 +1119,24 @@ class _DialogContentState extends State<DialogContent> {
                                 final StorageTaskSnapshot downloadUrl =
                                     (await uploadTask.onComplete);
 
-                                if (
-                                  (
-                                  widget.foto == 'PP'
-                                            // ? controlador1
-                                            //     .usuario.fotoStorageRef
-                                            // : controlador1
-                                            //     .usuario.fotoCompDomiRef
-                                                ) !=
+                                if ((widget.foto == 'PP'
+                                        // ? controlador1
+                                        //     .usuario.fotoStorageRef
+                                        // : controlador1
+                                        //     .usuario.fotoCompDomiRef
+                                        ) !=
                                         null &&
                                     widget.foto != 'INE') {
                                   await FirebaseStorage.instance
                                       .ref()
                                       .child(
-                                        //(widget.foto == 'PP'
-                                         // ? 
+                                          //(widget.foto == 'PP'
+                                          // ?
                                           controlador1.usuario.fotoStorageRef
-                                         // : controlador1
-                                              // .usuario.fotoCompDomiRef
-                                              // )
-                                              )
+                                          // : controlador1
+                                          // .usuario.fotoCompDomiRef
+                                          // )
+                                          )
                                       .delete()
                                       .catchError((onError) {
                                     print(onError);
@@ -1124,7 +1155,7 @@ class _DialogContentState extends State<DialogContent> {
                                   controlador1.usuario.foto = url;
                                   controlador1.usuario.fotoStorageRef =
                                       downloadUrl.ref.path;
-                                } 
+                                }
                                 // else if (widget.foto == 'INE') {
                                 //   await controlador1.usuario.reference
                                 //       .updateData({
@@ -1151,8 +1182,7 @@ class _DialogContentState extends State<DialogContent> {
                                 controlador1.notify();
 
                                 Navigator.of(context).pop();
-                              }
-                              ,
+                              },
                               label: Text(
                                 'Guardar',
                                 style: TextStyle(color: secondaryLight),
@@ -1222,10 +1252,6 @@ class _DialogContentState extends State<DialogContent> {
     );
   }
 }
-
-
-
-
 
 class DialogChangePhone extends StatefulWidget {
   @override
@@ -1300,17 +1326,15 @@ class _DialogChangePhoneState extends State<DialogChangePhone> {
 }
 
 class AvatarMascota extends StatelessWidget {
- 
-   AvatarMascota({
+  AvatarMascota({
     Key key,
     @required this.mascota,
     @required this.usuario,
   }) : super(key: key);
- final MascotaModel mascota;
-final UsuarioModel usuario;
+  final MascotaModel mascota;
+  final UsuarioModel usuario;
   @override
   Widget build(BuildContext context) {
-
     Controller controlador1 = Provider.of<Controller>(context);
     return Row(
       children: <Widget>[
@@ -1322,26 +1346,47 @@ final UsuarioModel usuario;
             return Navigator.push(
                 context,
                 MaterialPageRoute(
-
-
-                    builder: (context) => MascotaDetails(mascota: mascota,usuario: usuario)));
-
+                    builder: (context) =>
+                        MascotaDetails(mascota: mascota, usuario: usuario)));
           },
-          child: Container(
-            height: 40,
-            width: 40,
-            child: CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage(mascota.foto),
+          child: Column(
+            children: <Widget>[
+              Container(
+                
+                height: 60,
+                width: 60,
+                child:
+                
+            //     ClipRRect(
+            //   borderRadius: BorderRadius.circular(10),
+            //   child: FadeInImage(
+            //     width: 50,
+            //     height: 50,
+            //     fit: BoxFit.cover,
+            //     image: NetworkImage(mascota.foto),
+                   
+            //     placeholder: AssetImage('assets/dog.png'),
+            //   ),
+            // ),
+                
+                 CircleAvatar(
+                  radius: 40,
+                  backgroundImage: NetworkImage(mascota.foto),
 
 
-            ),
+                ),
+              ),
+              SizedBox(height: 10,),
+              Text(mascota.nombre),
+            ],
+
           ),
         ),
       ],
     );
   }
 }
+
 class AvatarAmigo extends StatelessWidget {
   const AvatarAmigo({
     Key key,
@@ -1349,7 +1394,6 @@ class AvatarAmigo extends StatelessWidget {
   }) : super(key: key);
 
   final UsuarioModel usuario;
-
 
   @override
   Widget build(BuildContext context) {

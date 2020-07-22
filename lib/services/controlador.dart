@@ -11,6 +11,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io' show Platform;
 
 class Controller with ChangeNotifier {
+
+  List<String> mascotas = [];
+
+  UsuarioModel selectedUser;
+
   int pestanaAct = 0;
   String uid = '';
   String name = '';
@@ -122,6 +127,16 @@ class Controller with ChangeNotifier {
       await usuario.reference.updateData({'municipio': municipio});
       Fluttertoast.showToast(msg: 'actualicé ambos');
     }
+  }
+
+  Future<bool> checkPermission() async {
+    final permissionStorageGroup =
+        Platform.isIOS ? PermissionGroup.photos : PermissionGroup.storage;
+    Map<PermissionGroup, PermissionStatus> res =
+        await PermissionHandler().requestPermissions([
+      permissionStorageGroup,
+    ]);
+    return res[permissionStorageGroup] == PermissionStatus.granted;
   }
 
   Future<GeoPoint> getLocation(BuildContext context) async {
@@ -249,6 +264,55 @@ class Controller with ChangeNotifier {
     await setAddress();
   }
 
+  fecha(Timestamp fecha) {
+    String mes;
+    switch (fecha.toDate().month) {
+      case 1:
+        mes = 'ene';
+        break;
+      case 2:
+        mes = 'feb';
+        break;
+      case 3:
+        mes = 'mar';
+        break;
+      case 4:
+        mes = 'abr';
+        break;
+      case 5:
+        mes = 'may';
+        break;
+      case 6:
+        mes = 'jun';
+        break;
+      case 7:
+        mes = 'jul';
+        break;
+      case 8:
+        mes = 'ago';
+        break;
+      case 9:
+        mes = 'sep';
+        break;
+      case 10:
+        mes = 'oct';
+        break;
+      case 11:
+        mes = 'nov';
+        break;
+      case 12:
+        mes = 'dic';
+        break;
+    }
+    return fecha.toDate().day.toString() +
+        ' ' +
+        mes +
+        ' ' +
+        fecha.toDate().hour.toString() +
+        ':' +
+        fecha.toDate().minute.toString();
+  }
+
   Future<bool> signInCheck(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('correo') == null) {
@@ -260,7 +324,7 @@ class Controller with ChangeNotifier {
           .getDocuments()
           .then((onValue) {
         usuarioActual =
-            UsuarioModel.fromDocumentSnapshot(onValue.documents.first);
+            UsuarioModel.fromDocumentSnapshot(onValue.documents.first, 'meh');
 
         setAddress();
       });
