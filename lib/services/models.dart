@@ -25,6 +25,9 @@ class UsuarioModel {
   List<dynamic> amigos;
   List<dynamic> solicitudesAE;
   List<dynamic> bloqueados;
+  Timestamp userLastMsg;
+  bool userCheck;
+  bool userChat;
 
   UsuarioModel(
       {this.contrasena,
@@ -68,8 +71,8 @@ class UsuarioModel {
     };
   }
 
-  UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    contrasena = data['tcontrasena'];
+  UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data, String user) {
+    contrasena = data['tcontrasena'] ?? '';
     correo = data['correo'];
     descripcion = data['descripcion'] ?? '';
     edad = calculateAge(data['fnacimiento'].toDate());
@@ -96,6 +99,9 @@ class UsuarioModel {
     solicitudesAE = List<String>.from(solicitudesAE);
     bloqueados = data['bloqueados'] ?? [];
     bloqueados = List<String>.from(bloqueados);
+    userCheck = data[user + 'Check'] ?? true;
+    userLastMsg = data[user + 'LastMsg'] ?? null;
+    userChat = data[user + 'Chat'] ?? false;
   }
 }
 
@@ -287,31 +293,35 @@ class AdopcionModel {
   String adoptanteCorreo;
   String adoptanteId;
 
-  AdopcionModel(
-      {this.titulo,
-      this.descripcion,
-      this.tipoAnimal,
-      this.foto,
-      this.sexo,
-      this.edad,
-      this.esterilizacion,
-      this.vacunacion,
-      this.desparacitacion,
-      this.convivenciaotros,
-      this.fecha,
-      this.documentId,
-      this.userName,
-      this.userId,
-      this.albumrefs,
-      this.reffoto,
-      this.fotos,
-      this.status,
-      this.adoptanteNombre,
-      // this.adoptanteINE,
-      this.adoptanteFoto,
-      this.adoptanteTelefono,
-      this.adoptanteId,
-      this.adoptanteCorreo});
+  GeoPoint ubicacion;
+
+  AdopcionModel({
+    this.titulo,
+    this.descripcion,
+    this.tipoAnimal,
+    this.foto,
+    this.sexo,
+    this.edad,
+    this.esterilizacion,
+    this.vacunacion,
+    this.desparacitacion,
+    this.convivenciaotros,
+    this.fecha,
+    this.documentId,
+    this.userName,
+    this.userId,
+    this.albumrefs,
+    this.reffoto,
+    this.fotos,
+    this.status,
+    this.adoptanteNombre,
+    // this.adoptanteINE,
+    this.adoptanteFoto,
+    this.adoptanteTelefono,
+    this.adoptanteId,
+    this.adoptanteCorreo,
+    this.ubicacion,
+  });
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data['titulo'];
@@ -340,6 +350,8 @@ class AdopcionModel {
     adoptanteId = data['adoptanteId'];
     adoptanteFoto = data['adoptanteFoto'];
     adoptanteCorreo = data['adoptanteCorreo'];
+
+    ubicacion = data['ubicacion'] ?? GeoPoint(0, 0);
   }
 
   Map<String, dynamic> toMap() {
@@ -465,19 +477,21 @@ class AvisoModel {
 
 class MensajeModel {
   String mensaje;
+  String recibe;
   String imagen;
   String gif;
-  String envia;
+  String usuario;
   Timestamp fecha;
   String tipo;
 
   MensajeModel.fromDS(DocumentSnapshot ds) {
     fecha = ds['fecha'] ?? Timestamp(0, 0);
-    envia = ds['envia'] ?? '';
+    usuario = ds['usuario'] ?? '';
     mensaje = ds['mensaje'] ?? '';
     tipo = ds['tipo'] ?? '';
     imagen = ds['imagen'] ?? '';
     gif = ds['gif'] ?? '';
+    recibe = ds['recibe'] ?? '';
   }
 }
 
@@ -523,7 +537,6 @@ class MascotaModel {
     this.buscaAmigos,
     //this.documentId
   });
-
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
     int age = currentDate.year - birthDate.year;
@@ -618,6 +631,7 @@ class PostsModel {
   String documentId;
   List<dynamic> favoritos = [];
   DocumentReference reference;
+  int numlikes;
 
   PostsModel(
       {this.foto,
@@ -629,12 +643,13 @@ class PostsModel {
       this.storageRef,
       this.usuario,
       this.documentId,
+      this.numlikes,
       this.userId});
 
   PostsModel.fromDocumentSnapshot(DocumentSnapshot data) {
     foto = data['foto'];
     descripcion = data['descripcion'];
-
+    numlikes = data['numlikes'];
     fecha = data['fecha'].toDate();
     usuario = data['usuario'];
     privacidad = data['privacidad'] ?? [''];
@@ -642,6 +657,30 @@ class PostsModel {
     storageRef = data['storageRef'];
     mascotas = data['mascotas'] ?? [''];
     favoritos = data['favoritos'] ?? [''];
+    documentId = data.documentID.toString();
+    reference = data.reference;
+  }
+}
+
+class ComentarioModel {
+  String comentario;
+  DateTime fecha;
+  String userId;
+  String documentId;
+  List<dynamic> likes = [];
+  DocumentReference reference;
+  //int numlikes;
+
+  ComentarioModel(
+      {this.comentario, this.fecha, this.likes, this.documentId, this.userId});
+
+  ComentarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    //numlikes = data['numlikes'];
+    fecha = data['fecha'].toDate();
+    comentario = data['comentario'];
+    userId = data['userId'];
+
+    likes = data['likes'] ?? [''];
     documentId = data.documentID.toString();
     reference = data.reference;
   }

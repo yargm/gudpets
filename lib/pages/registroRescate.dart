@@ -18,6 +18,7 @@ class RegistroRescate extends StatefulWidget {
 class _RegistroRescateState extends State<RegistroRescate> {
   void initState() {
     super.initState();
+
     PermissionHandler()
         .checkPermissionStatus(PermissionGroup.locationWhenInUse)
         .then(_actualizaestado);
@@ -40,7 +41,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
   double longitud;
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
-  
+
   Future<GeoPoint> getLocation() async {
     try {
       var userLocation = await location.getLocation();
