@@ -44,13 +44,14 @@ dependencies:
   multi_image_picker: ^4.6.1
   firebase_messaging: ^6.0.9
   flutter_launcher_icons: "^0.7.3"
-  permission_handler: ^4.2.0+hotfix.3
+  permission_handler: ^4.4.0+hotfix.3
   permission: ^0.1.5
   flutter_speed_dial: ^1.2.5
   giphy_picker: ^1.0.4
   cached_network_image: ^2.2.0+1
   photo_view: ^0.9.2
   image_downloader: ^0.19.2
+  photofilters: ^2.0.1
   
 
 

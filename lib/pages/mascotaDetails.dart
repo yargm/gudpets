@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/colores.dart';
+import 'package:gudpets/shared/postCard.dart';
 
 class MascotaDetails extends StatefulWidget {
   final UsuarioModel usuario;
@@ -87,11 +88,11 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                                           setState(() {
                                             loading = true;
                                           });
-                                          // await controlador1.mascota.reference
-                                          //     .delete()
-                                          //     .catchError((onError) {
-                                          //   print(onError);
-                                          // });
+                                          await controlador1.mascota.reference
+                                              .delete()
+                                              .catchError((onError) {
+                                            print(onError);
+                                          });
                                           setState(() {
                                             loading = false;
                                             complete = true;
@@ -426,7 +427,6 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                       .collection('posts')
                       .where('mascotas',
                           arrayContains: controlador1.mascota.documentId)
-                      .where('privacidad', isEqualTo: false)
                       .orderBy('fecha')
                       .snapshots()
                   : controlador1.usuario.documentId == widget.usuario.documentId
@@ -465,7 +465,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                       )
                     : GridView.builder(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            EdgeInsets.symmetric(horizontal: 0, vertical: 5),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3, crossAxisSpacing: 2),
                         physics: NeverScrollableScrollPhysics(),
@@ -474,12 +474,42 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                         itemBuilder: (context, index) {
                           PostsModel post =
                               PostsModel.fromDocumentSnapshot(documents[index]);
-                          return FadeInImage(
-                            placeholder: AssetImage('assets/dog.png'),
-                            image: NetworkImage(post.foto),
-                            height: 150,
-                            width: 150,
-                            fit: BoxFit.cover,
+                          return GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                useSafeArea: false,
+                                //barrierDismissible: false,
+                                barrierColor: Colors.black54,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return WillPopScope(
+                                    onWillPop: () async {
+                                      controlador1.pestanaAct = 0;
+                                      controlador1.notify();
+                                      return true;
+                                    },
+                                    child: SimpleDialog(
+                                      elevation: 0,
+                                      backgroundColor: Colors.transparent,
+                                      children: <Widget>[
+                                        Fotos(
+                                          index: 2,
+                                          controlador1: controlador1,
+                                          post: post,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: FadeInImage(
+                              placeholder: AssetImage('assets/dog.png'),
+                              image: NetworkImage(post.foto),
+                              height: 150,
+                              width: 150,
+                              fit: BoxFit.cover,
+                            ),
                           );
                         },
                       );
@@ -488,6 +518,24 @@ class _MascotaDetailsState extends State<MascotaDetails> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class TarjetaDialog extends StatefulWidget {
+  PostsModel post;
+  TarjetaDialog({this.post});
+
+  @override
+  _TarjetaDialogState createState() => _TarjetaDialogState();
+}
+
+class _TarjetaDialogState extends State<TarjetaDialog> {
+  Widget build(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
+    return Fotos(
+      controlador1: controlador1,
+      post: widget.post,
     );
   }
 }

@@ -72,7 +72,7 @@ class UsuarioModel {
   }
 
   UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data, String user) {
-    contrasena = data['tcontrasena'];
+    contrasena = data['tcontrasena'] ?? '';
     correo = data['correo'];
     descripcion = data['descripcion'] ?? '';
     edad = calculateAge(data['fnacimiento'].toDate());
@@ -595,6 +595,7 @@ class PostsModel {
   String documentId;
   List<dynamic> favoritos = [];
   DocumentReference reference;
+  int numlikes;
 
   PostsModel(
       {this.foto,
@@ -606,12 +607,13 @@ class PostsModel {
       this.storageRef,
       this.usuario,
       this.documentId,
+      this.numlikes,
       this.userId});
 
   PostsModel.fromDocumentSnapshot(DocumentSnapshot data) {
     foto = data['foto'];
     descripcion = data['descripcion'];
-
+    numlikes = data['numlikes'];
     fecha = data['fecha'].toDate();
     usuario = data['usuario'];
     privacidad = data['privacidad'] ?? [''];
@@ -619,6 +621,30 @@ class PostsModel {
     storageRef = data['storageRef'];
     mascotas = data['mascotas'] ?? [''];
     favoritos = data['favoritos'] ?? [''];
+    documentId = data.documentID.toString();
+    reference = data.reference;
+  }
+}
+
+class ComentarioModel {
+  String comentario;
+  DateTime fecha;
+  String userId;
+  String documentId;
+  List<dynamic> likes = [];
+  DocumentReference reference;
+  //int numlikes;
+
+  ComentarioModel(
+      {this.comentario, this.fecha, this.likes, this.documentId, this.userId});
+
+  ComentarioModel.fromDocumentSnapshot(DocumentSnapshot data) {
+    //numlikes = data['numlikes'];
+    fecha = data['fecha'].toDate();
+    comentario = data['comentario'];
+    userId = data['userId'];
+
+    likes = data['likes'] ?? [''];
     documentId = data.documentID.toString();
     reference = data.reference;
   }

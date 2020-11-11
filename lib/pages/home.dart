@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:gudpets/pages/rescateList.dart';
 import 'package:flutter/material.dart';
 import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+//import 'package:image_editor_pro/image_editor_pro.dart';
 
 class Home extends StatefulWidget {
   final Controller controlador1;
@@ -47,6 +48,24 @@ class _HomeState extends State<Home> {
     });
   }
 
+  // Future getimageditor(context) async {
+  //   final geteditimage =
+  //       await Navigator.push(context, MaterialPageRoute(builder: (context) {
+  //     return ImageEditorPro(
+  //       appBarColor: Colors.blue,
+  //       bottomBarColor: Colors.blue,
+  //     );
+  //   })).then((geteditimage) {
+  //     if (geteditimage != null) {
+  //       setState(() {
+  //         _image = geteditimage;
+  //       });
+  //     }
+  //   }).catchError((er) {
+  //     print(er);
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
@@ -71,11 +90,10 @@ class _HomeState extends State<Home> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => SubirFotos(image: _image)));
+                // getImage(context, _image);
               } else {
                 return;
               }
-
-              setState(() {});
             },
             label: 'Foto Camára',
             labelStyle: TextStyle(fontWeight: FontWeight.w500),
@@ -85,16 +103,18 @@ class _HomeState extends State<Home> {
               child: Icon(FontAwesomeIcons.image, color: Colors.white),
               backgroundColor: secondaryColor,
               onTap: () async {
+                // Navigator.popAndPushNamed(context, '/Filtros');
+                // getimageditor(context);
                 _image = await controlador1.getImage(context);
                 if (_image != null) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => SubirFotos(image: _image)));
+                  //   getImage(context, _image);
                 } else {
                   return;
                 }
-                setState(() {});
               },
               label: 'Foto Galeria',
               labelStyle: TextStyle(fontWeight: FontWeight.w500),

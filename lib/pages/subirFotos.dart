@@ -1,10 +1,13 @@
 import 'dart:io';
-
+import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:gudpets/main.dart';
+
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
+import 'package:photofilters/photofilters.dart';
+
+import 'package:image/image.dart' as imageLib;
 
 class SubirFotos extends StatefulWidget {
   final File image;
@@ -27,8 +30,42 @@ class _SubirFotosState extends State<SubirFotos> {
     'privacidad': false,
     'storageRef': '',
     'favoritos': [],
-    'userId': ''
+    'userId': '',
+    'numlikes': 0
   };
+  String fileName;
+
+  List<Filter> filters = presetFiltersList;
+
+  File imageFile;
+
+  Future getImage(context, File image1) async {
+    imageFile = image1;
+    fileName = basename(imageFile.path);
+    var image = imageLib.decodeImage(imageFile.readAsBytesSync());
+    image = imageLib.copyResize(image, width: 600);
+    Map imagefile = await Navigator.push(
+      context,
+      new MaterialPageRoute(
+        builder: (context) => new PhotoFilterSelector(
+          appBarColor: primaryDark,
+          title: Text("Aplica algún filtro"),
+          image: image,
+          filters: presetFiltersList,
+          filename: fileName,
+          loader: Center(child: CircularProgressIndicator()),
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+    if (imagefile != null && imagefile.containsKey('image_filtered')) {
+      setState(() {
+        imageFile = imagefile['image_filtered'];
+      });
+      print(imageFile.path);
+    }
+  }
+
   final key0 = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -183,12 +220,44 @@ class _SubirFotosState extends State<SubirFotos> {
                         EdgeInsets.only(top: 10, left: 5, bottom: 15, right: 5),
                     //height: 500,
                     width: MediaQuery.of(context).size.shortestSide,
-                    child: FadeInImage(
-                      fit: BoxFit.fill,
-                      image: widget.image == null
-                          ? AssetImage('assets/dog.png')
-                          : FileImage(widget.image),
-                      placeholder: AssetImage('assets/dog.png'),
+                    child: Stack(
+                      children: [
+                        FadeInImage(
+                          fit: BoxFit.cover,
+                          image: widget.image == null
+                              ? AssetImage('assets/dog.png')
+                              : imageFile == null
+                                  ? FileImage(widget.image)
+                                  : FileImage(imageFile),
+                          placeholder: AssetImage('assets/dog.png'),
+                        ),
+                        Container(
+                            padding: EdgeInsets.all(10),
+                            alignment: Alignment.topRight,
+                            child: RaisedButton(
+                              padding: EdgeInsets.all(0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              color: Colors.black45,
+                              elevation: 10,
+                              onPressed: () {
+                                getImage(context, widget.image);
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    FontAwesomeIcons.magic,
+                                    size: 20,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text('Filtro'),
+                                ],
+                              ),
+                            )),
+                      ],
                     ),
                   ),
                   Row(
