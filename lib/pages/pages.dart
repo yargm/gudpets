@@ -42,3 +42,4 @@ export 'subirFotos.dart';
 
 export 'chat.dart';
 export 'mensaje.dart';
+export 'filtrosdeFotos.dart';
