@@ -265,12 +265,10 @@ class PerdidoModel {
 }
 
 class AdopcionModel {
-  String titulo;
-  String userName;
+  String nombre;
   List<dynamic> favoritos = [];
   String descripcion;
   String tipoAnimal;
-  String foto;
   String sexo;
   String edad;
   bool esterilizacion;
@@ -282,25 +280,16 @@ class AdopcionModel {
   DateTime fecha;
   String userId;
   dynamic albumrefs;
-  String reffoto;
   dynamic fotos;
   String status;
-  String adoptanteNombre;
-
-  int adoptanteTelefono;
-  //String adoptanteINE;
-  String adoptanteFoto;
-  String adoptanteCorreo;
   String adoptanteId;
-  
-  GeoPoint ubicacion;
+  String lugar;
 
   AdopcionModel(
-      {this.titulo,
+      {this.nombre,
       this.descripcion,
       this.tipoAnimal,
-      this.foto,
-      this.sexo,
+     this.sexo,
       this.edad,
       this.esterilizacion,
       this.vacunacion,
@@ -308,33 +297,23 @@ class AdopcionModel {
       this.convivenciaotros,
       this.fecha,
       this.documentId,
-      this.userName,
       this.userId,
       this.albumrefs,
-      this.reffoto,
       this.fotos,
       this.status,
-      this.adoptanteNombre,
-      // this.adoptanteINE,
-      this.adoptanteFoto,
-      this.adoptanteTelefono,
       this.adoptanteId,
-      this.adoptanteCorreo,
-      this.ubicacion,});
+      this.lugar});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    titulo = data['titulo'];
-    userName = data['userName'];
+    nombre = data['nombre'];
     favoritos = data['favoritos'] ?? [''];
     descripcion = data['descripcion'];
     tipoAnimal = data['tipoAnimal'];
-    foto = data['foto'];
     sexo = data['sexo'];
     edad = data['edad'];
     fecha = data['fecha'].toDate();
     fotos = data['fotos'] ?? [''];
     albumrefs = data['albumrefs'] ?? [''];
-    reffoto = data['reffoto'];
     esterilizacion = data['esterilizacion'];
     vacunacion = data['vacunacion'];
     desparacitacion = data['desparacitacion'];
@@ -343,30 +322,21 @@ class AdopcionModel {
     documentId = data.documentID.toString();
     reference = data.reference;
     status = data['status'];
-    adoptanteNombre = data['adoptanteNombre'];
-    //adoptanteINE = data['adoptanteINE'];
-    adoptanteTelefono = data['adoptanteTelefono'];
     adoptanteId = data['adoptanteId'];
-    adoptanteFoto = data['adoptanteFoto'];
-    adoptanteCorreo = data['adoptanteCorreo'];
-
-    ubicacion = data['ubicacion']?? GeoPoint(0, 0);
+    lugar = data['lugar'];
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'titulo': titulo,
-      'userName': userName,
+      'nombre': nombre,
       'favoritos': favoritos,
       'descripcion': descripcion,
       'tipoAnimal': tipoAnimal,
-      'foto': foto,
       'sexo': sexo,
       'edad': edad,
       'fecha': fecha,
       'fotos': fotos,
       'albumrefs': albumrefs,
-      'reffoto': reffoto,
       'esterilizacion': esterilizacion,
       'vacunacion': vacunacion,
       'desparacitacion': desparacitacion,
@@ -375,12 +345,7 @@ class AdopcionModel {
       'documentId': documentId,
       'reference': reference,
       'status': status,
-      'adoptanteNombre': adoptanteNombre,
-      //'adoptanteINE': adoptanteINE,
-      'adoptanteTelefono': adoptanteTelefono,
       'adoptanteId': adoptanteId,
-      'adoptanteFoto': adoptanteFoto,
-      'adoptanteCorreo': adoptanteCorreo,
     };
   }
 }

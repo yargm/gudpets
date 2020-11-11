@@ -14,54 +14,83 @@ class Adopcion extends StatefulWidget {
 }
 
 class _AdopcionState extends State<Adopcion> {
-  Map<String, dynamic> formsolicitud = {};
+  int index = 0;
+
+  void _next() {
+    setState(() {
+      if (index < widget.objeto.fotos.length - 1) {
+        index++;
+      } else {
+        index = index;
+      }
+    });
+  }
+
+  void _prev() {
+    setState(() {
+      if (index > 0) {
+        index--;
+      } else {
+        index = 0;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
+    UsuarioModel userpublicacion;
     controlador1.adopcion = widget.objeto;
+
+    Widget _indicator(bool isActive) {
+      return Expanded(
+        child: Container(
+          height: 4,
+          margin: EdgeInsets.only(right: 5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: isActive ? Colors.white : Colors.grey[800]),
+        ),
+      );
+    }
+
+    List<Widget> _buildIndicator() {
+      List<Widget> indicators = [];
+      for (int i = 0; i < widget.objeto.fotos.length; i++) {
+        if (index == i) {
+          indicators.add(_indicator(true));
+        } else {
+          indicators.add(_indicator(false));
+        }
+      }
+
+      return indicators;
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        actions: <Widget>[
-          Container(
-              padding: EdgeInsets.all(10),
-              child: Image(
-                image: AssetImage('assets/gudpetsfirstNoText.png'),
-              )),
-        ],
-        title: Text('GudPets'),
-        // leading: IconButton(
-        //   color: Colors.white,
-        //   onPressed: () => Navigator.of(context).pop(),
-        //   icon: Icon(
-        //     FontAwesomeIcons.chevronCircleLeft,
-        //   ),
-        // ),
-        // elevation: 0,
-        backgroundColor: Colors.white,
+        title: Text('¡Adóptame!'),
+        backgroundColor: primaryColor,
       ),
       body: SingleChildScrollView(
         child: Container(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               SizedBox(
                 width: double.maxFinite,
                 height: 350,
                 child: GestureDetector(
-                  onTap: () => showDialog(
-                    context: context,
-                    child: SingleChildScrollView(
-                      child: GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: FadeInImage(
-                          image: NetworkImage(widget.objeto.foto),
-                          placeholder: AssetImage('assets/dog.png'),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ImageViewer(
+                          image: widget.objeto.fotos[index],
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                   child: Stack(
                     alignment: Alignment.bottomRight,
                     children: <Widget>[
@@ -72,142 +101,298 @@ class _AdopcionState extends State<Adopcion> {
                             placeholder: AssetImage('assets/dog.png'),
                             width: double.maxFinite,
                             height: 350,
-                            image: NetworkImage(widget.objeto.foto),
+                            image: NetworkImage(widget.objeto.fotos[index]),
                           )),
+                      GestureDetector(
+                        onHorizontalDragEnd: (DragEndDetails details) {
+                          if (details.velocity.pixelsPerSecond.dx > 0) {
+                            print("next");
+                            _prev();
+                          } else if (details.velocity.pixelsPerSecond.dx < 0) {
+                            _next();
+                          }
+                        },
+                        child: Container(
+                          height: 350,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.bottomCenter,
+                                  colors: [
+                                Colors.black.withOpacity(.3),
+                                Colors.black.withOpacity(.3),
+                              ])),
+                        ),
+                      ),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              width: 45,
+                              margin: EdgeInsets.only(top: 15),
+                              child: Row(
+                                children: _buildIndicator(),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        left: 10,
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  widget.objeto.nombre,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.10,
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                widget.objeto.sexo == "Hembra"
+                                    ? Icon(FontAwesomeIcons.venus,
+                                        color: Colors.pink[100])
+                                    : Icon(FontAwesomeIcons.mars,
+                                        color: Colors.blue[100])
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                       Container(
+                        height: 40,
+                        width: MediaQuery.of(context).size.width * 0.40,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20),
                             ),
                             color: Colors.brown[300]),
-                        padding: EdgeInsets.all(10.0),
-                        width: widget.objeto.userName.length * 11.1,
-                        height: 40,
+                        padding: EdgeInsets.all(5.0),
                         alignment: Alignment.bottomRight,
-                        child: Text(
-                          widget.objeto.userName,
-                          style: TextStyle(fontSize: 16.0, color: Colors.white),
-                        ),
+                        child: StreamBuilder(
+                            stream: Firestore.instance
+                                .collection('usuarios')
+                                .document(widget.objeto.userId)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData)
+                                return Container(
+                                    height: 50,
+                                    child: const CircularProgressIndicator());
+
+                              userpublicacion =
+                                  UsuarioModel.fromDocumentSnapshot(
+                                      snapshot.data, 'meh');
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Perfil(
+                                              usuario: userpublicacion)));
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    CircleAvatar(
+                                      radius: 15,
+                                      backgroundImage:
+                                          NetworkImage(userpublicacion.foto),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.25,
+                                      child: Text(
+                                        userpublicacion.nombre,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
                       ),
                     ],
                   ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 20, top: 10, right: 20.0),
+                padding: EdgeInsets.only(left: 20, top: 10, right: 20),
                 child: Column(
                   children: <Widget>[
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Flexible(
-                          child: Text(
-                            widget.objeto.titulo,
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
+                        Icon(Icons.location_on),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(widget.objeto.lugar,
+                            style:
+                                TextStyle(fontSize: 18.0, color: Colors.grey)),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Container(
+                          height: MediaQuery.of(context).size.width * 0.20,
+                          width: MediaQuery.of(context).size.width * 0.18,
+                          child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: <Widget>[
+                                Positioned(
+                                  top: 0,
+                                  child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              0.18,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.18,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(.2),
+                                              spreadRadius: 3,
+                                              blurRadius: 3)
+                                        ],
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                      )),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: 30, left: 10, right: 10),
+                                    child: Text(
+                                      "Tipo",
+                                      style: TextStyle(
+                                        fontSize: 17.0,
+                                      ),
+                                    )),
+                                widget.objeto.tipoAnimal == 'perro'
+                                    ? Icon(FontAwesomeIcons.dog)
+                                    : widget.objeto.tipoAnimal == 'gato'
+                                        ? Icon(FontAwesomeIcons.cat)
+                                        : widget.objeto.tipoAnimal == 'ave'
+                                            ? Icon(FontAwesomeIcons.dove)
+                                            : Text(
+                                                'otro',
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                              ]),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Container(
+                          height: MediaQuery.of(context).size.width * 0.20,
+                          width: MediaQuery.of(context).size.width * 0.18,
+                          child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: <Widget>[
+                                Positioned(
+                                  top: 0,
+                                  child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              0.18,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.18,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(.2),
+                                              spreadRadius: 3,
+                                              blurRadius: 3)
+                                        ],
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                      )),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: 30, left: 10, right: 10),
+                                    child: Text(
+                                      widget.objeto.edad,
+                                      style: TextStyle(
+                                        fontSize: 17.0,
+                                      ),
+                                    )),
+                                Icon(Icons.cake),
+                              ]),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.width * 0.35,
+                      width: 300,
+                      child: Stack(
+                        children: <Widget>[
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                                height:
+                                    MediaQuery.of(context).size.width * 0.32,
+                                width: 300,
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey.withOpacity(.2),
+                                        spreadRadius: 3,
+                                        blurRadius: 3)
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                )),
                           ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Text('Tipo:', style: TextStyle(fontSize: 12)),
-                            widget.objeto.tipoAnimal == 'perro'
-                                ? Icon(FontAwesomeIcons.dog)
-                                : widget.objeto.tipoAnimal == 'gato'
-                                    ? Icon(FontAwesomeIcons.cat)
-                                    : widget.objeto.tipoAnimal == 'ave'
-                                        ? Icon(FontAwesomeIcons.dove)
-                                        : Text(
-                                            'otro',
-                                            style: TextStyle(fontSize: 15),
-                                          ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(Icons.description),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Text(widget.objeto.descripcion,
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                color: Colors.grey,
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  top: 30, left: 15, right: 10, bottom: 15),
+                              child: Expanded(
+                                flex: 1,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Text(
+                                    widget.objeto.descripcion,
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                    ),
+                                  ),
+                                ),
                               )),
-                        ),
-                      ],
+                          Icon(Icons.description)
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Icon(FontAwesomeIcons.venusMars),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('Sexo: ',
+                        Text('Convive con otros animales: ',
                             style: TextStyle(
                               fontSize: 20.0,
                             )),
                         SizedBox(
-                          width: 10,
+                          width: 5,
                         ),
-                        Text(widget.objeto.sexo,
-                            style:
-                                TextStyle(fontSize: 18.0, color: Colors.grey))
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(Icons.cake),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text('Edad:',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                  )),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(widget.objeto.edad,
-                                  style: TextStyle(
-                                      fontSize: 18.0, color: Colors.grey)),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: <Widget>[
                         Icon(
                           widget.objeto.convivenciaotros
                               ? Icons.check_circle
@@ -216,18 +401,6 @@ class _AdopcionState extends State<Adopcion> {
                               ? Colors.green
                               : Colors.red,
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('Convivencia con otros: ',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                            )),
-                        widget.objeto.convivenciaotros
-                            ? Text('Sí',
-                                style: TextStyle(
-                                    fontSize: 18.0, color: Colors.grey))
-                            : Text('No'),
                       ],
                     ),
                     SizedBox(
@@ -235,6 +408,13 @@ class _AdopcionState extends State<Adopcion> {
                     ),
                     Row(
                       children: <Widget>[
+                        Text('Desparacitado: ',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            )),
+                        SizedBox(
+                          width: 5,
+                        ),
                         Icon(
                           widget.objeto.desparacitacion
                               ? Icons.check_circle
@@ -243,20 +423,6 @@ class _AdopcionState extends State<Adopcion> {
                               ? Colors.green
                               : Colors.red,
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('Desparacitado: ',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                            )),
-                        widget.objeto.desparacitacion
-                            ? Text('Sí',
-                                style: TextStyle(
-                                    fontSize: 18.0, color: Colors.grey))
-                            : Text('No',
-                                style: TextStyle(
-                                    fontSize: 18.0, color: Colors.grey)),
                       ],
                     ),
                     SizedBox(
@@ -264,6 +430,13 @@ class _AdopcionState extends State<Adopcion> {
                     ),
                     Row(
                       children: <Widget>[
+                        Text('Vacunado: ',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            )),
+                        SizedBox(
+                          width: 5,
+                        ),
                         Icon(
                           widget.objeto.vacunacion
                               ? Icons.check_circle
@@ -272,20 +445,6 @@ class _AdopcionState extends State<Adopcion> {
                               ? Colors.green
                               : Colors.red,
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('Vacunado: ',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                            )),
-                        widget.objeto.vacunacion
-                            ? Text('Sí',
-                                style: TextStyle(
-                                    fontSize: 18.0, color: Colors.grey))
-                            : Text('No',
-                                style: TextStyle(
-                                    fontSize: 18.0, color: Colors.grey)),
                       ],
                     ),
                     SizedBox(
@@ -293,6 +452,13 @@ class _AdopcionState extends State<Adopcion> {
                     ),
                     Row(
                       children: <Widget>[
+                        Text('Esterilizado: ',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            )),
+                        SizedBox(
+                          width: 5,
+                        ),
                         Icon(
                           widget.objeto.esterilizacion
                               ? Icons.check_circle
@@ -301,20 +467,6 @@ class _AdopcionState extends State<Adopcion> {
                               ? Colors.green
                               : Colors.red,
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('Esterilizado: ',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                            )),
-                        widget.objeto.esterilizacion
-                            ? Text('Si',
-                                style: TextStyle(
-                                    fontSize: 18.0, color: Colors.grey))
-                            : Text('No',
-                                style: TextStyle(
-                                    fontSize: 18.0, color: Colors.grey)),
                       ],
                     ),
                     SizedBox(
@@ -350,63 +502,8 @@ class _AdopcionState extends State<Adopcion> {
                     SizedBox(
                       height: 30,
                     ),
-                    Divider(
-                      endIndent: 60,
-                      indent: 60,
-                      thickness: 1,
-                      color: secondaryDark,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Center(
-                      child: Text('Álbum',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                          )),
-                    ),
-                    SizedBox(height: 5),
-                    widget.objeto.fotos.isNotEmpty
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                "Desliza hacia la derecha ",
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 18),
-                              ),
-                              Container(
-                                height: 350,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  shrinkWrap: true,
-                                  physics: ScrollPhysics(
-                                      parent: BouncingScrollPhysics(
-                                          parent:
-                                              AlwaysScrollableScrollPhysics())),
-                                  itemBuilder: (context, index) => FadeInImage(
-                                    fit: BoxFit.cover,
-                                    placeholder: AssetImage('assets/dog.png'),
-                                    width: MediaQuery.of(context).size.width *
-                                        0.90,
-                                    height: 300,
-                                    image: NetworkImage(
-                                        widget.objeto.fotos[index]),
-                                  ),
-                                  itemCount: widget.objeto.fotos.length,
-                                ),
-                              )
-                            ],
-                          )
-                        : Text(
-                            'No hay nada para mostrar',
-                            style: TextStyle(color: Colors.grey, fontSize: 18),
-                          ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 30,
               ),
               Divider(
                 endIndent: 60,
@@ -414,225 +511,6 @@ class _AdopcionState extends State<Adopcion> {
                 thickness: 1,
                 color: secondaryDark,
               ),
-              SizedBox(
-                height: 30,
-              ),
-              ButtonBar(
-                alignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  controlador1.usuario.documentId == widget.objeto.userId &&
-                          widget.objeto.status == 'en adopcion'
-                      ? FloatingActionButton.extended(
-                          icon: Icon(FontAwesomeIcons.userFriends),
-                          label: Text('Ver solicitudes'),
-                          onPressed: () {
-                            print(widget.objeto.documentId);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SolicitudAdopcion(
-                                        docId: widget.objeto.reference,
-                                      )),
-                            );
-                          },
-                        )
-                      : widget.objeto.status == 'en adopcion'
-                          ? FloatingActionButton.extended(
-                              icon: Icon(FontAwesomeIcons.home),
-                              label: Text('Adoptar'),
-                              onPressed: () async {
-                                print('boton adoptar');
-                                var query = widget.objeto.reference
-                                    .collection('solicitudes')
-                                    .where('userId',
-                                        isEqualTo:
-                                            controlador1.usuario.documentId)
-                                    .getDocuments();
-                                query.then((onValue) {
-                                  if (onValue.documents.isNotEmpty) {
-                                    return showDialog(
-                                      context: context,
-                                      builder: (_) => AlertDialog(
-                                        title: Text('Solicitud realizada '),
-                                        content:
-                                            Text('Ya te encuentras postulado'),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            onPressed: () {
-                                              return Navigator.of(context)
-                                                  .pop();
-                                            },
-                                            child: Text('CERRAR'),
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                   else {
-                                    print('boton para adoptar');
-                                    
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AlertDialog(
-                                                title: Text(
-                                                  'Al solicitar una adopción de esta mascota aceptas lo siguiente:',
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                content: SingleChildScrollView(
-                                                  child: Text(
-                                                      "1. No tendrás a la mascota aislada, ya sea en azoteas, balcones, patios o para cuidar establecimientos. La mascota requiere de un ambiente familiar.\n\n2. No mutilar cola u orejas de la mascota.\n\n3. Todos en el hogar en el que la mascota vivirá deben estar de acuerdo con su adopción.\n\n4. La mascota no es un objeto, no puedes regalarla o venderla a terceras personas.\n\n5. La convivencia de la mascota con menores de edad siempre debe ser supervisada por un adulto.\n\n6. Es obligatorio continuar con el cuadro médico de la mascota, esto incluye desparacitación, vacunación y esterilización.\n\n7. No adopte con fines reproductivos o de venta, no lucre con la vida de un animal.\n\n8. En caso de que el actual poseedor de la mascota considere necesario, este puede hacer visitas de rutina a su nuevo hogar para supervisar el progreso o adaptación de este.\n\nPor favor, adopta con amor, paciencia y responsabilidad. Tener una mascota es un compromiso a largo plazo que requiere tiempo, dinero y esfuerzo."),
-                                                ),
-                                                actions: <Widget>[
-                                                  FlatButton(
-                                                    onPressed: () {
-                                                      return Navigator.of(
-                                                              context)
-                                                          .pop();
-                                                    },
-                                                    child: Text('CANCELAR'),
-                                                  ),
-                                                  FlatButton(
-                                                    onPressed: () {
-                                                      print('solicitud valida');
-                                                      formsolicitud['correo'] =
-                                                          controlador1
-                                                              .usuario.correo;
-                                                      formsolicitud[
-                                                              'descripcion'] =
-                                                          controlador1.usuario
-                                                              .descripcion;
-                                                      formsolicitud[
-                                                              'fnacimiento'] =
-                                                          controlador1.usuario
-                                                              .fnacimiento;
-                                                      formsolicitud['foto'] =
-                                                          controlador1
-                                                              .usuario.foto;
-                                                      formsolicitud['nombre'] =
-                                                          controlador1
-                                                              .usuario.nombre;
-                                                      formsolicitud['sexo'] =
-                                                          controlador1
-                                                              .usuario.sexo;
-                                                      formsolicitud[
-                                                              'telefono'] =
-                                                          controlador1
-                                                              .usuario.telefono;
-                                                      formsolicitud['userId'] =
-                                                          controlador1.usuario
-                                                              .documentId;
-                                                      formsolicitud[
-                                                              'referencia'] =
-                                                          controlador1.usuario
-                                                              .reference;
-                                                      formsolicitud[
-                                                              'fotoStorageRef'] =
-                                                          controlador1.usuario
-                                                              .fotoStorageRef;
-                                                      // formsolicitud[
-                                                      //         'fotoCompDomi'] =
-                                                      //     controlador1.usuario
-                                                      //         .fotoCompDomi;
-                                                      // formsolicitud[
-                                                      //         'fotoCompDomiRef'] =
-                                                      //     controlador1.usuario
-                                                      //         .fotoCompDomiRef;
-                                                      // formsolicitud['fotoINE'] =
-                                                      //     controlador1
-                                                      //         .usuario.fotoINE;
-                                                      // formsolicitud[
-                                                      //         'fotoINERef'] =
-                                                      //     controlador1.usuario
-                                                      //         .fotoINERef;
-                                                      // formsolicitud[
-                                                      //         'galeriaFotos'] =
-                                                      //     controlador1.usuario
-                                                      //         .galeriaFotos;
-                                                      // formsolicitud[
-                                                      //         'galeriaFotosRefs'] =
-                                                      //     controlador1.usuario
-                                                      //         .galeriaFotosRefs;
-                                                      formsolicitud[
-                                                              'userIdPub'] =
-                                                          widget.objeto.userId;
-                                                      formsolicitud[
-                                                              'tituloPub'] =
-                                                          widget.objeto.titulo;
-
-                                                      var agregar = widget
-                                                          .objeto.reference
-                                                          .collection(
-                                                              'solicitudes')
-                                                          .add(formsolicitud)
-                                                          .then((value) {
-                                                        if (value != null) {
-                                                          return true;
-                                                        } else {
-                                                          return false;
-                                                        }
-                                                      });
-                                                      if (agregar != null) {
-                                                        showDialog(
-                                                          barrierDismissible:
-                                                              false,
-                                                          context: context,
-                                                          child: AlertDialog(
-                                                            title: Text(
-                                                              '¡Tu solicitud fue enviada!',
-                                                            ),
-                                                            content: Text(
-                                                              'Gracias por enviar tus datos, te notificaremos cuando tu solicitud sea aceptada.',
-                                                            ),
-                                                            actions: <Widget>[
-                                                              FlatButton(
-                                                                child:
-                                                                    Text('OK'),
-                                                                onPressed: () {
-                                                                  Navigator.popAndPushNamed(
-                                                                      context,
-                                                                      '/home');
-                                                                },
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                      }
-                                                    },
-                                                    child: Text('ACEPTAR'),
-                                                  ),
-                                                ],
-                                              ));
-                                    
-                                    return null;
-                                  }
-                                });
-                              })
-                          : Container(),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 20),
-                child: (widget.objeto.status == 'adoptado')
-                    ? (widget.objeto.userId == controlador1.usuario.documentId
-                        ? Text('Usuario que adoptó a la mascota')
-                        : Text('Usuario que dio en adopción a tu mascota'))
-                    : Container(),
-              ),
-              widget.objeto.adoptanteNombre != null
-                  ? UserBanner(
-                      usuario: UsuarioModel(
-                          foto: widget.objeto.adoptanteFoto ?? '',
-                          nombre: widget.objeto.adoptanteNombre ?? '',
-                          correo: widget.objeto.adoptanteCorreo ?? '',
-                          telefono: widget.objeto.adoptanteTelefono ?? 0,
-                         // fotoINE: widget.objeto.adoptanteINE ?? ''
-                          ),
-                      extended: true,
-                    )
-                  : Container()
             ],
           ),
         ),
@@ -648,8 +526,8 @@ class _AdopcionState extends State<Adopcion> {
       {
         'adopciones': FieldValue.arrayUnion([
           {
-            'imagen': objeto.foto,
-            'titulo': objeto.titulo,
+            'imagen': objeto.fotos[0],
+            'titulo': objeto.nombre,
             'documentId': objeto.documentId,
           }
         ])
@@ -665,8 +543,8 @@ class _AdopcionState extends State<Adopcion> {
       {
         'adopciones': FieldValue.arrayRemove([
           {
-            'imagen': objeto.foto,
-            'titulo': objeto.titulo,
+            'imagen': objeto.fotos[0],
+            'nombre': objeto.nombre,
             'documentId': objeto.documentId,
           }
         ])

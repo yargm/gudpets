@@ -8,12 +8,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'dart:io' show Platform;
 
 class Controller with ChangeNotifier {
-
   List<String> mascotas = [];
-
+  List<Asset> images = List<Asset>();
   UsuarioModel selectedUser;
 
   int pestanaAct = 0;
@@ -60,6 +60,42 @@ class Controller with ChangeNotifier {
         ),
       ),
     );
+  }
+
+  Future multiImage(BuildContext context) async {
+    List<Asset> resultList = List<Asset>();
+    String error = 'No Error Dectected';
+    var permisson = await checkGalerryPermisson(false);
+    if (permisson) {
+      try {
+        resultList = await MultiImagePicker.pickImages(
+          maxImages: 4,
+          enableCamera: true,
+          selectedAssets: images,
+          cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+          materialOptions: MaterialOptions(
+            actionBarColor: "#FF795548",
+            actionBarTitle: "GudPets",
+            allViewTitle: "Todas las fotos",
+            useDetailsView: true,
+            selectCircleStrokeColor: "#FFFFFF",
+          ),
+        );
+      } on Exception catch (e) {
+        error = e.toString();
+        print(error);
+      }
+
+      // If the widget was removed from the tree while the asynchronous platform
+      // message was in flight, we want to discard the reply rather than calling
+      // setState to update our non-existent appearance.
+      //if (!mounted) return;
+
+      images = resultList;
+      return images;
+    } else {
+      return permissonDeniedDialog(context);
+    }
   }
 
   Future getImageCamera(BuildContext context) async {

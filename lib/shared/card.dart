@@ -18,8 +18,6 @@ class _ListCardState extends State<ListCard> {
 
   final double containerPadding2 = 80;
 
-  
-
   final double containerBorderRadius = 15;
   bool favorito = false;
 
@@ -40,10 +38,10 @@ class _ListCardState extends State<ListCard> {
   @override
   Widget build(BuildContext context) {
     var prefHeigth = MediaQuery.of(context).size.width > 900 ? 500.0 : 200.0;
-    var textSize =  MediaQuery.of(context).size.width > 900 ? 40.0 : 24.0;
-    var subTextSize =  MediaQuery.of(context).size.width > 900 ? 30.0 : 16.0;
+    var textSize = MediaQuery.of(context).size.width > 900 ? 40.0 : 24.0;
+    var subTextSize = MediaQuery.of(context).size.width > 900 ? 30.0 : 16.0;
     //  for (var usuario in widget.objeto.favoritos) {
-     
+
     //     if (widget.controlador1.usuario.documentId == usuario) {
     //       favorito = true;
     //     } else {
@@ -124,12 +122,13 @@ class _ListCardState extends State<ListCard> {
                                 : Radius.circular(0),
                           ),
                           child: FadeInImage(
-                            placeholder: AssetImage('assets/dog.png'),
-                            width: double.maxFinite,
-                            height: prefHeigth,
-                            fit: BoxFit.fitWidth,
-                            image: NetworkImage(widget.objeto.foto),
-                          ),
+                              placeholder: AssetImage('assets/dog.png'),
+                              width: double.maxFinite,
+                              height: prefHeigth,
+                              fit: BoxFit.fitWidth,
+                              image: controlador1.pestanaAct == 0
+                                  ? NetworkImage(widget.objeto.fotos[0])
+                                  : NetworkImage(widget.objeto.foto)),
                         ),
                       ),
                     ),
@@ -147,7 +146,7 @@ class _ListCardState extends State<ListCard> {
                 children: <Widget>[
                   Flexible(
                     child: Text(
-                      widget.objeto.titulo,
+                      widget.objeto.nombre,
                       style: TextStyle(
                         fontSize: textSize,
                         fontWeight: FontWeight.bold,
@@ -182,8 +181,8 @@ class _ListCardState extends State<ListCard> {
                                   {
                                     'adopciones': FieldValue.arrayUnion([
                                       {
-                                        'imagen': widget.objeto.foto,
-                                        'titulo': widget.objeto.titulo,
+                                        'imagen': widget.objeto.fotos[0],
+                                        'nombre': widget.objeto.nombre,
                                         'documentId': widget.objeto.documentId,
                                       }
                                     ])
@@ -193,8 +192,8 @@ class _ListCardState extends State<ListCard> {
                                   {
                                     'adopciones': FieldValue.arrayRemove([
                                       {
-                                        'imagen': widget.objeto.foto,
-                                        'titulo': widget.objeto.titulo,
+                                        'imagen': widget.objeto.fotos[0],
+                                        'nombre': widget.objeto.nombre,
                                         'documentId': widget.objeto.documentId,
                                       }
                                     ])
