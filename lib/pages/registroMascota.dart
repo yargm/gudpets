@@ -295,20 +295,20 @@ class _RegistroMascotaState extends State<RegistroMascota> {
               '/mascotas/photos' +
               DateTime.now().toString();
 
-          StorageReference storageRef =
+          Reference storageRef =
               FirebaseStorage.instance.ref().child(fileName);
 
-          final StorageUploadTask uploadTask = storageRef.putFile(
+          final UploadTask uploadTask = storageRef.putFile(
             imagen,
           );
 
-          final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+          final TaskSnapshot downloadUrl = (await uploadTask.whenComplete(() => null));
 
           final String url = (await downloadUrl.ref.getDownloadURL());
           print('URL Is $url');
           print('Ref: $storageRef');
           mascota['foto'] = url;
-          mascota['storageRef'] = downloadUrl.ref.path;
+          mascota['storageRef'] = downloadUrl.ref.fullPath;
         }
 
         await controlador1.usuario.reference

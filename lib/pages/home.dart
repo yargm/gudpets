@@ -23,9 +23,9 @@ class _HomeState extends State<Home> {
   File _image;
 
   List<Widget> _widgetOptions = <Widget>[
-    AdopcionList(),
-    PerdidoList(),
     FotosPrincipal(),
+    PerdidoList(),
+    AdopcionList(),
     EmergenciaList(),
   ];
 
@@ -176,13 +176,13 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            controlador1.pestanaAct == 0 || controlador1.pestanaAct == 1
+            controlador1.pestanaAct == 2 || controlador1.pestanaAct == 1
                 ? IconButton(
                     onPressed: () {
                       showSearch(
                         context: context,
                         delegate: CustomSearchDelegate(
-                            controlador1.pestanaAct == 0
+                            controlador1.pestanaAct == 2
                                 ? 'adopciones'
                                 : controlador1.pestanaAct == 1
                                     ? 'perdidos'
@@ -207,16 +207,16 @@ class _HomeState extends State<Home> {
         body: Center(
           child: _widgetOptions.elementAt(seleccionado),
         ),
-        floatingActionButton: controlador1.pestanaAct == 2
+        floatingActionButton: controlador1.pestanaAct == 0
             ? buildSpeedDial()
             : FloatingActionButton(
                 mini: true,
                 onPressed: () {
-                  controlador1.pestanaAct == 0
+                  controlador1.pestanaAct == 2
                       ? Navigator.of(context).pushNamed('/registro_adopcion')
                       : controlador1.pestanaAct == 1
                           ? Navigator.of(context).pushNamed('/registro_perdido')
-                          : controlador1.pestanaAct == 2
+                          : controlador1.pestanaAct == 0
                               ? print('holi')
 
                               // Navigator.of(context).pushNamed('/fotosPrincipal')
@@ -224,7 +224,7 @@ class _HomeState extends State<Home> {
                                   .pushNamed('/registro_emergencia');
                 },
                 child: Icon(
-                    controlador1.pestanaAct == 2
+                    controlador1.pestanaAct == 0
                         ? Icons.camera_enhance
                         : Icons.add,
                     color: primaryLight),
@@ -234,20 +234,20 @@ class _HomeState extends State<Home> {
           unselectedItemColor: primaryDark,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.home),
-              title: Text('Adopción'),
+              icon: Icon(FontAwesomeIcons.cameraRetro),
+              label: "Fotos"
             ),
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.searchLocation),
-              title: Text('Perdidos'),
+              label: "Perdidos"
             ),
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.cameraRetro),
-              title: Text('Fotos'),
+              icon: Icon(FontAwesomeIcons.home),
+              label: "Adopción"
             ),
             BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.ambulance),
-              title: Text('Emergencias'),
+              label: "Emergencias"
             ),
           ],
           currentIndex: seleccionado,

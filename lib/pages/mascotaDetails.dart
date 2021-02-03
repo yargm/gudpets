@@ -376,7 +376,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                                               controlador1.notify();
                                               await controlador1
                                                   .mascota.reference
-                                                  .updateData({
+                                                  .update({
                                                 'personalidad':
                                                     textEditingController.text
                                               });
@@ -644,18 +644,18 @@ class _DialogContentState extends State<DialogContentM> {
                                     controlador1.usuario.correo +
                                         '/mascotas/${widget.foto}' +
                                         DateTime.now().toString();
-                                StorageReference storageRef = FirebaseStorage
+                                Reference storageRef = FirebaseStorage
                                     .instance
                                     .ref()
                                     .child(fileName);
 
-                                final StorageUploadTask uploadTask =
+                                final UploadTask uploadTask =
                                     storageRef.putFile(
                                   imagen,
                                 );
 
-                                final StorageTaskSnapshot downloadUrl =
-                                    (await uploadTask.onComplete);
+                                final TaskSnapshot downloadUrl =
+                                    (await uploadTask.whenComplete(() => null));
 
                                 if ((controlador1.mascota.storageRef) != null &&
                                     widget.foto != 'INE') {
@@ -670,16 +670,17 @@ class _DialogContentState extends State<DialogContentM> {
 
                                 final String url =
                                     (await downloadUrl.ref.getDownloadURL());
+
                                 if (widget.foto == 'PPM') {
                                   await controlador1.mascota.reference
-                                      .updateData({
+                                      .update({
                                     'foto': url,
-                                    'fotoStorageRef': downloadUrl.ref.path
+                                    'fotoStorageRef': downloadUrl.ref.fullPath
                                   });
 
                                   controlador1.mascota.foto = url;
                                   controlador1.mascota.storageRef =
-                                      downloadUrl.ref.path;
+                                      downloadUrl.ref.fullPath;
                                 }
 
                                 // else if (widget.foto == 'INE') {

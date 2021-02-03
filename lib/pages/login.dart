@@ -238,7 +238,7 @@ class _LogInState extends State<LogIn> {
                                               setState(() {
                                                 isLoading = true;
                                               });
-                                              var query = await Firestore
+                                              var query = await FirebaseFirestore
                                                   .instance
                                                   .collection('usuarios')
                                                   .where('correo',
@@ -247,9 +247,9 @@ class _LogInState extends State<LogIn> {
                                                   .where('contrasena',
                                                       isEqualTo:
                                                           loginMap['password'])
-                                                  .getDocuments();
+                                                  .get();
 
-                                              if (query.documents.isEmpty) {
+                                              if (query.docs.isEmpty) {
                                                 setState(() {
                                                   errorbase = true;
                                                   isLoading = false;
@@ -260,7 +260,7 @@ class _LogInState extends State<LogIn> {
                                                 }
                                               } else {
                                                 var user =
-                                                    query.documents.first;
+                                                    query.docs.first;
                                                 controlador1.usuarioActual =
                                                     UsuarioModel
                                                         .fromDocumentSnapshot(
@@ -325,16 +325,16 @@ class _LogInState extends State<LogIn> {
         print('entro al on pressed');
         signInWithGoogle(controlador1).whenComplete(() {
           print('estoy dentro y voy a navegar con' + controlador1.name);
-          Firestore.instance
+          FirebaseFirestore.instance
               .collection('usuarios')
               .where('correo', isEqualTo: controlador1.email)
-              .getDocuments()
+              .get()
               .then((onValue) {
-            if (onValue.documents.isEmpty) {
+            if (onValue.docs.isEmpty) {
               Navigator.of(context).pushReplacementNamed('/registro_usuario');
             } else {
               controlador1.usuarioActual =
-                  UsuarioModel.fromDocumentSnapshot(onValue.documents.first, 'meh');
+                  UsuarioModel.fromDocumentSnapshot(onValue.docs.first, 'meh');
               controlador1.signIn();
               Navigator.of(context).pushReplacementNamed('/home');
             }

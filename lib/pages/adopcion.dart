@@ -145,7 +145,7 @@ class _AdopcionState extends State<Adopcion> {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  widget.objeto.nombre,
+                                  widget.objeto.titulo,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -176,9 +176,9 @@ class _AdopcionState extends State<Adopcion> {
                         padding: EdgeInsets.all(5.0),
                         alignment: Alignment.bottomRight,
                         child: StreamBuilder(
-                            stream: Firestore.instance
+                            stream: FirebaseFirestore.instance
                                 .collection('usuarios')
-                                .document(widget.objeto.userId)
+                                .doc(widget.objeto.userId)
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (!snapshot.hasData)
@@ -197,25 +197,27 @@ class _AdopcionState extends State<Adopcion> {
                                           builder: (context) => Perfil(
                                               usuario: userpublicacion)));
                                 },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    CircleAvatar(
-                                      radius: 15,
-                                      backgroundImage:
-                                          NetworkImage(userpublicacion.foto),
-                                    ),
-                                    SizedBox(width: 5),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.25,
-                                      child: Text(
-                                        userpublicacion.nombre,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: Colors.white),
+                                child: Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      CircleAvatar(
+                                        radius: 15,
+                                        backgroundImage:
+                                            NetworkImage(userpublicacion.foto),
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(width: 5),
+                                      Container(
+                                        width: MediaQuery.of(context).size.width *
+                                            0.25,
+                                        child: Text(
+                                          userpublicacion.nombre,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                             }),
@@ -470,7 +472,16 @@ class _AdopcionState extends State<Adopcion> {
                       ],
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 10,
+                    ),
+                    Divider(
+                      endIndent: 60,
+                      indent: 60,
+                      thickness: 1,
+                      color: secondaryDark,
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -500,16 +511,10 @@ class _AdopcionState extends State<Adopcion> {
                       ],
                     ),
                     SizedBox(
-                      height: 30,
+                      height: 20,
                     ),
                   ],
                 ),
-              ),
-              Divider(
-                endIndent: 60,
-                indent: 60,
-                thickness: 1,
-                color: secondaryDark,
               ),
             ],
           ),
@@ -519,15 +524,15 @@ class _AdopcionState extends State<Adopcion> {
   }
 
   favtrue(bool favorito, Controller controlador1, AdopcionModel objeto) {
-    objeto.reference.updateData({
+    objeto.reference.update({
       'favoritos': FieldValue.arrayUnion([controlador1.usuario.documentId]),
     });
-    controlador1.usuario.reference.updateData(
+    controlador1.usuario.reference.update(
       {
         'adopciones': FieldValue.arrayUnion([
           {
             'imagen': objeto.fotos[0],
-            'titulo': objeto.nombre,
+            'titulo': objeto.titulo,
             'documentId': objeto.documentId,
           }
         ])
@@ -536,15 +541,15 @@ class _AdopcionState extends State<Adopcion> {
   }
 
   favfalse(bool favorito, Controller controlador1, AdopcionModel objeto) {
-    objeto.reference.updateData({
+    objeto.reference.update({
       'favoritos': FieldValue.arrayRemove([controlador1.usuario.documentId])
     });
-    controlador1.usuario.reference.updateData(
+    controlador1.usuario.reference.update(
       {
         'adopciones': FieldValue.arrayRemove([
           {
             'imagen': objeto.fotos[0],
-            'nombre': objeto.nombre,
+            'titulo': objeto.titulo,
             'documentId': objeto.documentId,
           }
         ])

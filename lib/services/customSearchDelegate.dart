@@ -57,7 +57,7 @@ class CustomSearchDelegate extends SearchDelegate {
 //     .searchTerm
 //     .add(query);
     var stream = coleccion == 'adopciones'
-        ? Firestore.instance
+        ? FirebaseFirestore.instance
             .collection(coleccion)
             .where('tipoAnimal',
                 isEqualTo: controlador1.tipo == null
@@ -68,7 +68,7 @@ class CustomSearchDelegate extends SearchDelegate {
             .where('status', isEqualTo: 'en adopcion')
             .snapshots()
         : coleccion == 'perdidos'
-            ? Firestore.instance
+            ? FirebaseFirestore.instance
                 .collection(coleccion)
                 .where('tipoAnimal',
                     isEqualTo: controlador1.tipo == null
@@ -77,7 +77,7 @@ class CustomSearchDelegate extends SearchDelegate {
                 .where('sexo', isEqualTo: controlador1.sexo)
                 .where('titulo', isGreaterThanOrEqualTo: query)
                 .snapshots()
-            : Firestore.instance
+            : FirebaseFirestore.instance
                 .collection('usuarios')
                 .where('nombre', isEqualTo: query.trim())
                 .snapshots();

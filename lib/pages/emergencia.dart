@@ -333,10 +333,10 @@ class _EmergenciaState extends State<Emergencia> {
   }
 
   favtrue(bool favorito, Controller controlador1, EmergenciaModel objeto) {
-    objeto.reference.updateData({
+    objeto.reference.update({
       'favoritos': FieldValue.arrayUnion([controlador1.usuario.documentId]),
     });
-    controlador1.usuario.reference.updateData(
+    controlador1.usuario.reference.update(
       {
         'emergencias': FieldValue.arrayUnion([
           {
@@ -350,10 +350,10 @@ class _EmergenciaState extends State<Emergencia> {
   }
 
   favfalse(bool favorito, Controller controlador1, EmergenciaModel objeto) {
-    objeto.reference.updateData({
+    objeto.reference.update({
       'favoritos': FieldValue.arrayRemove([controlador1.usuario.documentId])
     });
-    controlador1.usuario.reference.updateData(
+    controlador1.usuario.reference.update(
       {
         'emergencias': FieldValue.arrayRemove([
           {
