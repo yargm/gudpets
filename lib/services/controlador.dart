@@ -5,15 +5,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as locations;
 import 'package:geocoder/geocoder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'dart:io' show Platform;
 
 class Controller with ChangeNotifier {
-
   List<String> mascotas = [];
-
+  List<Asset> images = List<Asset>();
   UsuarioModel selectedUser;
 
   int pestanaAct = 0;
@@ -26,7 +26,7 @@ class Controller with ChangeNotifier {
   String sexo;
   String tipo;
   GeoPoint _currentLocation;
-  var location = Location();
+  var location = locations.Location();
   double latitud;
   double longitud;
   String edo;
@@ -50,8 +50,7 @@ class Controller with ChangeNotifier {
                 height: 10,
               ),
               FloatingActionButton.extended(
-                onPressed: () async =>
-                    await PermissionHandler().openAppSettings(),
+                onPressed: () async => await openAppSettings(),
                 label: Text('Configuración'),
                 icon: Icon(Icons.settings),
               )
@@ -60,6 +59,42 @@ class Controller with ChangeNotifier {
         ),
       ),
     );
+  }
+
+  Future multiImage(BuildContext context) async {
+    List<Asset> resultList = List<Asset>();
+    String error = 'No Error Dectected';
+    var permisson = await checkGalerryPermisson(false);
+    if (permisson) {
+      try {
+        resultList = await MultiImagePicker.pickImages(
+          maxImages: 4,
+          enableCamera: true,
+          selectedAssets: images,
+          cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+          materialOptions: MaterialOptions(
+            actionBarColor: "#FF795548",
+            actionBarTitle: "GudPets",
+            allViewTitle: "Todas las fotos",
+            useDetailsView: true,
+            selectCircleStrokeColor: "#FFFFFF",
+          ),
+        );
+      } on Exception catch (e) {
+        error = e.toString();
+        print(error);
+      }
+
+      // If the widget was removed from the tree while the asynchronous platform
+      // message was in flight, we want to discard the reply rather than calling
+      // setState to update our non-existent appearance.
+      //if (!mounted) return;
+
+      images = resultList;
+      return images;
+    } else {
+      return permissonDeniedDialog(context);
+    }
   }
 
   Future getImageCamera(BuildContext context) async {
@@ -131,19 +166,42 @@ class Controller with ChangeNotifier {
 
   Future<bool> checkPermission() async {
     final permissionStorageGroup =
-        Platform.isIOS ? PermissionGroup.photos : PermissionGroup.storage;
-    Map<PermissionGroup, PermissionStatus> res =
-        await PermissionHandler().requestPermissions([
-      permissionStorageGroup,
-    ]);
-    return res[permissionStorageGroup] == PermissionStatus.granted;
+        Platform.isIOS ? Permission.photos : Permission.storage;
+    if (Platform.isIOS) {
+      PermissionStatus permission = await Permission.photos.status;
+      if (permission != PermissionStatus.granted) {
+        await Permission.photos.request();
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      PermissionStatus permission = await Permission.storage.status;
+      if (permission != PermissionStatus.granted) {
+        await Permission.storage.request();
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    // final permissionStorageGroup =
+    //     Platform.isIOS ? Permission.photos : Permission.storage;
+    // Map<Permission, PermissionStatus> res =
+    //     await PermissionStatus.requestPermissions([
+    //   permissionStorageGroup,
+    // ]);
+    // return res[permissionStorageGroup] == PermissionStatus.granted;
   }
 
   Future<GeoPoint> getLocation(BuildContext context) async {
     try {
-      var userLocation = await location.getLocation();
-      _currentLocation =
-          GeoPoint(userLocation.latitude, userLocation.longitude);
+      var userLocation = location.getLocation();
+      double latitude;
+      userLocation.then((value) => latitude.toDouble());
+      double longitude;
+      userLocation.then((value) => longitude.toDouble());
+      _currentLocation = GeoPoint(latitude, longitude);
       latitud = _currentLocation.latitude;
       longitud = _currentLocation.longitude;
       Fluttertoast.showToast(msg: 'tengo la ubicación');
@@ -155,28 +213,34 @@ class Controller with ChangeNotifier {
 
   Future<bool> checkLocationPermisson() async {
     if (Platform.isIOS) {
-      PermissionStatus permission = await PermissionHandler()
-          .checkPermissionStatus(PermissionGroup.locationWhenInUse);
+      PermissionStatus permission = await Permission.locationWhenInUse.status;
       if (permission != PermissionStatus.granted) {
-        Map<PermissionGroup, PermissionStatus> permissions =
-            await PermissionHandler()
-                .requestPermissions([PermissionGroup.locationWhenInUse]);
-        if (permissions[PermissionStatus] != PermissionStatus.granted) {
+        Permission.locationWhenInUse.request();
+        if (permission != PermissionStatus.granted) {
           return false;
         }
       } else {
         return true;
       }
     } else {
-      PermissionHandler permissionHandler = PermissionHandler();
-      var idk = await permissionHandler
-          .checkPermissionStatus(PermissionGroup.locationWhenInUse);
+      // PermissionHandler permissionHandler = PermissionHandler();
+      PermissionStatus idk = await Permission.locationWhenInUse.status;
       print('Permisos stauts!!! ' + idk.toString());
-      if (idk == PermissionStatus.neverAskAgain) {
-        return false;
+
+      if (idk != PermissionStatus.permanentlyDenied) {
+        Permission.locationWhenInUse.request();
+        if (idk != PermissionStatus.granted) {
+          return false;
+        }
       } else {
         return true;
       }
+
+      // if (idk == PermissionStatus.neverAskAgain) {
+      //   return false;
+      // } else {
+      //   return true;
+      // }
     }
     return true;
   }
@@ -193,25 +257,24 @@ class Controller with ChangeNotifier {
 
   Future<bool> checkGalerryPermisson(bool camera) async {
     if (Platform.isIOS) {
-      PermissionStatus permission = await PermissionHandler()
-          .checkPermissionStatus(
-              camera ? PermissionGroup.camera : PermissionGroup.photos);
+      PermissionStatus permission = camera
+          ? await Permission.camera.status
+          : await Permission.photos.status;
       if (permission != PermissionStatus.granted) {
-        Map<PermissionGroup, PermissionStatus> permissions =
-            await PermissionHandler().requestPermissions(
-                [camera ? PermissionGroup.camera : PermissionGroup.photos]);
-        if (permissions[PermissionStatus] != PermissionStatus.granted) {
+        if (camera
+            ? await Permission.camera.request().isGranted
+            : await Permission.photos.request().isGranted) {
+          return true;
+        } else {
           return false;
         }
-      } else {
-        return true;
       }
     } else {
-      PermissionHandler permissionHandler = PermissionHandler();
-      var idk = await permissionHandler.checkPermissionStatus(
-          camera ? PermissionGroup.camera : PermissionGroup.storage);
+      var idk = camera
+          ? await Permission.camera.status
+          : await Permission.storage.status;
       print('Permisos stauts!!! ' + idk.toString());
-      if (idk == PermissionStatus.neverAskAgain) {
+      if (idk == PermissionStatus.permanentlyDenied) {
         return false;
       } else {
         return true;

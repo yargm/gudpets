@@ -104,8 +104,6 @@ class MyApp extends StatelessWidget {
               RegistroEmergencia(),
           '/registro_rescate': (BuildContext context) => RegistroRescate(),
           '/registro_adopcion': (BuildContext context) => RegistroAdopcion(),
-          '/solicitudes_adopcion': (BuildContext context) =>
-              SolicitudAdopcion(),
           '/registro_perdido': (BuildContext context) => RegistroPerdido(),
           '/mapaejemplo': (BuildContext context) => MapSample(),
           '/avisos': (BuildContext context) => AvisosList(),

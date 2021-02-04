@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as locations;
+import 'package:permission/permission.dart' as permisos;
 import 'mapaejemplo.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
@@ -19,9 +20,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
   void initState() {
     super.initState();
 
-    PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.locationWhenInUse)
-        .then(_actualizaestado);
+    Permission.locationWhenInUse.status.then(_actualizaestado);
   }
 
   PermissionStatus permisoStatus;
@@ -36,7 +35,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
   }
 
   GeoPoint _currentLocation;
-  var location = Location();
+  var location = locations.Location();
   double latitud;
   double longitud;
   List<Asset> images = List<Asset>();
@@ -348,10 +347,9 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                                         'permiso despues cuadro dialogo:' +
                                                             permisoStatus
                                                                 .toString());
-                                                    await PermissionHandler()
-                                                        .checkPermissionStatus(
-                                                            PermissionGroup
-                                                                .locationWhenInUse)
+                                                    await Permission
+                                                        .locationWhenInUse
+                                                        .status
                                                         .then(_actualizaestado);
                                                     print('permiso final: ' +
                                                         permisoStatus
@@ -494,10 +492,8 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                               print(
                                                   'permiso despues cuadro dialogo:' +
                                                       permisoStatus.toString());
-                                              await PermissionHandler()
-                                                  .checkPermissionStatus(
-                                                      PermissionGroup
-                                                          .locationWhenInUse)
+                                              await Permission
+                                                  .locationWhenInUse.status
                                                   .then(_actualizaestado);
                                               print('permiso final: ' +
                                                   permisoStatus.toString());

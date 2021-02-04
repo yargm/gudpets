@@ -21,7 +21,7 @@ class AmigoTile extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => Perfil(usuario: usuario)));
         }
-        Navigator.of(context).push(
+        return Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => Chat(
               usuario: usuario,

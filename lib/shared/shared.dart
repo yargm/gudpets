@@ -5,4 +5,5 @@ export 'package:gudpets/pages/mapaejemplo.dart';
 export 'userBanner.dart';
 export 'buttonBarOptions.dart';
 export 'amigoTile.dart';
+export 'imageviewer.dart';
 export 'postCard.dart';
