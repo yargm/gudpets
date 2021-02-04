@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:provider/provider.dart';
-import 'package:giphy_client/giphy_client.dart';
+
 import 'package:giphy_picker/giphy_picker.dart';
 import 'pages.dart';
 import 'package:fluttertoast/fluttertoast.dart';

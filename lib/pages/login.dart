@@ -28,9 +28,7 @@ class _LogInState extends State<LogIn> {
     super.initState();
     if (Platform.isIOS) {
     } else {
-      PermissionHandler()
-          .checkPermissionStatus(PermissionGroup.locationWhenInUse)
-          .then((status) {
+      Permission.locationWhenInUse.serviceStatus.then((status) {
         print(status.toString());
         if (status.toString() == 'PermissionStatus.denied' ||
             status.toString() == 'PermissionStatus.unknown' ||
@@ -53,12 +51,9 @@ class _LogInState extends State<LogIn> {
   }
 
   Future<bool> _askpermission() async {
-    await PermissionHandler()
-        .requestPermissions([PermissionGroup.locationWhenInUse]);
+    await Permission.locationWhenInUse.request();
 
-    await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.locationWhenInUse)
-        .then((status) {
+    Permission.locationWhenInUse.serviceStatus.then((status) {
       if (status.toString() == 'PermissionStatus.denied') {
         exit(0);
       } else if (status.toString() == "PermissionStatus.granted") {
@@ -333,8 +328,8 @@ class _LogInState extends State<LogIn> {
             if (onValue.documents.isEmpty) {
               Navigator.of(context).pushReplacementNamed('/registro_usuario');
             } else {
-              controlador1.usuarioActual =
-                  UsuarioModel.fromDocumentSnapshot(onValue.documents.first, 'meh');
+              controlador1.usuarioActual = UsuarioModel.fromDocumentSnapshot(
+                  onValue.documents.first, 'meh');
               controlador1.signIn();
               Navigator.of(context).pushReplacementNamed('/home');
             }

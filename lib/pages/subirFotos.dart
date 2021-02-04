@@ -308,7 +308,7 @@ class _SubirFotosState extends State<SubirFotos> {
                                   .child(fileName);
                               final StorageUploadTask uploadTask =
                                   storageRef.putFile(
-                                widget.image,
+                                imageFile != null ? imageFile : widget.image,
                               );
                               final StorageTaskSnapshot downloadUrl =
                                   (await uploadTask.onComplete);
