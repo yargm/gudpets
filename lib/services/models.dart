@@ -289,7 +289,7 @@ class AdopcionModel {
       {this.titulo,
       this.descripcion,
       this.tipoAnimal,
-     this.sexo,
+      this.sexo,
       this.edad,
       this.esterilizacion,
       this.vacunacion,
@@ -449,13 +449,13 @@ class MensajeModel {
   String tipo;
 
   MensajeModel.fromDS(DocumentSnapshot ds) {
-    fecha = ds['fecha'] ?? Timestamp(0, 0);
-    usuario = ds['usuario'] ?? '';
-    mensaje = ds['mensaje'] ?? '';
-    tipo = ds['tipo'] ?? '';
-    imagen = ds['imagen'] ?? '';
-    gif = ds['gif'] ?? '';
-    recibe = ds['recibe'] ?? '';
+    fecha = ds.data()['fecha'] ?? Timestamp(0, 0);
+    usuario = ds.data()['usuario'] ?? '';
+    mensaje = ds.data()['mensaje'] ?? '';
+    tipo = ds.data()['tipo'] ?? '';
+    imagen = ds.data()['imagen'] ?? '';
+    gif = ds.data()['gif'] ?? '';
+    recibe = ds.data()['recibe'] ?? '';
   }
 }
 
@@ -465,8 +465,8 @@ class ChatModel {
 
   ChatModel({this.usuarios, this.ids});
   ChatModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    usuarios = data['usuarios'] ?? '';
-    ids = data['ids'] ?? '';
+    usuarios = data.data()['usuarios'] ?? '';
+    ids = data.data()['ids'] ?? '';
   }
 }
 

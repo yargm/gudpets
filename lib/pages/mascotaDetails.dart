@@ -490,7 +490,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                                 builder: (_) => WillPopScope(
                                     onWillPop: () async {
                                       controlador1.pestanaAct = 0;
-                                      controlador1.notify();
+                                      //controlador1.notify();
                                       return true;
                                     },
                                     child: AlertDialog(
@@ -691,8 +691,7 @@ class _DialogContentState extends State<DialogContentM> {
                                     controlador1.usuario.correo +
                                         '/mascotas/${widget.foto}' +
                                         DateTime.now().toString();
-                                Reference storageRef = FirebaseStorage
-                                    .instance
+                                Reference storageRef = FirebaseStorage.instance
                                     .ref()
                                     .child(fileName);
 
@@ -719,8 +718,7 @@ class _DialogContentState extends State<DialogContentM> {
                                     (await downloadUrl.ref.getDownloadURL());
 
                                 if (widget.foto == 'PPM') {
-                                  await controlador1.mascota.reference
-                                      .update({
+                                  await controlador1.mascota.reference.update({
                                     'foto': url,
                                     'fotoStorageRef': downloadUrl.ref.fullPath
                                   });
