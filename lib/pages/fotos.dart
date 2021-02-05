@@ -44,10 +44,7 @@ class _FotosPrincipalState extends State<FotosPrincipal> {
       child: Column(
         children: <Widget>[
           StreamBuilder(
-            stream: Firestore.instance
-                .collectionGroup('posts')
-                .orderBy('fecha', descending: true)
-                .snapshots(),
+            stream: FirebaseFirestore.instance.collectionGroup('posts').snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
                 return Center(

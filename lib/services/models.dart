@@ -72,36 +72,36 @@ class UsuarioModel {
   }
 
   UsuarioModel.fromDocumentSnapshot(DocumentSnapshot data, String user) {
-    contrasena = data['tcontrasena'] ?? '';
-    correo = data['correo'];
-    descripcion = data['descripcion'] ?? '';
-    edad = calculateAge(data['fnacimiento'].toDate());
-    foto = data['foto'];
-    nombre = data['nombre'];
-    sexo = data['sexo'];
-    telefono = data['telefono'];
-    tipo = data['tipo'];
+    contrasena = data.data()['tcontrasena'] ?? '';
+    correo = data.data()['correo'];
+    descripcion = data.data()['descripcion'] ?? '';
+    edad = calculateAge(data.data()['fnacimiento'].toDate());
+    foto = data.data()['foto'];
+    nombre = data.data()['nombre'];
+    sexo = data.data()['sexo'];
+    telefono = data.data()['telefono'];
+    tipo = data.data()['tipo'];
     reference = data.reference;
-    documentId = data.documentID.toString();
-    fnacimiento = data['fnacimiento'].toDate();
-    fotoStorageRef = data['fotoStorageRef'];
+    documentId = data.id.toString();
+    fnacimiento = data.data()['fnacimiento'].toDate();
+    fotoStorageRef = data.data()['fotoStorageRef'];
     // fotoCompDomi = data['fotoCompDomi'];
     // fotoCompDomiRef = data['fotoCompDomiRef'];
     // fotoINE = data['fotoINE'];
     // fotoINERef = data['fotoINERef'];
     // galeriaFotos = data['galeriaFotos'] ?? [];
     // galeriaFotosRefs = data['galeriaFotosRefs'] ?? [];
-    edo = data['edo'] ?? '';
-    municipio = data['municipio'] ?? '';
-    amigos = data['amigos'] ?? [];
+    edo = data.data()['edo'] ?? '';
+    municipio = data.data()['municipio'] ?? '';
+    amigos = data.data()['amigos'] ?? [];
     amigos = List<String>.from(amigos);
-    solicitudesAE = data['solicitudesAE'] ?? [];
+    solicitudesAE = data.data()['solicitudesAE'] ?? [];
     solicitudesAE = List<String>.from(solicitudesAE);
-    bloqueados = data['bloqueados'] ?? [];
+    bloqueados = data.data()['bloqueados'] ?? [];
     bloqueados = List<String>.from(bloqueados);
-    userCheck = data[user + 'Check'] ?? true;
-    userLastMsg = data[user + 'LastMsg'] ?? null;
-    userChat = data[user + 'Chat'] ?? false;
+    userCheck = data.data()[user + 'Check'] ?? true;
+    userLastMsg = data.data()[user + 'LastMsg'] ?? null;
+    userChat = data.data()[user + 'Chat'] ?? false;
   }
 }
 
@@ -144,7 +144,7 @@ class RescateModel {
     descripcion = data['descripcion'];
     tipoAnimal = data['tipoAnimal'];
     foto = data['foto'];
-    documentId = data.documentID.toString();
+    documentId = data.id.toString();
     reference = data.reference;
     fecha = data['fecha'].toDate();
     userName = data['userName'];
@@ -198,7 +198,7 @@ class EmergenciaModel {
     reffoto = data['reffoto'];
 
     favoritos = data['favoritos'] ?? [''];
-    documentId = data.documentID.toString();
+    documentId = data.id.toString();
     reference = data.reference;
   }
 }
@@ -259,13 +259,13 @@ class PerdidoModel {
     reffoto = data['reffoto'];
 
     favoritos = data['favoritos'] ?? [''];
-    documentId = data.documentID.toString();
+    documentId = data.id.toString();
     reference = data.reference;
   }
 }
 
 class AdopcionModel {
-  String nombre;
+  String titulo;
   List<dynamic> favoritos = [];
   String descripcion;
   String tipoAnimal;
@@ -286,7 +286,7 @@ class AdopcionModel {
   String lugar;
 
   AdopcionModel(
-      {this.nombre,
+      {this.titulo,
       this.descripcion,
       this.tipoAnimal,
      this.sexo,
@@ -305,30 +305,30 @@ class AdopcionModel {
       this.lugar});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    nombre = data['nombre'];
-    favoritos = data['favoritos'] ?? [''];
-    descripcion = data['descripcion'];
-    tipoAnimal = data['tipoAnimal'];
-    sexo = data['sexo'];
-    edad = data['edad'];
-    fecha = data['fecha'].toDate();
-    fotos = data['fotos'] ?? [''];
-    albumrefs = data['albumrefs'] ?? [''];
-    esterilizacion = data['esterilizacion'];
-    vacunacion = data['vacunacion'];
-    desparacitacion = data['desparacitacion'];
-    convivenciaotros = data['convivenciaotros'];
-    userId = data['userId'];
-    documentId = data.documentID.toString();
+    titulo = data.data()['titulo'];
+    favoritos = data.data()['favoritos'] ?? [''];
+    descripcion = data.data()['descripcion'];
+    tipoAnimal = data.data()['tipoAnimal'];
+    sexo = data.data()['sexo'];
+    edad = data.data()['edad'];
+    fecha = data.data()['fecha'].toDate();
+    fotos = data.data()['fotos'] ?? [''];
+    albumrefs = data.data()['albumrefs'] ?? [''];
+    esterilizacion = data.data()['esterilizacion'];
+    vacunacion = data.data()['vacunacion'];
+    desparacitacion = data.data()['desparacitacion'];
+    convivenciaotros = data.data()['convivenciaotros'];
+    userId = data.data()['userId'];
+    documentId = data.id.toString();
     reference = data.reference;
-    status = data['status'];
-    adoptanteId = data['adoptanteId'];
-    lugar = data['lugar'];
+    status = data.data()['status'];
+    adoptanteId = data.data()['adoptanteId'];
+    lugar = data.data()['lugar'];
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'nombre': nombre,
+      'titulo': titulo,
       'favoritos': favoritos,
       'descripcion': descripcion,
       'tipoAnimal': tipoAnimal,
@@ -559,7 +559,7 @@ class MascotaModel {
     tipoAnimal = data['tipoAnimal'];
     reference = data.reference;
     storageRef = data['storageRef'];
-    documentId = data.documentID.toString();
+    documentId = data.id.toString();
     // documentId = data.documentID.toString() ?? '';
     tamano = data['tamano'];
     buscaAmigos = data['buscaAmigos'];
@@ -621,7 +621,7 @@ class PostsModel {
     storageRef = data['storageRef'];
     mascotas = data['mascotas'] ?? [''];
     favoritos = data['favoritos'] ?? [''];
-    documentId = data.documentID.toString();
+    documentId = data.id.toString();
     reference = data.reference;
   }
 }
@@ -645,7 +645,7 @@ class ComentarioModel {
     userId = data['userId'];
 
     likes = data['likes'] ?? [''];
-    documentId = data.documentID.toString();
+    documentId = data.id.toString();
     reference = data.reference;
   }
 }

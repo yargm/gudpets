@@ -302,17 +302,17 @@ class _SubirFotosState extends State<SubirFotos> {
                                       '/posts/' +
                                       DateTime.now().toString();
 
-                              StorageReference storageRef = FirebaseStorage
+                              Reference storageRef = FirebaseStorage
                                   .instance
                                   .ref()
                                   .child(fileName);
-                              final StorageUploadTask uploadTask =
+                              final UploadTask uploadTask =
                                   storageRef.putFile(
                                 imageFile != null ? imageFile : widget.image,
                               );
-                              final StorageTaskSnapshot downloadUrl =
-                                  (await uploadTask.onComplete);
-                              final String fotoref = downloadUrl.ref.path;
+                              final TaskSnapshot downloadUrl =
+                                  (await uploadTask.whenComplete(() => null));
+                              final String fotoref = downloadUrl.ref.fullPath;
 
                               final String url =
                                   (await downloadUrl.ref.getDownloadURL());

@@ -49,9 +49,9 @@ class _FotosState extends State<Fotos> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           StreamBuilder(
-              stream: Firestore.instance
+              stream: FirebaseFirestore.instance
                   .collection('usuarios')
-                  .document(widget.post.userId)
+                  .doc(widget.post.userId)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData)
@@ -73,10 +73,12 @@ class _FotosState extends State<Fotos> {
                   ),
                   title: Text(
                     usu.nombre,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                   subtitle: Text(
-                      '${widget.post.fecha.month.toString()}-${widget.post.fecha.day.toString()}  a las ${widget.post.fecha.hour.toString()}:${widget.post.fecha.minute.toString()}'),
+                    '${widget.post.fecha.day.toString()}/${widget.post.fecha.month.toString()}/${widget.post.fecha.year.toString()}   a las ${widget.post.fecha.hour.toString()}:${widget.post.fecha.minute.toString()}',
+                    style: TextStyle(fontSize: 12),
+                  ),
                   trailing: PopupMenuButton(
                     elevation: 8,
                     padding: EdgeInsets.all(8),
@@ -146,21 +148,21 @@ class _FotosState extends State<Fotos> {
                   controlador1.loading = true;
                   controlador1.notify();
                   if (!fav) {
-                    widget.post.reference.updateData({
+                    widget.post.reference.update({
                       'favoritos': FieldValue.arrayUnion(
                           [controlador1.usuario.documentId])
                     });
                     numlikes = widget.post.numlikes;
                     widget.post.reference
-                        .updateData({'numlikes': widget.post.numlikes + 1});
+                        .update({'numlikes': widget.post.numlikes + 1});
                   } else {
-                    widget.post.reference.updateData({
+                    widget.post.reference.update({
                       'favoritos': FieldValue.arrayRemove(
                           [controlador1.usuario.documentId])
                     });
                     if (widget.post.numlikes != 0) {
                       widget.post.reference
-                          .updateData({'numlikes': widget.post.numlikes - 1});
+                          .update({'numlikes': widget.post.numlikes - 1});
                     }
                   }
                   print('hello');
@@ -221,6 +223,7 @@ class _CommentsState extends State<Comments> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     return Dialog(
+      insetPadding: EdgeInsets.only(top: 60),
       backgroundColor: Colors.transparent,
       child: Card(
         child: Column(
@@ -255,7 +258,7 @@ class _CommentsState extends State<Comments> {
 
                     return documents.isNotEmpty
                         ? ListView.builder(
-                            physics: ScrollPhysics(
+                            physics: BouncingScrollPhysics(
                                 parent: AlwaysScrollableScrollPhysics()),
                             shrinkWrap: true,
                             itemCount: documents.length,
@@ -268,9 +271,9 @@ class _CommentsState extends State<Comments> {
                                 children: <Widget>[
                                   Flexible(
                                     child: StreamBuilder(
-                                        stream: Firestore.instance
+                                        stream: FirebaseFirestore.instance
                                             .collection('usuarios')
-                                            .document(comentario.userId)
+                                            .doc(comentario.userId)
                                             .snapshots(),
                                         builder: (context, snapshot) {
                                           if (!snapshot.hasData)
@@ -417,7 +420,7 @@ class _ListaComentarioState extends State<ListaComentario> {
           ),
           child: ListTile(
             leading: CircleAvatar(
-              radius: widget.index == 2 ? 17 : 20,
+              radius: widget.index == 2 ? 17 : 25,
               backgroundImage: NetworkImage(widget.usuario.foto),
             ),
             title: Column(
@@ -430,7 +433,7 @@ class _ListaComentarioState extends State<ListaComentario> {
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 Text(
                   widget.comentario.comentario,
-                  style: TextStyle(color: Colors.black54, fontSize: 18),
+                  style: TextStyle(color: Colors.black87, fontSize: 18),
                 )
               ],
             ),
@@ -472,15 +475,17 @@ class _ListaComentarioState extends State<ListaComentario> {
                 IconButton(
                     color: Colors.pink[200],
                     icon: Icon(
-                        widget.like ? Icons.favorite : Icons.favorite_border),
+                      widget.like ? Icons.favorite : Icons.favorite_border,
+                      size: 15,
+                    ),
                     onPressed: () async {
                       if (!widget.like) {
-                        widget.comentario.reference.updateData({
+                        widget.comentario.reference.update({
                           'likes': FieldValue.arrayUnion(
                               [controlador1.usuario.documentId])
                         });
                       } else {
-                        widget.comentario.reference.updateData({
+                        widget.comentario.reference.update({
                           'likes': FieldValue.arrayRemove(
                               [controlador1.usuario.documentId])
                         });
@@ -536,7 +541,7 @@ class _ListaComentarioState extends State<ListaComentario> {
                           return documents.isNotEmpty
                               ? ListView.builder(
                                   physics: ScrollPhysics(
-                                      parent: AlwaysScrollableScrollPhysics()),
+                                      parent: NeverScrollableScrollPhysics()),
                                   shrinkWrap: true,
                                   itemCount: documents.length,
                                   itemBuilder: (context, index) {
@@ -548,9 +553,9 @@ class _ListaComentarioState extends State<ListaComentario> {
                                       children: <Widget>[
                                         Flexible(
                                           child: StreamBuilder(
-                                              stream: Firestore.instance
+                                              stream: FirebaseFirestore.instance
                                                   .collection('usuarios')
-                                                  .document(comentario.userId)
+                                                  .doc(comentario.userId)
                                                   .snapshots(),
                                               builder: (context, snapshot) {
                                                 if (!snapshot.hasData)

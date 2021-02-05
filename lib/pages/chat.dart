@@ -102,9 +102,9 @@ class _ChatState extends State<Chat> {
                     roomID = snapshot.data;
                     return StreamBuilder(
                       //Finalmente obtienes los pinches mensajes y los ordenas por fecha de arriba pabajo
-                      stream: Firestore.instance
+                      stream: FirebaseFirestore.instance
                           .collection('chats')
-                          .document(roomID)
+                          .doc(roomID)
                           .collection('mensajes')
                           .orderBy('fecha', descending: true)
                           .limit(500)
@@ -260,9 +260,9 @@ class _ChatState extends State<Chat> {
                                   controller, widget.usuario.documentId);
                               //Consulta para guardar el mensaje en su respectiva sala de chat
                               Fluttertoast.showToast(msg: 'haré la inserción');
-                              await Firestore.instance
+                              await FirebaseFirestore.instance
                                   .collection('chats')
-                                  .document(roomID)
+                                  .doc(roomID)
                                   .collection('mensajes')
                                   .add({
                                 'recibe': widget.usuario.documentId,
@@ -293,18 +293,18 @@ class _ChatState extends State<Chat> {
                                       '/chat/' +
                                       DateTime.now().toString();
 
-                              StorageReference storageRef = FirebaseStorage
+                              Reference storageRef = FirebaseStorage
                                   .instance
                                   .ref()
                                   .child(fileName);
 
-                              final StorageUploadTask uploadTask =
+                              final UploadTask uploadTask =
                                   storageRef.putFile(
                                 newImagen,
                               );
 
-                              final StorageTaskSnapshot downloadUrl =
-                                  (await uploadTask.onComplete);
+                              final TaskSnapshot downloadUrl =
+                                  (await uploadTask.whenComplete(() => null));
 
                               if (controller.usuario.fotoStorageRef != null) {
                                 await FirebaseStorage.instance
@@ -324,9 +324,9 @@ class _ChatState extends State<Chat> {
                                   controller, widget.usuario.documentId);
 
                               //Subir el contenido a su respectivo chat
-                              await Firestore.instance
+                              await FirebaseFirestore.instance
                                   .collection('chats')
-                                  .document(roomID)
+                                  .doc(roomID)
                                   .collection('mensajes')
                                   .add({
                                 'recibe': widget.usuario.documentId,
@@ -357,9 +357,9 @@ class _ChatState extends State<Chat> {
                               await updateLastMsg(
                                   controller, widget.usuario.documentId);
                               //Consulta para guardar el mensaje en la colección chats subcolección mensajes con el id específico
-                              await Firestore.instance
+                              await FirebaseFirestore.instance
                                   .collection('chats')
-                                  .document(roomID)
+                                  .doc(roomID)
                                   .collection('mensajes')
                                   .add({
                                 'recibe': widget.usuario.documentId,
@@ -406,7 +406,7 @@ class _ChatState extends State<Chat> {
     if (documents == null || documents.isEmpty) {
       //Al momento de enviar el mensaje se generan las variables del diablo
       //En mi usuario se guardan las siguientes variables
-      await controller.usuario.reference.updateData({
+      await controller.usuario.reference.update({
         //variable amix+check visto
         user + 'Check': false,
         //Variable hora ultimo mensaje
@@ -415,7 +415,7 @@ class _ChatState extends State<Chat> {
         user + 'Chat': true
       });
       //En el documento de mi amix
-      await widget.usuario.reference.updateData({
+      await widget.usuario.reference.update({
         //Variable chat conmigo
         controller.usuario.documentId + 'Chat': true,
         //Variable ultimo mensaje
@@ -424,33 +424,33 @@ class _ChatState extends State<Chat> {
       return;
     }
     //Si ya envié otros mensajes mientras tenía la ventana abierta
-    await controller.usuario.reference.updateData({
+    await controller.usuario.reference.update({
       //Actualizo la hora del último mensaje
       user + 'LastMsg': DateTime.now(),
     });
     //Aquí no entiendo qué pedo
     await controller.usuario.reference
-        .updateData({user + 'Check': false, user + 'LastMsg': DateTime.now()});
+        .update({user + 'Check': false, user + 'LastMsg': DateTime.now()});
   }
 
   Future<String> getChat(dynamic usuarios) async {
     //busca en la colección chats el documento que se llame id1-id2
-    var query = await Firestore.instance
+    var query = await FirebaseFirestore.instance
         .collection('chats')
-        .document('${usuarios[0]}-${usuarios[1]}')
+        .doc('${usuarios[0]}-${usuarios[1]}')
         .get();
     //Si ese documento no existe busca al revés id2-id1
     if (!query.exists) {
-      query = await Firestore.instance
+      query = await FirebaseFirestore.instance
           .collection('chats')
-          .document('${usuarios[1]}-${usuarios[0]}')
+          .doc('${usuarios[1]}-${usuarios[0]}')
           .get();
       //Si el chat no existe crea el chat nuevo guardándole su array de ids y el último mensaje con la fecha actual
       if (!query.exists) {
-        await Firestore.instance
+        await FirebaseFirestore.instance
             .collection('chats')
-            .document('${usuarios[0]}-${usuarios[1]}')
-            .setData({'usuarios': usuarios, 'ultimoMsj': DateTime.now()});
+            .doc('${usuarios[0]}-${usuarios[1]}')
+            .set({'usuarios': usuarios, 'ultimoMsj': DateTime.now()});
         return '${usuarios[0]}-${usuarios[1]}';
       }
 

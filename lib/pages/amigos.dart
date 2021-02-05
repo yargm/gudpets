@@ -47,7 +47,7 @@ class _AmigosState extends State<Amigos> {
     Controller controlador1 = Provider.of<Controller>(context);
     return Scaffold(
       floatingActionButton: StreamBuilder(
-          stream: Firestore.instance
+          stream: FirebaseFirestore.instance
               .collection('usuarios')
               .where('solicitudesAE',
                   arrayContains: controlador1.usuario.documentId)
@@ -111,7 +111,7 @@ class _AmigosState extends State<Amigos> {
               height: 137,
               padding: EdgeInsets.only(top: 10, bottom: 10),
               child: StreamBuilder(
-                stream: Firestore.instance
+                stream: FirebaseFirestore.instance
                     .collection('usuarios')
                     .where('amigos',
                         arrayContains: controlador1.usuario.documentId)
@@ -158,7 +158,7 @@ class _AmigosState extends State<Amigos> {
             ),
             StreamBuilder(
               //Consulta que busca a todos los usuarios que me tienen como amigo
-              stream: Firestore.instance
+              stream: FirebaseFirestore.instance
                   .collection('usuarios')
                   .where('amigos',
                       arrayContains: controlador1.usuario.documentId)
@@ -259,11 +259,11 @@ class _SolicitudesAmistadState extends State<SolicitudesAmistad> {
                                         controller.loading = true;
                                         controller.notify();
                                         await controller.usuario.reference
-                                            .updateData({
+                                            .update({
                                           'amigos': FieldValue.arrayUnion(
                                               [usuario.documentId])
                                         });
-                                        await usuario.reference.updateData({
+                                        await usuario.reference.update({
                                           'solicitudesAE':
                                               FieldValue.arrayRemove([
                                             controller.usuario.documentId
@@ -288,7 +288,7 @@ class _SolicitudesAmistadState extends State<SolicitudesAmistad> {
                                       onPressed: () async {
                                         controller.loading = true;
                                         controller.notify();
-                                        await usuario.reference.updateData({
+                                        await usuario.reference.update({
                                           'solicitudesAE':
                                               FieldValue.arrayRemove([
                                             controller.usuario.documentId

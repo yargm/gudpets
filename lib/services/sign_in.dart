@@ -20,13 +20,13 @@ Future<String> signInWithGoogle(Controller controlador1) async {
       await googleSignInAccount.authentication;
   print('paso2');
 
-  final AuthCredential credential = GoogleAuthProvider.getCredential(
+  final AuthCredential credential = GoogleAuthProvider.credential(
     accessToken: googleSignInAuthentication.accessToken,
     idToken: googleSignInAuthentication.idToken,
   );
   print('paso4');
 
-  final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+  final User user = (await _auth.signInWithCredential(credential)).user;
   // final FirebaseUser user = authResult.user;
   print('capturé datos de usuario');
 
@@ -35,14 +35,14 @@ Future<String> signInWithGoogle(Controller controlador1) async {
 
   assert(user.email != null);
   assert(user.displayName != null);
-  assert(user.photoUrl != null);
+  assert(user.photoURL != null);
   assert(user.uid != null);
   controlador1.uid = user.uid;
   controlador1.name = user.displayName;
   print('no la estoy dando con' + controlador1.name.toString());
   controlador1.email = user.email;
-  controlador1.imageUrl = user.photoUrl;
-  final FirebaseUser currentUser = await _auth.currentUser();
+  controlador1.imageUrl = user.photoURL;
+  final User currentUser = FirebaseAuth.instance.currentUser;
   assert(user.uid == currentUser.uid);
   controlador1.loading = false;
 

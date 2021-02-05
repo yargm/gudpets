@@ -8,7 +8,7 @@ class EmergenciaList extends StatefulWidget {
 }
 
 class _EmergenciaListState extends State<EmergenciaList> {
-  var emergencias = Firestore.instance.collection('emergencias').snapshots();
+  var emergencias = FirebaseFirestore.instance.collection('emergencias').snapshots();
 
   @override
   Widget build(BuildContext context) {

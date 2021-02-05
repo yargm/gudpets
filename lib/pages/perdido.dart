@@ -423,10 +423,10 @@ class _PerdidoState extends State<Perdido> {
   }
 
   favtrue(bool favorito, Controller controlador1, PerdidoModel objeto) {
-    objeto.reference.updateData({
+    objeto.reference.update({
       'favoritos': FieldValue.arrayUnion([controlador1.usuario.documentId]),
     });
-    controlador1.usuario.reference.updateData(
+    controlador1.usuario.reference.update(
       {
         'perdidos': FieldValue.arrayUnion([
           {
@@ -440,10 +440,10 @@ class _PerdidoState extends State<Perdido> {
   }
 
   favfalse(bool favorito, Controller controlador1, PerdidoModel objeto) {
-    objeto.reference.updateData({
+    objeto.reference.update({
       'favoritos': FieldValue.arrayRemove([controlador1.usuario.documentId])
     });
-    controlador1.usuario.reference.updateData(
+    controlador1.usuario.reference.update(
       {
         'emergencias': FieldValue.arrayRemove([
           {

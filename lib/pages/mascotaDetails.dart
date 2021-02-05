@@ -376,7 +376,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                                               controlador1.notify();
                                               await controlador1
                                                   .mascota.reference
-                                                  .updateData({
+                                                  .update({
                                                 'personalidad':
                                                     textEditingController.text
                                               });
@@ -419,29 +419,35 @@ class _MascotaDetailsState extends State<MascotaDetails> {
             SizedBox(
               height: 10,
             ),
-            Text('Fotos'),
-            Divider(),
+            Text(
+              'Fotos',
+              style: TextStyle(fontSize: 20),
+            ),
+            Divider(
+              thickness: 1,
+              color: primaryDark,
+            ),
             StreamBuilder(
               stream: amigos.contains(widget.usuario.documentId)
                   ? widget.usuario.reference
                       .collection('posts')
                       .where('mascotas',
                           arrayContains: controlador1.mascota.documentId)
-                      .orderBy('fecha')
+                      .orderBy('fecha', descending: true)
                       .snapshots()
                   : controlador1.usuario.documentId == widget.usuario.documentId
                       ? widget.usuario.reference
                           .collection('posts')
                           .where('mascotas',
                               arrayContains: controlador1.mascota.documentId)
-                          .orderBy('fecha')
+                          .orderBy('fecha', descending: true)
                           .snapshots()
                       : widget.usuario.reference
                           .collection('posts')
                           .where('mascotas',
                               arrayContains: controlador1.mascota.documentId)
                           .where('privacidad', isEqualTo: true)
-                          .orderBy('fecha')
+                          .orderBy('fecha', descending: true)
                           .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData)
@@ -477,30 +483,71 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                           return GestureDetector(
                             onTap: () {
                               showDialog(
-                                useSafeArea: false,
+                                useSafeArea: true,
                                 //barrierDismissible: false,
                                 barrierColor: Colors.black54,
                                 context: context,
-                                builder: (BuildContext context) {
-                                  return WillPopScope(
+                                builder: (_) => WillPopScope(
                                     onWillPop: () async {
                                       controlador1.pestanaAct = 0;
                                       controlador1.notify();
                                       return true;
                                     },
-                                    child: SimpleDialog(
-                                      elevation: 0,
+                                    child: AlertDialog(
                                       backgroundColor: Colors.transparent,
-                                      children: <Widget>[
-                                        Fotos(
-                                          index: 2,
-                                          controlador1: controlador1,
-                                          post: post,
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                      contentPadding: EdgeInsets.all(0.0),
+                                      insetPadding: EdgeInsets.all(5),
+                                      content: Builder(
+                                        builder: (context) {
+                                          // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                          var height = MediaQuery.of(context)
+                                              .size
+                                              .height;
+                                          var width =
+                                              MediaQuery.of(context).size.width;
+                                          print(width);
+
+                                          return Container(
+                                            color: Colors.transparent,
+                                            //height: ,
+                                            width: width,
+                                            child: SingleChildScrollView(
+                                              child: Fotos(
+                                                controlador1: controlador1,
+                                                index: 2,
+                                                post: post,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    )),
+
+                                //     (BuildContext context) {
+                                //   var height =
+                                //       MediaQuery.of(context).size.height;
+                                //   var width = MediaQuery.of(context).size.width;
+                                //   print(width);
+
+                                //   return WillPopScope(
+                                //       onWillPop: () async {
+                                //         controlador1.pestanaAct = 0;
+                                //         controlador1.notify();
+                                //         return true;
+                                //       },
+                                //       child: Container(
+                                //         width:
+                                //             MediaQuery.of(context).size.width,
+                                //         child: Fotos(
+                                //           index: 2,
+                                //           controlador1: controlador1,
+                                //           post: post,
+                                //         ),
+                                //       ));
+                                // },
                               );
                             },
                             child: FadeInImage(
@@ -644,18 +691,18 @@ class _DialogContentState extends State<DialogContentM> {
                                     controlador1.usuario.correo +
                                         '/mascotas/${widget.foto}' +
                                         DateTime.now().toString();
-                                StorageReference storageRef = FirebaseStorage
+                                Reference storageRef = FirebaseStorage
                                     .instance
                                     .ref()
                                     .child(fileName);
 
-                                final StorageUploadTask uploadTask =
+                                final UploadTask uploadTask =
                                     storageRef.putFile(
                                   imagen,
                                 );
 
-                                final StorageTaskSnapshot downloadUrl =
-                                    (await uploadTask.onComplete);
+                                final TaskSnapshot downloadUrl =
+                                    (await uploadTask.whenComplete(() => null));
 
                                 if ((controlador1.mascota.storageRef) != null &&
                                     widget.foto != 'INE') {
@@ -670,16 +717,17 @@ class _DialogContentState extends State<DialogContentM> {
 
                                 final String url =
                                     (await downloadUrl.ref.getDownloadURL());
+
                                 if (widget.foto == 'PPM') {
                                   await controlador1.mascota.reference
-                                      .updateData({
+                                      .update({
                                     'foto': url,
-                                    'fotoStorageRef': downloadUrl.ref.path
+                                    'fotoStorageRef': downloadUrl.ref.fullPath
                                   });
 
                                   controlador1.mascota.foto = url;
                                   controlador1.mascota.storageRef =
-                                      downloadUrl.ref.path;
+                                      downloadUrl.ref.fullPath;
                                 }
 
                                 // else if (widget.foto == 'INE') {

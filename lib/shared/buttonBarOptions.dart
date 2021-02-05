@@ -62,11 +62,11 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                             onPressed: () async {
                               controlador1.loading = true;
                               controlador1.notify();
-                              await controlador1.usuario.reference.updateData({
+                              await controlador1.usuario.reference.update({
                                 'amigos': FieldValue.arrayRemove(
                                     [widget.usuario.documentId]),
                               });
-                              await widget.usuario.reference.updateData({
+                              await widget.usuario.reference.update({
                                 'amigos': FieldValue.arrayRemove(
                                     [controlador1.usuario.documentId]),
                                 'bloqueados': FieldValue.arrayUnion(
@@ -122,7 +122,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                     ? FlatButton.icon(
                         onPressed: () async {
                           print(widget.usuario.documentId.length);
-                          await controlador1.usuario.reference.updateData({
+                          await controlador1.usuario.reference.update({
                             'solicitudesAE': FieldValue.arrayRemove(
                                 [widget.usuario.documentId])
                           });
@@ -147,11 +147,11 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                   controlador1.loading = true;
                                   controlador1.notify();
                                   await controlador1.usuario.reference
-                                      .updateData({
+                                      .update({
                                     'amigos': FieldValue.arrayUnion(
                                         [widget.usuario.documentId])
                                   });
-                                  await widget.usuario.reference.updateData({
+                                  await widget.usuario.reference.update({
                                     'amigos': FieldValue.arrayUnion(
                                         [controlador1.usuario.documentId]),
                                     'solicitudesAE': FieldValue.arrayRemove(
@@ -175,7 +175,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                 onPressed: () async {
                                   controlador1.loading = true;
                                   controlador1.notify();
-                                  await widget.usuario.reference.updateData({
+                                  await widget.usuario.reference.update({
                                     'solicitudesAE': FieldValue.arrayRemove(
                                         [controlador1.usuario.documentId])
                                   });
@@ -207,11 +207,11 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                   controlador1.loading = true;
                                   controlador1.notify();
                                   await controlador1.usuario.reference
-                                      .updateData({
+                                      .update({
                                     'amigos': FieldValue.arrayRemove(
                                         [widget.usuario.documentId])
                                   });
-                                  await widget.usuario.reference.updateData({
+                                  await widget.usuario.reference.update({
                                     'amigos': FieldValue.arrayRemove(
                                         [controlador1.usuario.documentId])
                                   });
@@ -236,7 +236,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                   controlador1.loading = true;
                                   controlador1.notify();
                                   await controlador1.usuario.reference
-                                      .updateData({
+                                      .update({
                                     'solicitudesAE': FieldValue.arrayUnion(
                                         [widget.usuario.documentId]),
                                   });
@@ -344,7 +344,7 @@ class _ReportDialogState extends State<ReportDialog> {
                       controlador1.loading = true;
                       controlador1.notify();
 
-                      await Firestore.instance
+                      await FirebaseFirestore.instance
                           .collection('reportes')
                           .add(widget.usuarioModel.toReport(razones));
 
