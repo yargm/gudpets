@@ -39,13 +39,6 @@ class _LogInState extends State<LogIn> {
           _askpermission();
         } else {
           print('ya me aceptaste antes');
-          Future.delayed(Duration.zero, () async {
-            Controller controller =
-                Provider.of<Controller>(context, listen: false);
-
-            await controller.getLocation(context);
-            await controller.getAddress(context, true);
-          });
           return;
         }
       });
@@ -67,7 +60,7 @@ class _LogInState extends State<LogIn> {
               Provider.of<Controller>(context, listen: false);
 
           await controller.getLocation(context);
-          await controller.getAddress(context, true);
+          //await controller.getAddress(context, true);
         });
       }
     });

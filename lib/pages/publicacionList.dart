@@ -86,8 +86,8 @@ class _PublicacionListState extends State<PublicacionList> {
                                           child: Image(
                                             width: 40,
                                             height: 40,
-                                            image: NetworkImage(snapshot
-                                                .data.documents[index]['foto']),
+                                            image: NetworkImage(snapshot.data
+                                                .documents[index]['fotos'][0]),
                                           ),
                                         ),
                                       ),
@@ -380,13 +380,15 @@ class _PublicacionListState extends State<PublicacionList> {
   }
 
   deleteData(String tabla, dynamic objeto) async {
-    await FirebaseStorage.instance
-        .ref()
-        .child(objeto['reffoto'])
-        .delete()
-        .catchError((onError) {
-      print(onError);
-    });
+    if (tabla == 'rescates' || tabla == 'emergencias') {
+      await FirebaseStorage.instance
+          .ref()
+          .child(objeto['reffoto'])
+          .delete()
+          .catchError((onError) {
+        print(onError);
+      });
+    }
 
     if (tabla == 'rescates' || tabla == 'adopciones') {
       for (var elemento in objeto['albumrefs']) {
@@ -399,7 +401,6 @@ class _PublicacionListState extends State<PublicacionList> {
         });
       }
     }
-    
 
     await FirebaseFirestore.instance
         .collection(tabla)

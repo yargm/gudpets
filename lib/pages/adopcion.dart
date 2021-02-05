@@ -236,7 +236,7 @@ class _AdopcionState extends State<Adopcion> {
                         SizedBox(
                           width: 10,
                         ),
-                        Text(widget.objeto.lugar,
+                        Text(widget.objeto.municipio + ", " + widget.objeto.estado,
                             style:
                                 TextStyle(fontSize: 18.0, color: Colors.grey)),
                       ],

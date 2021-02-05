@@ -297,7 +297,7 @@ class Controller with ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('correo', usuarioActual.correo);
     await storeToken();
-    await setAddress();
+    //await setAddress();
   }
 
   fecha(Timestamp fecha) {
@@ -362,7 +362,7 @@ class Controller with ChangeNotifier {
         usuarioActual =
             UsuarioModel.fromDocumentSnapshot(onValue.docs.first, 'meh');
 
-        setAddress();
+        //setAddress();
       });
       await storeToken();
       return true;
