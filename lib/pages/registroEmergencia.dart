@@ -311,19 +311,19 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                         '/emergencia/' +
                                         DateTime.now().toString();
 
-                                StorageReference storageRef = FirebaseStorage
+                                Reference storageRef = FirebaseStorage
                                     .instance
                                     .ref()
                                     .child(fileName);
 
-                                final StorageUploadTask uploadTask =
+                                final UploadTask uploadTask =
                                     storageRef.putFile(
                                   _image,
                                 );
 
-                                final StorageTaskSnapshot downloadUrl =
-                                    (await uploadTask.onComplete);
-                                final String fotoref = downloadUrl.ref.path;
+                                final TaskSnapshot downloadUrl =
+                                    (await uploadTask.whenComplete(() => null));
+                                final String fotoref = downloadUrl.ref.fullPath;
 
                                 final String url =
                                     (await downloadUrl.ref.getDownloadURL());
@@ -367,7 +367,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
 
                               _emergenciakey.currentState.save();
 
-                              var agregar = await Firestore.instance
+                              var agregar = await FirebaseFirestore.instance
                                   .collection('emergencias')
                                   .add(formEmergencia)
                                   .then((value) {

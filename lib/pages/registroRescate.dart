@@ -659,22 +659,22 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                         '/rescate/' +
                                         DateTime.now().toString();
 
-                                StorageReference storageRef = FirebaseStorage
+                                Reference storageRef = FirebaseStorage
                                     .instance
                                     .ref()
                                     .child(fileName);
 
-                                final StorageUploadTask uploadTask =
+                                final UploadTask uploadTask =
                                     storageRef.putFile(
                                   _image,
                                 );
 
-                                final StorageTaskSnapshot downloadUrl =
-                                    (await uploadTask.onComplete);
+                                final TaskSnapshot downloadUrl =
+                                    (await uploadTask.whenComplete(() => null));
 
                                 final String url =
                                     (await downloadUrl.ref.getDownloadURL());
-                                final String fotoref = downloadUrl.ref.path;
+                                final String fotoref = downloadUrl.ref.fullPath;
                                 print('URL Is $url');
                                 setState(() {
                                   formRescate['foto'] = url;
@@ -722,7 +722,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
 
                               _rescatekey.currentState.save();
 
-                              var agregar = await Firestore.instance
+                              var agregar = await FirebaseFirestore.instance
                                   .collection('rescates')
                                   .add(formRescate)
                                   .then((value) {
@@ -756,11 +756,11 @@ class _RegistroRescateState extends State<RegistroRescate> {
     List<int> imageData = byteData.buffer.asUint8List();
     final String fileName =
         controlador1.usuario.correo + '/rescate/' + DateTime.now().toString();
-    StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = ref.putData(imageData);
+    Reference ref = FirebaseStorage.instance.ref().child(fileName);
+    UploadTask uploadTask = ref.putData(imageData);
 
-    fotosRef['url'] = await (await uploadTask.onComplete).ref.getDownloadURL();
-    fotosRef['ref'] = (await uploadTask.onComplete).ref.path;
+    fotosRef['url'] = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    fotosRef['ref'] = (await uploadTask.whenComplete(() => null)).ref.fullPath;
     return fotosRef;
   }
 }

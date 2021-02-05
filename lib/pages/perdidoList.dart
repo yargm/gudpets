@@ -8,7 +8,7 @@ class PerdidoList extends StatefulWidget {
 }
 
 class _PerdidoListState extends State<PerdidoList> {
-  var perdidos = Firestore.instance.collection('perdidos').snapshots();
+  var perdidos = FirebaseFirestore.instance.collection('perdidos').snapshots();
 
   @override
   Widget build(BuildContext context) {

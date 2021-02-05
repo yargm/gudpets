@@ -8,7 +8,7 @@ class RescateList extends StatefulWidget {
 }
 
 class _RescateListState extends State<RescateList> {
-  var rescates = Firestore.instance.collection('rescates').snapshots();
+  var rescates = FirebaseFirestore.instance.collection('rescates').snapshots();
 
   @override
   Widget build(BuildContext context) {

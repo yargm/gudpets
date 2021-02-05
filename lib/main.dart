@@ -7,8 +7,14 @@ import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gudpets/pages/registroRescate.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() => runApp(MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+
+}
 
 Controller controller = Controller();
 
@@ -67,9 +73,9 @@ class MyApp extends StatelessWidget {
           ),
           //texto
           textTheme: GoogleFonts.josefinSansTextTheme(TextTheme(
-            body1: TextStyle(fontSize: 15),
+            bodyText2: TextStyle(fontSize: 15),
             button: TextStyle(fontSize: 15, color: Colors.white),
-            body2: TextStyle(fontSize: 18),
+            bodyText1: TextStyle(fontSize: 18),
           )),
           //flotante
 
@@ -82,7 +88,7 @@ class MyApp extends StatelessWidget {
               iconTheme: IconThemeData(size: 30, color: secondaryDark),
               actionsIconTheme: IconThemeData(color: secondaryDark, size: 30),
               textTheme: GoogleFonts.josefinSansTextTheme(TextTheme(
-                  title: TextStyle(color: primaryText, fontSize: 20))),
+                  headline6: TextStyle(color: primaryText, fontSize: 20))),
               color: primaryDark),
           primarySwatch: Colors.blue,
         ),

@@ -4,6 +4,7 @@ import 'package:gudpets/shared/colores.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io';
@@ -28,7 +29,9 @@ class _LogInState extends State<LogIn> {
     super.initState();
     if (Platform.isIOS) {
     } else {
-      Permission.locationWhenInUse.serviceStatus.then((status) {
+      PermissionHandler()
+          .checkPermissionStatus(PermissionGroup.locationWhenInUse)
+          .then((status) {
         print(status.toString());
         if (status.toString() == 'PermissionStatus.denied' ||
             status.toString() == 'PermissionStatus.unknown' ||
@@ -49,11 +52,58 @@ class _LogInState extends State<LogIn> {
       });
     }
   }
+  // void initState() {
+  //   super.initState();
+  //   if (Platform.isIOS) {
+  //   } else {
+  //     Permission.locationWhenInUse.serviceStatus.then((status) {
+  //       print(status.toString());
+  //       if (status.toString() == 'PermissionStatus.denied' ||
+  //           status.toString() == 'PermissionStatus.unknown' ||
+  //           status.toString() == 'PermissionStatus.disabled') {
+  //         print('preguntar');
+  //         _askpermission();
+  //       } else {
+  //         print('ya me aceptaste antes');
+  //         Future.delayed(Duration.zero, () async {
+  //           Controller controller =
+  //               Provider.of<Controller>(context, listen: false);
+
+  //           await controller.getLocation(context);
+  //           await controller.getAddress(context, true);
+  //         });
+  //         return;
+  //       }
+  //     });
+  //   }
+  // }
+
+  // Future<bool> _askpermission() async {
+  //   await Permission.locationWhenInUse.request();
+
+  //   Permission.locationWhenInUse.serviceStatus.then((status) {
+  //     if (status.toString() == 'PermissionStatus.denied') {
+  //       exit(0);
+  //     } else if (status.toString() == "PermissionStatus.granted") {
+  //       Future.delayed(Duration.zero, () async {
+  //         Controller controller =
+  //             Provider.of<Controller>(context, listen: false);
+
+  //         await controller.getLocation(context);
+  //         await controller.getAddress(context, true);
+  //       });
+  //     }
+  //   });
+  //   return true;
+  // }
 
   Future<bool> _askpermission() async {
-    await Permission.locationWhenInUse.request();
+    await PermissionHandler()
+        .requestPermissions([PermissionGroup.locationWhenInUse]);
 
-    Permission.locationWhenInUse.serviceStatus.then((status) {
+    await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.locationWhenInUse)
+        .then((status) {
       if (status.toString() == 'PermissionStatus.denied') {
         exit(0);
       } else if (status.toString() == "PermissionStatus.granted") {
@@ -233,18 +283,19 @@ class _LogInState extends State<LogIn> {
                                               setState(() {
                                                 isLoading = true;
                                               });
-                                              var query = await Firestore
-                                                  .instance
-                                                  .collection('usuarios')
-                                                  .where('correo',
-                                                      isEqualTo:
-                                                          loginMap['user'])
-                                                  .where('contrasena',
-                                                      isEqualTo:
-                                                          loginMap['password'])
-                                                  .getDocuments();
+                                              var query =
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection('usuarios')
+                                                      .where('correo',
+                                                          isEqualTo:
+                                                              loginMap['user'])
+                                                      .where('contrasena',
+                                                          isEqualTo: loginMap[
+                                                              'password'])
+                                                      .get();
 
-                                              if (query.documents.isEmpty) {
+                                              if (query.docs.isEmpty) {
                                                 setState(() {
                                                   errorbase = true;
                                                   isLoading = false;
@@ -254,8 +305,7 @@ class _LogInState extends State<LogIn> {
                                                   return;
                                                 }
                                               } else {
-                                                var user =
-                                                    query.documents.first;
+                                                var user = query.docs.first;
                                                 controlador1.usuarioActual =
                                                     UsuarioModel
                                                         .fromDocumentSnapshot(
@@ -320,16 +370,16 @@ class _LogInState extends State<LogIn> {
         print('entro al on pressed');
         signInWithGoogle(controlador1).whenComplete(() {
           print('estoy dentro y voy a navegar con' + controlador1.name);
-          Firestore.instance
+          FirebaseFirestore.instance
               .collection('usuarios')
               .where('correo', isEqualTo: controlador1.email)
-              .getDocuments()
+              .get()
               .then((onValue) {
-            if (onValue.documents.isEmpty) {
+            if (onValue.docs.isEmpty) {
               Navigator.of(context).pushReplacementNamed('/registro_usuario');
             } else {
-              controlador1.usuarioActual = UsuarioModel.fromDocumentSnapshot(
-                  onValue.documents.first, 'meh');
+              controlador1.usuarioActual =
+                  UsuarioModel.fromDocumentSnapshot(onValue.docs.first, 'meh');
               controlador1.signIn();
               Navigator.of(context).pushReplacementNamed('/home');
             }

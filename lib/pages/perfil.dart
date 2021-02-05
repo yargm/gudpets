@@ -213,7 +213,7 @@ class _PerfilState extends State<Perfil> {
                               child: Container(
                                 margin: EdgeInsets.all(5),
                                 child: StreamBuilder(
-                                  stream: Firestore.instance
+                                  stream: FirebaseFirestore.instance
                                       .collection('usuarios')
                                       .where('bloqueados',
                                           arrayContains:
@@ -263,7 +263,7 @@ class _PerfilState extends State<Perfil> {
 
                                                               await user
                                                                   .reference
-                                                                  .updateData({
+                                                                  .update({
                                                                 'bloqueados':
                                                                     FieldValue
                                                                         .arrayRemove([
@@ -324,7 +324,7 @@ class _PerfilState extends State<Perfil> {
             height: 10,
           ),
           StreamBuilder(
-            stream: Firestore.instance
+            stream: FirebaseFirestore.instance
                 .collection('usuarios')
                 .where('amigos', arrayContains: widget.usuario.documentId)
                 .orderBy('nombre')
@@ -415,7 +415,7 @@ class _PerfilState extends State<Perfil> {
                                           controlador1.loading = true;
                                           controlador1.notify();
                                           await controlador1.usuario.reference
-                                              .updateData({
+                                              .update({
                                             'descripcion':
                                                 textEditingController.text
                                           });
@@ -1106,18 +1106,18 @@ class _DialogContentState extends State<DialogContent> {
                                     controlador1.usuario.correo +
                                         '/perfil/${widget.foto}' +
                                         DateTime.now().toString();
-                                StorageReference storageRef = FirebaseStorage
+                                Reference storageRef = FirebaseStorage
                                     .instance
                                     .ref()
                                     .child(fileName);
 
-                                final StorageUploadTask uploadTask =
+                                final UploadTask uploadTask =
                                     storageRef.putFile(
                                   imagen,
                                 );
 
-                                final StorageTaskSnapshot downloadUrl =
-                                    (await uploadTask.onComplete);
+                                final TaskSnapshot downloadUrl =
+                                    (await uploadTask.whenComplete(() => null));
 
                                 if ((widget.foto == 'PP'
                                         // ? controlador1
@@ -1147,14 +1147,14 @@ class _DialogContentState extends State<DialogContent> {
                                     (await downloadUrl.ref.getDownloadURL());
                                 if (widget.foto == 'PP') {
                                   await controlador1.usuario.reference
-                                      .updateData({
+                                      .update({
                                     'foto': url,
-                                    'fotoStorageRef': downloadUrl.ref.path
+                                    'fotoStorageRef': downloadUrl.ref.fullPath
                                   });
 
                                   controlador1.usuario.foto = url;
                                   controlador1.usuario.fotoStorageRef =
-                                      downloadUrl.ref.path;
+                                      downloadUrl.ref.fullPath;
                                 }
                                 // else if (widget.foto == 'INE') {
                                 //   await controlador1.usuario.reference
@@ -1297,7 +1297,7 @@ class _DialogChangePhoneState extends State<DialogChangePhone> {
                       });
                       return;
                     }
-                    await controlador1.usuario.reference.updateData(
+                    await controlador1.usuario.reference.update(
                         {'telefono': int.parse(textEditingControllerTel.text)});
                     setState(() {
                       error = '';

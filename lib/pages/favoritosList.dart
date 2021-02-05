@@ -112,7 +112,7 @@ class _FavoritosListState extends State<FavoritosList> {
                   },
                 ),
                 StreamBuilder(
-                  stream: Firestore.instance
+                  stream: FirebaseFirestore.instance
                       .collectionGroup('posts')
                       .where('favoritos',
                           arrayContains: controlador1.usuario.documentId)
@@ -146,14 +146,14 @@ class _FavoritosListState extends State<FavoritosList> {
                                       title: Text(post.descripcion),
                                       trailing: IconButton(
                                         onPressed: () async {
-                                          await post.reference.updateData({
+                                          await post.reference.update({
                                             'favoritos':
                                                 FieldValue.arrayRemove([
                                               controlador1.usuario.documentId
                                             ]),
                                           });
                                           if (post.numlikes != 0) {
-                                            post.reference.updateData({
+                                            post.reference.update({
                                               'numlikes': post.numlikes - 1
                                             });
                                           }
@@ -256,14 +256,14 @@ class _FavoritosListState extends State<FavoritosList> {
             title: Text(list[index]['titulo']),
             trailing: IconButton(
               onPressed: () async {
-                await Firestore.instance
+                await FirebaseFirestore.instance
                     .collection(titulo.toLowerCase())
-                    .document(list[index]['documentId'])
-                    .updateData({
+                    .doc(list[index]['documentId'])
+                    .update({
                   'favoritos':
                       FieldValue.arrayRemove([controlador1.usuario.documentId]),
                 });
-                await controlador1.usuario.reference.updateData(
+                await controlador1.usuario.reference.update(
                   {
                     titulo.toLowerCase(): FieldValue.arrayRemove([list[index]])
                   },
@@ -279,9 +279,9 @@ class _FavoritosListState extends State<FavoritosList> {
               tag: list[index]['documentId'],
               child: GestureDetector(
                 onTap: () async {
-                  var query = await Firestore.instance
+                  var query = await FirebaseFirestore.instance
                       .collection(titulo.toLowerCase())
-                      .document(list[index]['documentId'])
+                      .doc(list[index]['documentId'])
                       .get();
                   switch (titulo) {
                     case 'Adopciones':

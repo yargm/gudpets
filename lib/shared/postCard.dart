@@ -49,9 +49,9 @@ class _FotosState extends State<Fotos> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           StreamBuilder(
-              stream: Firestore.instance
+              stream: FirebaseFirestore.instance
                   .collection('usuarios')
-                  .document(widget.post.userId)
+                  .doc(widget.post.userId)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData)
@@ -148,21 +148,21 @@ class _FotosState extends State<Fotos> {
                   controlador1.loading = true;
                   controlador1.notify();
                   if (!fav) {
-                    widget.post.reference.updateData({
+                    widget.post.reference.update({
                       'favoritos': FieldValue.arrayUnion(
                           [controlador1.usuario.documentId])
                     });
                     numlikes = widget.post.numlikes;
                     widget.post.reference
-                        .updateData({'numlikes': widget.post.numlikes + 1});
+                        .update({'numlikes': widget.post.numlikes + 1});
                   } else {
-                    widget.post.reference.updateData({
+                    widget.post.reference.update({
                       'favoritos': FieldValue.arrayRemove(
                           [controlador1.usuario.documentId])
                     });
                     if (widget.post.numlikes != 0) {
                       widget.post.reference
-                          .updateData({'numlikes': widget.post.numlikes - 1});
+                          .update({'numlikes': widget.post.numlikes - 1});
                     }
                   }
                   print('hello');
@@ -271,9 +271,9 @@ class _CommentsState extends State<Comments> {
                                 children: <Widget>[
                                   Flexible(
                                     child: StreamBuilder(
-                                        stream: Firestore.instance
+                                        stream: FirebaseFirestore.instance
                                             .collection('usuarios')
-                                            .document(comentario.userId)
+                                            .doc(comentario.userId)
                                             .snapshots(),
                                         builder: (context, snapshot) {
                                           if (!snapshot.hasData)
@@ -480,12 +480,12 @@ class _ListaComentarioState extends State<ListaComentario> {
                     ),
                     onPressed: () async {
                       if (!widget.like) {
-                        widget.comentario.reference.updateData({
+                        widget.comentario.reference.update({
                           'likes': FieldValue.arrayUnion(
                               [controlador1.usuario.documentId])
                         });
                       } else {
-                        widget.comentario.reference.updateData({
+                        widget.comentario.reference.update({
                           'likes': FieldValue.arrayRemove(
                               [controlador1.usuario.documentId])
                         });
@@ -553,9 +553,9 @@ class _ListaComentarioState extends State<ListaComentario> {
                                       children: <Widget>[
                                         Flexible(
                                           child: StreamBuilder(
-                                              stream: Firestore.instance
+                                              stream: FirebaseFirestore.instance
                                                   .collection('usuarios')
-                                                  .document(comentario.userId)
+                                                  .doc(comentario.userId)
                                                   .snapshots(),
                                               builder: (context, snapshot) {
                                                 if (!snapshot.hasData)

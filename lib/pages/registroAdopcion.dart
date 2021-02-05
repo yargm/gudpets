@@ -53,7 +53,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     'fecha': null,
     'sexo': null,
     'tipoAnimal': null,
-    'nombre': null,
+    'titulo': null,
     'vacunacion': null,
     'userId': null,
     'fotos': <String>[],
@@ -200,7 +200,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                   TextFormField(
                     initialValue: null,
                     onSaved: (String value) {
-                      formAdopcion['nombre'] = value;
+                      formAdopcion['titulo'] = value;
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
@@ -594,11 +594,11 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     List<int> imageData = byteData.buffer.asUint8List();
     final String fileName =
         controlador.usuario.correo + '/adopcion/' + DateTime.now().toString();
-    StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = ref.putData(imageData);
+    Reference ref = FirebaseStorage.instance.ref().child(fileName);
+    UploadTask uploadTask = ref.putData(imageData);
 
-    fotosRef['url'] = await (await uploadTask.onComplete).ref.getDownloadURL();
-    fotosRef['ref'] = (await uploadTask.onComplete).ref.path;
+    fotosRef['url'] = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    fotosRef['ref'] = (await uploadTask.whenComplete(() => null)).ref.fullPath;
     return fotosRef;
   }
 }

@@ -150,16 +150,16 @@ class Controller with ChangeNotifier {
     }
     //actualizar solo estado
     else if (usuario.edo != edo && usuario.municipio == municipio) {
-      await usuario.reference.updateData({'edo': edo});
+      await usuario.reference.update({'edo': edo});
       Fluttertoast.showToast(msg: 'actualicé estado');
     }
     //actualizar solo municipio
     else if (usuario.edo == edo && usuario.municipio != municipio) {
-      await usuario.reference.updateData({'municipio': municipio});
+      await usuario.reference.update({'municipio': municipio});
       Fluttertoast.showToast(msg: 'actualicé municipio');
     } else {
-      await usuario.reference.updateData({'edo': edo});
-      await usuario.reference.updateData({'municipio': municipio});
+      await usuario.reference.update({'edo': edo});
+      await usuario.reference.update({'municipio': municipio});
       Fluttertoast.showToast(msg: 'actualicé ambos');
     }
   }
@@ -301,7 +301,7 @@ class Controller with ChangeNotifier {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging();
     firebaseMessaging.getToken().then((value) {
       activeToken = value;
-      usuario.reference.updateData({
+      usuario.reference.update({
         'tokens': FieldValue.arrayUnion([value])
       });
     });
@@ -310,7 +310,7 @@ class Controller with ChangeNotifier {
   signOut() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await googleSignIn.signOut();
-    await usuario.reference.updateData({
+    await usuario.reference.update({
       'tokens': FieldValue.arrayRemove([activeToken])
     });
     await prefs.clear();
@@ -381,13 +381,13 @@ class Controller with ChangeNotifier {
     if (prefs.getString('correo') == null) {
       return false;
     } else {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('usuarios')
           .where('correo', isEqualTo: prefs.getString('correo'))
-          .getDocuments()
+          .get()
           .then((onValue) {
         usuarioActual =
-            UsuarioModel.fromDocumentSnapshot(onValue.documents.first, 'meh');
+            UsuarioModel.fromDocumentSnapshot(onValue.docs.first, 'meh');
 
         setAddress();
       });

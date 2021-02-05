@@ -38,7 +38,7 @@ class _PublicacionListState extends State<PublicacionList> {
 
                 //PESTAÑA DE ADOPCIONES
                 StreamBuilder(
-                  stream: Firestore.instance
+                  stream: FirebaseFirestore.instance
                       .collection('adopciones')
                       .where('userId',
                           isEqualTo: controlador1.usuario.documentId)
@@ -116,7 +116,7 @@ class _PublicacionListState extends State<PublicacionList> {
 
                 //PESTAÑA DE PERDIDOS
                 StreamBuilder(
-                  stream: Firestore.instance
+                  stream: FirebaseFirestore.instance
                       .collection('perdidos')
                       .where('userId',
                           isEqualTo: controlador1.usuario.documentId)
@@ -194,7 +194,7 @@ class _PublicacionListState extends State<PublicacionList> {
 
                 //PESTAÑA DE RESCATES
                 StreamBuilder(
-                  stream: Firestore.instance
+                  stream: FirebaseFirestore.instance
                       .collection('rescates')
                       .where('userId',
                           isEqualTo: controlador1.usuario.documentId)
@@ -272,7 +272,7 @@ class _PublicacionListState extends State<PublicacionList> {
 
                 //PESTAÑA DE EMERGENCIAS
                 StreamBuilder(
-                  stream: Firestore.instance
+                  stream: FirebaseFirestore.instance
                       .collection('emergencias')
                       .where('userId',
                           isEqualTo: controlador1.usuario.documentId)
@@ -401,9 +401,9 @@ class _PublicacionListState extends State<PublicacionList> {
     }
     
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection(tabla)
-        .document(objeto.documentID)
+        .doc(objeto.documentID)
         .delete()
         .catchError((onError) {
       print('error en base de datos');

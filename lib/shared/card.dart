@@ -71,39 +71,30 @@ class _ListCardState extends State<ListCard> {
                       tag: widget.objeto.documentId,
                       child: GestureDetector(
                         onTap: () {
-                          controlador1.pestanaAct == 0
+                          controlador1.pestanaAct == 1
                               ? Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Adopcion(
-                                            objeto: widget.objeto,
-                                            favorito: favorito,
-                                          )),
+                                      builder: (context) => Perdido(
+                                          objeto: widget.objeto,
+                                          favorito: favorito)),
                                 )
-                              : controlador1.pestanaAct == 1
+                              : controlador1.pestanaAct == 2
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Perdido(
+                                          builder: (context) => Adopcion(
+                                                objeto: widget.objeto,
+                                                favorito: favorito,
+                                              )),
+                                    )
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Emergencia(
                                               objeto: widget.objeto,
                                               favorito: favorito)),
-                                    )
-                                  : controlador1.pestanaAct == 2
-                                      ? Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Rescate(
-                                                    objeto: widget.objeto,
-                                                    favorito: favorito,
-                                                  )),
-                                        )
-                                      : Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Emergencia(
-                                                  objeto: widget.objeto,
-                                                  favorito: favorito)),
-                                        );
+                                    );
                         },
                         child: ClipRRect(
                           clipBehavior: Clip.hardEdge,
@@ -126,7 +117,7 @@ class _ListCardState extends State<ListCard> {
                               width: double.maxFinite,
                               height: prefHeigth,
                               fit: BoxFit.fitWidth,
-                              image: controlador1.pestanaAct == 0
+                              image: controlador1.pestanaAct == 2
                                   ? NetworkImage(widget.objeto.fotos[0])
                                   : NetworkImage(widget.objeto.foto)),
                         ),
@@ -146,7 +137,7 @@ class _ListCardState extends State<ListCard> {
                 children: <Widget>[
                   Flexible(
                     child: Text(
-                      widget.objeto.nombre,
+                      widget.objeto.titulo,
                       style: TextStyle(
                         fontSize: textSize,
                         fontWeight: FontWeight.bold,
@@ -176,32 +167,6 @@ class _ListCardState extends State<ListCard> {
                             });
                       switch (controlador1.pestanaAct) {
                         case 0:
-                          !favorito
-                              ? controlador1.usuario.reference.updateData(
-                                  {
-                                    'adopciones': FieldValue.arrayUnion([
-                                      {
-                                        'imagen': widget.objeto.fotos[0],
-                                        'nombre': widget.objeto.nombre,
-                                        'documentId': widget.objeto.documentId,
-                                      }
-                                    ])
-                                  },
-                                )
-                              : controlador1.usuario.reference.updateData(
-                                  {
-                                    'adopciones': FieldValue.arrayRemove([
-                                      {
-                                        'imagen': widget.objeto.fotos[0],
-                                        'nombre': widget.objeto.nombre,
-                                        'documentId': widget.objeto.documentId,
-                                      }
-                                    ])
-                                  },
-                                );
-                          setState(() {
-                            favorito ? favorito = false : favorito = true;
-                          });
                           break;
                         case 1:
                           !favorito
@@ -233,11 +198,11 @@ class _ListCardState extends State<ListCard> {
                           break;
                         case 2:
                           !favorito
-                              ? controlador1.usuario.reference.updateData(
+                              ? controlador1.usuario.reference.update(
                                   {
-                                    'rescates': FieldValue.arrayUnion([
+                                    'adopciones': FieldValue.arrayUnion([
                                       {
-                                        'imagen': widget.objeto.foto,
+                                        'imagen': widget.objeto.fotos[0],
                                         'titulo': widget.objeto.titulo,
                                         'documentId': widget.objeto.documentId,
                                       }
@@ -246,9 +211,9 @@ class _ListCardState extends State<ListCard> {
                                 )
                               : controlador1.usuario.reference.updateData(
                                   {
-                                    'rescates': FieldValue.arrayRemove([
+                                    'adopciones': FieldValue.arrayRemove([
                                       {
-                                        'imagen': widget.objeto.foto,
+                                        'imagen': widget.objeto.fotos[0],
                                         'titulo': widget.objeto.titulo,
                                         'documentId': widget.objeto.documentId,
                                       }

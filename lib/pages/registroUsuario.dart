@@ -449,26 +449,26 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                     '/perfil/PP' +
                     DateTime.now().toString();
 
-                StorageReference storageRef =
+                Reference storageRef =
                     FirebaseStorage.instance.ref().child(fileName);
 
-                final StorageUploadTask uploadTask = storageRef.putFile(
+                final UploadTask uploadTask = storageRef.putFile(
                   imagen,
                 );
 
-                final StorageTaskSnapshot downloadUrl =
-                    (await uploadTask.onComplete);
+                final TaskSnapshot downloadUrl =
+                    (await uploadTask.whenComplete(() => null));
 
                 final String url = (await downloadUrl.ref.getDownloadURL());
                 print('URL Is $url');
 
                 formUsuario['foto'] = url;
-                formUsuario['fotoStorageRef'] = downloadUrl.ref.path;
+                formUsuario['fotoStorageRef'] = downloadUrl.ref.fullPath;
               } else {
                 formUsuario['foto'] = controlador1.imageUrl;
               }
 
-              await Firestore.instance
+              await FirebaseFirestore.instance
                   .collection('usuarios')
                   .add(formUsuario)
                   .then((value) async {
@@ -489,12 +489,12 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
 
   Future _validatorEmail(String value) async {
     print(value);
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection('usuarios')
         .where('correo', isEqualTo: value)
-        .getDocuments()
+        .get()
         .then((onValue) {
-      if (onValue.documents.isNotEmpty) {
+      if (onValue.docs.isNotEmpty) {
         print('correo existente');
         setState(() {
           correov = false;
