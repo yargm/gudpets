@@ -20,7 +20,9 @@ class _RegistroRescateState extends State<RegistroRescate> {
   void initState() {
     super.initState();
 
-    Permission.locationWhenInUse.status.then(_actualizaestado);
+    PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.locationWhenInUse)
+        .then(_actualizaestado);
   }
 
   PermissionStatus permisoStatus;
@@ -347,9 +349,10 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                                         'permiso despues cuadro dialogo:' +
                                                             permisoStatus
                                                                 .toString());
-                                                    await Permission
-                                                        .locationWhenInUse
-                                                        .status
+                                                    await PermissionHandler()
+                                                        .checkPermissionStatus(
+                                                            PermissionGroup
+                                                                .locationWhenInUse)
                                                         .then(_actualizaestado);
                                                     print('permiso final: ' +
                                                         permisoStatus
@@ -492,8 +495,10 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                               print(
                                                   'permiso despues cuadro dialogo:' +
                                                       permisoStatus.toString());
-                                              await Permission
-                                                  .locationWhenInUse.status
+                                              await PermissionHandler()
+                                                  .checkPermissionStatus(
+                                                      PermissionGroup
+                                                          .locationWhenInUse)
                                                   .then(_actualizaestado);
                                               print('permiso final: ' +
                                                   permisoStatus.toString());
@@ -659,8 +664,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                         '/rescate/' +
                                         DateTime.now().toString();
 
-                                Reference storageRef = FirebaseStorage
-                                    .instance
+                                Reference storageRef = FirebaseStorage.instance
                                     .ref()
                                     .child(fileName);
 
@@ -759,7 +763,8 @@ class _RegistroRescateState extends State<RegistroRescate> {
     Reference ref = FirebaseStorage.instance.ref().child(fileName);
     UploadTask uploadTask = ref.putData(imageData);
 
-    fotosRef['url'] = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    fotosRef['url'] =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     fotosRef['ref'] = (await uploadTask.whenComplete(() => null)).ref.fullPath;
     return fotosRef;
   }

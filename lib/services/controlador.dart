@@ -50,7 +50,7 @@ class Controller with ChangeNotifier {
                 height: 10,
               ),
               FloatingActionButton.extended(
-                onPressed: () async => await openAppSettings(),
+                onPressed: () async =>await PermissionHandler().openAppSettings(),
                 label: Text('Configuración'),
                 icon: Icon(Icons.settings),
               )
@@ -164,34 +164,14 @@ class Controller with ChangeNotifier {
     }
   }
 
-  Future<bool> checkPermission() async {
+    Future<bool> checkPermission() async {
     final permissionStorageGroup =
-        Platform.isIOS ? Permission.photos : Permission.storage;
-    if (Platform.isIOS) {
-      PermissionStatus permission = await Permission.photos.status;
-      if (permission != PermissionStatus.granted) {
-        await Permission.photos.request();
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      PermissionStatus permission = await Permission.storage.status;
-      if (permission != PermissionStatus.granted) {
-        await Permission.storage.request();
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    // final permissionStorageGroup =
-    //     Platform.isIOS ? Permission.photos : Permission.storage;
-    // Map<Permission, PermissionStatus> res =
-    //     await PermissionStatus.requestPermissions([
-    //   permissionStorageGroup,
-    // ]);
-    // return res[permissionStorageGroup] == PermissionStatus.granted;
+        Platform.isIOS ? PermissionGroup.photos : PermissionGroup.storage;
+    Map<PermissionGroup, PermissionStatus> res =
+        await PermissionHandler().requestPermissions([
+      permissionStorageGroup,
+    ]);
+    return res[permissionStorageGroup] == PermissionStatus.granted;
   }
 
   Future<GeoPoint> getLocation(BuildContext context) async {
@@ -213,34 +193,28 @@ class Controller with ChangeNotifier {
 
   Future<bool> checkLocationPermisson() async {
     if (Platform.isIOS) {
-      PermissionStatus permission = await Permission.locationWhenInUse.status;
+      PermissionStatus permission = await PermissionHandler()
+          .checkPermissionStatus(PermissionGroup.locationWhenInUse);
       if (permission != PermissionStatus.granted) {
-        Permission.locationWhenInUse.request();
-        if (permission != PermissionStatus.granted) {
+        Map<PermissionGroup, PermissionStatus> permissions =
+            await PermissionHandler()
+                .requestPermissions([PermissionGroup.locationWhenInUse]);
+        if (permissions[PermissionStatus] != PermissionStatus.granted) {
           return false;
         }
       } else {
         return true;
       }
     } else {
-      // PermissionHandler permissionHandler = PermissionHandler();
-      PermissionStatus idk = await Permission.locationWhenInUse.status;
+      PermissionHandler permissionHandler = PermissionHandler();
+      var idk = await permissionHandler
+          .checkPermissionStatus(PermissionGroup.locationWhenInUse);
       print('Permisos stauts!!! ' + idk.toString());
-
-      if (idk != PermissionStatus.permanentlyDenied) {
-        Permission.locationWhenInUse.request();
-        if (idk != PermissionStatus.granted) {
-          return false;
-        }
+      if (idk == PermissionStatus.neverAskAgain) {
+        return false;
       } else {
         return true;
       }
-
-      // if (idk == PermissionStatus.neverAskAgain) {
-      //   return false;
-      // } else {
-      //   return true;
-      // }
     }
     return true;
   }
@@ -257,24 +231,25 @@ class Controller with ChangeNotifier {
 
   Future<bool> checkGalerryPermisson(bool camera) async {
     if (Platform.isIOS) {
-      PermissionStatus permission = camera
-          ? await Permission.camera.status
-          : await Permission.photos.status;
+      PermissionStatus permission = await PermissionHandler()
+          .checkPermissionStatus(
+              camera ? PermissionGroup.camera : PermissionGroup.photos);
       if (permission != PermissionStatus.granted) {
-        if (camera
-            ? await Permission.camera.request().isGranted
-            : await Permission.photos.request().isGranted) {
-          return true;
-        } else {
+        Map<PermissionGroup, PermissionStatus> permissions =
+            await PermissionHandler().requestPermissions(
+                [camera ? PermissionGroup.camera : PermissionGroup.photos]);
+        if (permissions[PermissionStatus] != PermissionStatus.granted) {
           return false;
         }
+      } else {
+        return true;
       }
     } else {
-      var idk = camera
-          ? await Permission.camera.status
-          : await Permission.storage.status;
+      PermissionHandler permissionHandler = PermissionHandler();
+      var idk = await permissionHandler.checkPermissionStatus(
+          camera ? PermissionGroup.camera : PermissionGroup.storage);
       print('Permisos stauts!!! ' + idk.toString());
-      if (idk == PermissionStatus.permanentlyDenied) {
+      if (idk == PermissionStatus.neverAskAgain) {
         return false;
       } else {
         return true;
@@ -282,7 +257,6 @@ class Controller with ChangeNotifier {
     }
     return true;
   }
-
   UsuarioModel usuarioActual = UsuarioModel(
     nombre: 'No name',
     foto: '',
