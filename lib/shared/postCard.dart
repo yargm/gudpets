@@ -73,10 +73,12 @@ class _FotosState extends State<Fotos> {
                   ),
                   title: Text(
                     usu.nombre,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                   subtitle: Text(
-                      '${widget.post.fecha.month.toString()}-${widget.post.fecha.day.toString()}  a las ${widget.post.fecha.hour.toString()}:${widget.post.fecha.minute.toString()}'),
+                    '${widget.post.fecha.day.toString()}/${widget.post.fecha.month.toString()}/${widget.post.fecha.year.toString()}   a las ${widget.post.fecha.hour.toString()}:${widget.post.fecha.minute.toString()}',
+                    style: TextStyle(fontSize: 12),
+                  ),
                   trailing: PopupMenuButton(
                     elevation: 8,
                     padding: EdgeInsets.all(8),
@@ -135,65 +137,67 @@ class _FotosState extends State<Fotos> {
                   ),
                 ),
           Divider(),
-          ButtonBar(
-            buttonPadding: EdgeInsets.all(5),
-            alignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                splashColor: Colors.pink,
-                padding: EdgeInsets.all(0),
-                onPressed: () {
-                  controlador1.loading = true;
-                  controlador1.notify();
-                  if (!fav) {
-                    widget.post.reference.update({
-                      'favoritos': FieldValue.arrayUnion(
-                          [controlador1.usuario.documentId])
-                    });
-                    numlikes = widget.post.numlikes;
-                    widget.post.reference
-                        .update({'numlikes': widget.post.numlikes + 1});
-                  } else {
-                    widget.post.reference.update({
-                      'favoritos': FieldValue.arrayRemove(
-                          [controlador1.usuario.documentId])
-                    });
-                    if (widget.post.numlikes != 0) {
-                      widget.post.reference
-                          .update({'numlikes': widget.post.numlikes - 1});
-                    }
-                  }
-                  print('hello');
-                  controlador1.loading = false;
-                  controlador1.notify();
-                  setState(() {
-                    fav ? fav = false : fav = true;
-                  });
-                },
-                icon: controlador1.loading
-                    ? CircularProgressIndicator()
-                    : Icon(
-                        fav ? Icons.favorite : Icons.favorite_border,
-                        color: Colors.pink[200],
-                      ),
-              ),
-              widget.post.favoritos.length == 0
-                  ? Container()
-                  : widget.index == 2
-                      ? Container()
-                      : Text('${widget.post.favoritos.length} Me gusta'),
-              IconButton(
-                onPressed: () {
-                  return showDialog(
-                      context: context,
-                      child: Comments(
-                        post: widget.post,
-                      ));
-                },
-                icon: Icon(Icons.comment),
-              )
-            ],
-          ),
+          widget.index == 2
+              ? Container()
+              : ButtonBar(
+                  buttonPadding: EdgeInsets.all(5),
+                  alignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      splashColor: Colors.pink,
+                      padding: EdgeInsets.all(0),
+                      onPressed: () {
+                        controlador1.loading = true;
+                        controlador1.notify();
+                        if (!fav) {
+                          widget.post.reference.update({
+                            'favoritos': FieldValue.arrayUnion(
+                                [controlador1.usuario.documentId])
+                          });
+                          numlikes = widget.post.numlikes;
+                          widget.post.reference
+                              .update({'numlikes': widget.post.numlikes + 1});
+                        } else {
+                          widget.post.reference.update({
+                            'favoritos': FieldValue.arrayRemove(
+                                [controlador1.usuario.documentId])
+                          });
+                          if (widget.post.numlikes != 0) {
+                            widget.post.reference
+                                .update({'numlikes': widget.post.numlikes - 1});
+                          }
+                        }
+                        print('hello');
+                        controlador1.loading = false;
+                        controlador1.notify();
+                        setState(() {
+                          fav ? fav = false : fav = true;
+                        });
+                      },
+                      icon: controlador1.loading
+                          ? CircularProgressIndicator()
+                          : Icon(
+                              fav ? Icons.favorite : Icons.favorite_border,
+                              color: Colors.pink[200],
+                            ),
+                    ),
+                    widget.post.favoritos.length == 0
+                        ? Container()
+                        : widget.index == 2
+                            ? Container()
+                            : Text('${widget.post.favoritos.length} Me gusta'),
+                    IconButton(
+                      onPressed: () {
+                        return showDialog(
+                            context: context,
+                            child: Comments(
+                              post: widget.post,
+                            ));
+                      },
+                      icon: Icon(Icons.comment),
+                    )
+                  ],
+                ),
         ],
       ),
     );
@@ -221,8 +225,11 @@ class _CommentsState extends State<Comments> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      insetPadding: EdgeInsets.only(top: 60),
       backgroundColor: Colors.transparent,
       child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -255,7 +262,7 @@ class _CommentsState extends State<Comments> {
 
                     return documents.isNotEmpty
                         ? ListView.builder(
-                            physics: ScrollPhysics(
+                            physics: BouncingScrollPhysics(
                                 parent: AlwaysScrollableScrollPhysics()),
                             shrinkWrap: true,
                             itemCount: documents.length,
@@ -417,33 +424,46 @@ class _ListaComentarioState extends State<ListaComentario> {
           ),
           child: ListTile(
             leading: CircleAvatar(
-              radius: widget.index == 2 ? 17 : 20,
+              radius: widget.index == 2 ? 17 : 25,
               backgroundImage: NetworkImage(widget.usuario.foto),
             ),
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(widget.usuario.nombre,
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                Text(
-                  widget.comentario.comentario,
-                  style: TextStyle(color: Colors.black54, fontSize: 18),
-                )
-              ],
+            title: Container(
+              margin: EdgeInsets.only(top: 10, bottom: 5),
+              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+              decoration: BoxDecoration(
+                  color: primaryColor,
+                  border: Border.all(
+                    color: primaryLight,
+                  ),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(widget.usuario.nombre,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  Text(
+                    widget.comentario.comentario,
+                    style: TextStyle(color: Colors.black87, fontSize: 16),
+                  )
+                ],
+              ),
             ),
             subtitle: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                SizedBox(
+                  width: 10,
+                ),
                 Text(
                   '${widget.comentario.fecha.month.toString()}/${widget.comentario.fecha.day.toString()}  a las ${widget.comentario.fecha.hour.toString()}:${widget.comentario.fecha.minute.toString()}',
                   style: TextStyle(fontSize: 12),
                 ),
                 SizedBox(
-                  width: 5,
+                  width: 15,
                 ),
                 widget.index == 1
                     ? GestureDetector(
@@ -472,7 +492,9 @@ class _ListaComentarioState extends State<ListaComentario> {
                 IconButton(
                     color: Colors.pink[200],
                     icon: Icon(
-                        widget.like ? Icons.favorite : Icons.favorite_border),
+                      widget.like ? Icons.favorite : Icons.favorite_border,
+                      size: 15,
+                    ),
                     onPressed: () async {
                       if (!widget.like) {
                         widget.comentario.reference.update({
@@ -536,7 +558,7 @@ class _ListaComentarioState extends State<ListaComentario> {
                           return documents.isNotEmpty
                               ? ListView.builder(
                                   physics: ScrollPhysics(
-                                      parent: AlwaysScrollableScrollPhysics()),
+                                      parent: NeverScrollableScrollPhysics()),
                                   shrinkWrap: true,
                                   itemCount: documents.length,
                                   itemBuilder: (context, index) {

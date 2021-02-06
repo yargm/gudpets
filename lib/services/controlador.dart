@@ -5,7 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as locations;
 import 'package:geocoder/geocoder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -26,7 +26,7 @@ class Controller with ChangeNotifier {
   String sexo;
   String tipo;
   GeoPoint _currentLocation;
-  var location = Location();
+  var location = locations.Location();
   double latitud;
   double longitud;
   String edo;
@@ -50,8 +50,7 @@ class Controller with ChangeNotifier {
                 height: 10,
               ),
               FloatingActionButton.extended(
-                onPressed: () async =>
-                    await PermissionHandler().openAppSettings(),
+                onPressed: () async =>await PermissionHandler().openAppSettings(),
                 label: Text('Configuración'),
                 icon: Icon(Icons.settings),
               )
@@ -165,7 +164,7 @@ class Controller with ChangeNotifier {
     }
   }
 
-  Future<bool> checkPermission() async {
+    Future<bool> checkPermission() async {
     final permissionStorageGroup =
         Platform.isIOS ? PermissionGroup.photos : PermissionGroup.storage;
     Map<PermissionGroup, PermissionStatus> res =
@@ -177,9 +176,12 @@ class Controller with ChangeNotifier {
 
   Future<GeoPoint> getLocation(BuildContext context) async {
     try {
-      var userLocation = await location.getLocation();
-      _currentLocation =
-          GeoPoint(userLocation.latitude, userLocation.longitude);
+      var userLocation = location.getLocation();
+      double latitude;
+      userLocation.then((value) => latitude.toDouble());
+      double longitude;
+      userLocation.then((value) => longitude.toDouble());
+      _currentLocation = GeoPoint(latitude, longitude);
       latitud = _currentLocation.latitude;
       longitud = _currentLocation.longitude;
       Fluttertoast.showToast(msg: 'tengo la ubicación');
@@ -255,7 +257,6 @@ class Controller with ChangeNotifier {
     }
     return true;
   }
-
   UsuarioModel usuarioActual = UsuarioModel(
     nombre: 'No name',
     foto: '',

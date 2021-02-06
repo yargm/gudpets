@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as locations;
+import 'package:permission/permission.dart' as permisos;
 import 'mapaejemplo.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
@@ -36,7 +37,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
   }
 
   GeoPoint _currentLocation;
-  var location = Location();
+  var location = locations.Location();
   double latitud;
   double longitud;
   List<Asset> images = List<Asset>();
@@ -663,8 +664,7 @@ class _RegistroRescateState extends State<RegistroRescate> {
                                         '/rescate/' +
                                         DateTime.now().toString();
 
-                                Reference storageRef = FirebaseStorage
-                                    .instance
+                                Reference storageRef = FirebaseStorage.instance
                                     .ref()
                                     .child(fileName);
 
@@ -763,7 +763,8 @@ class _RegistroRescateState extends State<RegistroRescate> {
     Reference ref = FirebaseStorage.instance.ref().child(fileName);
     UploadTask uploadTask = ref.putData(imageData);
 
-    fotosRef['url'] = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    fotosRef['url'] =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     fotosRef['ref'] = (await uploadTask.whenComplete(() => null)).ref.fullPath;
     return fotosRef;
   }

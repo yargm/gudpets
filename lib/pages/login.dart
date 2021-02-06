@@ -4,6 +4,7 @@ import 'package:gudpets/shared/colores.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io';
@@ -44,6 +45,50 @@ class _LogInState extends State<LogIn> {
       });
     }
   }
+  // void initState() {
+  //   super.initState();
+  //   if (Platform.isIOS) {
+  //   } else {
+  //     Permission.locationWhenInUse.serviceStatus.then((status) {
+  //       print(status.toString());
+  //       if (status.toString() == 'PermissionStatus.denied' ||
+  //           status.toString() == 'PermissionStatus.unknown' ||
+  //           status.toString() == 'PermissionStatus.disabled') {
+  //         print('preguntar');
+  //         _askpermission();
+  //       } else {
+  //         print('ya me aceptaste antes');
+  //         Future.delayed(Duration.zero, () async {
+  //           Controller controller =
+  //               Provider.of<Controller>(context, listen: false);
+
+  //           await controller.getLocation(context);
+  //           await controller.getAddress(context, true);
+  //         });
+  //         return;
+  //       }
+  //     });
+  //   }
+  // }
+
+  // Future<bool> _askpermission() async {
+  //   await Permission.locationWhenInUse.request();
+
+  //   Permission.locationWhenInUse.serviceStatus.then((status) {
+  //     if (status.toString() == 'PermissionStatus.denied') {
+  //       exit(0);
+  //     } else if (status.toString() == "PermissionStatus.granted") {
+  //       Future.delayed(Duration.zero, () async {
+  //         Controller controller =
+  //             Provider.of<Controller>(context, listen: false);
+
+  //         await controller.getLocation(context);
+  //         await controller.getAddress(context, true);
+  //       });
+  //     }
+  //   });
+  //   return true;
+  // }
 
   Future<bool> _askpermission() async {
     await PermissionHandler()
@@ -231,16 +276,17 @@ class _LogInState extends State<LogIn> {
                                               setState(() {
                                                 isLoading = true;
                                               });
-                                              var query = await FirebaseFirestore
-                                                  .instance
-                                                  .collection('usuarios')
-                                                  .where('correo',
-                                                      isEqualTo:
-                                                          loginMap['user'])
-                                                  .where('contrasena',
-                                                      isEqualTo:
-                                                          loginMap['password'])
-                                                  .get();
+                                              var query =
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection('usuarios')
+                                                      .where('correo',
+                                                          isEqualTo:
+                                                              loginMap['user'])
+                                                      .where('contrasena',
+                                                          isEqualTo: loginMap[
+                                                              'password'])
+                                                      .get();
 
                                               if (query.docs.isEmpty) {
                                                 setState(() {
@@ -252,8 +298,7 @@ class _LogInState extends State<LogIn> {
                                                   return;
                                                 }
                                               } else {
-                                                var user =
-                                                    query.docs.first;
+                                                var user = query.docs.first;
                                                 controlador1.usuarioActual =
                                                     UsuarioModel
                                                         .fromDocumentSnapshot(
