@@ -53,6 +53,7 @@ dependencies:
   photo_view: ^0.10.3
   image_downloader: ^0.20.1
   photofilters: ^2.0.1
+  like_button: ^1.0.4
   
 
 

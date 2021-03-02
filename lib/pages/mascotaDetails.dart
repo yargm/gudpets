@@ -1,6 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gudpets/pages/postView.dart';
 
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/colores.dart';
@@ -482,74 +483,84 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                               PostsModel.fromDocumentSnapshot(documents[index]);
                           return GestureDetector(
                             onTap: () {
-                              showDialog(
-                                useSafeArea: true,
-                                //barrierDismissible: false,
-                                barrierColor: Colors.black54,
-                                context: context,
-                                builder: (_) => WillPopScope(
-                                    onWillPop: () async {
-                                      controlador1.pestanaAct = 0;
-                                      //controlador1.notify();
-                                      return true;
-                                    },
-                                    child: AlertDialog(
-                                      backgroundColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10.0))),
-                                      contentPadding: EdgeInsets.all(0.0),
-                                      insetPadding: EdgeInsets.all(5),
-                                      content: Builder(
-                                        builder: (context) {
-                                          // Get available height and width of the build area of this widget. Make a choice depending on the size.
-                                          var height = MediaQuery.of(context)
-                                              .size
-                                              .height;
-                                          var width =
-                                              MediaQuery.of(context).size.width;
-                                          print(width);
-
-                                          return Container(
-                                            color: Colors.transparent,
-                                            //height: ,
-                                            width: width,
-                                            child: SingleChildScrollView(
-                                              child: Fotos(
-                                                controlador1: controlador1,
-                                                index: 2,
-                                                post: post,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    )),
-
-                                //     (BuildContext context) {
-                                //   var height =
-                                //       MediaQuery.of(context).size.height;
-                                //   var width = MediaQuery.of(context).size.width;
-                                //   print(width);
-
-                                //   return WillPopScope(
-                                //       onWillPop: () async {
-                                //         controlador1.pestanaAct = 0;
-                                //         controlador1.notify();
-                                //         return true;
-                                //       },
-                                //       child: Container(
-                                //         width:
-                                //             MediaQuery.of(context).size.width,
-                                //         child: Fotos(
-                                //           index: 2,
-                                //           controlador1: controlador1,
-                                //           post: post,
-                                //         ),
-                                //       ));
-                                // },
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => PostView(
+                                    post: post,
+                                    controlador1: controlador1,
+                                  ),
+                                ),
                               );
                             },
+                            // onTap: () {
+                            //   showDialog(
+                            //     useSafeArea: true,
+                            //     //barrierDismissible: false,
+                            //     barrierColor: Colors.black54,
+                            //     context: context,
+                            //     builder: (_) => WillPopScope(
+                            //         onWillPop: () async {
+                            //           controlador1.pestanaAct = 0;
+                            //           //controlador1.notify();
+                            //           return true;
+                            //         },
+                            //         child: AlertDialog(
+                            //           backgroundColor: Colors.transparent,
+                            //           shape: RoundedRectangleBorder(
+                            //               borderRadius: BorderRadius.all(
+                            //                   Radius.circular(10.0))),
+                            //           contentPadding: EdgeInsets.all(0.0),
+                            //           insetPadding: EdgeInsets.all(5),
+                            //           content: Builder(
+                            //             builder: (context) {
+                            //               // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                            //               var height = MediaQuery.of(context)
+                            //                   .size
+                            //                   .height;
+                            //               var width =
+                            //                   MediaQuery.of(context).size.width;
+                            //               print(width);
+
+                            //               return Container(
+                            //                 color: Colors.transparent,
+                            //                 //height: ,
+                            //                 width: width,
+                            //                 child: SingleChildScrollView(
+                            //                   child: Fotos(
+                            //                     controlador1: controlador1,
+                            //                     index: 2,
+                            //                     post: post,
+                            //                   ),
+                            //                 ),
+                            //               );
+                            //             },
+                            //           ),
+                            //         )),
+
+                            //     //     (BuildContext context) {
+                            //     //   var height =
+                            //     //       MediaQuery.of(context).size.height;
+                            //     //   var width = MediaQuery.of(context).size.width;
+                            //     //   print(width);
+
+                            //     //   return WillPopScope(
+                            //     //       onWillPop: () async {
+                            //     //         controlador1.pestanaAct = 0;
+                            //     //         controlador1.notify();
+                            //     //         return true;
+                            //     //       },
+                            //     //       child: Container(
+                            //     //         width:
+                            //     //             MediaQuery.of(context).size.width,
+                            //     //         child: Fotos(
+                            //     //           index: 2,
+                            //     //           controlador1: controlador1,
+                            //     //           post: post,
+                            //     //         ),
+                            //     //       ));
+                            //     // },
+                            //   );
+                            // },
                             child: FadeInImage(
                               placeholder: AssetImage('assets/dog.png'),
                               image: NetworkImage(post.foto),

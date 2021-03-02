@@ -21,6 +21,7 @@ class SubirFotos extends StatefulWidget {
 class _SubirFotosState extends State<SubirFotos> {
   bool isLoading = false;
   bool checkedValue = false;
+  bool cargando = false;
   Map<String, dynamic> post = {
     'foto': '',
     'descripcion': '',
@@ -108,7 +109,7 @@ class _SubirFotosState extends State<SubirFotos> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text('Subir Foto'),
-          backgroundColor: Colors.transparent,
+          // backgroundColor: Colors.transparent,
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(10),
@@ -302,12 +303,10 @@ class _SubirFotosState extends State<SubirFotos> {
                                       '/posts/' +
                                       DateTime.now().toString();
 
-                              Reference storageRef = FirebaseStorage
-                                  .instance
+                              Reference storageRef = FirebaseStorage.instance
                                   .ref()
                                   .child(fileName);
-                              final UploadTask uploadTask =
-                                  storageRef.putFile(
+                              final UploadTask uploadTask = storageRef.putFile(
                                 imageFile != null ? imageFile : widget.image,
                               );
                               final TaskSnapshot downloadUrl =
