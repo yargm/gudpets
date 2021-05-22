@@ -77,28 +77,31 @@ class _SubirFotosState extends State<SubirFotos> {
       onWillPop: () async {
         var hola = await showDialog(
             context: context,
-            child: AlertDialog(
-              title: Text('Saliendo'),
-              content: Text('¿Estas seguro que deseas descartar los cambios?'),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    'Regresar',
-                    style: TextStyle(color: secondaryDark),
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Saliendo'),
+                content:
+                    Text('¿Estas seguro que deseas descartar los cambios?'),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: Text(
+                      'Regresar',
+                      style: TextStyle(color: secondaryDark),
+                    ),
                   ),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                    controlador1.mascotas.clear();
-                  },
-                  child: Text('Descartar cambios'),
-                ),
-              ],
-            ));
+                  RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                      controlador1.mascotas.clear();
+                    },
+                    child: Text('Descartar cambios'),
+                  ),
+                ],
+              );
+            });
         if (hola) {
           return true;
         }

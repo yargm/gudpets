@@ -43,70 +43,72 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                   onPressed: () {
                     return showDialog(
                         context: context,
-                        child: loading
-                            ? Expanded(
-                                child: AlertDialog(
-                                  title: Text('Eliminando Mascota'),
-                                  content: LinearProgressIndicator(),
-                                ),
-                              )
-                            : complete
-                                ? Expanded(
-                                    child: AlertDialog(
-                                      title: Text('¡Mascota eliminada!'),
-                                      content: Icon(
-                                        Icons.check_circle,
-                                        color: secondaryDark,
-                                        size: 40,
+                        builder: (BuildContext context) {
+                          return loading
+                              ? Expanded(
+                                  child: AlertDialog(
+                                    title: Text('Eliminando Mascota'),
+                                    content: LinearProgressIndicator(),
+                                  ),
+                                )
+                              : complete
+                                  ? Expanded(
+                                      child: AlertDialog(
+                                        title: Text('¡Mascota eliminada!'),
+                                        content: Icon(
+                                          Icons.check_circle,
+                                          color: secondaryDark,
+                                          size: 40,
+                                        ),
+                                        actions: <Widget>[
+                                          RaisedButton(
+                                              child: Text('OK'),
+                                              onPressed: () => Navigator
+                                                  .pushReplacementNamed(
+                                                      context, '/perfil')
+                                              // Navigator.of(context)
+                                              //     .pushReplacementNamed('/home'),
+                                              )
+                                        ],
                                       ),
+                                    )
+                                  : AlertDialog(
+                                      title: Text(
+                                          '¡Estás a punto de eliminar una Mascota!'),
+                                      content: Text(
+                                          '¿Estás seguro de eliminar está mascota?'),
                                       actions: <Widget>[
                                         RaisedButton(
-                                            child: Text('OK'),
-                                            onPressed: () =>
-                                                Navigator.pushReplacementNamed(
-                                                    context, '/perfil')
-                                            // Navigator.of(context)
-                                            //     .pushReplacementNamed('/home'),
-                                            )
+                                          child: Text('No'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        RaisedButton(
+                                          child: Text('Si'),
+                                          onPressed: () async {
+                                            setState(() {
+                                              loading = true;
+                                            });
+                                            await controlador1.mascota.reference
+                                                .delete()
+                                                .catchError((onError) {
+                                              print(onError);
+                                            });
+                                            setState(() {
+                                              loading = false;
+                                              complete = true;
+                                            });
+                                            Navigator.of(context).popUntil(
+                                                ModalRoute.withName('/perfil'));
+                                            //  Navigator.pushNamedAndRemoveUntil(
+                                            //           context, '/perfil',(Route<dynamic> route) => false);
+                                            //Navigator.popAndPushNamed(context, routeName);
+                                          },
+                                        ),
                                       ],
-                                    ),
-                                  )
-                                : AlertDialog(
-                                    title: Text(
-                                        '¡Estás a punto de eliminar una Mascota!'),
-                                    content: Text(
-                                        '¿Estás seguro de eliminar está mascota?'),
-                                    actions: <Widget>[
-                                      RaisedButton(
-                                        child: Text('No'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      RaisedButton(
-                                        child: Text('Si'),
-                                        onPressed: () async {
-                                          setState(() {
-                                            loading = true;
-                                          });
-                                          await controlador1.mascota.reference
-                                              .delete()
-                                              .catchError((onError) {
-                                            print(onError);
-                                          });
-                                          setState(() {
-                                            loading = false;
-                                            complete = true;
-                                          });
-                                          Navigator.of(context).popUntil(
-                                              ModalRoute.withName('/perfil'));
-                                          //  Navigator.pushNamedAndRemoveUntil(
-                                          //           context, '/perfil',(Route<dynamic> route) => false);
-                                          //Navigator.popAndPushNamed(context, routeName);
-                                        },
-                                      ),
-                                    ],
-                                  ));
+                                    );
+                        });
                   })
               : Container()
         ],
@@ -121,22 +123,23 @@ class _MascotaDetailsState extends State<MascotaDetails> {
               onTap: () =>
                   controlador1.usuario.documentId == widget.usuario.documentId
                       ? showDialog(
-                          child: WillPopScope(
-                            onWillPop: () async {
-                              return controlador1.loading ? false : true;
-                            },
-                            child: SimpleDialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              children: <Widget>[
-                                DialogContentM(
-                                  foto: 'PPM',
-                                ),
-                              ],
-                            ),
-                          ),
                           context: context,
-                        )
+                          builder: (BuildContext context) {
+                            return WillPopScope(
+                              onWillPop: () async {
+                                return controlador1.loading ? false : true;
+                              },
+                              child: SimpleDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                children: <Widget>[
+                                  DialogContentM(
+                                    foto: 'PPM',
+                                  ),
+                                ],
+                              ),
+                            );
+                          })
                       : null,
               child: Container(
                 width: 120,
@@ -349,61 +352,65 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                               child: IconButton(
                                 padding: EdgeInsets.only(top: 20),
                                 onPressed: () => showDialog(
-                                  context: context,
-                                  child: Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Container(
-                                      margin: EdgeInsets.all(20),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          TextField(
-                                            maxLength: 100,
-                                            maxLines: 4,
-                                            minLines: 1,
-                                            decoration: InputDecoration(
-                                                labelText: 'Descripción'),
-                                            controller: textEditingController,
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Container(
+                                          margin: EdgeInsets.all(20),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              TextField(
+                                                maxLength: 100,
+                                                maxLines: 4,
+                                                minLines: 1,
+                                                decoration: InputDecoration(
+                                                    labelText: 'Descripción'),
+                                                controller:
+                                                    textEditingController,
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FloatingActionButton.extended(
+                                                backgroundColor: primaryColor,
+                                                onPressed: () async {
+                                                  controlador1.loading = true;
+                                                  controlador1.notify();
+                                                  await controlador1
+                                                      .mascota.reference
+                                                      .update({
+                                                    'personalidad':
+                                                        textEditingController
+                                                            .text
+                                                  });
+                                                  controlador1.mascota
+                                                          .personalidad =
+                                                      textEditingController
+                                                          .text;
+                                                  controlador1.loading = false;
+                                                  textEditingController.clear();
+                                                  controlador1.notify();
+                                                  Navigator.of(context).pop();
+                                                },
+                                                label: Text(
+                                                  'Actualizar',
+                                                  style: TextStyle(
+                                                      color: secondaryLight),
+                                                ),
+                                                icon: Icon(
+                                                  Icons.system_update_alt,
+                                                  color: secondaryLight,
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          FloatingActionButton.extended(
-                                            backgroundColor: primaryColor,
-                                            onPressed: () async {
-                                              controlador1.loading = true;
-                                              controlador1.notify();
-                                              await controlador1
-                                                  .mascota.reference
-                                                  .update({
-                                                'personalidad':
-                                                    textEditingController.text
-                                              });
-                                              controlador1
-                                                      .mascota.personalidad =
-                                                  textEditingController.text;
-                                              controlador1.loading = false;
-                                              textEditingController.clear();
-                                              controlador1.notify();
-                                              Navigator.of(context).pop();
-                                            },
-                                            label: Text(
-                                              'Actualizar',
-                                              style: TextStyle(
-                                                  color: secondaryLight),
-                                            ),
-                                            icon: Icon(
-                                              Icons.system_update_alt,
-                                              color: secondaryLight,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                        ),
+                                      );
+                                    }),
                                 icon: Icon(
                                   FontAwesomeIcons.edit,
                                   size: 15,

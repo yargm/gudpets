@@ -9,11 +9,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gudpets/pages/registroRescate.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
-
 }
 
 Controller controller = Controller();
@@ -23,7 +22,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => controller,
-      builder: (context) => controller,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

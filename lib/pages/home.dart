@@ -163,26 +163,27 @@ class _HomeState extends State<Home> {
             IconButton(
               icon: Icon(Icons.help),
               onPressed: () => showDialog(
-                context: context,
-                child: SingleChildScrollView(
-                  child: GestureDetector(
-                    onDoubleTap: () => Navigator.of(context).pop(),
-                    child: FadeInImage(
-                      image: NetworkImage(
-                          'https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/infgudpets.png?alt=media&token=e37c4267-c4ec-4d3d-8286-5c726248f15c'),
-                      placeholder: AssetImage('assets/dog.png'),
-                    ),
-                  ),
-                ),
-              ),
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SingleChildScrollView(
+                      child: GestureDetector(
+                        onDoubleTap: () => Navigator.of(context).pop(),
+                        child: FadeInImage(
+                          image: NetworkImage(
+                              'https://firebasestorage.googleapis.com/v0/b/adoptionapp-8a76d.appspot.com/o/infgudpets.png?alt=media&token=e37c4267-c4ec-4d3d-8286-5c726248f15c'),
+                          placeholder: AssetImage('assets/dog.png'),
+                        ),
+                      ),
+                    );
+                  }),
             ),
             controlador1.pestanaAct == 2 || controlador1.pestanaAct == 1
                 ? IconButton(
                     onPressed: () {
                       showSearch(
                         context: context,
-                        delegate: CustomSearchDelegate(
-                            controlador1.pestanaAct == 2
+                        delegate:
+                            CustomSearchDelegate(controlador1.pestanaAct == 2
                                 ? 'adopciones'
                                 : controlador1.pestanaAct == 1
                                     ? 'perdidos'
@@ -234,21 +235,13 @@ class _HomeState extends State<Home> {
           unselectedItemColor: primaryDark,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.cameraRetro),
-              label: "Fotos"
-            ),
+                icon: Icon(FontAwesomeIcons.cameraRetro), label: "Fotos"),
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.searchLocation),
-              label: "Perdidos"
-            ),
+                icon: Icon(FontAwesomeIcons.searchLocation), label: "Perdidos"),
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.home),
-              label: "Adopción"
-            ),
+                icon: Icon(FontAwesomeIcons.home), label: "Adopción"),
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.ambulance),
-              label: "Emergencias"
-            ),
+                icon: Icon(FontAwesomeIcons.ambulance), label: "Emergencias"),
           ],
           currentIndex: seleccionado,
           selectedItemColor: Colors.brown,

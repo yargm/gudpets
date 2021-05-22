@@ -18,23 +18,25 @@ class UserBanner extends StatelessWidget {
         onTap: () => extended
             ? showDialog(
                 context: context,
-                child: Dialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Container(
-                    margin: EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text('INE'),
-                        FadeInImage(
-                          image: NetworkImage(usuario.fotoINE),
-                          placeholder: AssetImage('assets/dog.png'),
-                        )
-                      ],
+                builder: (BuildContext context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Container(
+                      margin: EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text('INE'),
+                          FadeInImage(
+                            image: NetworkImage(usuario.fotoINE),
+                            placeholder: AssetImage('assets/dog.png'),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ))
+                  );
+                })
             : null,
         child: Row(
           children: <Widget>[
@@ -55,11 +57,16 @@ class UserBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(usuario.nombre, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                  Text(
+                    usuario.nombre,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
                   usuario.descripcion != null
                       ? Text(usuario.descripcion)
                       : Container(),
-                      SizedBox(height: 3,),
+                  SizedBox(
+                    height: 3,
+                  ),
                   extended
                       ? Row(
                           children: <Widget>[

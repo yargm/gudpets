@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gudpets/pages/pages.dart';
@@ -65,6 +67,15 @@ class _PostViewState extends State<PostView> {
     return !isLiked;
   }
 
+  Map<String, dynamic> comentario = {
+    'comentario': '',
+    'fecha': '',
+    'likes': [],
+    'userId': '',
+  };
+
+  TextEditingController textEditingController = TextEditingController();
+
   Widget build(context) {
     Controller controlador1 = Provider.of<Controller>(context);
     return WillPopScope(
@@ -76,147 +87,274 @@ class _PostViewState extends State<PostView> {
         return true;
       },
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text('Detalles'),
+        ),
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('usuarios')
-                      .doc(widget.post.userId)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return Center(
-                        child: Container(
-                            height: 20,
-                            child: const CircularProgressIndicator()),
-                      );
-
-                    var documents = snapshot.data;
-
-                    // print(documents['foto']);
-                    UsuarioModel usu =
-                        UsuarioModel.fromDocumentSnapshot(documents, '');
-                    return ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 5),
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(usu.foto),
-                        // backgroundColor: Colors.black,
-                        radius: 25,
-                      ),
-                      title: Text(
-                        usu.nombre,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      subtitle: Text(
-                        '${widget.post.fecha.day.toString()}/${widget.post.fecha.month.toString()}/${widget.post.fecha.year.toString()}   a las ${widget.post.fecha.hour.toString()}:${widget.post.fecha.minute.toString()}',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                      trailing: PopupMenuButton(
-                        elevation: 8,
-                        padding: EdgeInsets.all(0),
-                        onCanceled: () {
-                          print("You have canceled the menu.");
-                        },
-                        onSelected: (value) {
-                          if (value == 1) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return EliminarPostsContent(
-                                    index: widget.index, post: widget.post);
-                              },
-                            );
-                          } else {
-                            print(value);
-                          }
-                        },
-                        icon: Icon(
-                          Icons.more_vert,
-                          color: secondaryDark,
-                        ),
-                        itemBuilder: (context) => [
-                          controlador1.usuario.documentId == usu.documentId
-                              ? PopupMenuItem(
-                                  value: 1,
-                                  child: Text("Eliminar"),
-                                )
-                              : null,
-                          PopupMenuItem(
-                            value: 2,
-                            child: Text("Reportar"),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(widget.post.foto),
+                            fit: BoxFit.cover,
                           ),
-                        ],
-                      ),
-                    );
-                  }),
-              widget.post.descripcion == ''
-                  ? Container()
-                  : Container(
-                      padding: EdgeInsets.only(
-                          top: 0, bottom: 10, left: 10, right: 10),
-                      child: Text(
-                        widget.post.descripcion,
-                        // 'Del nacimiento del teléfono móvil a las apps'
-                        style: TextStyle(
-                          fontSize: 20,
+                        ),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 10),
+                          child: Column(
+                            children: [
+                              Card(
+                                child: Column(
+                                  children: [
+                                    StreamBuilder(
+                                        stream: FirebaseFirestore.instance
+                                            .collection('usuarios')
+                                            .doc(widget.post.userId)
+                                            .snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData)
+                                            return Center(
+                                              child: Container(
+                                                  height: 20,
+                                                  child:
+                                                      const CircularProgressIndicator()),
+                                            );
+
+                                          var documents = snapshot.data;
+
+                                          // print(documents['foto']);
+                                          UsuarioModel usu =
+                                              UsuarioModel.fromDocumentSnapshot(
+                                                  documents, '');
+                                          return ListTile(
+                                            onTap: () async {
+                                              return Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                      builder: (context) =>
+                                                          Perfil(
+                                                              usuario: usu)));
+                                            },
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal: 5),
+                                            leading: CircleAvatar(
+                                              backgroundImage:
+                                                  NetworkImage(usu.foto),
+                                              // backgroundColor: Colors.black,
+                                              radius: 25,
+                                            ),
+                                            title: Text(
+                                              usu.nombre,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15),
+                                            ),
+                                            subtitle: Text(
+                                              '${widget.post.fecha.day.toString()}/${widget.post.fecha.month.toString()}/${widget.post.fecha.year.toString()}   a las ${widget.post.fecha.hour.toString()}:${widget.post.fecha.minute.toString()}',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                            trailing: PopupMenuButton(
+                                              elevation: 8,
+                                              padding: EdgeInsets.all(0),
+                                              onCanceled: () {
+                                                print(
+                                                    "You have canceled the menu.");
+                                              },
+                                              onSelected: (value) {
+                                                if (value == 1) {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return EliminarPostsContent(
+                                                          index: widget.index,
+                                                          post: widget.post);
+                                                    },
+                                                  );
+                                                } else {
+                                                  print(value);
+                                                }
+                                              },
+                                              icon: Icon(
+                                                Icons.more_vert,
+                                                color: secondaryDark,
+                                              ),
+                                              itemBuilder: (context) => [
+                                                controlador1.usuario
+                                                            .documentId ==
+                                                        usu.documentId
+                                                    ? PopupMenuItem(
+                                                        value: 1,
+                                                        child: Text("Eliminar"),
+                                                      )
+                                                    : null,
+                                                PopupMenuItem(
+                                                  value: 2,
+                                                  child: Text("Reportar"),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }),
+                                    widget.post.descripcion == ''
+                                        ? Container()
+                                        : Container(
+                                            padding: EdgeInsets.only(
+                                                top: 0,
+                                                bottom: 10,
+                                                left: 10,
+                                                right: 10),
+                                            child: Text(
+                                              widget.post.descripcion,
+                                              // 'Del nacimiento del teléfono móvil a las apps'
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ),
+                                  ],
+                                ),
+                              ),
+                              FadeInImage.assetNetwork(
+                                width: MediaQuery.of(context).size.width * .9,
+                                height: MediaQuery.of(context).size.height / 2,
+                                fadeInCurve: Curves.decelerate,
+                                placeholder: 'assets/Ripple.gif',
+                                image: widget.post.foto,
+                                fit: BoxFit.cover,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-              FadeInImage.assetNetwork(
-                fadeInCurve: Curves.decelerate,
-                placeholder: 'assets/Ripple.gif',
-                image: widget.post.foto,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              LikeButton(
-                isLiked: fav,
-                size: 25,
-                circleColor:
-                    CircleColor(start: Colors.yellow, end: Colors.yellowAccent),
-                bubblesColor: BubblesColor(
-                  dotPrimaryColor: Colors.yellow[900],
-                  dotSecondaryColor: Colors.yellow,
+                      SizedBox(
+                        height: 10,
+                      ),
+                      LikeButton(
+                        isLiked: fav,
+                        size: 25,
+                        circleColor: CircleColor(
+                            start: Colors.yellow, end: Colors.yellowAccent),
+                        bubblesColor: BubblesColor(
+                          dotPrimaryColor: Colors.yellow[900],
+                          dotSecondaryColor: Colors.yellow,
+                        ),
+                        likeBuilder: (bool isLiked) {
+                          return Icon(
+                            Icons.favorite,
+                            color: isLiked ? Colors.pink[600] : Colors.grey,
+                            size: 25,
+                          );
+                        },
+                        likeCount: widget.post.favoritos.length,
+                        countBuilder: (int count, bool isLiked, String text) {
+                          var color = isLiked ? Colors.black : Colors.grey;
+                          Widget result;
+                          if (count == 0) {
+                            result = Text(
+                              "",
+                              style: TextStyle(color: color),
+                            );
+                          } else
+                            result = Text(
+                              text,
+                              style: TextStyle(color: color),
+                            );
+                          return result;
+                        },
+                        onTap: onLikeButtonTapped,
+                      ),
+                      Divider(),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Comments1(
+                          post: widget.post,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                likeBuilder: (bool isLiked) {
-                  return Icon(
-                    Icons.favorite,
-                    color: isLiked ? Colors.pink[600] : Colors.grey,
-                    size: 25,
-                  );
-                },
-                likeCount: widget.post.favoritos.length,
-                countBuilder: (int count, bool isLiked, String text) {
-                  var color = isLiked ? Colors.black : Colors.grey;
-                  Widget result;
-                  if (count == 0) {
-                    result = Text(
-                      "",
-                      style: TextStyle(color: color),
-                    );
-                  } else
-                    result = Text(
-                      text,
-                      style: TextStyle(color: color),
-                    );
-                  return result;
-                },
-                onTap: onLikeButtonTapped,
               ),
-              Divider(),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Comments1(
-                  post: widget.post,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Expanded(
+                      child: controlador1.loading
+                          ? LinearProgressIndicator(
+                              // backgroundColor: secondaryDark,
+                              )
+                          : ListTile(
+                              leading: CircleAvatar(
+                                radius: 22,
+                                backgroundImage:
+                                    NetworkImage(controlador1.usuario.foto),
+                              ),
+                              title: TextField(
+                                maxLength: 100,
+                                maxLines: 4,
+                                minLines: 1,
+                                decoration: InputDecoration(
+                                    labelText: 'Escribe algo...'),
+                                controller: textEditingController,
+                              ),
+                              trailing: Container(
+                                alignment: Alignment.bottomCenter,
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(180),
+                                    color: primaryDark),
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.send,
+                                    color: Colors.black,
+                                    size: 15,
+                                  ),
+                                  onPressed: () async {
+                                    controlador1.loading = true;
+                                    controlador1.notify();
+                                    comentario['comentario'] =
+                                        textEditingController.text.trim();
+                                    comentario['fecha'] = DateTime.now();
+                                    comentario['userId'] =
+                                        controlador1.usuario.documentId;
+
+                                    if (comentario['comentario'] != '' &&
+                                        comentario['comentario'] != null &&
+                                        comentario['fecha'] != '' &&
+                                        comentario['fecha'] != null &&
+                                        comentario['userId'] != '' &&
+                                        comentario['userId'] != null) {
+                                      await widget.post.reference
+                                          .collection('comentarios')
+                                          .add(comentario);
+                                    }
+                                    controlador1.loading = false;
+                                    textEditingController.clear();
+                                    controlador1.notify();
+                                  },
+                                ),
+                              ),
+                            ),
+                    ),
+                  ],
                 ),
               )
             ],
@@ -238,14 +376,7 @@ class Comments1 extends StatefulWidget {
 class _CommentsState extends State<Comments1> {
   //final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool eliminar = false;
-  Map<String, dynamic> comentario = {
-    'comentario': '',
-    'fecha': '',
-    'likes': [],
-    'userId': '',
-  };
 
-  TextEditingController textEditingController = TextEditingController();
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     return Column(
@@ -313,82 +444,16 @@ class _CommentsState extends State<Comments1> {
                       },
                     )
                   : Container(
-                      padding: EdgeInsets.only(left: 15),
+                      height: MediaQuery.of(context).size.height / 3,
+                      padding: EdgeInsets.only(
+                        left: 15,
+                      ),
                       alignment: Alignment.center,
                       child: Text(
                           'No hay ningun comentario.\nSe el primero en comentar'),
                     );
             }),
         Divider(),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Expanded(
-                child: controlador1.loading
-                    ? LinearProgressIndicator(
-                        // backgroundColor: secondaryDark,
-                        )
-                    : ListTile(
-                        leading: CircleAvatar(
-                          radius: 22,
-                          backgroundImage:
-                              NetworkImage(controlador1.usuario.foto),
-                        ),
-                        title: TextField(
-                          maxLength: 100,
-                          maxLines: 4,
-                          minLines: 1,
-                          decoration:
-                              InputDecoration(labelText: 'Escribe algo...'),
-                          controller: textEditingController,
-                        ),
-                        trailing: Container(
-                          alignment: Alignment.bottomCenter,
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(180),
-                              color: primaryDark),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.send,
-                              color: Colors.black,
-                              size: 15,
-                            ),
-                            onPressed: () async {
-                              controlador1.loading = true;
-                              controlador1.notify();
-                              comentario['comentario'] =
-                                  textEditingController.text.trim();
-                              comentario['fecha'] = DateTime.now();
-                              comentario['userId'] =
-                                  controlador1.usuario.documentId;
-
-                              if (comentario['comentario'] != '' &&
-                                  comentario['comentario'] != null &&
-                                  comentario['fecha'] != '' &&
-                                  comentario['fecha'] != null &&
-                                  comentario['userId'] != '' &&
-                                  comentario['userId'] != null) {
-                                await widget.post.reference
-                                    .collection('comentarios')
-                                    .add(comentario);
-                              }
-                              controlador1.loading = false;
-                              textEditingController.clear();
-                              controlador1.notify();
-                            },
-                          ),
-                        ),
-                      ),
-              ),
-            ],
-          ),
-        )
       ],
     );
   }

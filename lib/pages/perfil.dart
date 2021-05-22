@@ -18,7 +18,6 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
-
   TextEditingController textEditingController = TextEditingController();
 
   _PerfilState();
@@ -115,23 +114,25 @@ class _PerfilState extends State<Perfil> {
                               child: IconButton(
                                 icon: Icon(Icons.photo_camera),
                                 onPressed: () => showDialog(
-                                  child: WillPopScope(
-                                    onWillPop: () async {
-                                      return controlador1.loading
-                                          ? false
-                                          : true;
-                                    },
-                                    child: SimpleDialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      children: <Widget>[
-                                        DialogContent(
-                                          foto: 'PP',
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  builder: (BuildContext context) {
+                                    return WillPopScope(
+                                      onWillPop: () async {
+                                        return controlador1.loading
+                                            ? false
+                                            : true;
+                                      },
+                                      child: SimpleDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        children: <Widget>[
+                                          DialogContent(
+                                            foto: 'PP',
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                   context: context,
                                 ),
                               ),
@@ -208,99 +209,105 @@ class _PerfilState extends State<Perfil> {
                       onPressed: () {
                         showDialog(
                             context: context,
-                            child: Dialog(
-                              backgroundColor: Colors.white,
-                              child: Container(
-                                margin: EdgeInsets.all(5),
-                                child: StreamBuilder(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('usuarios')
-                                      .where('bloqueados',
-                                          arrayContains:
-                                              controlador1.usuario.documentId)
-                                      .snapshots(),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData)
-                                      return const LinearProgressIndicator();
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                backgroundColor: Colors.white,
+                                child: Container(
+                                  margin: EdgeInsets.all(5),
+                                  child: StreamBuilder(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('usuarios')
+                                        .where('bloqueados',
+                                            arrayContains:
+                                                controlador1.usuario.documentId)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData)
+                                        return const LinearProgressIndicator();
 
-                                    List<DocumentSnapshot> documents =
-                                        snapshot.data.documents;
+                                      List<DocumentSnapshot> documents =
+                                          snapshot.data.documents;
 
-                                    return documents.isEmpty
-                                        ? Text('No tienes usuarios bloqueados')
-                                        : ListView.builder(
-                                            itemCount: documents.length,
-                                            shrinkWrap: true,
-                                            itemBuilder: (context, index) {
-                                              UsuarioModel user = UsuarioModel
-                                                  .fromDocumentSnapshot(
-                                                      documents[index], 'meh');
+                                      return documents.isEmpty
+                                          ? Text(
+                                              'No tienes usuarios bloqueados')
+                                          : ListView.builder(
+                                              itemCount: documents.length,
+                                              shrinkWrap: true,
+                                              itemBuilder: (context, index) {
+                                                UsuarioModel user = UsuarioModel
+                                                    .fromDocumentSnapshot(
+                                                        documents[index],
+                                                        'meh');
 
-                                              return ListTile(
-                                                leading: CircleAvatar(
-                                                  backgroundImage:
-                                                      NetworkImage(user.foto),
-                                                ),
-                                                title: Text(user.nombre,
-                                                    style: TextStyle(
-                                                        color: Colors.black)),
-                                                trailing: controlador1.loading
-                                                    ? CircularProgressIndicator()
-                                                    : Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: <Widget>[
-                                                          RaisedButton(
-                                                            color: Colors.white,
-                                                            onPressed:
-                                                                () async {
-                                                              controlador1
-                                                                      .loading =
-                                                                  true;
+                                                return ListTile(
+                                                  leading: CircleAvatar(
+                                                    backgroundImage:
+                                                        NetworkImage(user.foto),
+                                                  ),
+                                                  title: Text(user.nombre,
+                                                      style: TextStyle(
+                                                          color: Colors.black)),
+                                                  trailing: controlador1.loading
+                                                      ? CircularProgressIndicator()
+                                                      : Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            RaisedButton(
+                                                              color:
+                                                                  Colors.white,
+                                                              onPressed:
+                                                                  () async {
+                                                                controlador1
+                                                                        .loading =
+                                                                    true;
 
-                                                              controlador1
-                                                                  .notify();
+                                                                controlador1
+                                                                    .notify();
 
-                                                              await user
-                                                                  .reference
-                                                                  .update({
-                                                                'bloqueados':
-                                                                    FieldValue
-                                                                        .arrayRemove([
-                                                                  controlador1
-                                                                      .usuario
-                                                                      .documentId
-                                                                ])
-                                                              });
+                                                                await user
+                                                                    .reference
+                                                                    .update({
+                                                                  'bloqueados':
+                                                                      FieldValue
+                                                                          .arrayRemove([
+                                                                    controlador1
+                                                                        .usuario
+                                                                        .documentId
+                                                                  ])
+                                                                });
 
-                                                              controlador1
-                                                                      .loading =
-                                                                  false;
+                                                                controlador1
+                                                                        .loading =
+                                                                    false;
 
-                                                              controlador1
-                                                                  .notify();
+                                                                controlador1
+                                                                    .notify();
 
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                            child: Text(
-                                                              'Desbloquear',
-                                                              style: TextStyle(
-                                                                  fontSize: 10,
-                                                                  color: Colors
-                                                                      .black),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                              );
-                                            },
-                                          );
-                                  },
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: Text(
+                                                                'Desbloquear',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        10,
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                );
+                                              },
+                                            );
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ));
+                              );
+                            });
                       },
                     ),
                   ],
@@ -391,55 +398,58 @@ class _PerfilState extends State<Perfil> {
                             controlador1.usuario.documentId
                         ? IconButton(
                             onPressed: () => showDialog(
-                              context: context,
-                              child: Dialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Container(
-                                  margin: EdgeInsets.all(20),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      TextField(
-                                        maxLength: 50,
-                                        decoration: InputDecoration(
-                                            labelText: 'Descripción'),
-                                        controller: textEditingController,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Container(
+                                      margin: EdgeInsets.all(20),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          TextField(
+                                            maxLength: 50,
+                                            decoration: InputDecoration(
+                                                labelText: 'Descripción'),
+                                            controller: textEditingController,
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          FloatingActionButton.extended(
+                                            backgroundColor: primaryColor,
+                                            onPressed: () async {
+                                              controlador1.loading = true;
+                                              controlador1.notify();
+                                              await controlador1
+                                                  .usuario.reference
+                                                  .update({
+                                                'descripcion':
+                                                    textEditingController.text
+                                              });
+                                              controlador1.usuario.descripcion =
+                                                  textEditingController.text;
+                                              controlador1.loading = false;
+                                              controlador1.notify();
+                                              Navigator.of(context).pop();
+                                            },
+                                            label: Text(
+                                              'Actualizar',
+                                              style: TextStyle(
+                                                  color: secondaryLight),
+                                            ),
+                                            icon: Icon(
+                                              Icons.system_update_alt,
+                                              color: secondaryLight,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      FloatingActionButton.extended(
-                                        backgroundColor: primaryColor,
-                                        onPressed: () async {
-                                          controlador1.loading = true;
-                                          controlador1.notify();
-                                          await controlador1.usuario.reference
-                                              .update({
-                                            'descripcion':
-                                                textEditingController.text
-                                          });
-                                          controlador1.usuario.descripcion =
-                                              textEditingController.text;
-                                          controlador1.loading = false;
-                                          controlador1.notify();
-                                          Navigator.of(context).pop();
-                                        },
-                                        label: Text(
-                                          'Actualizar',
-                                          style:
-                                              TextStyle(color: secondaryLight),
-                                        ),
-                                        icon: Icon(
-                                          Icons.system_update_alt,
-                                          color: secondaryLight,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                                    ),
+                                  );
+                                }),
                             icon: Icon(Icons.edit),
                           )
                         : null),
@@ -461,38 +471,40 @@ class _PerfilState extends State<Perfil> {
                           controlador1.usuario.documentId
                       ? IconButton(
                           onPressed: () => showDialog(
-                            context: context,
-                            child: WillPopScope(
-                              onWillPop: () async {
-                                return controlador1.loading ? false : true;
-                              },
-                              child: Dialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: DialogChangePhone(),
-                              ),
-                            ),
-                          ),
+                              context: context,
+                              builder: (BuildContext context) {
+                                return WillPopScope(
+                                  onWillPop: () async {
+                                    return controlador1.loading ? false : true;
+                                  },
+                                  child: Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: DialogChangePhone(),
+                                  ),
+                                );
+                              }),
                           icon: Icon(Icons.edit),
                         )
                       : null,
                 ),
-               controlador1.usuario.documentId == widget.usuario.documentId ?  RaisedButton(
-                  padding: EdgeInsets.all(6),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/registroMascota');
-                  },elevation: 0,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('Añadir mascota '),
-                      Icon(Icons.pets)
-                    ],
-                  ),
-                ): Container(),
-
+                controlador1.usuario.documentId == widget.usuario.documentId
+                    ? ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/registroMascota');
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Añadir mascota '),
+                            Icon(Icons.pets)
+                          ],
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),
@@ -1106,8 +1118,7 @@ class _DialogContentState extends State<DialogContent> {
                                     controlador1.usuario.correo +
                                         '/perfil/${widget.foto}' +
                                         DateTime.now().toString();
-                                Reference storageRef = FirebaseStorage
-                                    .instance
+                                Reference storageRef = FirebaseStorage.instance
                                     .ref()
                                     .child(fileName);
 
@@ -1146,8 +1157,7 @@ class _DialogContentState extends State<DialogContent> {
                                 final String url =
                                     (await downloadUrl.ref.getDownloadURL());
                                 if (widget.foto == 'PP') {
-                                  await controlador1.usuario.reference
-                                      .update({
+                                  await controlador1.usuario.reference.update({
                                     'foto': url,
                                     'fotoStorageRef': downloadUrl.ref.fullPath
                                   });
@@ -1352,34 +1362,32 @@ class AvatarMascota extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
-                
                 height: 60,
                 width: 60,
                 child:
-                
-            //     ClipRRect(
-            //   borderRadius: BorderRadius.circular(10),
-            //   child: FadeInImage(
-            //     width: 50,
-            //     height: 50,
-            //     fit: BoxFit.cover,
-            //     image: NetworkImage(mascota.foto),
-                   
-            //     placeholder: AssetImage('assets/dog.png'),
-            //   ),
-            // ),
-                
-                 CircleAvatar(
+
+                    //     ClipRRect(
+                    //   borderRadius: BorderRadius.circular(10),
+                    //   child: FadeInImage(
+                    //     width: 50,
+                    //     height: 50,
+                    //     fit: BoxFit.cover,
+                    //     image: NetworkImage(mascota.foto),
+
+                    //     placeholder: AssetImage('assets/dog.png'),
+                    //   ),
+                    // ),
+
+                    CircleAvatar(
                   radius: 40,
                   backgroundImage: NetworkImage(mascota.foto),
-
-
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Text(mascota.nombre),
             ],
-
           ),
         ),
       ],

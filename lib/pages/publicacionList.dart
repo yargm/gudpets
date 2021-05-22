@@ -358,25 +358,27 @@ class _PublicacionListState extends State<PublicacionList> {
   _myshowDialog(context, dynamic objeto, String tabla) {
     showDialog(
         context: context,
-        child: AlertDialog(
-          title: Text('Borrarás la publicación'),
-          content: Text(
-              'Los datos de esta publicación no podrán restaurarse en el futuro'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Borrar'),
-              onPressed: () {
-                deleteData(tabla, objeto);
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-                child: Text('Cancelar'),
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Borrarás la publicación'),
+            content: Text(
+                'Los datos de esta publicación no podrán restaurarse en el futuro'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Borrar'),
                 onPressed: () {
+                  deleteData(tabla, objeto);
                   Navigator.of(context).pop();
-                })
-          ],
-        ));
+                },
+              ),
+              FlatButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
+            ],
+          );
+        });
   }
 
   deleteData(String tabla, dynamic objeto) async {
@@ -399,7 +401,6 @@ class _PublicacionListState extends State<PublicacionList> {
         });
       }
     }
-    
 
     await FirebaseFirestore.instance
         .collection(tabla)

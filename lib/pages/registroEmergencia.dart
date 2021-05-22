@@ -220,55 +220,58 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                           controlador1.latitud;
                                       controlador1.longitudfinal =
                                           controlador1.longitud;
-                                     await controlador1.getAddress(
+                                      await controlador1.getAddress(
                                           context, false);
                                       showDialog(
                                           barrierDismissible: false,
                                           context: context,
-                                          child: WillPopScope(
-                                            onWillPop: () async {
-                                              setState(() {
-                                                isLoadig2 = false;
-                                              });
-                                              return true;
-                                            },
-                                            child: AlertDialog(
-                                              title: Text('Importante',
-                                                  style: TextStyle(
-                                                      color: Colors.red)),
-                                              content: Text(
-                                                  'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
-                                                  style:
-                                                      TextStyle(fontSize: 20)),
-                                              actions: <Widget>[
-                                                FlatButton(
-                                                  child: Text('OK'),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              MapSample(
-                                                                latitud:
-                                                                    controlador1
-                                                                        .latitud,
-                                                                longitud:
-                                                                    controlador1
-                                                                        .longitud,
-                                                                controlador1:
-                                                                    controlador1,
-                                                              )),
-                                                    );
-                                                    setState(() {
-                                                      isLoadig2 = false;
-                                                      boton = false;
-                                                    });
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ));
+                                          builder: (BuildContext context) {
+                                            return WillPopScope(
+                                              onWillPop: () async {
+                                                setState(() {
+                                                  isLoadig2 = false;
+                                                });
+                                                return true;
+                                              },
+                                              child: AlertDialog(
+                                                title: Text('Importante',
+                                                    style: TextStyle(
+                                                        color: Colors.red)),
+                                                content: Text(
+                                                    'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
+                                                    style: TextStyle(
+                                                        fontSize: 20)),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                    child: Text('OK'),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    MapSample(
+                                                                      latitud:
+                                                                          controlador1
+                                                                              .latitud,
+                                                                      longitud:
+                                                                          controlador1
+                                                                              .longitud,
+                                                                      controlador1:
+                                                                          controlador1,
+                                                                    )),
+                                                      );
+                                                      setState(() {
+                                                        isLoadig2 = false;
+                                                        boton = false;
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          });
                                     } else {
                                       setState(() {
                                         isLoadig2 = false;
@@ -311,8 +314,7 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                         '/emergencia/' +
                                         DateTime.now().toString();
 
-                                Reference storageRef = FirebaseStorage
-                                    .instance
+                                Reference storageRef = FirebaseStorage.instance
                                     .ref()
                                     .child(fileName);
 
@@ -341,28 +343,30 @@ class _RegistroEmergenciaState extends State<RegistroEmergencia> {
                                 return showDialog(
                                     barrierDismissible: false,
                                     context: context,
-                                    child: AlertDialog(
-                                      content: SingleChildScrollView(
-                                        child: ListBody(
-                                          children: <Widget>[
-                                            Text(
-                                                'Todos los campos son obligatorios. Por favor, completa la información que se solicita.'),
-                                          ],
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        content: SingleChildScrollView(
+                                          child: ListBody(
+                                            children: <Widget>[
+                                              Text(
+                                                  'Todos los campos son obligatorios. Por favor, completa la información que se solicita.'),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('Regresar'),
-                                          onPressed: () {
-                                            setState(() {
-                                              isLoadig = false;
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                      title: Text('Olvidaste añadir algo'),
-                                    ));
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text('Regresar'),
+                                            onPressed: () {
+                                              setState(() {
+                                                isLoadig = false;
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                        title: Text('Olvidaste añadir algo'),
+                                      );
+                                    });
                               }
 
                               _emergenciakey.currentState.save();

@@ -1,6 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/pages/postView.dart';
 import 'package:gudpets/services/models.dart';
 import 'package:flutter/material.dart';
@@ -87,6 +88,12 @@ class _FotosState extends State<Fotos> {
                 UsuarioModel usu =
                     UsuarioModel.fromDocumentSnapshot(documents, '');
                 return ListTile(
+                  onTap: () async {
+                    return Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => Perfil(usuario: usu)));
+                  },
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(usu.foto),
                     // backgroundColor: Colors.black,

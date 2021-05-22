@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gudpets/pages/postView.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/shared/shared.dart';
@@ -64,53 +66,57 @@ class _FavoritosListState extends State<FavoritosList> {
                     style: TextStyle(fontSize: 25),
                   ),
                 ),
-                StreamBuilder(
-                  stream: controlador1.usuario.reference.get().asStream(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return const CircularProgressIndicator();
 
-                    return ListView(
-                      physics:
-                          ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                      shrinkWrap: true,
-                      children: <Widget>[
-                        snapshot.data['adopciones'] != null &&
-                                snapshot.data['adopciones'].isNotEmpty
-                            ? favoriteTile(
-                                titulo: 'Adopciones',
-                                iconData: Icons.home,
-                                list: snapshot.data['adopciones'],
-                                controlador1: controlador1)
-                            : Container(),
-                        snapshot.data['perdidos'] != null &&
-                                snapshot.data['perdidos'].isNotEmpty
-                            ? favoriteTile(
-                                titulo: 'Perdidos',
-                                iconData: FontAwesomeIcons.searchLocation,
-                                list: snapshot.data['perdidos'],
-                                controlador1: controlador1)
-                            : Container(),
-                        snapshot.data['rescates'] != null &&
-                                snapshot.data['rescates'].isNotEmpty
-                            ? favoriteTile(
-                                titulo: 'Rescates',
-                                iconData: FontAwesomeIcons.handHoldingHeart,
-                                list: snapshot.data['rescates'],
-                                controlador1: controlador1)
-                            : Container(),
-                        snapshot.data['emergencias'] != null &&
-                                snapshot.data['emergencias'].isNotEmpty
-                            ? favoriteTile(
-                                titulo: 'Emergencias',
-                                iconData: FontAwesomeIcons.ambulance,
-                                list: snapshot.data['emergencias'],
-                                controlador1: controlador1)
-                            : Container()
-                      ],
-                    );
-                  },
-                ),
+                ///////LO COMENTÉ POR QUE NO SIRVE HAY QUE ARREGLARLO
+                // StreamBuilder(
+                //   stream: controlador1.usuario.reference.get().asStream(),
+                //   builder: (context, snapshot) {
+                //     print( snapshot.data);
+                //          print( 'jsadjasdkjsndjasndskdnsdsajkdnasjdjsadnslandsndnskls');
+                //     if (!snapshot.hasData)
+                //       return const CircularProgressIndicator();
+
+                //     return ListView(
+                //       physics:
+                //           ScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                //       shrinkWrap: true,
+                //       children: <Widget>[
+                //         snapshot.data['adopciones'] != null &&
+                //                 snapshot.data['adopciones'].isNotEmpty
+                //             ? favoriteTile(
+                //                 titulo: 'Adopciones',
+                //                 iconData: Icons.home,
+                //                 list: snapshot.data['adopciones'],
+                //                 controlador1: controlador1)
+                //             : Container(),
+                //         snapshot.data['perdidos'] != null &&
+                //                 snapshot.data['perdidos'].isNotEmpty
+                //             ? favoriteTile(
+                //                 titulo: 'Perdidos',
+                //                 iconData: FontAwesomeIcons.searchLocation,
+                //                 list: snapshot.data['perdidos'],
+                //                 controlador1: controlador1)
+                //             : Container(),
+                //         snapshot.data['rescates'] != null &&
+                //                 snapshot.data['rescates'].isNotEmpty
+                //             ? favoriteTile(
+                //                 titulo: 'Rescates',
+                //                 iconData: FontAwesomeIcons.handHoldingHeart,
+                //                 list: snapshot.data['rescates'],
+                //                 controlador1: controlador1)
+                //             : Container(),
+                //         snapshot.data['emergencias'] != null &&
+                //                 snapshot.data['emergencias'].isNotEmpty
+                //             ? favoriteTile(
+                //                 titulo: 'Emergencias',
+                //                 iconData: FontAwesomeIcons.ambulance,
+                //                 list: snapshot.data['emergencias'],
+                //                 controlador1: controlador1)
+                //             : Container()
+                //       ],
+                //     );
+                //   },
+                // ),
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collectionGroup('posts')
@@ -143,6 +149,16 @@ class _FavoritosListState extends State<FavoritosList> {
                                         PostsModel.fromDocumentSnapshot(
                                             documents[index]);
                                     return ListTile(
+                                      onTap: () async {
+                                        Navigator.of(context).push(
+                                          CupertinoPageRoute(
+                                            builder: (context) => PostView(
+                                              post: post,
+                                              controlador1: controlador1,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                       title: Text(post.descripcion),
                                       trailing: IconButton(
                                         onPressed: () async {
@@ -167,58 +183,10 @@ class _FavoritosListState extends State<FavoritosList> {
                                       ),
                                       leading: Hero(
                                         tag: post.documentId,
-                                        child: GestureDetector(
-                                          onTap: () async {
-                                            // var query = await Firestore.instance
-                                            //     .collection(titulo.toLowerCase())
-                                            //     .document(list[index]['documentId'])
-                                            //     .get();
-                                            // switch (titulo) {
-                                            //   case 'Adopciones':
-                                            //     Navigator.of(context).push(
-                                            //       MaterialPageRoute(
-                                            //         builder: (context) => Adopcion(
-                                            //           objeto: AdopcionModel.fromDocumentSnapshot(query),
-                                            //         ),
-                                            //       ),
-                                            //     );
-                                            //     break;
-                                            //   case 'Perdidos':
-                                            //     Navigator.of(context).push(
-                                            //       MaterialPageRoute(
-                                            //         builder: (context) => Perdido(
-                                            //           objeto: PerdidoModel.fromDocumentSnapshot(query),
-                                            //         ),
-                                            //       ),
-                                            //     );
-                                            //     break;
-                                            //   case 'Rescates':
-                                            //     Navigator.of(context).push(
-                                            //       MaterialPageRoute(
-                                            //         builder: (context) => Rescate(
-                                            //           objeto: RescateModel.fromDocumentSnapshot(query),
-                                            //         ),
-                                            //       ),
-                                            //     );
-                                            //     break;
-
-                                            //   case 'Emergencias':
-                                            //     Navigator.of(context).push(
-                                            //       MaterialPageRoute(
-                                            //         builder: (context) => Emergencia(
-                                            //           objeto: EmergenciaModel.fromDocumentSnapshot(query),
-                                            //           favorito: true,
-                                            //         ),
-                                            //       ),
-                                            //     );
-                                            //     break;
-                                            // }
-                                          },
-                                          child: Image(
-                                            width: 40,
-                                            height: 40,
-                                            image: NetworkImage(post.foto),
-                                          ),
+                                        child: Image(
+                                          width: 40,
+                                          height: 40,
+                                          image: NetworkImage(post.foto),
                                         ),
                                       ),
                                     );
