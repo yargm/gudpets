@@ -9,6 +9,10 @@ class FotosPrincipal extends StatefulWidget {
 }
 
 class _FotosPrincipalState extends State<FotosPrincipal> {
+  bool contenido = false;
+  int queryprincipal;
+  var query;
+
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     List<String> amigos = controlador1.usuario.amigos;
@@ -43,8 +47,97 @@ class _FotosPrincipalState extends State<FotosPrincipal> {
       scrollDirection: Axis.vertical,
       child: Column(
         children: <Widget>[
+          Card(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Amigos'),
+                    Switch(
+                      value: contenido,
+                      onChanged: (bool valor) {
+                        setState(() {
+                          contenido = valor;
+                        });
+                      },
+                      activeColor: secondaryDark,
+                    ),
+                    Text('Amigos y Más'),
+                  ],
+                ),
+                // Row(
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   mainAxisSize: MainAxisSize.min,
+                //   mainAxisAlignment: MainAxisAlignment.start,
+                //   children: [
+                //     PopupMenuButton(
+                //       elevation: 8,
+                //       padding: EdgeInsets.all(8),
+                //       offset: Offset.zero,
+                //       onCanceled: () {
+                //         print("You have canceled the menu.");
+                //       },
+                //       onSelected: (value) {
+                //         print(value);
+                //         if (value == 1) {
+                //           queryprincipal = 1;
+                //           setState(() {});
+                //         } else if (value == 2) {
+                //           queryprincipal = 2;
+                //           setState(() {});
+                //         } else if (value == 3) {
+                //           queryprincipal = 3;
+                //           setState(() {});
+                //         } else if (value == 4) {
+                //           queryprincipal = 4;
+                //         }
+                //       },
+                //       icon: Icon(
+                //         FontAwesomeIcons.sortAmountDownAlt,
+                //         color: secondaryDark,
+                //       ),
+                //       itemBuilder: (context) => [
+                //         PopupMenuItem(
+                //           value: 1,
+                //           child: Text("Nuevas"),
+                //         ),
+                //         PopupMenuItem(
+                //           value: 2,
+                //           child: Text("Más antigua"),
+                //         ),
+                //         PopupMenuItem(
+                //           value: 3,
+                //           child: Text("Me gusta"),
+                //         ),
+                //         // PopupMenuItem(
+                //         //   value: 4,
+                //         //   child: Text("Tipo de Máscota"),
+                //         // ),
+                //       ],
+                //     ),
+                //     Padding(
+                //       padding: EdgeInsets.only(left: 5, right: 10),
+                //       child: Text('Ordenar por'),
+                //     ),
+                //   ],
+                // ),
+              ],
+            ),
+          ),
           StreamBuilder(
-            stream: FirebaseFirestore.instance.collectionGroup('posts').snapshots(),
+            stream: FirebaseFirestore.instance
+                .collectionGroup('posts')
+                .orderBy('fecha', descending: true)
+                .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
                 return Center(
@@ -59,19 +152,37 @@ class _FotosPrincipalState extends State<FotosPrincipal> {
               //   print('enemix');
               // }
               List<DocumentSnapshot> listaver = [];
-              documents.forEach((element) {
-                if (amigos.contains(element['userId'])) {
-                  listaver.add(element);
 
-                  print(element['userId']);
-                } else if (element['userId'] ==
-                    controlador1.usuario.documentId) {
-                  listaver.add(element);
-                  print('soy io');
-                } else if (element['privacidad'] == true) {
-                  listaver.add(element);
-                }
-              });
+              contenido
+                  ? documents.forEach((element) {
+                      if (controlador1.usuario.amigos
+                          .contains(element['userId'])) {
+                        listaver.add(element);
+
+                        print(element['userId']);
+                      } else if (element['userId'] ==
+                          controlador1.usuario.documentId) {
+                        listaver.add(element);
+                        print('soy io');
+                      } else if (element['privacidad'] == true) {
+                        listaver.add(element);
+                      }
+                    })
+                  : documents.forEach((element) {
+                      if (controlador1.usuario.amigos
+                          .contains(element['userId'])) {
+                        listaver.add(element);
+
+                        print(element['userId']);
+                      } else if (element['userId'] ==
+                          controlador1.usuario.documentId) {
+                        listaver.add(element);
+                        print('soy io');
+                      }
+                      //  else if (element['privacidad'] == true) {
+                      //   listaver.add(element);
+                      // }
+                    });
               print(listaver);
               print(documents);
               //print(documents.length);
@@ -89,9 +200,12 @@ class _FotosPrincipalState extends State<FotosPrincipal> {
                       itemBuilder: (context, index) {
                         PostsModel post =
                             PostsModel.fromDocumentSnapshot(listaver[index]);
+                        bool fav = post.favoritos
+                            .contains(controlador1.usuario.documentId);
                         return Fotos(
                           post: post,
                           controlador1: controlador1,
+                          fav: fav,
                         );
 
                         // Card(

@@ -265,6 +265,8 @@ class PerdidoModel {
 }
 
 class AdopcionModel {
+  String estado;
+  String municipio;
   String titulo;
   List<dynamic> favoritos = [];
   String descripcion;
@@ -283,13 +285,12 @@ class AdopcionModel {
   dynamic fotos;
   String status;
   String adoptanteId;
-  String lugar;
 
   AdopcionModel(
       {this.titulo,
       this.descripcion,
       this.tipoAnimal,
-     this.sexo,
+      this.sexo,
       this.edad,
       this.esterilizacion,
       this.vacunacion,
@@ -302,7 +303,8 @@ class AdopcionModel {
       this.fotos,
       this.status,
       this.adoptanteId,
-      this.lugar});
+      this.estado,
+      this.municipio});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data.data()['titulo'];
@@ -311,6 +313,8 @@ class AdopcionModel {
     tipoAnimal = data.data()['tipoAnimal'];
     sexo = data.data()['sexo'];
     edad = data.data()['edad'];
+    estado = data.data()['estado'];
+    municipio = data.data()['municipio'];
     fecha = data.data()['fecha'].toDate();
     fotos = data.data()['fotos'] ?? [''];
     albumrefs = data.data()['albumrefs'] ?? [''];
@@ -323,7 +327,6 @@ class AdopcionModel {
     reference = data.reference;
     status = data.data()['status'];
     adoptanteId = data.data()['adoptanteId'];
-    lugar = data.data()['lugar'];
   }
 
   Map<String, dynamic> toMap() {
@@ -333,6 +336,8 @@ class AdopcionModel {
       'descripcion': descripcion,
       'tipoAnimal': tipoAnimal,
       'sexo': sexo,
+      'estado': estado,
+      'municipio': municipio,
       'edad': edad,
       'fecha': fecha,
       'fotos': fotos,
@@ -449,13 +454,13 @@ class MensajeModel {
   String tipo;
 
   MensajeModel.fromDS(DocumentSnapshot ds) {
-    fecha = ds['fecha'] ?? Timestamp(0, 0);
-    usuario = ds['usuario'] ?? '';
-    mensaje = ds['mensaje'] ?? '';
-    tipo = ds['tipo'] ?? '';
-    imagen = ds['imagen'] ?? '';
-    gif = ds['gif'] ?? '';
-    recibe = ds['recibe'] ?? '';
+    fecha = ds.data()['fecha'] ?? Timestamp(0, 0);
+    usuario = ds.data()['usuario'] ?? '';
+    mensaje = ds.data()['mensaje'] ?? '';
+    tipo = ds.data()['tipo'] ?? '';
+    imagen = ds.data()['imagen'] ?? '';
+    gif = ds.data()['gif'] ?? '';
+    recibe = ds.data()['recibe'] ?? '';
   }
 }
 
@@ -465,8 +470,8 @@ class ChatModel {
 
   ChatModel({this.usuarios, this.ids});
   ChatModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    usuarios = data['usuarios'] ?? '';
-    ids = data['ids'] ?? '';
+    usuarios = data.data()['usuarios'] ?? '';
+    ids = data.data()['ids'] ?? '';
   }
 }
 
@@ -611,16 +616,16 @@ class PostsModel {
       this.userId});
 
   PostsModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    foto = data['foto'];
-    descripcion = data['descripcion'];
-    numlikes = data['numlikes'];
-    fecha = data['fecha'].toDate();
-    usuario = data['usuario'];
-    privacidad = data['privacidad'] ?? [''];
-    userId = data['userId'];
-    storageRef = data['storageRef'];
-    mascotas = data['mascotas'] ?? [''];
-    favoritos = data['favoritos'] ?? [''];
+    foto = data.data()['foto'];
+    descripcion = data.data()['descripcion'];
+    numlikes = data.data()['numlikes'];
+    fecha = data.data()['fecha'].toDate();
+    usuario = data.data()['usuario'];
+    privacidad = data.data()['privacidad'] ?? [''];
+    userId = data.data()['userId'];
+    storageRef = data.data()['storageRef'];
+    mascotas = data.data()['mascotas'] ?? [''];
+    favoritos = data.data()['favoritos'] ?? [''];
     documentId = data.id.toString();
     reference = data.reference;
   }

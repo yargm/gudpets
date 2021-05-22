@@ -208,8 +208,9 @@ class _AdopcionState extends State<Adopcion> {
                                       ),
                                       SizedBox(width: 5),
                                       Container(
-                                        width: MediaQuery.of(context).size.width *
-                                            0.25,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.25,
                                         child: Text(
                                           userpublicacion.nombre,
                                           overflow: TextOverflow.ellipsis,
@@ -236,7 +237,10 @@ class _AdopcionState extends State<Adopcion> {
                         SizedBox(
                           width: 10,
                         ),
-                        Text(widget.objeto.lugar,
+                        Text(
+                            widget.objeto.municipio +
+                                ", " +
+                                widget.objeto.estado,
                             style:
                                 TextStyle(fontSize: 18.0, color: Colors.grey)),
                       ],
@@ -472,16 +476,7 @@ class _AdopcionState extends State<Adopcion> {
                       ],
                     ),
                     SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      endIndent: 60,
-                      indent: 60,
-                      thickness: 1,
-                      color: secondaryDark,
-                    ),
-                    SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -509,6 +504,63 @@ class _AdopcionState extends State<Adopcion> {
                           ],
                         )
                       ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Divider(
+                      endIndent: 60,
+                      indent: 60,
+                      thickness: 1,
+                      color: secondaryDark,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                        "¿Quieres adoptarme? Agrega a la persona que hizo esta publicación para poder chatear con él/ella.",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        )),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: 40,
+                      width: MediaQuery.of(context).size.width * 0.50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(50),
+                          ),
+                          color: Colors.brown[300]),
+                      child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('usuarios')
+                              .doc(widget.objeto.userId)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData)
+                              return Container(
+                                  height: 50,
+                                  child: const CircularProgressIndicator());
+
+                            userpublicacion = UsuarioModel.fromDocumentSnapshot(
+                                snapshot.data, 'meh');
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Perfil(usuario: userpublicacion)));
+                              },
+                              child: Container(
+                                child: Center(
+                                    child: Text("Ver perfil",
+                                        style: TextStyle(color: Colors.white))),
+                              ),
+                            );
+                          }),
                     ),
                     SizedBox(
                       height: 20,

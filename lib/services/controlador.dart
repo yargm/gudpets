@@ -34,31 +34,34 @@ class Controller with ChangeNotifier {
 
   permissonDeniedDialog(BuildContext context) {
     return showDialog(
-      context: context,
-      child: Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Container(
-          margin: EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                '¡La aplicación necesita que le asignes los permisos necesarios para utilizar esta función, ve a la configuración de tu celular y asignale los permisos!',
-                style: TextStyle(fontWeight: FontWeight.bold),
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Container(
+              margin: EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    '¡La aplicación necesita que le asignes los permisos necesarios para utilizar esta función, ve a la configuración de tu celular y asignale los permisos!',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  FloatingActionButton.extended(
+                    onPressed: () async =>
+                        await PermissionHandler().openAppSettings(),
+                    label: Text('Configuración'),
+                    icon: Icon(Icons.settings),
+                  )
+                ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              FloatingActionButton.extended(
-                onPressed: () async =>await PermissionHandler().openAppSettings(),
-                label: Text('Configuración'),
-                icon: Icon(Icons.settings),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
+        });
   }
 
   Future multiImage(BuildContext context) async {
@@ -164,7 +167,7 @@ class Controller with ChangeNotifier {
     }
   }
 
-    Future<bool> checkPermission() async {
+  Future<bool> checkPermission() async {
     final permissionStorageGroup =
         Platform.isIOS ? PermissionGroup.photos : PermissionGroup.storage;
     Map<PermissionGroup, PermissionStatus> res =
@@ -257,6 +260,7 @@ class Controller with ChangeNotifier {
     }
     return true;
   }
+
   UsuarioModel usuarioActual = UsuarioModel(
     nombre: 'No name',
     foto: '',
@@ -298,7 +302,7 @@ class Controller with ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('correo', usuarioActual.correo);
     await storeToken();
-    await setAddress();
+    //await setAddress();
   }
 
   fecha(Timestamp fecha) {
@@ -363,7 +367,7 @@ class Controller with ChangeNotifier {
         usuarioActual =
             UsuarioModel.fromDocumentSnapshot(onValue.docs.first, 'meh');
 
-        setAddress();
+        //setAddress();
       });
       await storeToken();
       return true;

@@ -85,11 +85,12 @@ class _AmigosState extends State<Amigos> {
                     ),
               onPressed: () {
                 showDialog(
-                  context: context,
-                  child: SolicitudesAmistad(
-                    documents: snapshot.data.documents,
-                  ),
-                );
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SolicitudesAmistad(
+                        documents: snapshot.data.documents,
+                      );
+                    });
               },
             );
           }),

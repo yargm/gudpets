@@ -1,17 +1,21 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gudpets/pages/pages.dart';
+import 'package:gudpets/pages/postView.dart';
 import 'package:gudpets/services/models.dart';
 import 'package:flutter/material.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/colores.dart';
+import 'package:like_button/like_button.dart';
 
 class Fotos extends StatefulWidget {
   final PostsModel post;
   final int index;
   final Controller controlador1;
+  final bool fav;
 
-  const Fotos({Key key, this.post, this.controlador1, this.index})
+  const Fotos({Key key, this.post, this.controlador1, this.index, this.fav})
       : super(key: key);
 
   @override
@@ -19,22 +23,40 @@ class Fotos extends StatefulWidget {
 }
 
 class _FotosState extends State<Fotos> {
-  bool fav = false;
-
   int numlikes;
   bool expanded = false;
   bool contenido = false;
-
+  bool fav1 = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    List favoritos = widget.post.favoritos;
-    if (favoritos.contains(widget.controlador1.usuario.documentId)) {
+    fav1 = widget.fav;
+    if (widget.post.favoritos
+        .contains(widget.controlador1.usuario.documentId)) {
       setState(() {
-        fav = true;
+        fav1 = true;
       });
     }
+  }
+
+  Future<bool> onLikeButtonTapped(bool isLiked) async {
+    print(!isLiked);
+    if (!isLiked) {
+      widget.post.reference.update({
+        'favoritos':
+            FieldValue.arrayUnion([widget.controlador1.usuario.documentId])
+      });
+      numlikes = widget.post.numlikes;
+
+      //widget.post.reference.update({'numlikes': widget.post.numlikes + 1});
+    } else {
+      widget.post.reference.update({
+        'favoritos':
+            FieldValue.arrayRemove([widget.controlador1.usuario.documentId])
+      });
+    }
+    return !isLiked;
   }
 
   TextEditingController textEditingController = TextEditingController();
@@ -66,6 +88,12 @@ class _FotosState extends State<Fotos> {
                 UsuarioModel usu =
                     UsuarioModel.fromDocumentSnapshot(documents, '');
                 return ListTile(
+                  onTap: () async {
+                    return Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => Perfil(usuario: usu)));
+                  },
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(usu.foto),
                     // backgroundColor: Colors.black,
@@ -118,11 +146,23 @@ class _FotosState extends State<Fotos> {
                   ),
                 );
               }),
-          FadeInImage.assetNetwork(
-            fadeInCurve: Curves.decelerate,
-            placeholder: 'assets/Ripple.gif',
-            image: widget.post.foto,
-            fit: BoxFit.cover,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PostView(
+                    post: widget.post,
+                    controlador1: widget.controlador1,
+                  ),
+                ),
+              );
+            },
+            child: FadeInImage.assetNetwork(
+              fadeInCurve: Curves.decelerate,
+              placeholder: 'assets/Ripple.gif',
+              image: widget.post.foto,
+              fit: BoxFit.cover,
+            ),
           ),
           widget.post.descripcion == ''
               ? Container()
@@ -137,65 +177,104 @@ class _FotosState extends State<Fotos> {
                   ),
                 ),
           Divider(),
-          ButtonBar(
-            buttonPadding: EdgeInsets.all(5),
-            alignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                splashColor: Colors.pink,
-                padding: EdgeInsets.all(0),
-                onPressed: () {
-                  controlador1.loading = true;
-                  controlador1.notify();
-                  if (!fav) {
-                    widget.post.reference.update({
-                      'favoritos': FieldValue.arrayUnion(
-                          [controlador1.usuario.documentId])
-                    });
-                    numlikes = widget.post.numlikes;
-                    widget.post.reference
-                        .update({'numlikes': widget.post.numlikes + 1});
-                  } else {
-                    widget.post.reference.update({
-                      'favoritos': FieldValue.arrayRemove(
-                          [controlador1.usuario.documentId])
-                    });
-                    if (widget.post.numlikes != 0) {
-                      widget.post.reference
-                          .update({'numlikes': widget.post.numlikes - 1});
-                    }
-                  }
-                  print('hello');
-                  controlador1.loading = false;
-                  controlador1.notify();
-                  setState(() {
-                    fav ? fav = false : fav = true;
-                  });
-                },
-                icon: controlador1.loading
-                    ? CircularProgressIndicator()
-                    : Icon(
-                        fav ? Icons.favorite : Icons.favorite_border,
-                        color: Colors.pink[200],
-                      ),
-              ),
-              widget.post.favoritos.length == 0
-                  ? Container()
-                  : widget.index == 2
-                      ? Container()
-                      : Text('${widget.post.favoritos.length} Me gusta'),
-              IconButton(
-                onPressed: () {
-                  return showDialog(
-                      context: context,
-                      child: Comments(
-                        post: widget.post,
-                      ));
-                },
-                icon: Icon(Icons.comment),
-              )
-            ],
-          ),
+          widget.index == 2
+              ? Container()
+              : LikeButton(
+                  isLiked: widget.fav,
+                  size: 25,
+                  circleColor: CircleColor(
+                      start: Colors.yellow, end: Colors.yellowAccent),
+                  bubblesColor: BubblesColor(
+                    dotPrimaryColor: Colors.yellow[900],
+                    dotSecondaryColor: Colors.yellow,
+                  ),
+                  likeBuilder: (bool isLiked) {
+                    return Icon(
+                      Icons.favorite,
+                      color: isLiked ? Colors.pink[600] : Colors.grey,
+                      size: 25,
+                    );
+                  },
+                  likeCount: widget.post.favoritos.length,
+                  countBuilder: (int count, bool isLiked, String text) {
+                    var color = isLiked ? Colors.black : Colors.grey;
+                    Widget result;
+                    if (count == 0) {
+                      result = Text(
+                        "",
+                        style: TextStyle(color: color),
+                      );
+                    } else
+                      result = Text(
+                        text,
+                        style: TextStyle(color: color),
+                      );
+                    return result;
+                  },
+                  onTap: onLikeButtonTapped,
+                ),
+          SizedBox(
+            height: 10,
+          )
+          // ButtonBar(
+          //     buttonPadding: EdgeInsets.all(5),
+          //     alignment: MainAxisAlignment.center,
+          //     children: [
+          //       IconButton(
+          //         splashColor: Colors.pink,
+          //         padding: EdgeInsets.all(0),
+          //         onPressed: () {
+          //           controlador1.loading = true;
+          //           controlador1.notify();
+          //           if (!fav) {
+          //             widget.post.reference.update({
+          //               'favoritos': FieldValue.arrayUnion(
+          //                   [controlador1.usuario.documentId])
+          //             });
+          //             numlikes = widget.post.numlikes;
+          //             widget.post.reference
+          //                 .update({'numlikes': widget.post.numlikes + 1});
+          //           } else {
+          //             widget.post.reference.update({
+          //               'favoritos': FieldValue.arrayRemove(
+          //                   [controlador1.usuario.documentId])
+          //             });
+          //             if (widget.post.numlikes != 0) {
+          //               widget.post.reference
+          //                   .update({'numlikes': widget.post.numlikes - 1});
+          //             }
+          //           }
+          //           print('hello');
+          //           controlador1.loading = false;
+          //           controlador1.notify();
+          //           setState(() {
+          //             fav ? fav = false : fav = true;
+          //           });
+          //         },
+          //         icon: controlador1.loading
+          //             ? CircularProgressIndicator()
+          //             : Icon(
+          //                 fav ? Icons.favorite : Icons.favorite_border,
+          //                 color: Colors.pink[200],
+          //               ),
+          //       ),
+          //       widget.post.favoritos.length == 0
+          //           ? Container()
+          //           : widget.index == 2
+          //               ? Container()
+          //               : Text('${widget.post.favoritos.length} Me gusta'),
+          //       IconButton(
+          //         onPressed: () {
+          //           return showDialog(
+          //               context: context,
+          //               child: Comments(
+          //                 post: widget.post,
+          //               ));
+          //         },
+          //         icon: Icon(Icons.comment),
+          //       )
+          //     ],
+          //   ),
         ],
       ),
     );
@@ -223,9 +302,11 @@ class _CommentsState extends State<Comments> {
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       insetPadding: EdgeInsets.only(top: 60),
       backgroundColor: Colors.transparent,
       child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -403,6 +484,7 @@ class _ListaComentarioState extends State<ListaComentario> {
     'likes': [],
     'userId': '',
   };
+
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
 
@@ -423,50 +505,63 @@ class _ListaComentarioState extends State<ListaComentario> {
               radius: widget.index == 2 ? 17 : 25,
               backgroundImage: NetworkImage(widget.usuario.foto),
             ),
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(widget.usuario.nombre,
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                Text(
-                  widget.comentario.comentario,
-                  style: TextStyle(color: Colors.black87, fontSize: 18),
-                )
-              ],
+            title: Container(
+              margin: EdgeInsets.only(top: 10, bottom: 5),
+              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+              decoration: BoxDecoration(
+                  color: primaryColor,
+                  border: Border.all(
+                    color: primaryLight,
+                  ),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(widget.usuario.nombre,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  Text(
+                    widget.comentario.comentario,
+                    style: TextStyle(color: Colors.black87, fontSize: 16),
+                  )
+                ],
+              ),
             ),
             subtitle: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                SizedBox(
+                  width: 10,
+                ),
                 Text(
                   '${widget.comentario.fecha.month.toString()}/${widget.comentario.fecha.day.toString()}  a las ${widget.comentario.fecha.hour.toString()}:${widget.comentario.fecha.minute.toString()}',
                   style: TextStyle(fontSize: 12),
                 ),
                 SizedBox(
-                  width: 5,
+                  width: 15,
                 ),
-                widget.index == 1
-                    ? GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            expandedcomentario
-                                ? expandedcomentario = false
-                                : expandedcomentario = true;
-                          });
-                        },
-                        child: Text(
-                          expandedcomentario ? 'Minimizar' : 'Responder',
-                          style: TextStyle(
-                              color: expandedcomentario
-                                  ? secondaryDark
-                                  : secondaryLight,
-                              fontSize: 13),
-                        ),
-                      )
-                    : Container()
+                // widget.index == 1
+                //     ? GestureDetector(
+                //         onTap: () {
+                //           setState(() {
+                //             expandedcomentario
+                //                 ? expandedcomentario = false
+                //                 : expandedcomentario = true;
+                //           });
+                //         },
+                //         child: Text(
+                //           expandedcomentario ? 'Minimizar' : 'Responder',
+                //           style: TextStyle(
+                //               color: expandedcomentario
+                //                   ? secondaryDark
+                //                   : secondaryLight,
+                //               fontSize: 13),
+                //         ),
+                //       )
+                //     : Container()
               ],
             ),
             trailing: Row(

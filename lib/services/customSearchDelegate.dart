@@ -14,8 +14,11 @@ class CustomSearchDelegate extends SearchDelegate {
         ? [
             IconButton(
               icon: Icon(Icons.tune),
-              onPressed: () => showDialog(context: context, child: DialogBody())
-                  .whenComplete(() => buildResults(context)),
+              onPressed: () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogBody();
+                  }).whenComplete(() => buildResults(context)),
             )
           ]
         : [];
@@ -146,8 +149,8 @@ class CustomSearchDelegate extends SearchDelegate {
                       return Container();
                     }
                     return AmigoTile(
-                      usuario:
-                          UsuarioModel.fromDocumentSnapshot(documents[index], 'meh'),
+                      usuario: UsuarioModel.fromDocumentSnapshot(
+                          documents[index], 'meh'),
                     );
                   },
                 );

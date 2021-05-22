@@ -1,6 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gudpets/pages/postView.dart';
 
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/colores.dart';
@@ -42,70 +43,72 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                   onPressed: () {
                     return showDialog(
                         context: context,
-                        child: loading
-                            ? Expanded(
-                                child: AlertDialog(
-                                  title: Text('Eliminando Mascota'),
-                                  content: LinearProgressIndicator(),
-                                ),
-                              )
-                            : complete
-                                ? Expanded(
-                                    child: AlertDialog(
-                                      title: Text('¡Mascota eliminada!'),
-                                      content: Icon(
-                                        Icons.check_circle,
-                                        color: secondaryDark,
-                                        size: 40,
+                        builder: (BuildContext context) {
+                          return loading
+                              ? Expanded(
+                                  child: AlertDialog(
+                                    title: Text('Eliminando Mascota'),
+                                    content: LinearProgressIndicator(),
+                                  ),
+                                )
+                              : complete
+                                  ? Expanded(
+                                      child: AlertDialog(
+                                        title: Text('¡Mascota eliminada!'),
+                                        content: Icon(
+                                          Icons.check_circle,
+                                          color: secondaryDark,
+                                          size: 40,
+                                        ),
+                                        actions: <Widget>[
+                                          RaisedButton(
+                                              child: Text('OK'),
+                                              onPressed: () => Navigator
+                                                  .pushReplacementNamed(
+                                                      context, '/perfil')
+                                              // Navigator.of(context)
+                                              //     .pushReplacementNamed('/home'),
+                                              )
+                                        ],
                                       ),
+                                    )
+                                  : AlertDialog(
+                                      title: Text(
+                                          '¡Estás a punto de eliminar una Mascota!'),
+                                      content: Text(
+                                          '¿Estás seguro de eliminar está mascota?'),
                                       actions: <Widget>[
                                         RaisedButton(
-                                            child: Text('OK'),
-                                            onPressed: () =>
-                                                Navigator.pushReplacementNamed(
-                                                    context, '/perfil')
-                                            // Navigator.of(context)
-                                            //     .pushReplacementNamed('/home'),
-                                            )
+                                          child: Text('No'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        RaisedButton(
+                                          child: Text('Si'),
+                                          onPressed: () async {
+                                            setState(() {
+                                              loading = true;
+                                            });
+                                            await controlador1.mascota.reference
+                                                .delete()
+                                                .catchError((onError) {
+                                              print(onError);
+                                            });
+                                            setState(() {
+                                              loading = false;
+                                              complete = true;
+                                            });
+                                            Navigator.of(context).popUntil(
+                                                ModalRoute.withName('/perfil'));
+                                            //  Navigator.pushNamedAndRemoveUntil(
+                                            //           context, '/perfil',(Route<dynamic> route) => false);
+                                            //Navigator.popAndPushNamed(context, routeName);
+                                          },
+                                        ),
                                       ],
-                                    ),
-                                  )
-                                : AlertDialog(
-                                    title: Text(
-                                        '¡Estás a punto de eliminar una Mascota!'),
-                                    content: Text(
-                                        '¿Estás seguro de eliminar está mascota?'),
-                                    actions: <Widget>[
-                                      RaisedButton(
-                                        child: Text('No'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      RaisedButton(
-                                        child: Text('Si'),
-                                        onPressed: () async {
-                                          setState(() {
-                                            loading = true;
-                                          });
-                                          await controlador1.mascota.reference
-                                              .delete()
-                                              .catchError((onError) {
-                                            print(onError);
-                                          });
-                                          setState(() {
-                                            loading = false;
-                                            complete = true;
-                                          });
-                                          Navigator.of(context).popUntil(
-                                              ModalRoute.withName('/perfil'));
-                                          //  Navigator.pushNamedAndRemoveUntil(
-                                          //           context, '/perfil',(Route<dynamic> route) => false);
-                                          //Navigator.popAndPushNamed(context, routeName);
-                                        },
-                                      ),
-                                    ],
-                                  ));
+                                    );
+                        });
                   })
               : Container()
         ],
@@ -120,22 +123,23 @@ class _MascotaDetailsState extends State<MascotaDetails> {
               onTap: () =>
                   controlador1.usuario.documentId == widget.usuario.documentId
                       ? showDialog(
-                          child: WillPopScope(
-                            onWillPop: () async {
-                              return controlador1.loading ? false : true;
-                            },
-                            child: SimpleDialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              children: <Widget>[
-                                DialogContentM(
-                                  foto: 'PPM',
-                                ),
-                              ],
-                            ),
-                          ),
                           context: context,
-                        )
+                          builder: (BuildContext context) {
+                            return WillPopScope(
+                              onWillPop: () async {
+                                return controlador1.loading ? false : true;
+                              },
+                              child: SimpleDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                children: <Widget>[
+                                  DialogContentM(
+                                    foto: 'PPM',
+                                  ),
+                                ],
+                              ),
+                            );
+                          })
                       : null,
               child: Container(
                 width: 120,
@@ -348,61 +352,65 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                               child: IconButton(
                                 padding: EdgeInsets.only(top: 20),
                                 onPressed: () => showDialog(
-                                  context: context,
-                                  child: Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Container(
-                                      margin: EdgeInsets.all(20),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          TextField(
-                                            maxLength: 100,
-                                            maxLines: 4,
-                                            minLines: 1,
-                                            decoration: InputDecoration(
-                                                labelText: 'Descripción'),
-                                            controller: textEditingController,
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Container(
+                                          margin: EdgeInsets.all(20),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              TextField(
+                                                maxLength: 100,
+                                                maxLines: 4,
+                                                minLines: 1,
+                                                decoration: InputDecoration(
+                                                    labelText: 'Descripción'),
+                                                controller:
+                                                    textEditingController,
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FloatingActionButton.extended(
+                                                backgroundColor: primaryColor,
+                                                onPressed: () async {
+                                                  controlador1.loading = true;
+                                                  controlador1.notify();
+                                                  await controlador1
+                                                      .mascota.reference
+                                                      .update({
+                                                    'personalidad':
+                                                        textEditingController
+                                                            .text
+                                                  });
+                                                  controlador1.mascota
+                                                          .personalidad =
+                                                      textEditingController
+                                                          .text;
+                                                  controlador1.loading = false;
+                                                  textEditingController.clear();
+                                                  controlador1.notify();
+                                                  Navigator.of(context).pop();
+                                                },
+                                                label: Text(
+                                                  'Actualizar',
+                                                  style: TextStyle(
+                                                      color: secondaryLight),
+                                                ),
+                                                icon: Icon(
+                                                  Icons.system_update_alt,
+                                                  color: secondaryLight,
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          FloatingActionButton.extended(
-                                            backgroundColor: primaryColor,
-                                            onPressed: () async {
-                                              controlador1.loading = true;
-                                              controlador1.notify();
-                                              await controlador1
-                                                  .mascota.reference
-                                                  .update({
-                                                'personalidad':
-                                                    textEditingController.text
-                                              });
-                                              controlador1
-                                                      .mascota.personalidad =
-                                                  textEditingController.text;
-                                              controlador1.loading = false;
-                                              textEditingController.clear();
-                                              controlador1.notify();
-                                              Navigator.of(context).pop();
-                                            },
-                                            label: Text(
-                                              'Actualizar',
-                                              style: TextStyle(
-                                                  color: secondaryLight),
-                                            ),
-                                            icon: Icon(
-                                              Icons.system_update_alt,
-                                              color: secondaryLight,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                        ),
+                                      );
+                                    }),
                                 icon: Icon(
                                   FontAwesomeIcons.edit,
                                   size: 15,
@@ -482,74 +490,84 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                               PostsModel.fromDocumentSnapshot(documents[index]);
                           return GestureDetector(
                             onTap: () {
-                              showDialog(
-                                useSafeArea: true,
-                                //barrierDismissible: false,
-                                barrierColor: Colors.black54,
-                                context: context,
-                                builder: (_) => WillPopScope(
-                                    onWillPop: () async {
-                                      controlador1.pestanaAct = 0;
-                                      controlador1.notify();
-                                      return true;
-                                    },
-                                    child: AlertDialog(
-                                      backgroundColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10.0))),
-                                      contentPadding: EdgeInsets.all(0.0),
-                                      insetPadding: EdgeInsets.all(5),
-                                      content: Builder(
-                                        builder: (context) {
-                                          // Get available height and width of the build area of this widget. Make a choice depending on the size.
-                                          var height = MediaQuery.of(context)
-                                              .size
-                                              .height;
-                                          var width =
-                                              MediaQuery.of(context).size.width;
-                                          print(width);
-
-                                          return Container(
-                                            color: Colors.transparent,
-                                            //height: ,
-                                            width: width,
-                                            child: SingleChildScrollView(
-                                              child: Fotos(
-                                                controlador1: controlador1,
-                                                index: 2,
-                                                post: post,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    )),
-
-                                //     (BuildContext context) {
-                                //   var height =
-                                //       MediaQuery.of(context).size.height;
-                                //   var width = MediaQuery.of(context).size.width;
-                                //   print(width);
-
-                                //   return WillPopScope(
-                                //       onWillPop: () async {
-                                //         controlador1.pestanaAct = 0;
-                                //         controlador1.notify();
-                                //         return true;
-                                //       },
-                                //       child: Container(
-                                //         width:
-                                //             MediaQuery.of(context).size.width,
-                                //         child: Fotos(
-                                //           index: 2,
-                                //           controlador1: controlador1,
-                                //           post: post,
-                                //         ),
-                                //       ));
-                                // },
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => PostView(
+                                    post: post,
+                                    controlador1: controlador1,
+                                  ),
+                                ),
                               );
                             },
+                            // onTap: () {
+                            //   showDialog(
+                            //     useSafeArea: true,
+                            //     //barrierDismissible: false,
+                            //     barrierColor: Colors.black54,
+                            //     context: context,
+                            //     builder: (_) => WillPopScope(
+                            //         onWillPop: () async {
+                            //           controlador1.pestanaAct = 0;
+                            //           //controlador1.notify();
+                            //           return true;
+                            //         },
+                            //         child: AlertDialog(
+                            //           backgroundColor: Colors.transparent,
+                            //           shape: RoundedRectangleBorder(
+                            //               borderRadius: BorderRadius.all(
+                            //                   Radius.circular(10.0))),
+                            //           contentPadding: EdgeInsets.all(0.0),
+                            //           insetPadding: EdgeInsets.all(5),
+                            //           content: Builder(
+                            //             builder: (context) {
+                            //               // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                            //               var height = MediaQuery.of(context)
+                            //                   .size
+                            //                   .height;
+                            //               var width =
+                            //                   MediaQuery.of(context).size.width;
+                            //               print(width);
+
+                            //               return Container(
+                            //                 color: Colors.transparent,
+                            //                 //height: ,
+                            //                 width: width,
+                            //                 child: SingleChildScrollView(
+                            //                   child: Fotos(
+                            //                     controlador1: controlador1,
+                            //                     index: 2,
+                            //                     post: post,
+                            //                   ),
+                            //                 ),
+                            //               );
+                            //             },
+                            //           ),
+                            //         )),
+
+                            //     //     (BuildContext context) {
+                            //     //   var height =
+                            //     //       MediaQuery.of(context).size.height;
+                            //     //   var width = MediaQuery.of(context).size.width;
+                            //     //   print(width);
+
+                            //     //   return WillPopScope(
+                            //     //       onWillPop: () async {
+                            //     //         controlador1.pestanaAct = 0;
+                            //     //         controlador1.notify();
+                            //     //         return true;
+                            //     //       },
+                            //     //       child: Container(
+                            //     //         width:
+                            //     //             MediaQuery.of(context).size.width,
+                            //     //         child: Fotos(
+                            //     //           index: 2,
+                            //     //           controlador1: controlador1,
+                            //     //           post: post,
+                            //     //         ),
+                            //     //       ));
+                            //     // },
+                            //   );
+                            // },
                             child: FadeInImage(
                               placeholder: AssetImage('assets/dog.png'),
                               image: NetworkImage(post.foto),
@@ -691,8 +709,7 @@ class _DialogContentState extends State<DialogContentM> {
                                     controlador1.usuario.correo +
                                         '/mascotas/${widget.foto}' +
                                         DateTime.now().toString();
-                                Reference storageRef = FirebaseStorage
-                                    .instance
+                                Reference storageRef = FirebaseStorage.instance
                                     .ref()
                                     .child(fileName);
 
@@ -719,8 +736,7 @@ class _DialogContentState extends State<DialogContentM> {
                                     (await downloadUrl.ref.getDownloadURL());
 
                                 if (widget.foto == 'PPM') {
-                                  await controlador1.mascota.reference
-                                      .update({
+                                  await controlador1.mascota.reference.update({
                                     'foto': url,
                                     'fotoStorageRef': downloadUrl.ref.fullPath
                                   });

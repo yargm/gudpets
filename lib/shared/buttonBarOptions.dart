@@ -34,60 +34,62 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
             onPressed: () {
               showDialog(
                   context: context,
-                  child: WillPopScope(
-                    onWillPop: () async {
-                      Navigator.of(context).pop();
-
-                      return !controlador1.loading;
-                    },
-                    child: WillPopScope(
+                  builder: (BuildContext context) {
+                    return WillPopScope(
                       onWillPop: () async {
-                        return false;
+                        Navigator.of(context).pop();
+
+                        return !controlador1.loading;
                       },
-                      child: AlertDialog(
-                        backgroundColor: Colors.white,
-                        content: Text(
-                          '¿Seguro que deseas bloquear a este usuario?',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        actions: [
-                          RaisedButton(
-                            onPressed: () async {
-                              Navigator.of(context).pop();
-                              return;
-                            },
-                            child: Text('No'),
+                      child: WillPopScope(
+                        onWillPop: () async {
+                          return false;
+                        },
+                        child: AlertDialog(
+                          backgroundColor: Colors.white,
+                          content: Text(
+                            '¿Seguro que deseas bloquear a este usuario?',
+                            style: TextStyle(color: Colors.black),
                           ),
-                          RaisedButton(
-                            onPressed: () async {
-                              controlador1.loading = true;
-                              controlador1.notify();
-                              await controlador1.usuario.reference.update({
-                                'amigos': FieldValue.arrayRemove(
-                                    [widget.usuario.documentId]),
-                              });
-                              await widget.usuario.reference.update({
-                                'amigos': FieldValue.arrayRemove(
-                                    [controlador1.usuario.documentId]),
-                                'bloqueados': FieldValue.arrayUnion(
-                                    [controlador1.usuario.documentId]),
-                              });
-                              controlador1.loading = false;
-                              controlador1.notify();
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                              return;
-                            },
-                            child: Text('Si'),
-                          )
-                        ],
-                        title: Text(
-                          'Bloquear Usuario',
-                          style: TextStyle(fontSize: 30, color: Colors.black),
+                          actions: [
+                            RaisedButton(
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                return;
+                              },
+                              child: Text('No'),
+                            ),
+                            RaisedButton(
+                              onPressed: () async {
+                                controlador1.loading = true;
+                                controlador1.notify();
+                                await controlador1.usuario.reference.update({
+                                  'amigos': FieldValue.arrayRemove(
+                                      [widget.usuario.documentId]),
+                                });
+                                await widget.usuario.reference.update({
+                                  'amigos': FieldValue.arrayRemove(
+                                      [controlador1.usuario.documentId]),
+                                  'bloqueados': FieldValue.arrayUnion(
+                                      [controlador1.usuario.documentId]),
+                                });
+                                controlador1.loading = false;
+                                controlador1.notify();
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                                return;
+                              },
+                              child: Text('Si'),
+                            )
+                          ],
+                          title: Text(
+                            'Bloquear Usuario',
+                            style: TextStyle(fontSize: 30, color: Colors.black),
+                          ),
                         ),
                       ),
-                    ),
-                  ));
+                    );
+                  });
             },
             icon: Icon(Icons.report, size: 15, color: secondaryDark),
             label: Text(
@@ -104,10 +106,12 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
               ];
               showDialog(
                   context: context,
-                  child: ReportDialog(
-                    razones: razones,
-                    usuarioModel: widget.usuario,
-                  ));
+                  builder: (BuildContext context) {
+                    return ReportDialog(
+                      razones: razones,
+                      usuarioModel: widget.usuario,
+                    );
+                  });
             },
             icon: Icon(Icons.block, size: 15, color: secondaryDark),
             label: Text(
@@ -146,8 +150,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                 onPressed: () async {
                                   controlador1.loading = true;
                                   controlador1.notify();
-                                  await controlador1.usuario.reference
-                                      .update({
+                                  await controlador1.usuario.reference.update({
                                     'amigos': FieldValue.arrayUnion(
                                         [widget.usuario.documentId])
                                   });
@@ -206,8 +209,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                 onPressed: () async {
                                   controlador1.loading = true;
                                   controlador1.notify();
-                                  await controlador1.usuario.reference
-                                      .update({
+                                  await controlador1.usuario.reference.update({
                                     'amigos': FieldValue.arrayRemove(
                                         [widget.usuario.documentId])
                                   });
@@ -235,8 +237,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                 onPressed: () async {
                                   controlador1.loading = true;
                                   controlador1.notify();
-                                  await controlador1.usuario.reference
-                                      .update({
+                                  await controlador1.usuario.reference.update({
                                     'solicitudesAE': FieldValue.arrayUnion(
                                         [widget.usuario.documentId]),
                                   });
@@ -350,33 +351,35 @@ class _ReportDialogState extends State<ReportDialog> {
 
                       showDialog(
                           context: context,
-                          child: WillPopScope(
-                            onWillPop: () async {
-                              controlador1.loading = false;
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
+                          builder: (BuildContext context) {
+                            return WillPopScope(
+                              onWillPop: () async {
+                                controlador1.loading = false;
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
 
-                              return !controlador1.loading;
-                            },
-                            child: AlertDialog(
-                              backgroundColor: Colors.white,
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    'Estamos revisando tu reporte, si tu reporte es valido, la libreta sera eliminada en aproximadamente 24 horas',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 18),
-                                  ),
-                                  Icon(
-                                    Icons.check_circle,
-                                    color: Colors.green,
-                                    size: 100,
-                                  )
-                                ],
+                                return !controlador1.loading;
+                              },
+                              child: AlertDialog(
+                                backgroundColor: Colors.white,
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      'Estamos revisando tu reporte, si tu reporte es valido, la libreta sera eliminada en aproximadamente 24 horas',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 18),
+                                    ),
+                                    Icon(
+                                      Icons.check_circle,
+                                      color: Colors.green,
+                                      size: 100,
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ));
+                            );
+                          });
                     })
               ],
       ),
