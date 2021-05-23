@@ -265,6 +265,8 @@ class PerdidoModel {
 }
 
 class AdopcionModel {
+  String estado;
+  String municipio;
   String titulo;
   List<dynamic> favoritos = [];
   String descripcion;
@@ -283,7 +285,6 @@ class AdopcionModel {
   dynamic fotos;
   String status;
   String adoptanteId;
-  String lugar;
 
   AdopcionModel(
       {this.titulo,
@@ -302,7 +303,8 @@ class AdopcionModel {
       this.fotos,
       this.status,
       this.adoptanteId,
-      this.lugar});
+      this.estado,
+      this.municipio});
 
   AdopcionModel.fromDocumentSnapshot(DocumentSnapshot data) {
     titulo = data.data()['titulo'];
@@ -311,6 +313,8 @@ class AdopcionModel {
     tipoAnimal = data.data()['tipoAnimal'];
     sexo = data.data()['sexo'];
     edad = data.data()['edad'];
+    estado = data.data()['estado'];
+    municipio = data.data()['municipio'];
     fecha = data.data()['fecha'].toDate();
     fotos = data.data()['fotos'] ?? [''];
     albumrefs = data.data()['albumrefs'] ?? [''];
@@ -323,7 +327,6 @@ class AdopcionModel {
     reference = data.reference;
     status = data.data()['status'];
     adoptanteId = data.data()['adoptanteId'];
-    lugar = data.data()['lugar'];
   }
 
   Map<String, dynamic> toMap() {
@@ -333,6 +336,8 @@ class AdopcionModel {
       'descripcion': descripcion,
       'tipoAnimal': tipoAnimal,
       'sexo': sexo,
+      'estado': estado,
+      'municipio': municipio,
       'edad': edad,
       'fecha': fecha,
       'fotos': fotos,

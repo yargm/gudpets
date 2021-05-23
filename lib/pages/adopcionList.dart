@@ -8,9 +8,20 @@ class AdopcionList extends StatefulWidget {
 }
 
 class _AdopcionListState extends State<AdopcionList> {
+  var adopciones = FirebaseFirestore.instance
+      .collection('adopciones')
+      .where('status', isEqualTo: 'en adopcion')
+      .snapshots();
 
-  var adopciones = FirebaseFirestore.instance.collection('adopciones').where('status',isEqualTo: 'en adopcion' ).snapshots();
-
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      Controller controller = Provider.of<Controller>(context, listen: false);
+      await controller.getLocation(context);
+      await controller.getAddress(context, true);
+      await controller.setAddress();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +39,7 @@ class _AdopcionListState extends State<AdopcionList> {
               );
             return ListView.builder(
               itemBuilder: (context, index) => ListCard(
-                controlador1: controlador1,
+                  controlador1: controlador1,
                   objeto: AdopcionModel.fromDocumentSnapshot(
                       snapshot.data.documents[index]),
                   posicion: index),

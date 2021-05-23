@@ -58,7 +58,8 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     'userId': null,
     'fotos': <String>[],
     'albumrefs': <String>[],
-    'lugar': null,
+    'estado': null,
+    'municipio': null,
   };
 
   @override
@@ -467,6 +468,8 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                 formAdopcion['userName'] =
                                     controlador1.usuario.nombre;
                                 formAdopcion['fecha'] = DateTime.now();
+                                formAdopcion['estado'] = controlador1.usuario.edo;
+                                formAdopcion['municipio'] = controlador1.usuario.municipio;
                                 isLoadig = true;
                               });
 
@@ -530,6 +533,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                       controlador1.usuario.municipio +
                                           ', ' +
                                           controlador1.usuario.edo;
+
                                 });
                               } else {
                                 setState(() {
