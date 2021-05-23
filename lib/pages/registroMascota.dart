@@ -139,24 +139,24 @@ class _RegistroMascotaState extends State<RegistroMascota> {
                 SizedBox(
                   height: 10,
                 ),
-               TextFormField(
-                      validator: (String value) {
-                        if (textEditingControllerFecha.text == '' ||
-                            textEditingControllerFecha.text == null ||
-                            textEditingControllerFecha.text.isEmpty) {
-                          return 'El campo fecha de nacimiento es obligatorio';
-                        }
-                        return null;
-                      },
-                      controller: textEditingControllerFecha,
-                      onTap: () => _selectDate(context),
-                      readOnly: true,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          labelText: '* Fecha de nacimiento',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                    ),
+                TextFormField(
+                  validator: (String value) {
+                    if (textEditingControllerFecha.text == '' ||
+                        textEditingControllerFecha.text == null ||
+                        textEditingControllerFecha.text.isEmpty) {
+                      return 'El campo fecha de nacimiento es obligatorio';
+                    }
+                    return null;
+                  },
+                  controller: textEditingControllerFecha,
+                  onTap: () => _selectDate(context),
+                  readOnly: true,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      labelText: '* Fecha de nacimiento',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                ),
                 SizedBox(
                   height: 15,
                 ),
@@ -295,14 +295,14 @@ class _RegistroMascotaState extends State<RegistroMascota> {
               '/mascotas/photos' +
               DateTime.now().toString();
 
-          Reference storageRef =
-              FirebaseStorage.instance.ref().child(fileName);
+          Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
 
           final UploadTask uploadTask = storageRef.putFile(
             imagen,
           );
 
-          final TaskSnapshot downloadUrl = (await uploadTask.whenComplete(() => null));
+          final TaskSnapshot downloadUrl =
+              (await uploadTask.whenComplete(() => null));
 
           final String url = (await downloadUrl.ref.getDownloadURL());
           print('URL Is $url');
@@ -332,28 +332,30 @@ class _RegistroMascotaState extends State<RegistroMascota> {
       onWillPop: () async {
         var hola = await showDialog(
             context: context,
-            child: AlertDialog(
-              title: Text('Saliendo de registro de Mascota'),
-              content: Text(
-                  '¿Estas seguro que deseas cancelar el registro de esta Mascota?'),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    'Regresar',
-                    style: TextStyle(color: primaryColor),
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Saliendo de registro de Mascota'),
+                content: Text(
+                    '¿Estas seguro que deseas cancelar el registro de esta Mascota?'),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: Text(
+                      'Regresar',
+                      style: TextStyle(color: primaryColor),
+                    ),
                   ),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                  child: Text('Cancelar registro'),
-                ),
-              ],
-            ));
+                  RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    child: Text('Cancelar registro'),
+                  ),
+                ],
+              );
+            });
         if (hola) {
           return true;
         }

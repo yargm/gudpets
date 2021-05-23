@@ -120,6 +120,7 @@ class _LogInState extends State<LogIn> {
       setState(() {
         isLoading = true;
       });
+
       if (onValue) {
         Navigator.of(context).pushReplacementNamed('/home');
       } else {

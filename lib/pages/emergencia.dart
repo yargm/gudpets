@@ -65,15 +65,17 @@ class _EmergenciaState extends State<Emergencia> {
             child: GestureDetector(
               onTap: () => showDialog(
                 context: context,
-                child: SingleChildScrollView(
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: FadeInImage(
-                      image: NetworkImage(widget.objeto.foto),
-                      placeholder: AssetImage('assets/dog.png'),
+                builder: (BuildContext context) {
+                  return SingleChildScrollView(
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: FadeInImage(
+                        image: NetworkImage(widget.objeto.foto),
+                        placeholder: AssetImage('assets/dog.png'),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
               child: Stack(
                 alignment: Alignment.bottomRight,
@@ -302,18 +304,20 @@ class _EmergenciaState extends State<Emergencia> {
                             GestureDetector(
                               onTap: () => showDialog(
                                   context: context,
-                                  child: GestureDetector(
-                                    onDoubleTap: () =>
-                                        Navigator.of(context).pop(),
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Image.asset(
-                                        'assets/denuncia2.jpg',
-                                        width: 700,
-                                        height: 500,
+                                  builder: (BuildContext context) {
+                                    return GestureDetector(
+                                      onDoubleTap: () =>
+                                          Navigator.of(context).pop(),
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Image.asset(
+                                          'assets/denuncia2.jpg',
+                                          width: 700,
+                                          height: 500,
+                                        ),
                                       ),
-                                    ),
-                                  )),
+                                    );
+                                  }),
                               child: Container(
                                   height: 200.0,
                                   width: 400.0,

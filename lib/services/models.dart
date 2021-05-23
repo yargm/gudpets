@@ -616,16 +616,16 @@ class PostsModel {
       this.userId});
 
   PostsModel.fromDocumentSnapshot(DocumentSnapshot data) {
-    foto = data['foto'];
-    descripcion = data['descripcion'];
-    numlikes = data['numlikes'];
-    fecha = data['fecha'].toDate();
-    usuario = data['usuario'];
-    privacidad = data['privacidad'] ?? [''];
-    userId = data['userId'];
-    storageRef = data['storageRef'];
-    mascotas = data['mascotas'] ?? [''];
-    favoritos = data['favoritos'] ?? [''];
+    foto = data.data()['foto'];
+    descripcion = data.data()['descripcion'];
+    numlikes = data.data()['numlikes'];
+    fecha = data.data()['fecha'].toDate();
+    usuario = data.data()['usuario'];
+    privacidad = data.data()['privacidad'] ?? [''];
+    userId = data.data()['userId'];
+    storageRef = data.data()['storageRef'];
+    mascotas = data.data()['mascotas'] ?? [''];
+    favoritos = data.data()['favoritos'] ?? [''];
     documentId = data.id.toString();
     reference = data.reference;
   }

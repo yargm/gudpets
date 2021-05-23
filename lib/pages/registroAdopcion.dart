@@ -529,6 +529,11 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                   formAdopcion['userId'] =
                                       controlador1.usuario.documentId;
                                   formAdopcion['status'] = 'en adopcion';
+                                  formAdopcion['lugar'] =
+                                      controlador1.usuario.municipio +
+                                          ', ' +
+                                          controlador1.usuario.edo;
+
                                 });
                               } else {
                                 setState(() {
@@ -536,28 +541,30 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                 });
                                 return showDialog(
                                     context: context,
-                                    child: AlertDialog(
-                                      content: SingleChildScrollView(
-                                        child: ListBody(
-                                          children: <Widget>[
-                                            Text(
-                                                'Todos los campos son obligatorios. Por favor, completa la información que se solicita.'),
-                                          ],
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        content: SingleChildScrollView(
+                                          child: ListBody(
+                                            children: <Widget>[
+                                              Text(
+                                                  'Todos los campos son obligatorios. Por favor, completa la información que se solicita.'),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('Regresar'),
-                                          onPressed: () {
-                                            setState(() {
-                                              isLoadig = false;
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                      title: Text('Olvidaste añadir algo'),
-                                    ));
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text('Regresar'),
+                                            onPressed: () {
+                                              setState(() {
+                                                isLoadig = false;
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                        title: Text('Olvidaste añadir algo'),
+                                      );
+                                    });
                               }
 
                               _adopcionkey.currentState.save();
@@ -599,7 +606,8 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
     Reference ref = FirebaseStorage.instance.ref().child(fileName);
     UploadTask uploadTask = ref.putData(imageData);
 
-    fotosRef['url'] = await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+    fotosRef['url'] =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
     fotosRef['ref'] = (await uploadTask.whenComplete(() => null)).ref.fullPath;
     return fotosRef;
   }

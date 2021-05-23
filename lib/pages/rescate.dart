@@ -67,17 +67,18 @@ class _RescateState extends State<Rescate> {
             height: 350,
             child: GestureDetector(
               onTap: () => showDialog(
-                context: context,
-                child: SingleChildScrollView(
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: FadeInImage(
-                      image: NetworkImage(widget.objeto.foto),
-                      placeholder: AssetImage('assets/dog.png'),
-                    ),
-                  ),
-                ),
-              ),
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SingleChildScrollView(
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: FadeInImage(
+                          image: NetworkImage(widget.objeto.foto),
+                          placeholder: AssetImage('assets/dog.png'),
+                        ),
+                      ),
+                    );
+                  }),
               child: Stack(
                 alignment: Alignment.bottomRight,
                 children: <Widget>[
