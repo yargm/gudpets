@@ -24,14 +24,14 @@ class _HomeState extends State<Home> {
 
   List<Widget> _widgetOptions = <Widget>[
     FotosPrincipal(),
-    PerdidoList(),
-    AdopcionList(),
-    EmergenciaList(),
+    Publicaciones(),
+    Publicaciones(),
+    PerdidosList(),
   ];
 
   _onItemTapped(int index, Controller controlador1) {
     setState(() {
-      seleccionado = index;
+      //seleccionado = index;
       controlador1.pestanaAct = index;
       print('Estoy en : ' + controlador1.pestanaAct.toString());
     });
@@ -237,13 +237,13 @@ class _HomeState extends State<Home> {
             BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.cameraRetro), label: "Fotos"),
             BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.searchLocation), label: "Perdidos"),
-            BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.home), label: "Adopción"),
             BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.ambulance), label: "Emergencias"),
+            BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.searchLocation), label: "Perdidos"),
           ],
-          currentIndex: seleccionado,
+          currentIndex: controlador1.pestanaAct,
           selectedItemColor: Colors.brown,
           onTap: (int index) {
             _onItemTapped(index, controlador1);

@@ -73,7 +73,7 @@ class _PerdidoState extends State<Perdido> {
                       child: GestureDetector(
                         onTap: () => Navigator.of(context).pop(),
                         child: FadeInImage(
-                          image: NetworkImage(widget.objeto.foto),
+                          image: NetworkImage(widget.objeto.album[0]),
                           placeholder: AssetImage('assets/dog.png'),
                         ),
                       ),
@@ -89,7 +89,7 @@ class _PerdidoState extends State<Perdido> {
                         placeholder: AssetImage('assets/dog.png'),
                         width: double.maxFinite,
                         height: 350,
-                        image: NetworkImage(widget.objeto.foto),
+                        image: NetworkImage(widget.objeto.album[0]),
                       )),
                   Container(
                     decoration: BoxDecoration(
@@ -431,7 +431,7 @@ class _PerdidoState extends State<Perdido> {
       {
         'perdidos': FieldValue.arrayUnion([
           {
-            'imagen': objeto.foto,
+            'imagen': objeto.album[0],
             'titulo': objeto.titulo,
             'documentId': objeto.documentId,
           }
@@ -448,7 +448,7 @@ class _PerdidoState extends State<Perdido> {
       {
         'emergencias': FieldValue.arrayRemove([
           {
-            'imagen': objeto.foto,
+            'imagen': objeto.album[0],
             'titulo': objeto.titulo,
             'documentId': objeto.documentId,
           }

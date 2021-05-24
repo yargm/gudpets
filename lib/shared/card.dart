@@ -40,6 +40,7 @@ class _ListCardState extends State<ListCard> {
     var prefHeigth = MediaQuery.of(context).size.width > 900 ? 500.0 : 200.0;
     var textSize = MediaQuery.of(context).size.width > 900 ? 40.0 : 24.0;
     var subTextSize = MediaQuery.of(context).size.width > 900 ? 30.0 : 16.0;
+
     //  for (var usuario in widget.objeto.favoritos) {
 
     //     if (widget.controlador1.usuario.documentId == usuario) {
@@ -117,9 +118,7 @@ class _ListCardState extends State<ListCard> {
                               width: double.maxFinite,
                               height: prefHeigth,
                               fit: BoxFit.fitWidth,
-                              image: controlador1.pestanaAct == 2
-                                  ? NetworkImage(widget.objeto.fotos[0])
-                                  : NetworkImage(widget.objeto.foto)),
+                              image: NetworkImage(widget.objeto.album[0])),
                         ),
                       ),
                     ),
