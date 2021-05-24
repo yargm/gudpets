@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gudpets/pages/postView.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/pages/pages.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -268,6 +270,87 @@ class _PublicacionListState extends State<PublicacionList> {
                         : Container();
                   },
                 ),
+                //PESTAÑA DE posts
+                // StreamBuilder(
+                //   stream: FirebaseFirestore.instance
+                //       .collectionGroup('posts')
+                //       .where('userId',
+                //           arrayContains: controlador1.usuario.documentId)
+                //       .snapshots(),
+                //   builder: (context, snapshot) {
+                //     if (!snapshot.hasData && snapshot != null)
+                //       return Container();
+
+                //     List<DocumentSnapshot> documents = snapshot.data.documents;
+                //     PostsModel _postModel =
+                //         PostsModel.fromDocumentSnapshot(documents.last);
+                //     print(documents.length);
+                //     print('holaaaaaaaaaaaaaaaaaaa aqui abajo');
+                //     return documents.isNotEmpty && documents != null
+                //         ? ExpansionTile(
+                //             leading: Icon(FontAwesomeIcons.cameraRetro),
+                //             title: Text(
+                //               'Posts',
+                //               style: TextStyle(fontSize: 30),
+                //             ),
+                //             children: <Widget>[
+                //               ListView.builder(
+                //                   itemCount: documents.length,
+                //                   shrinkWrap: true,
+                //                   physics: ScrollPhysics(
+                //                       parent: NeverScrollableScrollPhysics()),
+                //                   itemBuilder: (context, index) {
+                //                     PostsModel post =
+                //                         PostsModel.fromDocumentSnapshot(
+                //                             documents[index]);
+                //                     return ListTile(
+                //                       onTap: () async {
+                //                         Navigator.of(context).push(
+                //                           CupertinoPageRoute(
+                //                             builder: (context) => PostView(
+                //                               post: post,
+                //                               controlador1: controlador1,
+                //                             ),
+                //                           ),
+                //                         );
+                //                       },
+                //                       title: Text(post.descripcion),
+                //                       trailing: IconButton(
+                //                         onPressed: () async {
+                //                           await post.reference.update({
+                //                             'favoritos':
+                //                                 FieldValue.arrayRemove([
+                //                               controlador1.usuario.documentId
+                //                             ]),
+                //                           });
+                //                           if (post.numlikes != 0) {
+                //                             post.reference.update({
+                //                               'numlikes': post.numlikes - 1
+                //                             });
+                //                           }
+
+                //                           controlador1.notify();
+                //                         },
+                //                         icon: Icon(
+                //                           Icons.favorite,
+                //                           color: Colors.pink,
+                //                         ),
+                //                       ),
+                //                       leading: Hero(
+                //                         tag: post.documentId,
+                //                         child: Image(
+                //                           width: 40,
+                //                           height: 40,
+                //                           image: NetworkImage(post.foto),
+                //                         ),
+                //                       ),
+                //                     );
+                //                   })
+                //             ],
+                //           )
+                //         : Container();
+                //   },
+                // ),
               ],
             ),
           ),

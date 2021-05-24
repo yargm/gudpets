@@ -158,12 +158,9 @@ class _FotosPrincipalState extends State<FotosPrincipal> {
                       if (controlador1.usuario.amigos
                           .contains(element['userId'])) {
                         listaver.add(element);
-
-                        print(element['userId']);
                       } else if (element['userId'] ==
                           controlador1.usuario.documentId) {
                         listaver.add(element);
-                        print('soy io');
                       } else if (element['privacidad'] == true) {
                         listaver.add(element);
                       }
@@ -172,19 +169,15 @@ class _FotosPrincipalState extends State<FotosPrincipal> {
                       if (controlador1.usuario.amigos
                           .contains(element['userId'])) {
                         listaver.add(element);
-
-                        print(element['userId']);
                       } else if (element['userId'] ==
                           controlador1.usuario.documentId) {
                         listaver.add(element);
-                        print('soy io');
                       }
                       //  else if (element['privacidad'] == true) {
                       //   listaver.add(element);
                       // }
                     });
-              print(listaver);
-              print(documents);
+
               //print(documents.length);
 
               return listaver.isEmpty
