@@ -87,7 +87,7 @@ class _PublicacionListState extends State<PublicacionList> {
                                             width: 40,
                                             height: 40,
                                             image: NetworkImage(snapshot.data
-                                                .documents[index]['fotos'][0]),
+                                                .documents[index]['album'][0]),
                                           ),
                                         ),
                                       ),
@@ -164,8 +164,8 @@ class _PublicacionListState extends State<PublicacionList> {
                                           child: Image(
                                             width: 40,
                                             height: 40,
-                                            image: NetworkImage(snapshot
-                                                .data.documents[index]['foto']),
+                                            image: NetworkImage(snapshot.data
+                                                .documents[index]['album'][0]),
                                           ),
                                         ),
                                       ),
@@ -191,85 +191,6 @@ class _PublicacionListState extends State<PublicacionList> {
                         : Container();
                   },
                 ),
-
-                //PESTAÑA DE RESCATES
-                StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('rescates')
-                      .where('userId',
-                          isEqualTo: controlador1.usuario.documentId)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return const CircularProgressIndicator();
-
-                    return snapshot.data.documents.isNotEmpty
-                        ? ExpansionTile(
-                            title: Text('Rescates',
-                                style: TextStyle(fontSize: 30)),
-                            leading: Icon(FontAwesomeIcons.handHoldingHeart),
-                            children: <Widget>[
-                              ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: ScrollPhysics(
-                                      parent: NeverScrollableScrollPhysics()),
-                                  itemCount: snapshot.data.documents.length,
-                                  itemBuilder: (context, index) {
-                                    return ListTile(
-                                      title: Text(snapshot.data.documents[index]
-                                          ['titulo']),
-                                      leading: Hero(
-                                        tag: snapshot
-                                            .data.documents[index].documentID,
-                                        child: GestureDetector(
-                                          onTap: () async {
-                                            bool favorito = _favorito(
-                                                snapshot.data.documents[index]
-                                                    ['favoritos'],
-                                                controlador1);
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return Rescate(
-                                                favorito: favorito,
-                                                objeto: RescateModel
-                                                    .fromDocumentSnapshot(
-                                                        snapshot.data
-                                                            .documents[index]),
-                                              );
-                                            }));
-                                          },
-                                          child: Image(
-                                            width: 40,
-                                            height: 40,
-                                            image: NetworkImage(snapshot
-                                                .data.documents[index]['foto']),
-                                          ),
-                                        ),
-                                      ),
-                                      trailing: IconButton(
-                                        onPressed: () async {
-                                          setState(() {
-                                            tabla = 'rescates';
-                                          });
-                                          _myshowDialog(
-                                              context,
-                                              snapshot.data.documents[index],
-                                              tabla);
-                                          setState(() {});
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                        ),
-                                      ),
-                                    );
-                                  })
-                            ],
-                          )
-                        : Container();
-                  },
-                ),
-
                 //PESTAÑA DE EMERGENCIAS
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
@@ -320,8 +241,8 @@ class _PublicacionListState extends State<PublicacionList> {
                                           child: Image(
                                             width: 40,
                                             height: 40,
-                                            image: NetworkImage(snapshot
-                                                .data.documents[index]['foto']),
+                                            image: NetworkImage(snapshot.data
+                                                .documents[index]['album'][0]),
                                           ),
                                         ),
                                       ),
@@ -382,26 +303,14 @@ class _PublicacionListState extends State<PublicacionList> {
   }
 
   deleteData(String tabla, dynamic objeto) async {
-    if (tabla == 'rescates' || tabla == 'emergencias') {
+    for (var elemento in objeto['albumrefs']) {
       await FirebaseStorage.instance
           .ref()
-          .child(objeto['reffoto'])
+          .child(elemento)
           .delete()
           .catchError((onError) {
-        print(onError);
+        print('error en album ref');
       });
-    }
-
-    if (tabla == 'rescates' || tabla == 'adopciones') {
-      for (var elemento in objeto['albumrefs']) {
-        await FirebaseStorage.instance
-            .ref()
-            .child(elemento)
-            .delete()
-            .catchError((onError) {
-          print('error en album ref');
-        });
-      }
     }
 
     await FirebaseFirestore.instance

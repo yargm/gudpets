@@ -270,16 +270,6 @@ class _FavoritosListState extends State<FavoritosList> {
                         ),
                       );
                       break;
-                    case 'Rescates':
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => Rescate(
-                            objeto: RescateModel.fromDocumentSnapshot(query),
-                          ),
-                        ),
-                      );
-                      break;
-
                     case 'Emergencias':
                       Navigator.of(context).push(
                         MaterialPageRoute(

@@ -18,7 +18,7 @@ class _AdopcionState extends State<Adopcion> {
 
   void _next() {
     setState(() {
-      if (index < widget.objeto.fotos.length - 1) {
+      if (index < widget.objeto.album.length - 1) {
         index++;
       } else {
         index = index;
@@ -56,7 +56,7 @@ class _AdopcionState extends State<Adopcion> {
 
     List<Widget> _buildIndicator() {
       List<Widget> indicators = [];
-      for (int i = 0; i < widget.objeto.fotos.length; i++) {
+      for (int i = 0; i < widget.objeto.album.length; i++) {
         if (index == i) {
           indicators.add(_indicator(true));
         } else {
@@ -86,7 +86,7 @@ class _AdopcionState extends State<Adopcion> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => ImageViewer(
-                          image: widget.objeto.fotos[index],
+                          image: widget.objeto.album[index],
                         ),
                       ),
                     );
@@ -101,7 +101,7 @@ class _AdopcionState extends State<Adopcion> {
                             placeholder: AssetImage('assets/dog.png'),
                             width: double.maxFinite,
                             height: 350,
-                            image: NetworkImage(widget.objeto.fotos[index]),
+                            image: NetworkImage(widget.objeto.album[index]),
                           )),
                       GestureDetector(
                         onHorizontalDragEnd: (DragEndDetails details) {
@@ -231,23 +231,6 @@ class _AdopcionState extends State<Adopcion> {
                 padding: EdgeInsets.only(left: 20, top: 10, right: 20),
                 child: Column(
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Icon(Icons.location_on),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                            widget.objeto.municipio +
-                                ", " +
-                                widget.objeto.estado,
-                            style:
-                                TextStyle(fontSize: 18.0, color: Colors.grey)),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
@@ -583,7 +566,7 @@ class _AdopcionState extends State<Adopcion> {
       {
         'adopciones': FieldValue.arrayUnion([
           {
-            'imagen': objeto.fotos[0],
+            'imagen': objeto.album[0],
             'titulo': objeto.titulo,
             'documentId': objeto.documentId,
           }
@@ -600,7 +583,7 @@ class _AdopcionState extends State<Adopcion> {
       {
         'adopciones': FieldValue.arrayRemove([
           {
-            'imagen': objeto.fotos[0],
+            'imagen': objeto.album[0],
             'titulo': objeto.titulo,
             'documentId': objeto.documentId,
           }
