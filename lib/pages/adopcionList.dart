@@ -15,12 +15,12 @@ class _AdopcionListState extends State<AdopcionList> {
 
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      Controller controller = Provider.of<Controller>(context, listen: false);
-      await controller.getLocation(context);
-      await controller.getAddress(context, true);
-      await controller.setAddress();
-    });
+    // Future.delayed(Duration.zero, () async {
+    //   Controller controller = Provider.of<Controller>(context, listen: false);
+    //   await controller.getLocation(context);
+    //   await controller.getAddress(context, true);
+    //   await controller.setAddress();
+    // });
   }
 
   @override
