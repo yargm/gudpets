@@ -70,7 +70,7 @@ class _EmergenciaState extends State<Emergencia> {
                     child: GestureDetector(
                       onTap: () => Navigator.of(context).pop(),
                       child: FadeInImage(
-                        image: NetworkImage(widget.objeto.foto),
+                        image: NetworkImage(widget.objeto.album[0]),
                         placeholder: AssetImage('assets/dog.png'),
                       ),
                     ),
@@ -87,7 +87,7 @@ class _EmergenciaState extends State<Emergencia> {
                         placeholder: AssetImage('assets/dog.png'),
                         width: double.maxFinite,
                         height: 350,
-                        image: NetworkImage(widget.objeto.foto),
+                        image: NetworkImage(widget.objeto.album[0]),
                       )),
                   Container(
                     decoration: BoxDecoration(
@@ -344,7 +344,7 @@ class _EmergenciaState extends State<Emergencia> {
       {
         'emergencias': FieldValue.arrayUnion([
           {
-            'imagen': objeto.foto,
+            'imagen': objeto.album[0],
             'titulo': objeto.titulo,
             'documentId': objeto.documentId,
           }
@@ -361,7 +361,7 @@ class _EmergenciaState extends State<Emergencia> {
       {
         'emergencias': FieldValue.arrayRemove([
           {
-            'imagen': objeto.foto,
+            'imagen': objeto.album[0],
             'titulo': objeto.titulo,
             'documentId': objeto.documentId,
           }

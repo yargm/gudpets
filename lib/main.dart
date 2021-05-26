@@ -6,7 +6,6 @@ import 'package:gudpets/pages/pages.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gudpets/pages/registroRescate.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
@@ -61,7 +60,7 @@ class MyApp extends StatelessWidget {
             color: primaryLight,
           ),
           //iconos
-          accentIconTheme: IconThemeData(color: Colors.white, size: 25),
+
           iconTheme: IconThemeData(
             size: 25,
             color: secondaryColor,
@@ -76,10 +75,9 @@ class MyApp extends StatelessWidget {
             bodyText1: TextStyle(fontSize: 18),
           )),
           //flotante
+          floatingActionButtonTheme:
+              FloatingActionButtonThemeData(backgroundColor: secondaryColor),
 
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: secondaryColor,
-          ),
           //appbar
           appBarTheme: AppBarTheme(
               elevation: 0,
@@ -102,11 +100,9 @@ class MyApp extends StatelessWidget {
               ),
           '/adopcion': (BuildContext context) => Adopcion(),
           '/perdido': (BuildContext context) => Perdido(),
-          '/rescate': (BuildContext context) => Rescate(),
           '/emergencia': (BuildContext context) => Emergencia(),
           '/registro_emergencia': (BuildContext context) =>
               RegistroEmergencia(),
-          '/registro_rescate': (BuildContext context) => RegistroRescate(),
           '/registro_adopcion': (BuildContext context) => RegistroAdopcion(),
           '/registro_perdido': (BuildContext context) => RegistroPerdido(),
           '/mapaejemplo': (BuildContext context) => MapSample(),

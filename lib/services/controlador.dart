@@ -13,7 +13,7 @@ import 'dart:io' show Platform;
 
 class Controller with ChangeNotifier {
   List<String> mascotas = [];
-  List<Asset> images = List<Asset>();
+  List<Asset> images = [];
   UsuarioModel selectedUser;
 
   int pestanaAct = 0;
@@ -65,7 +65,7 @@ class Controller with ChangeNotifier {
   }
 
   Future multiImage(BuildContext context) async {
-    List<Asset> resultList = List<Asset>();
+    List<Asset> resultList = [];
     String error = 'No Error Dectected';
     var permisson = await checkGalerryPermisson(false);
     if (permisson) {

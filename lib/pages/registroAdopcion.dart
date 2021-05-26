@@ -44,22 +44,21 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
   String tipoA = '';
 
   Map<String, dynamic> formAdopcion = {
-    'convivenciaotros': null,
-    'descripcion': null,
-    'desparacitacion': null,
-    'edad': null,
-    'esterilizacion': null,
-    'favoritos': [],
-    'fecha': null,
-    'sexo': null,
-    'tipoAnimal': null,
-    'titulo': null,
-    'vacunacion': null,
-    'userId': null,
-    'fotos': <String>[],
+    'album': <String>[],
     'albumrefs': <String>[],
-    'estado': null,
-    'municipio': null,
+    'titulo': null,
+    'descripcion': null,
+    'tipoAnimal': null,
+    'sexo': null,
+    'convivenciaotros': null,
+    'desparacitacion': null,
+    'vacunacion': null,
+    'esterilizacion': null,
+    'edad': null,
+    'fecha': null,
+    'favoritos': [],
+    'userId': null,
+    'userName' : null,
   };
 
   @override
@@ -116,48 +115,6 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                   //Foto
                   Text(
                       '* Selecciona al menos una imagen de la mascota en adopción: '),
-                  // GestureDetector(
-                  //   onTap: () async {
-                  //     _image = await controlador1.getImage(context);
-                  //     setState(() {});
-                  //   },
-                  //   child: Center(
-                  //     child: SizedBox(
-                  //       width: 150,
-                  //       height: 150,
-                  //       child: Stack(
-                  //         children: <Widget>[
-                  //           Container(
-                  //             width: 150.0,
-                  //             height: 150.0,
-                  //             child: CircleAvatar(
-                  //               backgroundImage: _image == null
-                  //                   ? AssetImage('assets/dog.png')
-                  //                   : FileImage(_image),
-                  //               backgroundColor: Colors.transparent,
-                  //             ),
-                  //           ),
-                  //           CircleAvatar(
-                  //             backgroundColor: secondaryColor,
-                  //             child: IconButton(
-                  //                 icon: Icon(Icons.photo_camera),
-                  //                 onPressed: () async {
-                  //                   _image =
-                  //                       await controlador1.getImage(context);
-                  //                   setState(() {});
-                  //                 }),
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 15,
-                  // ),
-                  // controlador1.images.isNotEmpty
-                  //     ? Text('Fotos del álbum')
-                  //     : Text(' ¿Deseas crear un álbum? (opcional)'),
                   SizedBox(
                     height: 15,
                   ),
@@ -378,84 +335,6 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                   SizedBox(
                     height: 15,
                   ),
-                  //Ubicacion
-                  // Center(
-                  //   child: isLoadig2
-                  //       ? CircularProgressIndicator()
-                  //       : RaisedButton.icon(
-                  //           icon: Icon(Icons.location_on),
-                  //           label: Text('Capturar ubicación'),
-                  //           onPressed: boton
-                  //               ? () async {
-                  //                   if (await controlador1
-                  //                       .checkLocationPermisson()) {
-                  //                     setState(() {
-                  //                       isLoadig2 = true;
-                  //                     });
-                  //                     await controlador1.getLocation(context);
-                  //                     controlador1.latitudfinal =
-                  //                         controlador1.latitud;
-                  //                     controlador1.longitudfinal =
-                  //                         controlador1.longitud;
-                  //                     await controlador1.getAddress(
-                  //                         context, false);
-                  //                     showDialog(
-                  //                         barrierDismissible: false,
-                  //                         context: context,
-                  //                         child: WillPopScope(
-                  //                           onWillPop: () async {
-                  //                             setState(() {
-                  //                               isLoadig2 = false;
-                  //                             });
-                  //                             return true;
-                  //                           },
-                  //                           child: AlertDialog(
-                  //                             title: Text('Importante',
-                  //                                 style: TextStyle(
-                  //                                     color: Colors.red)),
-                  //                             content: Text(
-                  //                                 'Para cambiar la ubicación en el mapa, mantén presionado el marcador rojo y deslízalo hasta posicionarlo en la calle correcta.',
-                  //                                 style:
-                  //                                     TextStyle(fontSize: 20)),
-                  //                             actions: <Widget>[
-                  //                               FlatButton(
-                  //                                 child: Text('OK'),
-                  //                                 onPressed: () {
-                  //                                   Navigator.pop(context);
-                  //                                   Navigator.push(
-                  //                                     context,
-                  //                                     MaterialPageRoute(
-                  //                                         builder: (context) =>
-                  //                                             MapSample(
-                  //                                               latitud:
-                  //                                                   controlador1
-                  //                                                       .latitud,
-                  //                                               longitud:
-                  //                                                   controlador1
-                  //                                                       .longitud,
-                  //                                               controlador1:
-                  //                                                   controlador1,
-                  //                                             )),
-                  //                                   );
-                  //                                   setState(() {
-                  //                                     isLoadig2 = false;
-                  //                                     boton = false;
-                  //                                   });
-                  //                                 },
-                  //                               ),
-                  //                             ],
-                  //                           ),
-                  //                         ));
-                  //                   } else {
-                  //                     setState(() {
-                  //                       isLoadig2 = false;
-                  //                     });
-                  //                     return controlador1
-                  //                         .permissonDeniedDialog(context);
-                  //                   }
-                  //                 }
-                  //               : null),
-                  // ),
                   //Guardar
                   Center(
                     child: isLoadig
@@ -468,8 +347,6 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                 formAdopcion['userName'] =
                                     controlador1.usuario.nombre;
                                 formAdopcion['fecha'] = DateTime.now();
-                                formAdopcion['estado'] = controlador1.usuario.edo;
-                                formAdopcion['municipio'] = controlador1.usuario.municipio;
                                 isLoadig = true;
                               });
 
@@ -479,15 +356,7 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                 });
                                 return;
                               }
-                              // if (controlador1.images != null) {
-                              //   for (var im in controlador1.images) {
-                              //     var fotos = await saveImage(im, controlador1);
-                              //     formAdopcion['fotos'].add(fotos['url']);
-                              //     formAdopcion['albumrefs'].add(fotos['ref']);
-                              //   }
-                              //   print(formAdopcion['fotos'].toString());
-                              // }
-                              if (controlador1.images != null &&
+                              if (controlador1.images.isNotEmpty &&
                                   formAdopcion['tipoAnimal'] != null &&
                                   formAdopcion['sexo'] != null &&
                                   formAdopcion['convivenciaotros'] != null &&
@@ -496,80 +365,25 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                   formAdopcion['vacunacion'] != null) {
                                 for (var im in controlador1.images) {
                                   var fotos = await saveImage(im, controlador1);
-                                  formAdopcion['fotos'].add(fotos['url']);
+                                  formAdopcion['album'].add(fotos['url']);
                                   formAdopcion['albumrefs'].add(fotos['ref']);
                                 }
-                                print(formAdopcion['fotos'].toString());
-
-                                // final String fileName =
-                                //     controlador1.usuario.correo +
-                                //         '/adopcion/' +
-                                //         DateTime.now().toString();
-
-                                // StorageReference storageRef = FirebaseStorage
-                                //     .instance
-                                //     .ref()
-                                //     .child(fileName);
-
-                                // final StorageUploadTask uploadTask =
-                                //     storageRef.putFile(
-                                //   _image,
-                                // );
-
-                                // final StorageTaskSnapshot downloadUrl =
-                                //     (await uploadTask.onComplete);
-                                // final String fotoref = downloadUrl.ref.path;
-
-                                // final String url =
-                                //     (await downloadUrl.ref.getDownloadURL());
-                                // print('URL Is $url');
+                                print(formAdopcion['album'].toString());
                                 setState(() {
-                                  // formAdopcion['foto'] = url;
-                                  // formAdopcion['reffoto'] = fotoref;
                                   formAdopcion['userId'] =
                                       controlador1.usuario.documentId;
                                   formAdopcion['status'] = 'en adopcion';
-                                  formAdopcion['lugar'] =
-                                      controlador1.usuario.municipio +
-                                          ', ' +
-                                          controlador1.usuario.edo;
-
                                 });
                               } else {
                                 setState(() {
                                   isLoadig = false;
                                 });
-                                return showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        content: SingleChildScrollView(
-                                          child: ListBody(
-                                            children: <Widget>[
-                                              Text(
-                                                  'Todos los campos son obligatorios. Por favor, completa la información que se solicita.'),
-                                            ],
-                                          ),
-                                        ),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text('Regresar'),
-                                            onPressed: () {
-                                              setState(() {
-                                                isLoadig = false;
-                                              });
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                        title: Text('Olvidaste añadir algo'),
-                                      );
-                                    });
+                                return datosIncompletos();
                               }
 
                               _adopcionkey.currentState.save();
 
-                              var agregar = await Firestore.instance
+                              var agregar = await FirebaseFirestore.instance
                                   .collection('adopciones')
                                   .add(formAdopcion)
                                   .then((value) {
@@ -580,8 +394,6 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
                                 }
                               });
                               if (agregar) {
-                                controlador1.latitudfinal = null;
-                                controlador1.longitudfinal = null;
                                 controlador1.images.clear();
                                 Navigator.of(context).pushNamed('/home');
                               }
@@ -594,6 +406,35 @@ class _RegistroAdopcionState extends State<RegistroAdopcion> {
         ),
       ),
     );
+  }
+
+  datosIncompletos() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                      'Todos los campos son obligatorios. Por favor, completa la información que se solicita.'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Regresar'),
+                onPressed: () {
+                  setState(() {
+                    isLoadig = false;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+            title: Text('Olvidaste añadir algo'),
+          );
+        });
   }
 
   Future saveImage(Asset asset, Controller controlador) async {

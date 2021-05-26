@@ -67,56 +67,49 @@ class _FavoritosListState extends State<FavoritosList> {
                   ),
                 ),
 
-                ///////LO COMENTÉ POR QUE NO SIRVE HAY QUE ARREGLARLO
-                // StreamBuilder(
-                //   stream: controlador1.usuario.reference.get().asStream(),
-                //   builder: (context, snapshot) {
-                //     print( snapshot.data);
-                //          print( 'jsadjasdkjsndjasndskdnsdsajkdnasjdjsadnslandsndnskls');
-                //     if (!snapshot.hasData)
-                //       return const CircularProgressIndicator();
+                /////LO COMENTÉ POR QUE NO SIRVE HAY QUE ARREGLARLO
+                StreamBuilder(
+                  stream: controlador1.usuario.reference.get().asStream(),
+                  builder: (context, snapshot) {
+                    print(snapshot.data);
+                    print(
+                        'jsadjasdkjsndjasndskdnsdsajkdnasjdjsadnslandsndnskls');
+                    if (!snapshot.hasData)
+                      return const CircularProgressIndicator();
 
-                //     return ListView(
-                //       physics:
-                //           ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                //       shrinkWrap: true,
-                //       children: <Widget>[
-                //         snapshot.data['adopciones'] != null &&
-                //                 snapshot.data['adopciones'].isNotEmpty
-                //             ? favoriteTile(
-                //                 titulo: 'Adopciones',
-                //                 iconData: Icons.home,
-                //                 list: snapshot.data['adopciones'],
-                //                 controlador1: controlador1)
-                //             : Container(),
-                //         snapshot.data['perdidos'] != null &&
-                //                 snapshot.data['perdidos'].isNotEmpty
-                //             ? favoriteTile(
-                //                 titulo: 'Perdidos',
-                //                 iconData: FontAwesomeIcons.searchLocation,
-                //                 list: snapshot.data['perdidos'],
-                //                 controlador1: controlador1)
-                //             : Container(),
-                //         snapshot.data['rescates'] != null &&
-                //                 snapshot.data['rescates'].isNotEmpty
-                //             ? favoriteTile(
-                //                 titulo: 'Rescates',
-                //                 iconData: FontAwesomeIcons.handHoldingHeart,
-                //                 list: snapshot.data['rescates'],
-                //                 controlador1: controlador1)
-                //             : Container(),
-                //         snapshot.data['emergencias'] != null &&
-                //                 snapshot.data['emergencias'].isNotEmpty
-                //             ? favoriteTile(
-                //                 titulo: 'Emergencias',
-                //                 iconData: FontAwesomeIcons.ambulance,
-                //                 list: snapshot.data['emergencias'],
-                //                 controlador1: controlador1)
-                //             : Container()
-                //       ],
-                //     );
-                //   },
-                // ),
+                    return ListView(
+                      physics:
+                          ScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                      shrinkWrap: true,
+                      children: <Widget>[
+                        snapshot.data['adopciones'] != null &&
+                                snapshot.data['adopciones'].isNotEmpty
+                            ? favoriteTile(
+                                titulo: 'Adopciones',
+                                iconData: Icons.home,
+                                list: snapshot.data['adopciones'],
+                                controlador1: controlador1)
+                            : Container(),
+                        snapshot.data['perdidos'] != null &&
+                                snapshot.data['perdidos'].isNotEmpty
+                            ? favoriteTile(
+                                titulo: 'Perdidos',
+                                iconData: FontAwesomeIcons.searchLocation,
+                                list: snapshot.data['perdidos'],
+                                controlador1: controlador1)
+                            : Container(),
+                        snapshot.data['emergencias'] != null &&
+                                snapshot.data['emergencias'].isNotEmpty
+                            ? favoriteTile(
+                                titulo: 'Emergencias',
+                                iconData: FontAwesomeIcons.ambulance,
+                                list: snapshot.data['emergencias'],
+                                controlador1: controlador1)
+                            : Container()
+                      ],
+                    );
+                  },
+                ),
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collectionGroup('posts')
@@ -270,16 +263,6 @@ class _FavoritosListState extends State<FavoritosList> {
                         ),
                       );
                       break;
-                    case 'Rescates':
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => Rescate(
-                            objeto: RescateModel.fromDocumentSnapshot(query),
-                          ),
-                        ),
-                      );
-                      break;
-
                     case 'Emergencias':
                       Navigator.of(context).push(
                         MaterialPageRoute(

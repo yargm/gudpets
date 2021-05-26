@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gudpets/pages/pages.dart';
@@ -109,7 +110,7 @@ class _AmigosState extends State<Amigos> {
               ),
             ),
             Container(
-              height: 137,
+              height: 150,
               padding: EdgeInsets.only(top: 10, bottom: 10),
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -122,7 +123,7 @@ class _AmigosState extends State<Amigos> {
                   if (!snapshot.hasData)
                     return Center(
                       child: Container(
-                          height: 50, child: const CircularProgressIndicator()),
+                          height: 100, child: const LinearProgressIndicator()),
                     );
                   List<DocumentSnapshot> documents = snapshot.data.documents;
                   print(documents);
@@ -131,7 +132,7 @@ class _AmigosState extends State<Amigos> {
                       ? Text(
                           'No tienes amigos :C , Haz click en el botón de abajo para buscar mas amigos')
                       : ListView.builder(
-                          scrollDirection: Axis.vertical,
+                          scrollDirection: Axis.horizontal,
                           //physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: documents.length,
@@ -139,7 +140,37 @@ class _AmigosState extends State<Amigos> {
                             UsuarioModel usuario =
                                 UsuarioModel.fromDocumentSnapshot(
                                     documents[index], 'meh');
-                            return AmigoTile(usuario: usuario, chat: false);
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  return Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) =>
+                                              Perfil(usuario: usuario)));
+                                },
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 60,
+                                      width: 60,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(360),
+                                        child: Image.network(usuario.foto),
+                                      ),
+                                    ),
+                                    Text(usuario.nombre),
+                                    SizedBox(
+                                      width: 15,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                            //AmigoTile(usuario: usuario, chat: false);
                           },
                         );
                 },

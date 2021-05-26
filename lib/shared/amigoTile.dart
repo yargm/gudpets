@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gudpets/services/services.dart';
@@ -18,11 +19,11 @@ class AmigoTile extends StatelessWidget {
         if (!chat) {
           return Navigator.push(
               context,
-              MaterialPageRoute(
+              CupertinoPageRoute(
                   builder: (context) => Perfil(usuario: usuario)));
         }
         return Navigator.of(context).push(
-          MaterialPageRoute(
+          CupertinoPageRoute(
             builder: (context) => Chat(
               usuario: usuario,
               usuarios: [

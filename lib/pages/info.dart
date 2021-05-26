@@ -9,15 +9,15 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
-   _launchURL() async {
-    const url =
-        'http://gudtech.tech/es/gudpets-tos/';
+  _launchURL() async {
+    const url = 'http://gudtech.tech/es/gudpets-tos/';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
       throw 'Could not launch $url';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,8 +117,14 @@ class _InfoState extends State<Info> {
                 FloatingActionButton.extended(
                   onPressed: () => launch(
                       'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CKVCWLMCRCFTN&source=url'),
-                  label: Text('Donar'),
-                  icon: Icon(FontAwesomeIcons.paypal),
+                  label: Text(
+                    'Donar',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon: Icon(
+                    FontAwesomeIcons.paypal,
+                    color: Colors.white,
+                  ),
                 ),
                 SizedBox(
                   height: 15,
@@ -140,9 +146,9 @@ class _InfoState extends State<Info> {
                   height: 10,
                 ),
                 GestureDetector(
-                  onTap: () => Clipboard.setData(ClipboardData(text: 'gudtechinfo@gmail.com')),
+                  onTap: () => Clipboard.setData(
+                      ClipboardData(text: 'gudtechinfo@gmail.com')),
                   child: Tooltip(
-
                     message: 'Copy',
                     child: Text('gudtechinfo@gmail.com',
                         style: TextStyle(fontSize: 18.0, color: Colors.brown)),
