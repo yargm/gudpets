@@ -30,7 +30,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
       crossAxisAlignment: WrapCrossAlignment.center,
       alignment: WrapAlignment.center,
       children: [
-        FlatButton.icon(
+        TextButton.icon(
             onPressed: () {
               showDialog(
                   context: context,
@@ -96,7 +96,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
               'Bloquear \nUsuario',
               style: TextStyle(fontSize: 15, color: secondaryDark),
             )),
-        FlatButton.icon(
+        TextButton.icon(
             onPressed: () {
               List<String> razones = [
                 'Contenido Ofensivo',
@@ -123,7 +123,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
             : controlador1.loading
                 ? CircularProgressIndicator()
                 : verifyMyFRequest(controlador1)
-                    ? FlatButton.icon(
+                    ? TextButton.icon(
                         onPressed: () async {
                           print(widget.usuario.documentId.length);
                           await controlador1.usuario.reference.update({
@@ -195,7 +195,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                             ],
                           )
                         : verifyFriendship(controlador1)
-                            ? FlatButton.icon(
+                            ? TextButton.icon(
                                 label: Text(
                                   'Eliminar',
                                   style: TextStyle(
@@ -228,7 +228,7 @@ class _ButtonBarOptionsState extends State<ButtonBarOptions> {
                                   Navigator.of(context).pop();
                                 },
                               )
-                            : FlatButton.icon(
+                            : TextButton.icon(
                                 label: Text(
                                   'Agregar',
                                   style: TextStyle(

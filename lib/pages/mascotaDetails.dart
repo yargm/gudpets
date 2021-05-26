@@ -149,7 +149,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                     Container(
                       foregroundDecoration: BoxDecoration(
                           border: Border.all(color: secondaryDark, width: 0.3),
-                          borderRadius: BorderRadius.circular(180)),
+                          borderRadius: BorderRadius.circular(360)),
                       margin: EdgeInsets.all(1),
                       padding: EdgeInsets.all(1),
                       //padding: const EdgeInsets.only(left: 20, top: 10, right: 10),
@@ -158,7 +158,7 @@ class _MascotaDetailsState extends State<MascotaDetails> {
                               color: secondaryLight,
                               width: 2,
                               style: BorderStyle.solid),
-                          borderRadius: BorderRadius.circular(180)),
+                          borderRadius: BorderRadius.circular(360)),
                       child: CircleAvatar(
                         radius: 50,
                         backgroundImage:

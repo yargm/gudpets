@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +25,24 @@ class _PerfilState extends State<Perfil> {
 
   _PerfilState();
   UsuarioModel usuario;
+  List<Color> colors = [
+    primaryColor,
+    primaryDark,
+    primaryLight,
+
+    secondaryColor,
+    secondaryDark,
+    secondaryLight,
+
+    // Colors.red,
+    // Colors.yellow,
+    // Colors.blue,
+    // Colors.green,
+    // Colors.pink,
+    // Colors.purpleAccent,
+    // Colors.deepOrange,
+    // Colors.cyan
+  ];
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
@@ -42,7 +61,7 @@ class _PerfilState extends State<Perfil> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            controlador1.usuario.nombre,
+            usuario.nombre,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.transparent,
@@ -193,22 +212,34 @@ class _PerfilState extends State<Perfil> {
                 ],
               ),
             ),
-
-            Text(
-              'Amigos',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 25,
-              ),
-            ),
-
+            controlador1.usuario.documentId == widget.usuario.documentId
+                ? Container(
+                    margin: EdgeInsets.symmetric(horizontal: 40),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: secondaryColor),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/registroMascota');
+                      },
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text('Añadir mascota '),
+                          Icon(Icons.pets)
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(),
+            SizedBox(height: 30),
             StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('usuarios')
-                  .where('amigos', arrayContains: widget.usuario.documentId)
-                  .orderBy('nombre')
-                  .snapshots(),
+              stream:
+                  widget.usuario.reference.collection('mascotas').snapshots(),
               builder: (context, snapshot) {
+                if (snapshot.hasError)
+                  return Container(height: 50, child: Text('No hay mascotas'));
+
                 if (!snapshot.hasData)
                   return Container(
                       height: 50, child: const CircularProgressIndicator());
@@ -216,24 +247,33 @@ class _PerfilState extends State<Perfil> {
                 List<DocumentSnapshot> documents = snapshot.data.documents;
 
                 return documents.isEmpty
-                    ? Text('Usuario nuevo')
+                    ? controlador1.usuario.documentId ==
+                            widget.usuario.documentId
+                        ? Text('No tienes mascotas registradas')
+                        : Text('este usuario no tiene mascotas registradas')
                     : Row(
                         children: <Widget>[
                           Expanded(
                             child: SizedBox(
-                              height: 50,
-                              width: 50,
+                              height: 100,
+                              width: 100,
                               child: ListView.builder(
                                 physics: ClampingScrollPhysics(),
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
                                 itemCount: documents.length,
                                 itemBuilder: (context, index) {
-                                  UsuarioModel usuario =
-                                      UsuarioModel.fromDocumentSnapshot(
-                                          documents[index], 'meh');
+                                  var random = new Random();
+                                  Color col =
+                                      colors[random.nextInt(colors.length)];
+                                  MascotaModel mascota =
+                                      MascotaModel.fromDocumentSnapshot(
+                                          documents[index]);
 
-                                  return AvatarAmigo(usuario: usuario);
+                                  return AvatarMascota(
+                                      color: col,
+                                      mascota: mascota,
+                                      usuario: widget.usuario);
                                 },
                               ),
                             ),
@@ -242,6 +282,7 @@ class _PerfilState extends State<Perfil> {
                       );
               },
             ),
+
             Divider(
               endIndent: 0,
               indent: 0,
@@ -255,11 +296,11 @@ class _PerfilState extends State<Perfil> {
                 child: Text('Fotos'),
               ),
               Tab(
-                child: Text('Más'),
+                child: Text('Amigos'),
               )
             ]),
             Container(
-              height: MediaQuery.of(context).size.height * .83,
+              height: MediaQuery.of(context).size.height * .80,
               child: TabBarView(
                   children: [tab1(context), tab2(context), tab3(context)]),
             ),
@@ -522,124 +563,111 @@ class _PerfilState extends State<Perfil> {
   Widget tab1(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Información básica',
-                  style: TextStyle(
-                    fontSize: 25,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                ListTile(
-                    leading: Icon(Icons.description),
-                    subtitle: Text(widget.usuario.descripcion),
-                    title: Text('Descripción'),
-                    trailing: widget.usuario.documentId ==
-                            controlador1.usuario.documentId
-                        ? IconButton(
-                            onPressed: () => showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Container(
-                                      margin: EdgeInsets.all(20),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          TextField(
-                                            maxLength: 50,
-                                            decoration: InputDecoration(
-                                                labelText: 'Descripción'),
-                                            controller: textEditingController,
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          FloatingActionButton.extended(
-                                            backgroundColor: primaryColor,
-                                            onPressed: () async {
-                                              controlador1.loading = true;
-                                              controlador1.notify();
-                                              await controlador1
-                                                  .usuario.reference
-                                                  .update({
-                                                'descripcion':
-                                                    textEditingController.text
-                                              });
-                                              controlador1.usuario.descripcion =
-                                                  textEditingController.text;
-                                              controlador1.loading = false;
-                                              controlador1.notify();
-                                              Navigator.of(context).pop();
-                                            },
-                                            label: Text(
-                                              'Actualizar',
-                                              style: TextStyle(
-                                                  color: secondaryLight),
-                                            ),
-                                            icon: Icon(
-                                              Icons.system_update_alt,
-                                              color: secondaryLight,
-                                            ),
-                                          )
-                                        ],
-                                      ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          ListTile(
+              leading: Icon(Icons.description),
+              subtitle: Text(widget.usuario.descripcion),
+              title: Text('Descripción'),
+              trailing: widget.usuario.documentId ==
+                      controlador1.usuario.documentId
+                  ? IconButton(
+                      onPressed: () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Container(
+                                margin: EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    TextField(
+                                      maxLength: 50,
+                                      decoration: InputDecoration(
+                                          labelText: 'Descripción'),
+                                      controller: textEditingController,
                                     ),
-                                  );
-                                }),
-                            icon: Icon(Icons.edit),
-                          )
-                        : null),
-                ListTile(
-                  leading: Icon(FontAwesomeIcons.calendar),
-                  subtitle: Text(widget.usuario.edad.toString()),
-                  title: Text('Edad'),
-                ),
-                ListTile(
-                  leading: Icon(FontAwesomeIcons.genderless),
-                  subtitle: Text(widget.usuario.sexo ?? '???'),
-                  title: Text('Sexo'),
-                ),
-                ListTile(
-                  leading: Icon(FontAwesomeIcons.phoneAlt),
-                  subtitle: Text(widget.usuario.telefono.toString()),
-                  title: Text('Telefono'),
-                  trailing: widget.usuario.documentId ==
-                          controlador1.usuario.documentId
-                      ? IconButton(
-                          onPressed: () => showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return WillPopScope(
-                                  onWillPop: () async {
-                                    return controlador1.loading ? false : true;
-                                  },
-                                  child: Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: DialogChangePhone(),
-                                  ),
-                                );
-                              }),
-                          icon: Icon(Icons.edit),
-                        )
-                      : null,
-                ),
-              ],
-            ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    FloatingActionButton.extended(
+                                      backgroundColor: primaryColor,
+                                      onPressed: () async {
+                                        controlador1.loading = true;
+                                        controlador1.notify();
+                                        await controlador1.usuario.reference
+                                            .update({
+                                          'descripcion':
+                                              textEditingController.text
+                                        });
+                                        controlador1.usuario.descripcion =
+                                            textEditingController.text;
+                                        controlador1.loading = false;
+                                        controlador1.notify();
+                                        Navigator.of(context).pop();
+                                      },
+                                      label: Text(
+                                        'Actualizar',
+                                        style: TextStyle(color: secondaryLight),
+                                      ),
+                                      icon: Icon(
+                                        Icons.system_update_alt,
+                                        color: secondaryLight,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                      icon: Icon(Icons.edit),
+                    )
+                  : null),
+          ListTile(
+            leading: Icon(FontAwesomeIcons.calendar),
+            subtitle: Text(widget.usuario.edad.toString()),
+            title: Text('Edad'),
+          ),
+          ListTile(
+            leading: Icon(FontAwesomeIcons.genderless),
+            subtitle: Text(widget.usuario.sexo ?? '???'),
+            title: Text('Sexo'),
+          ),
+          ListTile(
+            leading: Icon(FontAwesomeIcons.phoneAlt),
+            subtitle: Text(widget.usuario.telefono.toString()),
+            title: Text('Telefono'),
+            trailing:
+                widget.usuario.documentId == controlador1.usuario.documentId
+                    ? IconButton(
+                        onPressed: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return WillPopScope(
+                                onWillPop: () async {
+                                  return controlador1.loading ? false : true;
+                                },
+                                child: Dialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: DialogChangePhone(),
+                                ),
+                              );
+                            }),
+                        icon: Icon(Icons.edit),
+                      )
+                    : null,
           ),
           Divider(
             endIndent: 20,
@@ -654,7 +682,7 @@ class _PerfilState extends State<Perfil> {
                   // children: [
                   //             alignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    FlatButton.icon(
+                    TextButton.icon(
                       icon: Icon(
                         Icons.cancel,
                         size: 20,
@@ -787,10 +815,13 @@ class _PerfilState extends State<Perfil> {
   Widget tab2(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
     List<String> amigos = controlador1.usuario.amigos;
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          StreamBuilder(
+    return Column(
+      children: [
+        SizedBox(
+          height: 5,
+        ),
+        Expanded(
+          child: StreamBuilder(
             stream: amigos.contains(widget.usuario.documentId)
                 ? widget.usuario.reference
                     .collection('posts')
@@ -832,7 +863,8 @@ class _PerfilState extends State<Perfil> {
                           mainAxisSpacing: 5,
                           crossAxisCount: 3,
                           crossAxisSpacing: 5),
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: BouncingScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics()),
                       shrinkWrap: true,
                       itemCount: documents.length,
                       itemBuilder: (context, index) {
@@ -861,8 +893,8 @@ class _PerfilState extends State<Perfil> {
                     );
             },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -871,44 +903,27 @@ class _PerfilState extends State<Perfil> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          controlador1.usuario.documentId == widget.usuario.documentId
-              ? ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/registroMascota');
-                  },
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('Añadir mascota '),
-                      Icon(Icons.pets)
-                    ],
-                  ),
-                )
-              : Container(),
           Container(
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(10),
             color: Colors.white,
             child: Column(
               children: [
-                Text('Mascotas',
-                    style: TextStyle(
-                      fontSize: 20,
-                    )),
+                // Text('Mascotas',
+                //     style: TextStyle(
+                //       fontSize: 20,
+                //     )),
                 SizedBox(
                   height: 10,
                 ),
+
                 StreamBuilder(
-                  stream: widget.usuario.reference
-                      .collection('mascotas')
+                  stream: FirebaseFirestore.instance
+                      .collection('usuarios')
+                      .where('amigos', arrayContains: widget.usuario.documentId)
+                      .orderBy('nombre')
                       .snapshots(),
                   builder: (context, snapshot) {
-                    if (snapshot.hasError)
-                      return Container(
-                          height: 50, child: Text('No hay mascotas'));
-
                     if (!snapshot.hasData)
                       return Container(
                           height: 50, child: const CircularProgressIndicator());
@@ -916,29 +931,22 @@ class _PerfilState extends State<Perfil> {
                     List<DocumentSnapshot> documents = snapshot.data.documents;
 
                     return documents.isEmpty
-                        ? controlador1.usuario.documentId ==
-                                widget.usuario.documentId
-                            ? Text('No tienes mascotas registradas')
-                            : Text('este usuario no tiene mascotas registradas')
+                        ? Text('Usuario nuevo')
                         : Row(
                             children: <Widget>[
                               Expanded(
                                 child: SizedBox(
-                                  height: 100,
-                                  width: 100,
                                   child: ListView.builder(
                                     physics: ClampingScrollPhysics(),
                                     shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
+                                    scrollDirection: Axis.vertical,
                                     itemCount: documents.length,
                                     itemBuilder: (context, index) {
-                                      MascotaModel mascota =
-                                          MascotaModel.fromDocumentSnapshot(
-                                              documents[index]);
+                                      UsuarioModel usuario =
+                                          UsuarioModel.fromDocumentSnapshot(
+                                              documents[index], 'meh');
 
-                                      return AvatarMascota(
-                                          mascota: mascota,
-                                          usuario: widget.usuario);
+                                      return AvatarAmigo(usuario: usuario);
                                     },
                                   ),
                                 ),
@@ -947,7 +955,6 @@ class _PerfilState extends State<Perfil> {
                           );
                   },
                 ),
-                SizedBox(height: 30),
               ],
             ),
           ),
@@ -1462,7 +1469,9 @@ class AvatarMascota extends StatelessWidget {
     Key key,
     @required this.mascota,
     @required this.usuario,
+    this.color,
   }) : super(key: key);
+  final Color color;
   final MascotaModel mascota;
   final UsuarioModel usuario;
   @override
@@ -1484,8 +1493,14 @@ class AvatarMascota extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
-                height: 60,
-                width: 60,
+                foregroundDecoration: BoxDecoration(
+                    border: Border.all(color: secondaryDark, width: 0.5),
+                    borderRadius: BorderRadius.circular(360)),
+                decoration: BoxDecoration(
+                    border: Border.all(color: color, width: 2),
+                    borderRadius: BorderRadius.circular(360)),
+                height: 70,
+                width: 70,
                 child:
 
                     //     ClipRRect(
@@ -1528,28 +1543,22 @@ class AvatarAmigo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Controller controlador1 = Provider.of<Controller>(context);
-    return Row(
-      children: <Widget>[
-        SizedBox(
-          width: 10,
+    return ListTile(
+      onTap: () {
+        return Navigator.push(context,
+            CupertinoPageRoute(builder: (context) => Perfil(usuario: usuario)));
+      },
+      leading: Container(
+        height: 50,
+        width: 50,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Image(image: NetworkImage(usuario.foto)),
         ),
-        GestureDetector(
-          onTap: () {
-            return Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (context) => Perfil(usuario: usuario)));
-          },
-          child: Container(
-            height: 50,
-            width: 50,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: Image(image: NetworkImage(usuario.foto)),
-            ),
-          ),
-        ),
-      ],
+      ),
+      title: Text(usuario.nombre),
+      subtitle: Text(usuario.descripcion),
+      trailing: Icon(Icons.arrow_forward_ios_rounded, size: 20),
     );
   }
 }
