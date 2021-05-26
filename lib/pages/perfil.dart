@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gudpets/pages/pages.dart';
+import 'package:gudpets/pages/postView.dart';
 import 'package:gudpets/pages/registroMascota.dart';
 import 'package:gudpets/services/services.dart';
 import 'package:gudpets/shared/shared.dart';
@@ -34,118 +36,124 @@ class _PerfilState extends State<Perfil> {
       usuario = controlador1.usuario;
     }
     TextEditingController textEditingController = TextEditingController();
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        actions: <Widget>[
-          widget.usuario.amigos.contains(controlador1.usuario.documentId)
-              ? RaisedButton(
-                  color: Colors.white,
-                  elevation: 0,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Icon(Icons.chat, size: 15, color: secondaryDark),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        'Chat',
-                        style: TextStyle(fontSize: 15, color: secondaryDark),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => Chat(
-                          //Paso el modelo de usuario de mi amix
-                          usuario: usuario,
-                          //Paso en un arreglo el id de mi amix y el mio
-                          usuarios: [
-                            usuario.documentId,
-                            controlador1.usuario.documentId,
-                          ],
-                          //Paso el nombre de mi amix
-                          nombre: usuario.nombre,
-                          //Paso la foto de mi amix
-                          foto: usuario.foto,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(
+            controlador1.usuario.nombre,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.transparent,
+          actions: <Widget>[
+            widget.usuario.amigos.contains(controlador1.usuario.documentId)
+                ? TextButton(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Icon(Icons.chat, size: 15, color: secondaryDark),
+                        SizedBox(
+                          width: 5,
                         ),
-                      ),
-                    );
-                  },
-                )
-              : Container()
-        ],
-      ),
-      body: ListView(
-        addSemanticIndexes: true,
-        addRepaintBoundaries: true,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                SizedBox(
-                  height: 140,
-                  width: 140,
-                  child: Stack(
-                    children: <Widget>[
-                      Hero(
-                        tag: widget.usuario.documentId,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(180),
-                          child: FadeInImage(
-                            fit: BoxFit.cover,
-                            placeholder: AssetImage('assets/dog.png'),
-                            width: 120,
-                            height: 120,
-                            image: NetworkImage(widget.usuario.foto),
+                        Text(
+                          'Chat',
+                          style: TextStyle(fontSize: 15, color: secondaryDark),
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => Chat(
+                            //Paso el modelo de usuario de mi amix
+                            usuario: usuario,
+                            //Paso en un arreglo el id de mi amix y el mio
+                            usuarios: [
+                              usuario.documentId,
+                              controlador1.usuario.documentId,
+                            ],
+                            //Paso el nombre de mi amix
+                            nombre: usuario.nombre,
+                            //Paso la foto de mi amix
+                            foto: usuario.foto,
                           ),
                         ),
-                      ),
-                      widget.usuario.documentId ==
-                              controlador1.usuario.documentId
-                          ? CircleAvatar(
-                              backgroundColor: secondaryColor,
-                              child: IconButton(
-                                icon: Icon(Icons.photo_camera),
-                                onPressed: () => showDialog(
-                                  builder: (BuildContext context) {
-                                    return WillPopScope(
-                                      onWillPop: () async {
-                                        return controlador1.loading
-                                            ? false
-                                            : true;
-                                      },
-                                      child: SimpleDialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        children: <Widget>[
-                                          DialogContent(
-                                            foto: 'PP',
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                  context: context,
+                      );
+                    },
+                  )
+                : Container()
+          ],
+        ),
+        body: ListView(
+          addSemanticIndexes: true,
+          addRepaintBoundaries: true,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  SizedBox(
+                    height: 140,
+                    width: 140,
+                    child: Stack(
+                      children: <Widget>[
+                        Hero(
+                          tag: widget.usuario.documentId,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(180),
+                            child: FadeInImage(
+                              fit: BoxFit.cover,
+                              placeholder: AssetImage('assets/dog.png'),
+                              width: 120,
+                              height: 120,
+                              image: NetworkImage(widget.usuario.foto),
+                            ),
+                          ),
+                        ),
+                        widget.usuario.documentId ==
+                                controlador1.usuario.documentId
+                            ? CircleAvatar(
+                                backgroundColor: Colors.black38,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.photo_camera,
+                                    size: 22,
+                                  ),
+                                  onPressed: () => showDialog(
+                                    builder: (BuildContext context) {
+                                      return WillPopScope(
+                                        onWillPop: () async {
+                                          return controlador1.loading
+                                              ? false
+                                              : true;
+                                        },
+                                        child: SimpleDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          children: <Widget>[
+                                            DialogContent(
+                                              foto: 'PP',
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    context: context,
+                                  ),
                                 ),
-                              ),
-                            )
-                          : Container()
-                    ],
+                              )
+                            : Container()
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  child: Container(
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Container(
                     padding: EdgeInsets.all(5),
                     // decoration: BoxDecoration(
                     //   border: Border(
@@ -168,14 +176,467 @@ class _PerfilState extends State<Perfil> {
                             Icon(FontAwesomeIcons.dove),
                           ],
                         ),
-                        Text(
-                          widget.usuario.nombre,
-                          style: TextStyle(fontSize: 18),
+                        SizedBox(
+                          height: 10,
                         ),
-                        Text(widget.usuario.correo)
+                        // Text(
+                        //   widget.usuario.nombre,
+                        //   style: TextStyle(fontSize: 18),
+                        // ),
+                        Text(
+                          widget.usuario.correo,
+                          style: TextStyle(fontSize: 18),
+                        )
                       ],
                     ),
                   ),
+                ],
+              ),
+            ),
+
+            Text(
+              'Amigos',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25,
+              ),
+            ),
+
+            StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('usuarios')
+                  .where('amigos', arrayContains: widget.usuario.documentId)
+                  .orderBy('nombre')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData)
+                  return Container(
+                      height: 50, child: const CircularProgressIndicator());
+
+                List<DocumentSnapshot> documents = snapshot.data.documents;
+
+                return documents.isEmpty
+                    ? Text('Usuario nuevo')
+                    : Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: ListView.builder(
+                                physics: ClampingScrollPhysics(),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: documents.length,
+                                itemBuilder: (context, index) {
+                                  UsuarioModel usuario =
+                                      UsuarioModel.fromDocumentSnapshot(
+                                          documents[index], 'meh');
+
+                                  return AvatarAmigo(usuario: usuario);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+              },
+            ),
+            Divider(
+              endIndent: 0,
+              indent: 0,
+              thickness: 1,
+            ),
+            TabBar(tabs: [
+              Tab(
+                child: Text('Información'),
+              ),
+              Tab(
+                child: Text('Fotos'),
+              ),
+              Tab(
+                child: Text('Más'),
+              )
+            ]),
+            Container(
+              height: MediaQuery.of(context).size.height * .83,
+              child: TabBarView(
+                  children: [tab1(context), tab2(context), tab3(context)]),
+            ),
+
+            ////aqui termina lo comentado ahorita
+
+            // Container(
+            //   child: Column(
+            //     children: <Widget>[
+            //       SizedBox(
+            //         height: 10,
+            //       ),
+            //       Text(
+            //         'Información necesaria para trámites de adopción',
+            //         textAlign: TextAlign.center,
+            //         style: TextStyle(fontSize: 25),
+            //       ),
+            //       SizedBox(
+            //         height: 10,
+            //       ),
+            //       Container(
+            //         margin: EdgeInsets.all(10),
+            //         child: Row(
+            //           children: <Widget>[
+            //             SizedBox(
+            //               height: 130,
+            //               width: 210,
+            //               child: Stack(
+            //                 children: <Widget>[
+            //                   FadeInImage(
+            //                     height: 110,
+            //                     width: 210,
+            //                     fit: BoxFit.cover,
+            //                     image: NetworkImage(
+            //                         controlador1.usuario.fotoINE ?? ''),
+            //                     placeholder: AssetImage('assets/dog.png'),
+            //                   ),
+            //                   CircleAvatar(
+            //                     backgroundColor: secondaryColor,
+            //                     child: IconButton(
+            //                       icon: Icon(Icons.photo_camera),
+            //                       onPressed: () => showDialog(
+            //                         child: WillPopScope(
+            //                           onWillPop: () async {
+            //                             return controlador1.loading
+            //                                 ? false
+            //                                 : true;
+            //                           },
+            //                           child: SimpleDialog(
+            //                             shape: RoundedRectangleBorder(
+            //                                 borderRadius:
+            //                                     BorderRadius.circular(20)),
+            //                             children: <Widget>[
+            //                               DialogContent(
+            //                                 foto: 'INE',
+            //                               ),
+            //                             ],
+            //                           ),
+            //                         ),
+            //                         context: context,
+            //                       ),
+            //                     ),
+            //                   )
+            //                 ],
+            //               ),
+            //             ),
+            //             SizedBox(
+            //               width: 20,
+            //             ),
+            //             Expanded(
+            //                 child: Text(
+            //               controlador1.usuario.fotoINE == null
+            //                   ? '* No cuentas con foto de tu INE y es necesaria para realizar un trámite de adopción'
+            //                   : 'Foto INE',
+            //               style: TextStyle(
+            //                   fontWeight: controlador1.usuario.fotoINE == null
+            //                       ? FontWeight.bold
+            //                       : null),
+            //             ))
+            //           ],
+            //         ),
+            //       ),
+            //       Container(
+            //         margin: EdgeInsets.all(10),
+            //         child: Row(
+            //           children: <Widget>[
+            //             SizedBox(
+            //               height: 130,
+            //               width: 210,
+            //               child: Stack(
+            //                 children: <Widget>[
+            //                   FadeInImage(
+            //                     height: 110,
+            //                     width: 210,
+            //                     fit: BoxFit.cover,
+            //                     image: NetworkImage(
+            //                         controlador1.usuario.fotoCompDomi ?? ''),
+            //                     placeholder: AssetImage('assets/dog.png'),
+            //                   ),
+            //                   CircleAvatar(
+            //                     backgroundColor: secondaryColor,
+            //                     child: IconButton(
+            //                       icon: Icon(Icons.photo_camera),
+            //                       onPressed: () => showDialog(
+            //                         child: WillPopScope(
+            //                           onWillPop: () async {
+            //                             return controlador1.loading
+            //                                 ? false
+            //                                 : true;
+            //                           },
+            //                           child: SimpleDialog(
+            //                             shape: RoundedRectangleBorder(
+            //                                 borderRadius:
+            //                                     BorderRadius.circular(20)),
+            //                             children: <Widget>[
+            //                               DialogContent(
+            //                                 foto: 'CompDomi',
+            //                               ),
+            //                             ],
+            //                           ),
+            //                         ),
+            //                         context: context,
+            //                       ),
+            //                     ),
+            //                   )
+            //                 ],
+            //               ),
+            //             ),
+            //             SizedBox(
+            //               width: 20,
+            //             ),
+            //             Expanded(
+            //                 child: Text(
+            //               controlador1.usuario.fotoCompDomi == null
+            //                   ? '* No cuentas con foto de tu comprobante de domicilio y es necesaria para realizar un trámite de adopción'
+            //                   : 'Foto Comprobante de domicilio',
+            //               style: TextStyle(
+            //                   fontWeight:
+            //                       controlador1.usuario.fotoCompDomi == null
+            //                           ? FontWeight.bold
+            //                           : null),
+            //             ))
+            //           ],
+            //         ),
+            //       ),
+            //       Divider(
+            //         endIndent: 20,
+            //         indent: 20,
+            //         thickness: 1,
+            //       ),
+            //       Container(
+            //         margin: EdgeInsets.all(20),
+            //         child: Column(
+            //           children: <Widget>[
+            //             Text(
+            //               'Galeria Fotos de tu hogar',
+            //               textAlign: TextAlign.center,
+            //               style: TextStyle(fontSize: 25),
+            //             ),
+            //             SizedBox(
+            //               height: 10,
+            //             ),
+            //             Text(
+            //               'Estas imágenes son necesarias para realizar un trámite de adopción, en ellas se debe mostrar el lugar en donde vivirán las mascotas que desees adoptar. Esta información se usa para comprobar que la mascota tendrá un hogar adecuado',
+            //               textAlign: TextAlign.center,
+            //             ),
+            //             SizedBox(
+            //               height: 20,
+            //             ),
+            //             controlador1.usuario.galeriaFotos.isNotEmpty &&
+            //                     controlador1.usuario.galeriaFotos != null
+            //                 ? GridView.builder(
+            //                     shrinkWrap: true,
+            //                     physics: ScrollPhysics(
+            //                         parent: NeverScrollableScrollPhysics()),
+            //                     gridDelegate:
+            //                         SliverGridDelegateWithFixedCrossAxisCount(
+            //                       crossAxisCount: 3,
+            //                     ),
+            //                     itemBuilder: (context, index) => GestureDetector(
+            //                       onTap: () => showDialog(
+            //                         context: context,
+            //                         child: WillPopScope(
+            //                           onWillPop: () async {
+            //                             return controlador1.loading
+            //                                 ? false
+            //                                 : true;
+            //                           },
+            //                           child: Dialog(
+            //                             shape: RoundedRectangleBorder(
+            //                                 borderRadius:
+            //                                     BorderRadius.circular(20)),
+            //                             child: DialogContent(
+            //                               index: index,
+            //                               foto: controlador1
+            //                                   .usuario.galeriaFotos[index],
+            //                             ),
+            //                           ),
+            //                         ),
+            //                       ),
+            //                       child: FadeInImage(
+            //                         placeholder: AssetImage('assets/dog.png'),
+            //                         image: NetworkImage(
+            //                           controlador1.usuario.galeriaFotos[index] ??
+            //                               '',
+            //                         ),
+            //                         height: 150,
+            //                         width: 150,
+            //                         fit: BoxFit.cover,
+            //                       ),
+            //                     ),
+            //                     itemCount:
+            //                         controlador1.usuario.galeriaFotos.length,
+            //                   )
+            //                 : Text('No hay fotos para mostrar'),
+            //             SizedBox(
+            //               height: 30,
+            //             ),
+            //             controlador1.usuario.galeriaFotos.length < 6
+            //                 ? FloatingActionButton.extended(
+            //                     elevation: 0,
+            //                     backgroundColor: primaryColor,
+            //                     onPressed: () => showDialog(
+            //                         context: context,
+            //                         child: WillPopScope(
+            //                           onWillPop: () async {
+            //                             return controlador1.loading
+            //                                 ? false
+            //                                 : true;
+            //                           },
+            //                           child: Dialog(
+            //                             shape: RoundedRectangleBorder(
+            //                                 borderRadius:
+            //                                     BorderRadius.circular(20)),
+            //                             child: DialogMultiImage(),
+            //                           ),
+            //                         )),
+            //                     label: Text(
+            //                       'Añadir fotos',
+            //                       style: TextStyle(color: secondaryLight),
+            //                     ),
+            //                     icon: Icon(
+            //                       Icons.add_a_photo,
+            //                       color: secondaryLight,
+            //                     ),
+            //                   )
+            //                 : Container()
+            //           ],
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget tab1(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Información básica',
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                ListTile(
+                    leading: Icon(Icons.description),
+                    subtitle: Text(widget.usuario.descripcion),
+                    title: Text('Descripción'),
+                    trailing: widget.usuario.documentId ==
+                            controlador1.usuario.documentId
+                        ? IconButton(
+                            onPressed: () => showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Container(
+                                      margin: EdgeInsets.all(20),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          TextField(
+                                            maxLength: 50,
+                                            decoration: InputDecoration(
+                                                labelText: 'Descripción'),
+                                            controller: textEditingController,
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          FloatingActionButton.extended(
+                                            backgroundColor: primaryColor,
+                                            onPressed: () async {
+                                              controlador1.loading = true;
+                                              controlador1.notify();
+                                              await controlador1
+                                                  .usuario.reference
+                                                  .update({
+                                                'descripcion':
+                                                    textEditingController.text
+                                              });
+                                              controlador1.usuario.descripcion =
+                                                  textEditingController.text;
+                                              controlador1.loading = false;
+                                              controlador1.notify();
+                                              Navigator.of(context).pop();
+                                            },
+                                            label: Text(
+                                              'Actualizar',
+                                              style: TextStyle(
+                                                  color: secondaryLight),
+                                            ),
+                                            icon: Icon(
+                                              Icons.system_update_alt,
+                                              color: secondaryLight,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
+                            icon: Icon(Icons.edit),
+                          )
+                        : null),
+                ListTile(
+                  leading: Icon(FontAwesomeIcons.calendar),
+                  subtitle: Text(widget.usuario.edad.toString()),
+                  title: Text('Edad'),
+                ),
+                ListTile(
+                  leading: Icon(FontAwesomeIcons.genderless),
+                  subtitle: Text(widget.usuario.sexo ?? '???'),
+                  title: Text('Sexo'),
+                ),
+                ListTile(
+                  leading: Icon(FontAwesomeIcons.phoneAlt),
+                  subtitle: Text(widget.usuario.telefono.toString()),
+                  title: Text('Telefono'),
+                  trailing: widget.usuario.documentId ==
+                          controlador1.usuario.documentId
+                      ? IconButton(
+                          onPressed: () => showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return WillPopScope(
+                                  onWillPop: () async {
+                                    return controlador1.loading ? false : true;
+                                  },
+                                  child: Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: DialogChangePhone(),
+                                  ),
+                                );
+                              }),
+                          icon: Icon(Icons.edit),
+                        )
+                      : null,
                 ),
               ],
             ),
@@ -315,204 +776,117 @@ class _PerfilState extends State<Perfil> {
               : ButtonBarOptions(
                   usuario: widget.usuario,
                 ),
-          Divider(
-            endIndent: 20,
-            indent: 20,
-            thickness: 1,
-          ),
-          Text(
-            'Amigos',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 25,
-            ),
-          ),
           SizedBox(
             height: 10,
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget tab2(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
+    List<String> amigos = controlador1.usuario.amigos;
+    return SingleChildScrollView(
+      child: Column(
+        children: [
           StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('usuarios')
-                .where('amigos', arrayContains: widget.usuario.documentId)
-                .orderBy('nombre')
-                .snapshots(),
+            stream: amigos.contains(widget.usuario.documentId)
+                ? widget.usuario.reference
+                    .collection('posts')
+                    .orderBy('fecha', descending: true)
+                    .snapshots()
+                : controlador1.usuario.documentId == widget.usuario.documentId
+                    ? widget.usuario.reference
+                        .collection('posts')
+                        .orderBy('fecha', descending: true)
+                        .snapshots()
+                    : widget.usuario.reference
+                        .collection('posts')
+                        .where('privacidad', isEqualTo: true)
+                        .orderBy('fecha', descending: true)
+                        .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
-                return Container(
-                    height: 50, child: const CircularProgressIndicator());
-
+                return Center(
+                  child: Container(
+                      height: 50, child: const CircularProgressIndicator()),
+                );
               List<DocumentSnapshot> documents = snapshot.data.documents;
-
+              bool amigo = amigos.contains(widget.usuario.documentId);
+              if (amigo) {
+                print('amix');
+              } else {
+                print('enemix');
+              }
+              print(documents);
+              print(documents.length);
               return documents.isEmpty
-                  ? Text('Usuario nuevo')
-                  : Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: ListView.builder(
-                              physics: ClampingScrollPhysics(),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: documents.length,
-                              itemBuilder: (context, index) {
-                                UsuarioModel usuario =
-                                    UsuarioModel.fromDocumentSnapshot(
-                                        documents[index], 'meh');
-
-                                return AvatarAmigo(usuario: usuario);
-                              },
-                            ),
+                  ? Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text('No hay fotos para mostrar'),
+                    )
+                  : GridView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisSpacing: 5,
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 5),
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        PostsModel post =
+                            PostsModel.fromDocumentSnapshot(documents[index]);
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => PostView(
+                                  post: post,
+                                  controlador1: controlador1,
+                                ),
+                              ),
+                            );
+                          },
+                          child: FadeInImage(
+                            placeholder: AssetImage('assets/dog.png'),
+                            image: NetworkImage(post.foto),
+                            height: 150,
+                            width: 150,
+                            fit: BoxFit.cover,
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     );
             },
           ),
-          Divider(
-            endIndent: 20,
-            indent: 20,
-            thickness: 1,
-          ),
-          Container(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Información básica',
-                  style: TextStyle(
-                    fontSize: 25,
+        ],
+      ),
+    );
+  }
+
+  Widget tab3(BuildContext context) {
+    Controller controlador1 = Provider.of<Controller>(context);
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          controlador1.usuario.documentId == widget.usuario.documentId
+              ? ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/registroMascota');
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Añadir mascota '),
+                      Icon(Icons.pets)
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                ListTile(
-                    leading: Icon(Icons.description),
-                    subtitle: Text(widget.usuario.descripcion),
-                    title: Text('Descripción'),
-                    trailing: widget.usuario.documentId ==
-                            controlador1.usuario.documentId
-                        ? IconButton(
-                            onPressed: () => showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Container(
-                                      margin: EdgeInsets.all(20),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          TextField(
-                                            maxLength: 50,
-                                            decoration: InputDecoration(
-                                                labelText: 'Descripción'),
-                                            controller: textEditingController,
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          FloatingActionButton.extended(
-                                            backgroundColor: primaryColor,
-                                            onPressed: () async {
-                                              controlador1.loading = true;
-                                              controlador1.notify();
-                                              await controlador1
-                                                  .usuario.reference
-                                                  .update({
-                                                'descripcion':
-                                                    textEditingController.text
-                                              });
-                                              controlador1.usuario.descripcion =
-                                                  textEditingController.text;
-                                              controlador1.loading = false;
-                                              controlador1.notify();
-                                              Navigator.of(context).pop();
-                                            },
-                                            label: Text(
-                                              'Actualizar',
-                                              style: TextStyle(
-                                                  color: secondaryLight),
-                                            ),
-                                            icon: Icon(
-                                              Icons.system_update_alt,
-                                              color: secondaryLight,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }),
-                            icon: Icon(Icons.edit),
-                          )
-                        : null),
-                ListTile(
-                  leading: Icon(FontAwesomeIcons.calendar),
-                  subtitle: Text(widget.usuario.edad.toString()),
-                  title: Text('Edad'),
-                ),
-                ListTile(
-                  leading: Icon(FontAwesomeIcons.genderless),
-                  subtitle: Text(widget.usuario.sexo ?? '???'),
-                  title: Text('Sexo'),
-                ),
-                ListTile(
-                  leading: Icon(FontAwesomeIcons.phoneAlt),
-                  subtitle: Text(widget.usuario.telefono.toString()),
-                  title: Text('Telefono'),
-                  trailing: widget.usuario.documentId ==
-                          controlador1.usuario.documentId
-                      ? IconButton(
-                          onPressed: () => showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return WillPopScope(
-                                  onWillPop: () async {
-                                    return controlador1.loading ? false : true;
-                                  },
-                                  child: Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: DialogChangePhone(),
-                                  ),
-                                );
-                              }),
-                          icon: Icon(Icons.edit),
-                        )
-                      : null,
-                ),
-                controlador1.usuario.documentId == widget.usuario.documentId
-                    ? ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('/registroMascota');
-                        },
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text('Añadir mascota '),
-                            Icon(Icons.pets)
-                          ],
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
-          ),
-          Divider(
-            endIndent: 20,
-            indent: 20,
-            thickness: 1,
-          ),
+                )
+              : Container(),
           Container(
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(10),
@@ -577,258 +951,6 @@ class _PerfilState extends State<Perfil> {
               ],
             ),
           ),
-          Divider(
-            endIndent: 20,
-            indent: 20,
-            thickness: 1,
-          ),
-          // Container(
-          //   child: Column(
-          //     children: <Widget>[
-          //       SizedBox(
-          //         height: 10,
-          //       ),
-          //       Text(
-          //         'Información necesaria para trámites de adopción',
-          //         textAlign: TextAlign.center,
-          //         style: TextStyle(fontSize: 25),
-          //       ),
-          //       SizedBox(
-          //         height: 10,
-          //       ),
-          //       Container(
-          //         margin: EdgeInsets.all(10),
-          //         child: Row(
-          //           children: <Widget>[
-          //             SizedBox(
-          //               height: 130,
-          //               width: 210,
-          //               child: Stack(
-          //                 children: <Widget>[
-          //                   FadeInImage(
-          //                     height: 110,
-          //                     width: 210,
-          //                     fit: BoxFit.cover,
-          //                     image: NetworkImage(
-          //                         controlador1.usuario.fotoINE ?? ''),
-          //                     placeholder: AssetImage('assets/dog.png'),
-          //                   ),
-          //                   CircleAvatar(
-          //                     backgroundColor: secondaryColor,
-          //                     child: IconButton(
-          //                       icon: Icon(Icons.photo_camera),
-          //                       onPressed: () => showDialog(
-          //                         child: WillPopScope(
-          //                           onWillPop: () async {
-          //                             return controlador1.loading
-          //                                 ? false
-          //                                 : true;
-          //                           },
-          //                           child: SimpleDialog(
-          //                             shape: RoundedRectangleBorder(
-          //                                 borderRadius:
-          //                                     BorderRadius.circular(20)),
-          //                             children: <Widget>[
-          //                               DialogContent(
-          //                                 foto: 'INE',
-          //                               ),
-          //                             ],
-          //                           ),
-          //                         ),
-          //                         context: context,
-          //                       ),
-          //                     ),
-          //                   )
-          //                 ],
-          //               ),
-          //             ),
-          //             SizedBox(
-          //               width: 20,
-          //             ),
-          //             Expanded(
-          //                 child: Text(
-          //               controlador1.usuario.fotoINE == null
-          //                   ? '* No cuentas con foto de tu INE y es necesaria para realizar un trámite de adopción'
-          //                   : 'Foto INE',
-          //               style: TextStyle(
-          //                   fontWeight: controlador1.usuario.fotoINE == null
-          //                       ? FontWeight.bold
-          //                       : null),
-          //             ))
-          //           ],
-          //         ),
-          //       ),
-          //       Container(
-          //         margin: EdgeInsets.all(10),
-          //         child: Row(
-          //           children: <Widget>[
-          //             SizedBox(
-          //               height: 130,
-          //               width: 210,
-          //               child: Stack(
-          //                 children: <Widget>[
-          //                   FadeInImage(
-          //                     height: 110,
-          //                     width: 210,
-          //                     fit: BoxFit.cover,
-          //                     image: NetworkImage(
-          //                         controlador1.usuario.fotoCompDomi ?? ''),
-          //                     placeholder: AssetImage('assets/dog.png'),
-          //                   ),
-          //                   CircleAvatar(
-          //                     backgroundColor: secondaryColor,
-          //                     child: IconButton(
-          //                       icon: Icon(Icons.photo_camera),
-          //                       onPressed: () => showDialog(
-          //                         child: WillPopScope(
-          //                           onWillPop: () async {
-          //                             return controlador1.loading
-          //                                 ? false
-          //                                 : true;
-          //                           },
-          //                           child: SimpleDialog(
-          //                             shape: RoundedRectangleBorder(
-          //                                 borderRadius:
-          //                                     BorderRadius.circular(20)),
-          //                             children: <Widget>[
-          //                               DialogContent(
-          //                                 foto: 'CompDomi',
-          //                               ),
-          //                             ],
-          //                           ),
-          //                         ),
-          //                         context: context,
-          //                       ),
-          //                     ),
-          //                   )
-          //                 ],
-          //               ),
-          //             ),
-          //             SizedBox(
-          //               width: 20,
-          //             ),
-          //             Expanded(
-          //                 child: Text(
-          //               controlador1.usuario.fotoCompDomi == null
-          //                   ? '* No cuentas con foto de tu comprobante de domicilio y es necesaria para realizar un trámite de adopción'
-          //                   : 'Foto Comprobante de domicilio',
-          //               style: TextStyle(
-          //                   fontWeight:
-          //                       controlador1.usuario.fotoCompDomi == null
-          //                           ? FontWeight.bold
-          //                           : null),
-          //             ))
-          //           ],
-          //         ),
-          //       ),
-          //       Divider(
-          //         endIndent: 20,
-          //         indent: 20,
-          //         thickness: 1,
-          //       ),
-          //       Container(
-          //         margin: EdgeInsets.all(20),
-          //         child: Column(
-          //           children: <Widget>[
-          //             Text(
-          //               'Galeria Fotos de tu hogar',
-          //               textAlign: TextAlign.center,
-          //               style: TextStyle(fontSize: 25),
-          //             ),
-          //             SizedBox(
-          //               height: 10,
-          //             ),
-          //             Text(
-          //               'Estas imágenes son necesarias para realizar un trámite de adopción, en ellas se debe mostrar el lugar en donde vivirán las mascotas que desees adoptar. Esta información se usa para comprobar que la mascota tendrá un hogar adecuado',
-          //               textAlign: TextAlign.center,
-          //             ),
-          //             SizedBox(
-          //               height: 20,
-          //             ),
-          //             controlador1.usuario.galeriaFotos.isNotEmpty &&
-          //                     controlador1.usuario.galeriaFotos != null
-          //                 ? GridView.builder(
-          //                     shrinkWrap: true,
-          //                     physics: ScrollPhysics(
-          //                         parent: NeverScrollableScrollPhysics()),
-          //                     gridDelegate:
-          //                         SliverGridDelegateWithFixedCrossAxisCount(
-          //                       crossAxisCount: 3,
-          //                     ),
-          //                     itemBuilder: (context, index) => GestureDetector(
-          //                       onTap: () => showDialog(
-          //                         context: context,
-          //                         child: WillPopScope(
-          //                           onWillPop: () async {
-          //                             return controlador1.loading
-          //                                 ? false
-          //                                 : true;
-          //                           },
-          //                           child: Dialog(
-          //                             shape: RoundedRectangleBorder(
-          //                                 borderRadius:
-          //                                     BorderRadius.circular(20)),
-          //                             child: DialogContent(
-          //                               index: index,
-          //                               foto: controlador1
-          //                                   .usuario.galeriaFotos[index],
-          //                             ),
-          //                           ),
-          //                         ),
-          //                       ),
-          //                       child: FadeInImage(
-          //                         placeholder: AssetImage('assets/dog.png'),
-          //                         image: NetworkImage(
-          //                           controlador1.usuario.galeriaFotos[index] ??
-          //                               '',
-          //                         ),
-          //                         height: 150,
-          //                         width: 150,
-          //                         fit: BoxFit.cover,
-          //                       ),
-          //                     ),
-          //                     itemCount:
-          //                         controlador1.usuario.galeriaFotos.length,
-          //                   )
-          //                 : Text('No hay fotos para mostrar'),
-          //             SizedBox(
-          //               height: 30,
-          //             ),
-          //             controlador1.usuario.galeriaFotos.length < 6
-          //                 ? FloatingActionButton.extended(
-          //                     elevation: 0,
-          //                     backgroundColor: primaryColor,
-          //                     onPressed: () => showDialog(
-          //                         context: context,
-          //                         child: WillPopScope(
-          //                           onWillPop: () async {
-          //                             return controlador1.loading
-          //                                 ? false
-          //                                 : true;
-          //                           },
-          //                           child: Dialog(
-          //                             shape: RoundedRectangleBorder(
-          //                                 borderRadius:
-          //                                     BorderRadius.circular(20)),
-          //                             child: DialogMultiImage(),
-          //                           ),
-          //                         )),
-          //                     label: Text(
-          //                       'Añadir fotos',
-          //                       style: TextStyle(color: secondaryLight),
-          //                     ),
-          //                     icon: Icon(
-          //                       Icons.add_a_photo,
-          //                       color: secondaryLight,
-          //                     ),
-          //                   )
-          //                 : Container()
-          //           ],
-          //         ),
-          //       )
-          //     ],
-          //   ),
-          // )
         ],
       ),
     );
@@ -1415,12 +1537,12 @@ class AvatarAmigo extends StatelessWidget {
           onTap: () {
             return Navigator.push(
                 context,
-                MaterialPageRoute(
+                CupertinoPageRoute(
                     builder: (context) => Perfil(usuario: usuario)));
           },
           child: Container(
-            height: 40,
-            width: 40,
+            height: 50,
+            width: 50,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
               child: Image(image: NetworkImage(usuario.foto)),
